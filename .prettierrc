@@ -1,0 +1,21 @@
+{
+  "singleQuote": true,
+  "jsxSingleQuote": true,
+  "semi": true,
+  "tabWidth": 2,
+  "useTabs": false,
+  "trailingComma": "es5",
+  "plugins": ["@trivago/prettier-plugin-sort-imports"],
+  "importOrder": [
+    "^next$",
+    "^next/\\w*$",
+    "^next/(.*)$",
+    "^next-auth/(.*)$",
+    "^react$",
+    "^react/(.*)$",
+    "^@/lib/(.*)$",
+    "^@/components/(.*)$",
+    "^@/app/(.*)$",
+    "^[./]"
+  ]
+}
