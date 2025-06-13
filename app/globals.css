@@ -45,6 +45,7 @@
   --code-theme21: #fff4d8;
   --code-theme22: #ffe9af;
   --code-theme23: #fec32b;
+  --code-theme25: #fef895;
 
   /* 레드 */
   --code-theme24: #f14a76;
@@ -77,6 +78,7 @@
   --color-yellow-4d8: var(--code-theme21);
   --color-yellow-9af: var(--code-theme22);
   --color-yellow-32b: var(--code-theme23);
+  --color-yellow-895: var(--code-theme25);
 
   --color-red-a76: var(--code-theme24);
 }
