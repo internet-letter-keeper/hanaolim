@@ -8,13 +8,13 @@ type Props = {
   align?: keyof typeof alignMap;
 } & HTMLAttributes<HTMLSpanElement>;
 
-const alignMap = {
+export const alignMap = {
   left: "text-left",
   right: "text-right",
   center: "text-center",
 };
 
-const fontMap = {
+export const fontMap = {
   light: "font-[Hana2-Light]",
   regular: "font-[Hana2-Regular]",
   medium: "font-[Hana2-Medium]",
