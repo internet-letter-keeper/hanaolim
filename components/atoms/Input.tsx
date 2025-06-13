@@ -89,11 +89,11 @@ export default function Input({
       autoFocus={autoFocus}
       defaultValue={defaultValue}
       className={cn(
-        inputType === "auth"
-          ? baseStyle.concat(borderObject.auth)
-          : inputType === "modal"
-            ? baseStyle.concat(borderObject.modal)
-            : baseStyle.concat(borderObject.search),
+        {
+          [baseStyle.concat(borderObject.auth)]: inputType === "auth",
+          [baseStyle.concat(borderObject.modal)]: inputType === "modal",
+          [baseStyle.concat(borderObject.search)]: inputType === "search",
+        },
         className
       )}
       {...props}
