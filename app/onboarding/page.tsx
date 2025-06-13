@@ -3,7 +3,7 @@ import OnboardingOption from "@/components/OnboardingOption";
 export default function OnboardingPage() {
   return (
     <>
-      <div className="flex flex-col  my-4 gap-y-4 items-center">
+      <div className="flex flex-col my-4 gap-y-4 items-center">
         <div>
           <OnboardingOption
             title={"나를 군인으로 등록하기"}
