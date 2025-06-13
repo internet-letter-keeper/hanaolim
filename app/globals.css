@@ -5,6 +5,30 @@
   --foreground: #171717;
 }
 
+@theme {
+  /* FIXME: 수정 필요 */
+  --font-dongle: "Dongle", serif;
+  --font-orbitron: "Orbitron", sans-serif;
+  --font-hanna: "Black Han Sans", sans-serif;
+  --font-noto: "Noto Sans KR", serif;
+
+  --code-theme1: #00a49d;
+  --code-theme2: #f6f7f9;
+  --code-theme3: #e5f5f2;
+  --code-theme4: #d5eaf0;
+  --code-theme5: #393939;
+  --code-theme6: #535353;
+  --code-theme7: #aaaaaa;
+
+  --color-green-49d: var(--code-theme1);
+  --color-white-7f9: var(--code-theme2);
+  --color-green-5f2: var(--code-theme3);
+  --color-blue-af0: var(--code-theme4);
+  --color-black-939: var(--code-theme5);
+  --color-gray-353: var(--code-theme6);
+  --color-gray-aaa: var(--code-theme7);
+}
+
 @theme inline {
   --color-background: var(--background);
   --color-foreground: var(--foreground);
