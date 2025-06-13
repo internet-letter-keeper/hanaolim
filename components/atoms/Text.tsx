@@ -8,13 +8,13 @@ type Props = {
   align?: keyof typeof alignMap;
 };
 
-const alignMap = {
+export const alignMap = {
   left: "text-left",
   right: "text-right",
   center: "text-center",
 };
 
-const fontMap = {
+export const fontMap = {
   light: "font-[Hana2-Light]",
   regular: "font-[Hana2-Regular]",
   medium: "font-[Hana2-Medium]",
@@ -23,7 +23,7 @@ const fontMap = {
   heavy: "font-[Hana2-Heavy]",
 };
 
-const sizeMap = {
+export const sizeMap = {
   xs: "text-xs",
   sm: "text-sm",
   md: "text-base",

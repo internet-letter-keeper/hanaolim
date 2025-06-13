@@ -12,21 +12,71 @@
   --font-hanna: "Black Han Sans", sans-serif;
   --font-noto: "Noto Sans KR", serif;
 
-  --code-theme1: #00a49d;
-  --code-theme2: #f6f7f9;
-  --code-theme3: #e5f5f2;
-  --code-theme4: #d5eaf0;
-  --code-theme5: #393939;
-  --code-theme6: #535353;
-  --code-theme7: #aaaaaa;
+  /* 화이트 */
+  --code-theme1: #ffffff;
+  --code-theme2: #f2f2f2;
+  --code-theme3: #f6f7f9;
 
-  --color-green-49d: var(--code-theme1);
-  --color-white-7f9: var(--code-theme2);
-  --color-green-5f2: var(--code-theme3);
-  --color-blue-af0: var(--code-theme4);
-  --color-black-939: var(--code-theme5);
-  --color-gray-353: var(--code-theme6);
-  --color-gray-aaa: var(--code-theme7);
+  /* 그레이 */
+  --code-theme4: #000000;
+  --code-theme5: #363530;
+  --code-theme6: #393939;
+  --code-theme7: #535353;
+  --code-theme8: #aaaaaa;
+  --code-theme9: #dfdfdf;
+  --code-theme10: #d7d7d6;
+
+  /* 그린 */
+  --code-theme11: #00a49d;
+  --code-theme12: #e5f5f2;
+  --code-theme13: #607a3b;
+  --code-theme14: #cdcfa7;
+  --code-theme15: #d6d181;
+
+  /* 블루 */
+  --code-theme16: #7389a0;
+  --code-theme17: #d5eaf0;
+  --code-theme18: #e0f0f5;
+  --code-theme19: #d5eaf0;
+  --code-theme20: #e3e4e8;
+
+  /* 옐로우 */
+  --code-theme21: #fff4d8;
+  --code-theme22: #ffe9af;
+  --code-theme23: #fec32b;
+
+  /* 레드 */
+  --code-theme24: #f14a76;
+
+  --color-white-fff: var(--code-theme1);
+  --color-white-2f2: var(--code-theme2);
+  --color-white-7f9: var(--code-theme3);
+
+  --color-gray-000: var(--code-theme4);
+  --color-gray-530: var(--code-theme5);
+  --color-gray-939: var(--code-theme6);
+  --color-gray-353: var(--code-theme7);
+  --color-gray-aaa: var(--code-theme8);
+  --color-gray-fdf: var(--code-theme9);
+  --color-gray-7d6: var(--code-theme10);
+
+  --color-green-49d: var(--code-theme11);
+  --color-green-5f2: var(--code-theme12);
+  --color-green-a3b: var(--code-theme13);
+  --color-green-fa7: var(--code-theme14);
+  --color-green-181: var(--code-theme15);
+
+  --color-blue-9a0: var(--code-theme16);
+  --color-blue-af0: var(--code-theme17);
+  --color-blue-0f5: var(--code-theme18);
+  --color-blue-af0: var(--code-theme19);
+  --color-blue-4e8: var(--code-theme20);
+
+  --color-yellow-4d8: var(--code-theme21);
+  --color-yellow-9af: var(--code-theme22);
+  --color-yellow-32b: var(--code-theme23);
+
+  --color-red-a76: var(--code-theme24);
 }
 
 @theme inline {
