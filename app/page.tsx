@@ -1,3 +1,3 @@
-export default function Home() {
-  return <div>하나은행</div>;
+export default function Page() {
+  return <>홈</>;
 }
