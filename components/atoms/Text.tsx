@@ -26,7 +26,7 @@ export const fontMap = {
 export default function Txt({
   children,
   className,
-  size = 12,
+  size = 14,
   weight = "regular",
   align = "center",
   ...props
