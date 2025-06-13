@@ -1,8 +1,7 @@
-import { PropsWithChildren, ReactNode } from "react";
+import { PropsWithChildren } from "react";
 import { cn } from "@/lib/utils";
 
 type Props = {
-  children: ReactNode;
   className?: string;
   size?: keyof typeof sizeMap;
   weight?: keyof typeof fontMap;
@@ -13,7 +12,7 @@ const alignMap = {
   left: "text-left",
   right: "text-right",
   center: "text-center",
-}
+};
 
 const fontMap = {
   light: "font-[Hana2-Light]",
@@ -31,11 +30,24 @@ const sizeMap = {
   lg: "text-lg",
   xl: "text-xl",
 };
-export default function Txt(
-  { children, className, size = "sm", weight = "regular", align = "center" }: PropsWithChildren<Props>
-) {
+
+export default function Txt({
+  children,
+  className,
+  size = "sm",
+  weight = "regular",
+  align = "center",
+}: PropsWithChildren<Props>) {
   return (
-    <span className={cn("text-black-939", fontMap[weight], sizeMap[size], alignMap[align], className)}>
+    <span
+      className={cn(
+        "text-black-939",
+        fontMap[weight],
+        sizeMap[size],
+        alignMap[align],
+        className
+      )}
+    >
       {children}
     </span>
   );
