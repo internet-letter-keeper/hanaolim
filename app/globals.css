@@ -32,6 +32,7 @@
   --code-theme13: #607a3b;
   --code-theme14: #cdcfa7;
   --code-theme15: #d6d181;
+  --code-theme26: #d6e9e7;
 
   /* 블루 */
   --code-theme16: #7389a0;
@@ -65,6 +66,7 @@
   --color-green-a3b: var(--code-theme13);
   --color-green-fa7: var(--code-theme14);
   --color-green-181: var(--code-theme15);
+  --color-green-9e7: var(--code-theme26);
 
   --color-blue-9a0: var(--code-theme16);
   --color-blue-af0: var(--code-theme17);
