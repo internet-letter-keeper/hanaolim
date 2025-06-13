@@ -1,5 +1,3 @@
-import { time } from "console";
-import { title } from "process";
 import Image from "next/image";
 import { cn } from "@/lib/utils";
 import Button from "./atoms/Button";
