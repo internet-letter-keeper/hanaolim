@@ -1,3 +1,10 @@
+import OnboardingCard from "@/components/OnboardingCard";
+
 export default function OnboardingPage() {
-  return <>온보딩. 군인/일반 모드 선택 화면</>;
+  return (
+    <div className="flex flex-col my-4 gap-y-4 items-center">
+      <OnboardingCard mode={"soldier"} />
+      <OnboardingCard mode={"viewer"} />
+    </div>
+  );
 }
