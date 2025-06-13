@@ -45,7 +45,7 @@ export default function OnboardingOption({
                 alt={"이동하기 "}
                 width={5}
                 height={10}
-              ></Image>
+              />
             </div>
           </div>
           <div>
@@ -54,7 +54,7 @@ export default function OnboardingOption({
               alt={"별돌이 머리 or 편지"}
               width={70}
               height={70}
-            ></Image>
+            />
           </div>
         </div>
       </Button>
