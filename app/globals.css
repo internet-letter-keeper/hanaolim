@@ -6,12 +6,6 @@
 }
 
 @theme {
-  /* FIXME: 수정 필요 */
-  --font-dongle: "Dongle", serif;
-  --font-orbitron: "Orbitron", sans-serif;
-  --font-hanna: "Black Han Sans", sans-serif;
-  --font-noto: "Noto Sans KR", serif;
-
   /* 화이트 */
   --code-theme1: #ffffff;
   --code-theme2: #f2f2f2;
@@ -130,5 +124,3 @@ body {
   font-family: "Hana2-Heavy";
   src: url("/fonts/Hana2-Heavy.ttf") format("truetype");
 }
-
-/* globals.css */
