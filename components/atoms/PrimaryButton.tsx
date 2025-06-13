@@ -41,6 +41,7 @@ export default function PrimaryButton({
   textSize = 14,
   align = "center",
   weight = "regular",
+  ...props
 }: Props) {
   return (
     <button
@@ -50,6 +51,7 @@ export default function PrimaryButton({
       )}
       onClick={onClick}
       type={type}
+      {...props}
     >
       <Txt
         className={`${Color[color][1]}`}
