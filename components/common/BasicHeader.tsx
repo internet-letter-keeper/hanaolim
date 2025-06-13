@@ -39,7 +39,7 @@ export default function BasicHeader({
       <Txt size={22} weight="cm" align="center" className="flex-1">
         {title}
       </Txt>
-      <div className="w-[10px]" />
+      {showBackButton && <div className="w-[10px]" />}
     </header>
   );
 }
