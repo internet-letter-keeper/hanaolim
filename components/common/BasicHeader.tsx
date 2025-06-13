@@ -6,7 +6,7 @@ import { cn } from "@/lib/utils";
 import Txt from "../atoms/Text";
 
 type Props = {
-  title: string;
+  title?: string;
   showBackButton?: boolean;
   className?: string;
 };
