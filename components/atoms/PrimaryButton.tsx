@@ -45,7 +45,7 @@ export default function PrimaryButton({
   return (
     <button
       className={cn(
-        `${Color[color][0]} ${width} ${disabled ? "opacity-50" : ""} ${padding} ${Round[rounded]} cursor-pointer`,
+        `${Color[color][0]} ${width} ${disabled ? "opacity-50" : "cursor-pointer"} ${padding} ${Round[rounded]} `,
         className
       )}
       onClick={onClick}
