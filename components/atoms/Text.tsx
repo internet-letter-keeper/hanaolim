@@ -1,12 +1,12 @@
-import { PropsWithChildren } from "react";
+import { HTMLAttributes, PropsWithChildren } from "react";
 import { cn } from "@/lib/utils";
 
 type Props = {
   className?: string;
-  size?: keyof typeof sizeMap;
+  size?: number;
   weight?: keyof typeof fontMap;
   align?: keyof typeof alignMap;
-};
+} & HTMLAttributes<HTMLSpanElement>;
 
 export const alignMap = {
   left: "text-left",
@@ -23,30 +23,24 @@ export const fontMap = {
   heavy: "font-[Hana2-Heavy]",
 };
 
-export const sizeMap = {
-  xs: "text-xs",
-  sm: "text-sm",
-  md: "text-base",
-  lg: "text-lg",
-  xl: "text-xl",
-};
-
 export default function Txt({
   children,
   className,
-  size = "sm",
+  size = 14,
   weight = "regular",
   align = "center",
+  ...props
 }: PropsWithChildren<Props>) {
   return (
     <span
       className={cn(
         "text-black-939",
         fontMap[weight],
-        sizeMap[size],
         alignMap[align],
         className
       )}
+      style={{ fontSize: `${size}px` }}
+      {...props}
     >
       {children}
     </span>
