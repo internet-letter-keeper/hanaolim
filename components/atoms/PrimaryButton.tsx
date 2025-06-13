@@ -1,7 +1,7 @@
 "use client";
 
 import { cn } from "@/lib/utils";
-import Txt, { alignMap, fontMap, sizeMap } from "./Text";
+import Txt, { alignMap, fontMap } from "./Text";
 
 type Props = {
   className?: string;
@@ -13,7 +13,7 @@ type Props = {
   padding?: string;
   title: string;
   rounded?: keyof typeof Round;
-  textSize?: keyof typeof sizeMap;
+  textSize?: number;
   align?: keyof typeof alignMap;
   weight?: keyof typeof fontMap;
 };
@@ -38,7 +38,7 @@ export default function PrimaryButton({
   padding = "py-4",
   rounded = "md",
   title,
-  textSize = "md",
+  textSize = 14,
   align = "center",
   weight = "regular",
 }: Props) {
