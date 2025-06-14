@@ -52,7 +52,7 @@ export default function WritePage() {
   return (
     <div className="flex flex-col">
       <BasicHeader />
-      <div className="flex flex-col items-center justify-center w-full px-4">
+      <div className="flex flex-col w-full px-4">
         <div className="flex items-center justify-center gap-2 mt-2">
           <Image
             src="/images/ic-byeoldol-face.svg"
@@ -94,6 +94,7 @@ export default function WritePage() {
             placeholder="내용을 입력하세요."
             inputType="auth"
             tag="textarea"
+            maxLength={500} // 500자 제햔
             className="flex w-full h-[230px] text-[15px] rounded-[10px] py-[10px] px-[18px] bg-white-fff text-gray-939 placeholder:text-blue-9a0 focus:outline-none"
           />
         </form>
