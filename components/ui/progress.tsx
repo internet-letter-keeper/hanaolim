@@ -2,16 +2,15 @@
 
 import * as ProgressPrimitive from "@radix-ui/react-progress";
 import * as React from "react";
+import { ComponentPropsWithoutRef, forwardRef, ElementRef } from "react";
 import { cn } from "@/lib/utils";
 
-type ProgressProps = React.ComponentPropsWithoutRef<
-  typeof ProgressPrimitive.Root
-> & {
+type ProgressProps = ComponentPropsWithoutRef<typeof ProgressPrimitive.Root> & {
   value?: number;
 };
 
-export const Progress = React.forwardRef<
-  React.ElementRef<typeof ProgressPrimitive.Root>,
+export const Progress = forwardRef<
+  ElementRef<typeof ProgressPrimitive.Root>,
   ProgressProps
 >(({ className, value = 0, ...props }, ref) => (
   <ProgressPrimitive.Root
