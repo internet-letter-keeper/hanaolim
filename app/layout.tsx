@@ -12,10 +12,10 @@ export default function RootLayout({
 }: Readonly<{ children: ReactNode }>) {
   return (
     <html lang="en">
-      <body
-        className={`antialiased [&::-webkit-scrollbar]:hidden`}
-      >
-        {children}
+      <body className="flex items-center justify-center h-screen overflow-hidden antialiased sm:bg-amber-50">
+        <div className="h-full w-full sm:max-w-sm p-4 bg-white overflow-y-auto [&::-webkit-scrollbar]:hidden">
+          {children}
+        </div>
       </body>
     </html>
   );
