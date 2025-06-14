@@ -31,7 +31,7 @@ const borderObject = {
 
 // input 컴포넌트의 기본 스타일
 const baseStyle = `
-  w-full max-w-sm h-[39px]
+  w-full h-[39px]
   bg-white
   px-3
   font-[Hana2-CM] text-[14px] leading-[18px] font-normal 

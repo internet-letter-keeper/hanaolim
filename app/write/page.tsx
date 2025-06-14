@@ -1,11 +1,30 @@
+"use client";
+
 import Image from "next/image";
+import { useState, useRef } from "react";
 import Button from "@/components/atoms/Button";
+import Input from "@/components/atoms/Input";
 import PrimaryButton from "@/components/atoms/PrimaryButton";
 import Txt from "@/components/atoms/Text";
 import BasicHeader from "@/components/common/BasicHeader";
-import TextArea from "@/components/common/TextArea";
+import IconPicker from "@/components/letters/IconPicker";
 
 export default function WritePage() {
+  const [isImage, setIsImage] = useState(false);
+  const [selectedIcon, setSelectedIcon] = useState("face");
+  const fileInputRef = useRef<HTMLInputElement>(null);
+
+  const onClickImage = () => {
+    fileInputRef.current?.click();
+  };
+
+  const handleFileChange = (e: React.ChangeEvent<HTMLInputElement>) => {
+    const file = e.target.files?.[0];
+    if (file) {
+      setIsImage(true);
+    }
+  };
+
   return (
     <div className="flex flex-col">
       <BasicHeader />
@@ -32,9 +51,30 @@ export default function WritePage() {
             군인에게 편지를 작성해주세요!
           </Txt>
         </div>
-        <TextArea />
+        <div className="flex flex-col gap-[14px] mb-8">
+          <Txt size={16} className="text-gray-939" weight="cm" align="left">
+            관물대에 넣을 물건 선택해주세요.
+          </Txt>
+          <IconPicker value={selectedIcon} onChange={setSelectedIcon} />
+        </div>
+        <form className="flex flex-col gap-3 w-full">
+          <Input
+            placeholder="닉네임"
+            inputType="auth"
+            className="w-1/3 text-gray-939 placeholder:text-blue-9a0 text-[15px] pl-[18px]"
+          />
+          <Input
+            placeholder="내용을 입력하세요."
+            inputType="auth"
+            tag="textarea"
+            className="flex w-full h-[230px] text-[15px] rounded-[10px] py-[10px] px-[18px] bg-white-fff text-gray-939 placeholder:text-blue-9a0 focus:outline-none"
+          />
+        </form>
         <div className="flex flex-row justify-between w-full items-center mt-5">
-          <Button className="cursor-pointer flex w-[25px] h-[25px] items-center justify-center rounded-[5px] bg-white-fff shadow drop-shadow-[0px_0px_5px_rgba(0,0,0,0.15)]">
+          <Button
+            onClick={onClickImage}
+            className="cursor-pointer flex w-[25px] h-[25px] items-center justify-center rounded-[5px] bg-white-fff shadow drop-shadow-[0px_0px_5px_rgba(0,0,0,0.15)]"
+          >
             <Image
               src="/icons/ic-picture.svg"
               alt="사진"
@@ -42,6 +82,13 @@ export default function WritePage() {
               height={20}
             />
           </Button>
+          <input
+            type="file"
+            ref={fileInputRef}
+            onChange={handleFileChange}
+            accept="image/*,video/*"
+            className="hidden"
+          />
           <PrimaryButton
             title="전송"
             type="submit"
