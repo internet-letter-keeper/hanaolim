@@ -15,7 +15,6 @@ type Props = {
   defaultValue?: string;
   // textarea용 줄 수 설정
   rows?: number;
-  readOnly?: boolean;
   disabled?: boolean;
   // 자동 포커스 여부
   autoFocus?: boolean;
@@ -52,7 +51,6 @@ const baseStyle = `
  * @param className - 추가 스타일 클래스
  * @param required - 필수 입력 여부
  * @param rows - textarea 줄 수
- * @param readOnly - 읽기 전용 여부
  * @param disabled - 비활성화 여부
  * @param autoFocus - 자동 포커스 여부
  * @param defaultValue - 기본값
@@ -69,7 +67,6 @@ export default function Input({
   className,
   required,
   rows,
-  readOnly,
   disabled,
   autoFocus,
   defaultValue,
@@ -84,16 +81,15 @@ export default function Input({
       placeholder={placeholder}
       required={required}
       rows={rows}
-      readOnly={readOnly}
       disabled={disabled}
       autoFocus={autoFocus}
       defaultValue={defaultValue}
       className={cn(
-        inputType === "auth"
-          ? baseStyle.concat(borderObject.auth)
-          : inputType === "modal"
-            ? baseStyle.concat(borderObject.modal)
-            : baseStyle.concat(borderObject.search),
+        {
+          [baseStyle.concat(borderObject.auth)]: inputType === "auth",
+          [baseStyle.concat(borderObject.modal)]: inputType === "modal",
+          [baseStyle.concat(borderObject.search)]: inputType === "search",
+        },
         className
       )}
       {...props}
