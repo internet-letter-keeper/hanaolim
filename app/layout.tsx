@@ -12,8 +12,8 @@ export default function RootLayout({
 }: Readonly<{ children: ReactNode }>) {
   return (
     <html lang="en">
-      <body className="flex items-center justify-center h-screen overflow-hidden antialiased sm:bg-amber-50">
-        <div className="h-full w-full sm:max-w-sm p-4 bg-white overflow-y-auto [&::-webkit-scrollbar]:hidden">
+      <body className="flex items-center justify-center h-screen overflow-hidden antialiased">
+        <div className="h-full w-full sm:max-w-sm p-4 bg-white-7f9 shadow-[0_0_10px_rgba(0,0,0,0.3)] overflow-y-auto [&::-webkit-scrollbar]:hidden">
           {children}
         </div>
       </body>
