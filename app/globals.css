@@ -1,15 +1,10 @@
 @import "tailwindcss";
 @import "tw-animate-css";
 
+
 @custom-variant dark (&:is(.dark *));
 
 @theme {
-  /* FIXME: 수정 필요 */
-  --font-dongle: "Dongle", serif;
-  --font-orbitron: "Orbitron", sans-serif;
-  --font-hanna: "Black Han Sans", sans-serif;
-  --font-noto: "Noto Sans KR", serif;
-
   /* 화이트 */
   --code-theme1: #ffffff;
   --code-theme2: #f2f2f2;
@@ -36,8 +31,7 @@
   --code-theme16: #7389a0;
   --code-theme17: #d5eaf0;
   --code-theme18: #e0f0f5;
-  --code-theme19: #d5eaf0;
-  --code-theme20: #e3e4e8;
+  --code-theme19: #e3e4e8;
 
   /* 옐로우 */
   --code-theme21: #fff4d8;
@@ -70,8 +64,7 @@
   --color-blue-9a0: var(--code-theme16);
   --color-blue-af0: var(--code-theme17);
   --color-blue-0f5: var(--code-theme18);
-  --color-blue-af0: var(--code-theme19);
-  --color-blue-4e8: var(--code-theme20);
+  --color-blue-4e8: var(--code-theme19);
 
   --color-yellow-4d8: var(--code-theme21);
   --color-yellow-9af: var(--code-theme22);
