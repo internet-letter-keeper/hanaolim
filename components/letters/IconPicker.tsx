@@ -35,6 +35,7 @@ export default function IconPicker({
             width={33}
             height={33}
             className="object-contain"
+            style={{ width: 33, height: 33 }}
           />
         </button>
       ))}
