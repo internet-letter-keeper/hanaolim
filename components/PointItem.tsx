@@ -26,24 +26,21 @@ function formatDate(date: Date): string {
 export default function PointItem({ item }: Props) {
   const { description, date, amount, balance } = item;
   return (
-    <>
-      <div className="flex flex-row justify-between py-[14px] px-7 ">
-        <Txt size={18} weight="cm">
-          {description}
+    <div className="flex flex-row justify-between py-[14px] px-7 border-b border-gray-ada ">
+      <Txt size={18} weight="cm">
+        {description}
+      </Txt>
+      <div className="flex flex-col items-end">
+        <Txt size={12} weight="light" className=" text-blue-9a0">
+          {formatDate(date)}
         </Txt>
-        <div className="flex flex-col items-end">
-          <Txt size={12} weight="light" className=" text-blue-9a0">
-            {formatDate(date)}
-          </Txt>
-          <Txt size={16} weight="bold" className=" mt-[21px] text-green-49d">
-            +{amount.toLocaleString()} 원
-          </Txt>
-          <Txt size={13} weight="cm" className="text-blue-9a0">
-            {balance.toLocaleString()} 원
-          </Txt>
-        </div>
+        <Txt size={16} weight="bold" className=" mt-[21px] text-green-49d">
+          +{amount.toLocaleString()} 원
+        </Txt>
+        <Txt size={13} weight="cm" className="text-blue-9a0">
+          {balance.toLocaleString()} 원
+        </Txt>
       </div>
-      <div className="h-[0.8px] bg-gray-ada mx-7" />
-    </>
+    </div>
   );
 }
