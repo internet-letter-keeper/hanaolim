@@ -2,16 +2,36 @@
 
 import Image from "next/image";
 import Txt from "@/components/atoms/Text";
+import { Progress } from "@/components/ui/progress";
 
 type Props = {
   userName?: string;
+  startDate?: string;
   endDate: string;
 };
 
-export default function ProfileBanner({ userName, endDate }: Props) {
-  const remainDays = Math.ceil(
-    (new Date(endDate).getTime() - new Date().getTime()) / (1000 * 60 * 60 * 24)
+export default function ProfileBanner({ userName, startDate, endDate }: Props) {
+  const startDateObj = new Date(startDate ?? "2024-06-01");
+  const endDateObj = new Date(endDate);
+  const today = new Date();
+
+  // 전체 복무 기간 = 전역일 - 입대일
+  const totalDays = Math.ceil(
+    (endDateObj.getTime() - startDateObj.getTime()) / (1000 * 60 * 60 * 24)
   );
+
+  // 오늘까지 복무한 일 수 = 오늘 - 입대일
+  const passedDays = Math.ceil(
+    (today.getTime() - startDateObj.getTime()) / (1000 * 60 * 60 * 24)
+  );
+
+  // 전역일까지 남은 일 수 = 전역일 - 오늘
+  const untilEndDate = Math.ceil(
+    (endDateObj.getTime() - today.getTime()) / (1000 * 60 * 60 * 24)
+  );
+
+  // 복무 진행률 (%) = (복무한 일 수 / 전체 복무 기간) × 100
+  const progressPercent = Math.min(100, (passedDays / totalDays) * 100);
 
   return (
     <div className="w-[337px] h-[89px] bg-gray-530 border-[1.5px] border-green-a3b rounded-[30px] flex items-center gap-3 px-4 py-3 relative overflow-hidden">
@@ -42,20 +62,13 @@ export default function ProfileBanner({ userName, endDate }: Props) {
 
         {/* 진행 바 + 전역일 디데이 */}
         <div className="mt-[4px]">
-          <div className="w-full h-[6px] bg-whi rounded-full overflow-hidden mb-[4px]">
-            <div
-              className="h-full bg-green-a3b transition-all duration-300 ease-out"
-              style={{
-                width: `${Math.min(100, 100 - (remainDays / 730) * 100)}%`,
-              }}
-            />
-          </div>
-          <div className="flex items-baseline gap-[2px]">
+          <Progress value={progressPercent} />
+          <div className="flex items-baseline gap-[2px] mt-[4px]">
             <Txt size={12} weight="cm" className="text-white">
               전역까지
             </Txt>
             <Txt size={12} weight="heavy" className="text-yellow-895">
-              {remainDays}일
+              {untilEndDate}일
             </Txt>
             <Txt size={12} weight="cm" className="text-white">
               남았어요!
