@@ -7,11 +7,20 @@ import Input from "@/components/atoms/Input";
 import PrimaryButton from "@/components/atoms/PrimaryButton";
 import Txt from "@/components/atoms/Text";
 import BasicHeader from "@/components/common/BasicHeader";
+import { FilePreview } from "@/components/letters/FilePreview";
 import IconPicker from "@/components/letters/IconPicker";
 
+export type uploadedFileType = {
+  file: File;
+  url: string;
+  type: "image" | "video";
+};
+
 export default function WritePage() {
-  const [isImage, setIsImage] = useState(false);
   const [selectedIcon, setSelectedIcon] = useState("face");
+  const [uploadedFile, setUploadedFile] = useState<uploadedFileType | null>(
+    null
+  );
   const fileInputRef = useRef<HTMLInputElement>(null);
 
   const onClickImage = () => {
@@ -21,14 +30,29 @@ export default function WritePage() {
   const handleFileChange = (e: React.ChangeEvent<HTMLInputElement>) => {
     const file = e.target.files?.[0];
     if (file) {
-      setIsImage(true);
+      const url = URL.createObjectURL(file);
+      const fileType = file.type.startsWith("image/") ? "image" : "video";
+
+      setUploadedFile({
+        file,
+        url,
+        type: fileType,
+      });
+    }
+  };
+
+  // 메모리 누수를 방지하기 위해 파일 삭제 시 메모리 해제
+  const handleDeleteFile = () => {
+    if (uploadedFile) {
+      URL.revokeObjectURL(uploadedFile.url);
+      setUploadedFile(null);
     }
   };
 
   return (
     <div className="flex flex-col">
       <BasicHeader />
-      <div className="flex flex-col items-center justify-center w-full">
+      <div className="flex flex-col items-center justify-center w-full px-4">
         <div className="flex items-center justify-center gap-2 mt-2">
           <Image
             src="/images/ic-byeoldol-face.svg"
@@ -43,6 +67,7 @@ export default function WritePage() {
             height={50}
           />
         </div>
+
         <div className="flex mt-[14px] mb-13 items-center justify-center">
           <Txt size={20} weight="bold" className="text-green-49d">
             별돌이&nbsp;
@@ -51,12 +76,14 @@ export default function WritePage() {
             군인에게 편지를 작성해주세요!
           </Txt>
         </div>
+
         <div className="flex flex-col gap-[14px] mb-8">
           <Txt size={16} className="text-gray-939" weight="cm" align="left">
             관물대에 넣을 물건 선택해주세요.
           </Txt>
           <IconPicker value={selectedIcon} onChange={setSelectedIcon} />
         </div>
+
         <form className="flex flex-col gap-3 w-full">
           <Input
             placeholder="닉네임"
@@ -70,18 +97,27 @@ export default function WritePage() {
             className="flex w-full h-[230px] text-[15px] rounded-[10px] py-[10px] px-[18px] bg-white-fff text-gray-939 placeholder:text-blue-9a0 focus:outline-none"
           />
         </form>
+
         <div className="flex flex-row justify-between w-full items-center mt-5">
-          <Button
-            onClick={onClickImage}
-            className="cursor-pointer flex w-[25px] h-[25px] items-center justify-center rounded-[5px] bg-white-fff shadow drop-shadow-[0px_0px_5px_rgba(0,0,0,0.15)]"
-          >
-            <Image
-              src="/icons/ic-picture.svg"
-              alt="사진"
-              width={20}
-              height={20}
-            />
-          </Button>
+          {/* 파일이 없을 때만 업로드 버튼 표시 */}
+          {!uploadedFile && (
+            <Button
+              onClick={onClickImage}
+              className="cursor-pointer flex w-7 h-7 items-center justify-center rounded-[5px] bg-white-fff shadow-[0px_0px_5px_rgba(0,0,0,0.15)]"
+            >
+              <Image
+                src="/icons/ic-picture.svg"
+                alt="사진"
+                width={20}
+                height={20}
+                style={{ width: 20, height: 20 }}
+              />
+            </Button>
+          )}
+
+          {/* 파일이 있을 때는 빈 div로 공간 */}
+          {uploadedFile && <div></div>}
+
           <input
             type="file"
             ref={fileInputRef}
@@ -89,6 +125,7 @@ export default function WritePage() {
             accept="image/*,video/*"
             className="hidden"
           />
+
           <PrimaryButton
             title="전송"
             type="submit"
@@ -99,6 +136,13 @@ export default function WritePage() {
             padding="py-1"
           />
         </div>
+
+        {uploadedFile && (
+          <FilePreview
+            uploadedFile={uploadedFile}
+            onDelete={handleDeleteFile}
+          />
+        )}
       </div>
     </div>
   );
