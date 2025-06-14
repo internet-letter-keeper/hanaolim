@@ -1,3 +1,4 @@
+import { HTMLAttributes, InputHTMLAttributes } from "react";
 import { cn } from "@/lib/utils";
 
 type Props = {
@@ -18,8 +19,8 @@ type Props = {
   disabled?: boolean;
   // 자동 포커스 여부
   autoFocus?: boolean;
-
-};
+} & InputHTMLAttributes<HTMLInputElement> &
+  HTMLAttributes<HTMLTextAreaElement>;
 
 } & InputHTMLAttributes<HTMLInputElement> &
   HTMLAttributes<HTMLTextAreaElement>;
