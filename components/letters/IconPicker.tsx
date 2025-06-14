@@ -1,13 +1,13 @@
 import Image from "next/image";
 
 const icons = [
-  { name: "bag", src: "/images/ic-bag.svg" },
-  { name: "shoes", src: "/images/ic-shoes.svg" },
-  { name: "dogtag", src: "/images/ic-byeoldol-face-blackhat.svg" },
-  { name: "vest", src: "/images/ic-vest.svg" },
-  { name: "face", src: "/images/ic-keyring.svg" },
-  { name: "helmet", src: "/images/ic-helmet.svg" },
-  { name: "gun", src: "/images/ic-gun.svg" },
+  { id: 1, name: "bag", src: "/images/ic-bag.svg" },
+  { id: 2, name: "shoes", src: "/images/ic-shoes.svg" },
+  { id: 3, name: "dogtag", src: "/images/ic-byeoldol-face-blackhat.svg" },
+  { id: 4, name: "vest", src: "/images/ic-vest.svg" },
+  { id: 5, name: "face", src: "/images/ic-keyring.svg" },
+  { id: 6, name: "helmet", src: "/images/ic-helmet.svg" },
+  { id: 7, name: "gun", src: "/images/ic-gun.svg" },
 ];
 
 export default function IconPicker({
@@ -21,10 +21,10 @@ export default function IconPicker({
     <div className="flex items-center gap-1">
       {icons.map((icon) => (
         <button
-          key={icon.name}
+          key={icon.id}
           type="button"
           className={`
-            w-12 h-12 flex items-center justify-center rounded-full p-1 cursor-pointer transition-all duration-200
+            w-12 aspect-square flex items-center justify-center rounded-full cursor-pointer transition-all duration-200
             ${value === icon.name ? "bg-white-fff shadow-[0_0_10px_0_rgba(32,155,152,0.35)]" : ""}
           `}
           onClick={() => onChange(icon.name)}
@@ -35,7 +35,6 @@ export default function IconPicker({
             width={33}
             height={33}
             className="object-contain"
-            style={{ width: 33, height: 33 }}
           />
         </button>
       ))}
