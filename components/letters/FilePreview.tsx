@@ -19,17 +19,17 @@ export const FilePreview = ({ uploadedFile, onDelete }: Props) => {
               alt="업로드된 이미지"
               width={120}
               height={120}
-              className="object-cover rounded-[5px]"
+              className="object-cover rounded-[5px] w-[100px] h-[100px]"
             />
           </div>
         ) : (
           <div className="relative">
             <video
               src={uploadedFile.url}
-              width={120}
-              height={120}
+              width={100}
+              height={100}
               controls
-              className="object-cover rounded-[5px]"
+              className="object-cover rounded-[5px] w-[100px] h-[100px]"
             />
           </div>
         )}
