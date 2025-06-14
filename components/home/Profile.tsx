@@ -5,9 +5,9 @@ import Txt from "@/components/atoms/Text";
 import { Progress } from "@/components/ui/progress";
 
 type Props = {
+  endDate: string;
   userName?: string;
   startDate?: string;
-  endDate: string;
 };
 
 export default function ProfileBanner({ userName, startDate, endDate }: Props) {
@@ -34,9 +34,9 @@ export default function ProfileBanner({ userName, startDate, endDate }: Props) {
   const progressPercent = Math.min(100, (passedDays / totalDays) * 100);
 
   return (
-    <div className="w-[337px] h-[89px] bg-gray-530 border-[1.5px] border-green-a3b rounded-[30px] flex items-center gap-3 px-4 py-3 relative overflow-hidden">
+    <div className="flex items-center gap-3 px-4 py-3 bg-gray-530 border-[1.5px] border-green-a3b rounded-[30px] w-max h-[89px] relative overflow-hidden">
       {/* 캐릭터 이미지 */}
-      <div className="w-[85.33px] h-[128px] relative">
+      <div className="flex-shrink-0 relative w-[85px] h-[85px]">
         <Image
           src="/images/ic-byeoldol.svg"
           alt="별돌이 프로필"
@@ -44,7 +44,6 @@ export default function ProfileBanner({ userName, startDate, endDate }: Props) {
           priority
         />
       </div>
-
       <div className="flex flex-col justify-center flex-1">
         {/* 군인 이름 */}
         <div className="flex justify-between items-baseline w-full">
