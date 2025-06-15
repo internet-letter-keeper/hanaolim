@@ -1,8 +1,8 @@
 import { dummyFriends } from "@/public/dummy";
-import { Button, Txt } from "./atoms";
+import { Txt } from "./atoms";
 import FriendProfileCircle from "./common/FriendProfileCircle";
 
-export default function FriendManageItem() {
+export default function FriendManageList() {
   return (
     <div>
       {dummyFriends.map((profile) => (
@@ -11,9 +11,9 @@ export default function FriendManageItem() {
           className="flex flex-row items-center justify-between pt-[12px] pb-[20px] px-7 border-b bg-white-fff border-gray-ada"
         >
           <FriendProfileCircle isRowLayout={true} profile={profile} />
-          <Button className="border-[1px] border-gray-353 px-[17px] py-0 rounded-[5px] mt-[8px]">
+          <button className="cursor-pointer border-[1px] border-gray-353 px-[17px] rounded-[5px] mt-[8px]">
             <Txt weight="medium">삭제</Txt>
-          </Button>
+          </button>
         </div>
       ))}
     </div>
