@@ -4,15 +4,12 @@ import Image from "next/image";
 import { IconName } from "@/types/common/icons";
 import { Button } from "../atoms";
 
-
-
-export default function IconPicker({
-  value,
-  onChange,
-}: {
+type Props = {
   value: IconName;
   onChange: (name: IconName) => void;
-}) {
+};
+
+export default function IconPicker({ value, onChange }: Props) {
   return (
     <div className="flex items-center gap-1">
       {ICONS.map(({ id, name, src }) => (
