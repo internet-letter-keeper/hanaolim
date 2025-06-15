@@ -22,7 +22,6 @@ type Props = {
 } & InputHTMLAttributes<HTMLInputElement> &
   HTMLAttributes<HTMLTextAreaElement>;
 
-
 // auth: 로그인, 회원가입용, 글쓰기 input
 // modal: 모달창용 input
 // search: 편지보관함 검색창용 input
