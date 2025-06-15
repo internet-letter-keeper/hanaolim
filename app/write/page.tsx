@@ -2,15 +2,10 @@
 
 import Image from "next/image";
 import { useState, useRef } from "react";
+import { uploadedFileType } from "@/types/letters/letter";
 import { Button, Input, PrimaryButton, Txt } from "@/components/atoms";
 import { BasicHeader } from "@/components/common";
 import { FilePreview, IconPicker } from "@/components/letters";
-
-export type uploadedFileType = {
-  file: File;
-  url: string;
-  type: "image" | "video";
-};
 
 export default function WritePage() {
   const [selectedIcon, setSelectedIcon] = useState("face");
