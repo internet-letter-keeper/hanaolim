@@ -1,7 +1,7 @@
 import { X } from "lucide-react";
 import Image from "next/image";
-import Txt from "@/components/atoms/Text";
-import { uploadedFileType } from "@/app/write/page";
+import { uploadedFileType } from "@/types/letters/letter";
+import { Txt } from "@/components/atoms";
 
 type Props = {
   uploadedFile: uploadedFileType;
@@ -9,13 +9,18 @@ type Props = {
 };
 
 export default function FilePreview({ uploadedFile, onDelete }: Props) {
+  const {
+    file: { name },
+    url,
+    type,
+  } = uploadedFile;
   return (
     <div className="w-full mt-4 p-4">
       <div className="flex items-start gap-3">
-        {uploadedFile.type === "image" ? (
+        {type === "image" ? (
           <div className="relative">
             <Image
-              src={uploadedFile.url}
+              src={url}
               alt="업로드된 이미지"
               width={120}
               height={120}
@@ -25,7 +30,7 @@ export default function FilePreview({ uploadedFile, onDelete }: Props) {
         ) : (
           <div className="relative">
             <video
-              src={uploadedFile.url}
+              src={url}
               width={100}
               height={100}
               controls
@@ -44,11 +49,11 @@ export default function FilePreview({ uploadedFile, onDelete }: Props) {
                   weight="cm"
                   className="text-gray-939 truncate block"
                 >
-                  {uploadedFile.file.name}
+                  {name}
                 </Txt>
               </div>
               <Txt size={12} weight="cm" className="text-gray-500">
-                {uploadedFile.type === "image" ? "이미지" : "동영상"}
+                {type === "image" ? "이미지" : "동영상"}
               </Txt>
             </div>
             <X onClick={onDelete} className="cursor-pointer" />
