@@ -1,6 +1,7 @@
 import Image from "next/image";
 import { ICONS, IconName } from "@/types/common/icons";
 import { cn } from "@/lib/utils";
+import { Button } from "../atoms";
 
 export default function IconPicker({
   value,
@@ -12,7 +13,7 @@ export default function IconPicker({
   return (
     <div className="flex items-center gap-1">
       {ICONS.map(({ id, name, src }) => (
-        <button
+        <Button
           key={id}
           type="button"
           className={cn(
@@ -28,9 +29,9 @@ export default function IconPicker({
             alt={name}
             width={33}
             height={33}
-            className="object-contain"
+            className="object-contain w-[33px] h-[33px]"
           />
-        </button>
+        </Button>
       ))}
     </div>
   );
