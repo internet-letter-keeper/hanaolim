@@ -63,11 +63,7 @@ export default function FriendProfileCircle({
       </div>
 
       {/* 군인 이름 */}
-      <Txt
-        className="mt-[12px] text-gray-353"
-        weight="medium"
-        size={isRowLayout ? 12 : 14}
-      >
+      <Txt className="mt-[12px]" weight="medium" size={isRowLayout ? 12 : 14}>
         {userName}
       </Txt>
     </button>
