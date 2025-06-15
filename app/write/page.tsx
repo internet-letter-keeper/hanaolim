@@ -65,13 +65,13 @@ export default function WritePage() {
           <Txt size={20} weight="bold" className="text-green-49d">
             별돌이&nbsp;
           </Txt>
-          <Txt size={20} weight="bold" className="text-gray-939">
+          <Txt size={20} weight="bold">
             군인에게 편지를 작성해주세요!
           </Txt>
         </div>
 
         <div className="flex flex-col gap-[14px] mb-8">
-          <Txt size={16} className="text-gray-939" weight="cm" align="left">
+          <Txt size={16} weight="cm" align="left">
             관물대에 넣을 물건 선택해주세요.
           </Txt>
           <IconPicker value={selectedIcon} onChange={setSelectedIcon} />
