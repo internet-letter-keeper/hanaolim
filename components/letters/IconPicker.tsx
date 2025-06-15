@@ -1,7 +1,7 @@
 import { ICONS } from "@/constants/icons";
-import clsx from "clsx";
 import Image from "next/image";
 import { IconName } from "@/types/common/icons";
+import { cn } from "@/lib/utils";
 import { Button } from "../atoms";
 
 type Props = {
@@ -16,7 +16,7 @@ export default function IconPicker({ value, onChange }: Props) {
         <Button
           key={id}
           type="button"
-          className={clsx(
+          className={cn(
             "w-12 aspect-square flex items-center justify-center rounded-full cursor-pointer transition-all duration-200",
 
             {
