@@ -8,7 +8,7 @@ type Props = {
   onDelete: () => void;
 };
 
-export const FilePreview = ({ uploadedFile, onDelete }: Props) => {
+export default function FilePreview({ uploadedFile, onDelete }: Props) {
   return (
     <div className="w-full mt-4 p-4">
       <div className="flex items-start gap-3">
@@ -57,4 +57,4 @@ export const FilePreview = ({ uploadedFile, onDelete }: Props) => {
       </div>
     </div>
   );
-};
+}

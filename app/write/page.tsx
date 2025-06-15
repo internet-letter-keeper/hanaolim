@@ -2,13 +2,9 @@
 
 import Image from "next/image";
 import { useState, useRef } from "react";
-import Button from "@/components/atoms/Button";
-import Input from "@/components/atoms/Input";
-import PrimaryButton from "@/components/atoms/PrimaryButton";
-import Txt from "@/components/atoms/Text";
-import BasicHeader from "@/components/common/BasicHeader";
-import { FilePreview } from "@/components/letters/FilePreview";
-import IconPicker from "@/components/letters/IconPicker";
+import { Button, Input, PrimaryButton, Txt } from "@/components/atoms";
+import { BasicHeader } from "@/components/common";
+import { FilePreview, IconPicker } from "@/components/letters";
 
 export type uploadedFileType = {
   file: File;
