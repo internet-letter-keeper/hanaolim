@@ -31,7 +31,11 @@ export default function FriendsList() {
       </button>
 
       {dummyFriends.map((profile, idx) => (
-        <FriendProfileCircle profile={profile} key={`${idx}_${profile.code}`} />
+        <FriendProfileCircle
+          profile={profile}
+          mode="list"
+          key={`${idx}_${profile.code}`}
+        />
       ))}
     </div>
   );
