@@ -1,9 +1,9 @@
-import FriendManageItem from "@/components/FriendManageItem";
+import FriendManageList from "@/components/FriendManageList";
 
 export default function FriendsPage() {
   return (
     <>
-      <FriendManageItem />
+      <FriendManageList />
     </>
   );
 }
