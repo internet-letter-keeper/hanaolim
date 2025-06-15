@@ -1,8 +1,10 @@
 import { ICONS } from "@/constants/icons";
+import clsx from "clsx";
 import Image from "next/image";
 import { IconName } from "@/types/common/icons";
-import { cn } from "@/lib/utils";
 import { Button } from "../atoms";
+
+
 
 export default function IconPicker({
   value,
@@ -17,11 +19,13 @@ export default function IconPicker({
         <Button
           key={id}
           type="button"
-          className={cn(
+          className={clsx(
             "w-12 aspect-square flex items-center justify-center rounded-full cursor-pointer transition-all duration-200",
-            value === name
-              ? "bg-white-fff shadow-[0_0_10px_0_rgba(32,155,152,0.35)]"
-              : ""
+
+            {
+              "bg-white-fff shadow-[0_0_10px_0_rgba(32,155,152,0.35)]":
+                value === name,
+            }
           )}
           onClick={() => onChange(name)}
         >

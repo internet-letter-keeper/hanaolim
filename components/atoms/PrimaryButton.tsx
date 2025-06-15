@@ -1,6 +1,6 @@
 "use client";
 
-import { cn } from "@/lib/utils";
+import clsx from "clsx";
 import Txt, { alignMap, fontMap } from "./Text";
 
 type Props = {
@@ -53,11 +53,14 @@ export default function PrimaryButton({
 }: Props) {
   return (
     <button
-      className={cn(
+      className={clsx(
         "flex items-center justify-center w-full py-4",
         Color[color][0],
-        disabled ? "opacity-50" : "cursor-pointer",
         Round[rounded],
+        {
+          "opacity-50": disabled,
+          "cursor-pointer": !disabled,
+        },
         className
       )}
       onClick={onClick}
