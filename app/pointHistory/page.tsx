@@ -1,3 +1,15 @@
+import PointItem from "@/components/PointItem";
+import { createDummyData } from "@/public/dummy";
+
+// TODO: dummy data 추후 실제 데이터로 변경
+const dummyData = createDummyData();
+
 export default function PointHistoryPage() {
-  return <>포인트 내역 조회</>;
+  return (
+    <div>
+      {dummyData.map((item) => (
+        <PointItem key={`${item.date}_${item.amount}`} item={item} />
+      ))}
+    </div>
+  );
 }
