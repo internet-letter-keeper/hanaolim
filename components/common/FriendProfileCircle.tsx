@@ -15,12 +15,12 @@ const AltMap: Record<FriendProfile["level"], string> = {
 
 type Props = {
   profile: FriendProfile;
-  isHorizontal?: boolean;
+  isRowLayout?: boolean;
 };
 
 export default function FriendProfileCircle({
   profile,
-  isHorizontal = false,
+  isRowLayout = false,
 }: Props) {
   const navigation = useRouter();
 
@@ -39,8 +39,8 @@ export default function FriendProfileCircle({
       type="button"
       onClick={onClick}
       className={cn(
-        "cursor-pointer whitespace-nowrap flex items-center",
-        isHorizontal ? "flex-row gap-[10px]" : "flex-col"
+        "cursor-pointer whitespace-nowrap flex items-center flex-col",
+        { "flex-row gap-[10px]": isRowLayout }
       )}
     >
       <div className="bg-white relative">
@@ -66,7 +66,7 @@ export default function FriendProfileCircle({
       <Txt
         className="mt-[12px] text-gray-353"
         weight="medium"
-        size={isHorizontal ? 12 : 14}
+        size={isRowLayout ? 12 : 14}
       >
         {userName}
       </Txt>
