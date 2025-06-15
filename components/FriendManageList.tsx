@@ -6,14 +6,17 @@ export default function FriendManageList() {
   return (
     <div>
       {dummyFriends.map((profile) => (
-        <div
-          key={profile.code}
-          className="flex flex-row items-center justify-between pt-[12px] pb-[20px] px-7 border-b bg-white-fff border-gray-ada"
-        >
-          <FriendProfileCircle isRowLayout={true} profile={profile} />
-          <button className="cursor-pointer border-[1px] border-gray-353 px-[17px] rounded-[5px] mt-[8px]">
-            <Txt weight="medium">삭제</Txt>
-          </button>
+        <div className="-mx-4  bg-white-fff">
+          <div
+            key={profile.code}
+            className="flex flex-row items-center justify-between pt-[12px] pb-[20px] px-7 "
+          >
+            <FriendProfileCircle isRowLayout={true} profile={profile} />
+            <button className="cursor-pointer border-[1px] border-gray-353 px-[17px] rounded-[5px] mt-[8px]">
+              <Txt weight="medium">삭제</Txt>
+            </button>
+          </div>
+          <div className="h-[1px] bg-gray-ada mx-7" />
         </div>
       ))}
     </div>
