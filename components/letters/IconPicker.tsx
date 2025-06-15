@@ -1,5 +1,6 @@
+import { ICONS } from "@/constants/icons";
 import Image from "next/image";
-import { ICONS, IconName } from "@/types/common/icons";
+import { IconName } from "@/types/common/icons";
 import { cn } from "@/lib/utils";
 import { Button } from "../atoms";
 
