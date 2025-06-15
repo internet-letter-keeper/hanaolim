@@ -34,7 +34,7 @@ export default function Txt({
   return (
     <span
       className={cn(
-        "text-black-939",
+        "text-gray-939",
         fontMap[weight],
         alignMap[align],
         className
