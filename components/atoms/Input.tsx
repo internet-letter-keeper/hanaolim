@@ -1,3 +1,4 @@
+import { HTMLAttributes, InputHTMLAttributes } from "react";
 import { cn } from "@/lib/utils";
 
 type Props = {
@@ -18,12 +19,8 @@ type Props = {
   disabled?: boolean;
   // 자동 포커스 여부
   autoFocus?: boolean;
-
-};
-
 } & InputHTMLAttributes<HTMLInputElement> &
   HTMLAttributes<HTMLTextAreaElement>;
-
 
 // auth: 로그인, 회원가입용, 글쓰기 input
 // modal: 모달창용 input
@@ -36,7 +33,7 @@ const borderObject = {
 
 // input 컴포넌트의 기본 스타일
 const baseStyle = `
-  w-full max-w-sm h-[39px]
+  w-full h-[39px]
   bg-white
   px-3
   font-[Hana2-CM] text-[14px] leading-[18px] font-normal 
