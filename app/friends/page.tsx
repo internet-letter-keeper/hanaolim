@@ -1,3 +1,9 @@
+import FriendManageList from "@/components/FriendManageList";
+
 export default function FriendsPage() {
-  return <>친구목록</>;
+  return (
+    <>
+      <FriendManageList />
+    </>
+  );
 }

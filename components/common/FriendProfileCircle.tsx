@@ -3,6 +3,7 @@
 import Image from "next/image";
 import { useRouter } from "next/navigation";
 import { FriendProfile } from "@/types/common/profile";
+import { cn } from "@/lib/utils";
 import Txt from "@/components/atoms/Text";
 
 const AltMap: Record<FriendProfile["level"], string> = {
@@ -14,9 +15,13 @@ const AltMap: Record<FriendProfile["level"], string> = {
 
 type Props = {
   profile: FriendProfile;
+  isRowLayout?: boolean;
 };
 
-export default function FriendProfileCircle({ profile }: Props) {
+export default function FriendProfileCircle({
+  profile,
+  isRowLayout = false,
+}: Props) {
   const navigation = useRouter();
 
   const { userName, endDate, code, level } = profile;
@@ -33,7 +38,10 @@ export default function FriendProfileCircle({ profile }: Props) {
     <button
       type="button"
       onClick={onClick}
-      className="flex flex-col items-center cursor-pointer whitespace-nowrap"
+      className={cn(
+        "cursor-pointer whitespace-nowrap flex items-center flex-col",
+        { "flex-row gap-[10px]": isRowLayout }
+      )}
     >
       <div className="bg-white relative">
         {/* 계급 아이콘 */}
@@ -55,7 +63,7 @@ export default function FriendProfileCircle({ profile }: Props) {
       </div>
 
       {/* 군인 이름 */}
-      <Txt className="mt-[12px] text-gray-353" weight="medium" size={12}>
+      <Txt className="mt-[12px]" weight="medium" size={isRowLayout ? 12 : 14}>
         {userName}
       </Txt>
     </button>

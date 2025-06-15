@@ -53,7 +53,7 @@ export default function PrimaryButton({
 }: Props) {
   return (
     <button
-      className={clsx(
+      className={cn(
         "flex items-center justify-center w-full py-4",
         Color[color][0],
         Round[rounded],
