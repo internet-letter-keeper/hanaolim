@@ -82,6 +82,7 @@ export default function WritePage() {
             placeholder="닉네임"
             inputType="auth"
             className="w-1/3 text-gray-939 placeholder:text-blue-9a0 text-[15px] pl-[18px]"
+            maxLength={7} // 7글자 제한
           />
           <Input
             placeholder="내용을 입력하세요."
