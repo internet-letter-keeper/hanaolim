@@ -15,10 +15,13 @@ const AltMap: Record<FriendProfile["level"], string> = {
 
 type Props = {
   profile: FriendProfile;
-  mode: "list" | "manage";
+  isHorizontal?: boolean;
 };
 
-export default function FriendProfileCircle({ profile, mode }: Props) {
+export default function FriendProfileCircle({
+  profile,
+  isHorizontal = false,
+}: Props) {
   const navigation = useRouter();
 
   const { userName, endDate, code, level } = profile;
@@ -37,7 +40,7 @@ export default function FriendProfileCircle({ profile, mode }: Props) {
       onClick={onClick}
       className={cn(
         "cursor-pointer whitespace-nowrap flex items-center",
-        mode === "list" ? "flex-col " : "flex-row gap-[10px]"
+        isHorizontal ? "flex-row gap-[10px]" : "flex-col"
       )}
     >
       <div className="bg-white relative">
@@ -63,7 +66,7 @@ export default function FriendProfileCircle({ profile, mode }: Props) {
       <Txt
         className="mt-[12px] text-gray-353"
         weight="medium"
-        size={mode === "list" ? 12 : 14}
+        size={isHorizontal ? 12 : 14}
       >
         {userName}
       </Txt>
