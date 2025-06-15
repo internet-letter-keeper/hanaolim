@@ -2,13 +2,14 @@
 
 import Image from "next/image";
 import { useState, useRef } from "react";
+import { IconName } from "@/types/common/icons";
 import { uploadedFileType } from "@/types/letters/letter";
 import { Button, Input, PrimaryButton, Txt } from "@/components/atoms";
 import { BasicHeader } from "@/components/common";
 import { FilePreview, IconPicker } from "@/components/letters";
 
 export default function WritePage() {
-  const [selectedIcon, setSelectedIcon] = useState("face");
+  const [selectedIcon, setSelectedIcon] = useState<IconName>("face");
   const [uploadedFile, setUploadedFile] = useState<uploadedFileType | null>(
     null
   );
