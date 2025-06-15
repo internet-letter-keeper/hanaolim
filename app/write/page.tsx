@@ -2,6 +2,7 @@
 
 import Image from "next/image";
 import { useState, useRef } from "react";
+import { ChangeEvent } from "react";
 import { IconName } from "@/types/common/icons";
 import { uploadedFileType } from "@/types/letters/letter";
 import { Button, Input, PrimaryButton, Txt } from "@/components/atoms";
@@ -19,7 +20,7 @@ export default function WritePage() {
     fileInputRef.current?.click();
   };
 
-  const handleFileChange = (e: React.ChangeEvent<HTMLInputElement>) => {
+  const handleFileChange = (e: ChangeEvent<HTMLInputElement>) => {
     const file = e.target.files?.[0];
     if (file) {
       const url = URL.createObjectURL(file);
