@@ -72,7 +72,7 @@ export default function WritePage() {
 
         <div className="flex flex-col gap-[14px] mb-8">
           <Txt size={16} weight="cm" align="left">
-            관물대에 넣을 물건 선택해주세요.
+            관물대에 넣을 물건을 선택해주세요.
           </Txt>
           <IconPicker value={selectedIcon} onChange={setSelectedIcon} />
         </div>
