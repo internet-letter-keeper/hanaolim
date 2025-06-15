@@ -7,6 +7,11 @@ export type IconName =
   | "helmet"
   | "gun";
 
+/**
+ * id: icon 의 아이디
+ * name: icon 의 이름
+ * src: icon의 경로
+ */
 export type CabinetIcon = {
   id: number;
   name: IconName;
