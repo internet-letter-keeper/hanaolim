@@ -4,7 +4,7 @@ import Image from "next/image";
 import { useState, useRef } from "react";
 import { ChangeEvent } from "react";
 import { IconName } from "@/types/common/icons";
-import { uploadedFileType } from "@/types/letters/letter";
+import { uploadedFileType } from "@/types/letters";
 import { Button, Input, PrimaryButton, Txt } from "@/components/atoms";
 import { BasicHeader } from "@/components/common";
 import { FilePreview, IconPicker } from "@/components/letters";
@@ -105,13 +105,13 @@ export default function WritePage() {
                 alt="사진"
                 width={20}
                 height={20}
-                style={{ width: 20, height: 20 }}
+                className="w-auto h-auto"
               />
             </Button>
           )}
 
           {/* 파일이 있을 때는 빈 div로 공간 */}
-          {uploadedFile && <div></div>}
+          {uploadedFile && <div />}
 
           <input
             type="file"
@@ -125,10 +125,7 @@ export default function WritePage() {
             title="전송"
             type="submit"
             rounded="sm"
-            textSize={14}
-            weight="bold"
-            className="w-20"
-            padding="py-1"
+            className="w-20 py-1 font-bold"
           />
         </div>
 
