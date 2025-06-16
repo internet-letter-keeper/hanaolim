@@ -1,4 +1,5 @@
 import { notFound } from "next/navigation";
+import { use } from "react";
 import { cn } from "@/lib/utils";
 import { PrimaryButton } from "@/components/atoms";
 import { fontMap } from "@/components/atoms/Text";
@@ -7,14 +8,13 @@ import LettersDetail from "@/components/letters/LettersDetail";
 import { dummyLetters } from "@/public/dummyLetters";
 
 type Props = {
-  params: {
-    letterId: string;
-  };
+  params: Promise<{ letterId: string }>;
+  isSoldier: boolean;
 };
 
-export default function LetterDetailPage({ params }: Props) {
-  const letterId = parseInt(params.letterId);
-  const letter = dummyLetters.find((l) => l.id === letterId);
+export default function LetterDetailPage({ params, isSoldier }: Props) {
+  const letterId = use(params);
+  const letter = dummyLetters.find((l) => l.id === +letterId);
 
   if (!letter) return notFound();
 
@@ -30,7 +30,9 @@ export default function LetterDetailPage({ params }: Props) {
 
       {/* 답장 버튼 */}
       <div className="flex justify-end text-center w-full">
-        <PrimaryButton title="답장하기" className="px-3 w-1/4 py-[5px]" />
+        {isSoldier && (
+          <PrimaryButton title="답장하기" className="px-3 w-1/4 py-[5px]" />
+        )}
       </div>
     </>
   );
