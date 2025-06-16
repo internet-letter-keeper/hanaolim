@@ -1,6 +1,7 @@
 "use client";
 
 import Image from "next/image";
+import { useRouter } from "next/navigation";
 import Txt, { fontMap } from "../atoms/Text";
 
 type LetterItem = {
@@ -17,9 +18,20 @@ type Props = {
 
 export default function LettersItem({ letters }: Props) {
   const { id, writer, content, createDt, isFavorite } = letters;
+
+  const router = useRouter();
+
+  const handleClick = () => {
+    router.push(`/letters/${id}`);
+  };
+
   return (
     <div className={`mt-4 ${fontMap.cm}`}>
-      <div key={id} className="border-b border-gray-ada pb-3">
+      <div
+        key={id}
+        className="border-b border-gray-ada pb-3"
+        onClick={handleClick}
+      >
         <div className="flex justify-between items-start ">
           <div className="flex items-center gap-1">
             <Image
