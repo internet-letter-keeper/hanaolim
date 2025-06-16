@@ -9,17 +9,14 @@ type Props = {
 
 export default function Savings({ savingBalance }: Props) {
   return (
-    <div
-      className="flex flex-col justify-between px-6 py-4 bg-white-fff rounded-[20px] w-max h-[153px]"
-      style={{ boxShadow: "0px 0px 5px 0px rgba(0, 0, 0, 0.15)" }}
-    >
+    <div className="flex flex-col justify-between px-6 py-4 bg-white-fff rounded-[20px] w-max h-[153px] shadow-[0_0_5px_rgba(0,0,0,0.15)]">
       {/* 적금 제목, 금액, 이미지 */}
       <div className="flex justify-between w-full">
         <div className="flex flex-col items-start gap-1">
-          <Txt size={16} weight="bold" className="text-gray-939">
+          <Txt size={16} weight="bold">
             하나 장병내일준비 적금
           </Txt>
-          <Txt size={16} weight="bold" className="text-gray-939">
+          <Txt size={16} weight="bold">
             {savingBalance.toLocaleString()}원
           </Txt>
         </div>
@@ -42,11 +39,11 @@ export default function Savings({ savingBalance }: Props) {
               달성
             </Txt>
           </div>
-          <Txt size={12} weight="medium" className="text-gray-939">
+          <Txt size={12} weight="medium">
             주택청약종합저축
           </Txt>
           <div className="ml-auto">
-            <Txt size={10} weight="medium" className="text-gray-939">
+            <Txt size={10} weight="medium">
               연 0.50%
             </Txt>
           </div>
@@ -58,11 +55,11 @@ export default function Savings({ savingBalance }: Props) {
               미달성
             </Txt>
           </div>
-          <Txt size={12} weight="medium" className="text-gray-939">
+          <Txt size={12} weight="medium">
             하나카드결제
           </Txt>
           <div className="ml-auto">
-            <Txt size={10} weight="medium" className="text-gray-939">
+            <Txt size={10} weight="medium">
               연 0.70%
             </Txt>
           </div>
