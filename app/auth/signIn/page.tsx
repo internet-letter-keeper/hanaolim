@@ -1,4 +1,7 @@
+"use client";
+
 import Image from "next/image";
+import { useRouter } from "next/navigation";
 import { PrimaryButton, Input, Txt } from "@/components/atoms";
 import icGoogle from "@/public/icons/ic-google.svg";
 import icKakao from "@/public/icons/ic-kakao.svg";
@@ -6,6 +9,12 @@ import icNaver from "@/public/icons/ic-naver.svg";
 import hanaOlim from "@/public/images/ic-hanaolim-logo.svg";
 
 export default function SignInPage() {
+  const isLoginError = false; // 로그인 에러 여부
+
+  const router = useRouter();
+
+  const goToSignUp = () => router.push("/auth/signUp");
+
   return (
     <div className="flex flex-col items-center justify-center gap-1 h-full px-[20px]">
       {/* 하나 올림 로고 */}
@@ -117,7 +126,7 @@ export default function SignInPage() {
         <Txt size={12} className="not-italic  text-gray-353">
           가입한 계정이 없으신가요?
         </Txt>
-        <button className="ml-[14px] mb-1">
+        <button onClick={goToSignUp} className="ml-[14px] mb-1">
           <Txt
             size={12}
             className="not-italic  text-gray-353 underline underline-offset-auto"
