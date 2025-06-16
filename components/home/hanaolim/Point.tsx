@@ -2,9 +2,11 @@
 
 import Image from "next/image";
 import { useRouter } from "next/navigation";
+import { useState } from "react";
 import { PointAccrue } from "@/types/points";
 import Txt from "@/components/atoms/Text";
 import { Progress } from "@/components/ui/progress";
+import PointRuleTooltip from "./PointRuleTooltip";
 
 type Props = {
   pointAccrue: PointAccrue;
@@ -12,19 +14,22 @@ type Props = {
 
 export default function Point({ pointAccrue }: Props) {
   const router = useRouter();
+  const [showTooltip, setShowTooltip] = useState(false);
 
   const handleClick = () => {
     router.push("/pointHistory");
   };
 
+  const toggleTooltip = () => setShowTooltip((prev) => !prev);
+
   return (
-    <div className="w-fit px-4 py-3 rounded-[15px] bg-yellow-4d8 border border-yellow-9af flex flex-col gap-[6px]">
+    <div className="relative w-fit px-4 py-3 rounded-[15px] bg-yellow-4d8 border border-yellow-9af flex flex-col gap-[6px]">
       <div className="flex items-center w-full">
         <Txt size={14} weight="medium" className="text-gray-939">
           포인트 적립까지
         </Txt>
 
-        <div className="flex items-center">
+        <div className="flex items-center relative">
           <Txt size={14} weight="heavy" className="text-yellow-32b ml-[17px]">
             {pointAccrue.myStamp}/{pointAccrue.totalStamp}
           </Txt>
@@ -40,17 +45,19 @@ export default function Point({ pointAccrue }: Props) {
             alt="도움말 아이콘"
             width={15}
             height={15}
-            className="ml-[60px]"
+            className="ml-[60px] cursor-pointer"
+            onClick={toggleTooltip}
           />
+          {showTooltip && (
+            <div className="absolute top-full left-1/2 transform -translate-x-1/2 mt-3 z-10">
+              <PointRuleTooltip />
+            </div>
+          )}
         </div>
       </div>
 
-      {/* 포인트 적립 진행률 바 */}
-      <div>
-        <Progress variant="yellow" />
-      </div>
+      <Progress variant="yellow" />
 
-      {/* 포인트 내역 조회로 이동 */}
       <Txt
         size={12}
         weight="medium"
