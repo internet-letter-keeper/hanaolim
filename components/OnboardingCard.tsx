@@ -1,5 +1,5 @@
 import Image from "next/image";
-import { ModeMap } from "@/constants/onboardingMode";
+import { ONBOARDING_MODE } from "@/constants/onboardingMode";
 import { cn } from "@/lib/utils";
 import Button from "./atoms/Button";
 import Txt from "./atoms/Text";
@@ -11,7 +11,8 @@ type Props = {
 };
 
 export default function OnboardingOption({ mode }: Props) {
-  const selectedMode = ModeMap[mode === "soldier" ? "soldier" : "viewer"];
+  const selectedMode =
+    ONBOARDING_MODE[mode === "soldier" ? "soldier" : "viewer"];
 
   const { title, label, imgSrc, iconAlt, imgAlt } = selectedMode;
 
