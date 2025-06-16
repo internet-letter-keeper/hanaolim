@@ -19,7 +19,7 @@ function formatDate(date: Date): string {
 export default function PointItem({ item }: Props) {
   const { date, amount, balance } = item;
   return (
-    <div className="py-[14px] px-11">
+    <div className="py-[14px] px-7">
       <div>
         <div className="flex flex-row justify-between">
           <Txt size={18} weight="cm">
