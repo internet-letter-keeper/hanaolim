@@ -70,10 +70,8 @@ export default function LetterWritePage() {
         <form className="flex flex-col gap-3 w-full">
           <Input
             placeholder="내용을 입력하세요."
-            inputType="auth"
             tag="textarea"
             maxLength={500} // 500자 제햔
-            className="flex w-full h-[230px] text-[15px] rounded-[10px] py-[10px] px-[18px] bg-white-fff text-gray-939 placeholder:text-blue-9a0 focus:outline-none"
           />
         </form>
 

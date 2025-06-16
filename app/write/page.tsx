@@ -70,7 +70,7 @@ export default function WritePage() {
           </Txt>
         </div>
 
-        <div className="flex flex-col gap-[14px] mb-8">
+        <div className="flex flex-col gap-[14px] mb-6">
           <Txt size={16} weight="cm" align="left">
             관물대에 넣을 물건을 선택해주세요.
           </Txt>
