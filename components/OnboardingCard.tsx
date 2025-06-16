@@ -7,8 +7,8 @@ import Txt from "./atoms/Text";
 //onBording 컴포넌트에 들어갈 option 컴포넌트
 
 type Props = {
-  className?: string;
   mode: "soldier" | "viewer";
+  className?: string;
 };
 
 export default function OnboardingOption({ className, mode }: Props) {
