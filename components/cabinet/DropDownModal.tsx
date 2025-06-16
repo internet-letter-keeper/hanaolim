@@ -1,5 +1,6 @@
 "use client";
 
+import { useRouter } from "next/navigation";
 import {
   Sidebar,
   SidebarContent,
@@ -13,7 +14,13 @@ import Profile from "../common/Profile";
 const ButtonStyle = "border border-gray-353/25 py-3";
 
 export default function DropDownModal() {
-  // 세션 프로바이더로 나중에 받아와서 구분하기
+  // TODO: 세션 프로바이더로 나중에 받아와서 구분하기
+
+  const router = useRouter();
+  const goToLetters = () => router.push("/letters");
+  const goToRegisterSoldier = () => router.push("/registerSoldier");
+  const goToFriends = () => router.push("/friends");
+
   const { toggleSidebar } = useSidebar();
   return (
     <div className="flex justify-center items-center">
@@ -29,6 +36,7 @@ export default function DropDownModal() {
                     className={ButtonStyle}
                     textSize={16}
                     color="gray"
+                    onClick={goToLetters}
                   />
                   <div className="flex gap-2">
                     <PrimaryButton
@@ -36,12 +44,14 @@ export default function DropDownModal() {
                       className={ButtonStyle}
                       color="gray"
                       textSize={16}
+                      onClick={goToRegisterSoldier}
                     />
                     <PrimaryButton
                       title="친구 관리"
                       className={ButtonStyle}
                       color="gray"
                       textSize={16}
+                      onClick={goToFriends}
                     />
                   </div>
                 </div>
