@@ -24,7 +24,7 @@ export default function OnboardingOption({ className, mode }: Props) {
         className
       )}
     >
-      <div className="flex flex-row gap-[10px]">
+      <div className="flex flex-row gap-[9px]">
         <div className="flex flex-col gap-y-[11px] pl-1">
           <Txt size={18} align="left" weight="bold" className="text-gray-939">
             {title}
