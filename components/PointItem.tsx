@@ -1,13 +1,5 @@
 import Txt from "./atoms/Text";
 
-//TODO: description 통일할지 논의 후 변경
-type PointItem = {
-  description: string;
-  date: Date;
-  amount: number;
-  balance: number;
-};
-
 type Props = {
   item: PointItem;
 };
@@ -24,11 +16,11 @@ function formatDate(date: Date): string {
 }
 
 export default function PointItem({ item }: Props) {
-  const { description, date, amount, balance } = item;
+  const { date, amount, balance } = item;
   return (
     <div className="flex flex-row justify-between py-[14px] px-7 border-b border-gray-ada ">
       <Txt size={18} weight="cm">
-        {description}
+            하나은행 편지 이벤트
       </Txt>
       <div className="flex flex-col items-end">
         <Txt size={12} weight="light" className=" text-blue-9a0">
