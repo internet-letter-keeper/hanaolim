@@ -1,8 +1,10 @@
+"use client";
 import {
   Sidebar,
   SidebarContent,
   SidebarMenu,
   SidebarMenuItem,
+  useSidebar,
 } from "@/components/ui/sidebar";
 import PrimaryButton from "../atoms/PrimaryButton";
 import Profile from "../common/Profile";
@@ -11,6 +13,7 @@ const ButtonStyle = "border border-gray-353/25 py-2";
 
 export default function DropDownModal() {
   // 세션 프로바이더로 나중에 받아와서 구분하기
+  const { toggleSidebar } = useSidebar();
   return (
     <div className="flex justify-center items-center">
       <Sidebar>
@@ -42,7 +45,10 @@ export default function DropDownModal() {
                 </div>
               </div>
               <div className="flex justify-center">
-                <div className="bg-gray-353/25 h-1 rounded-[2px] mb-[6px] w-1/5 " />
+                <div
+                  className="bg-gray-353/25 h-1 rounded-[2px] mb-[6px] w-1/5 cursor-pointer"
+                  onClick={toggleSidebar}
+                />
               </div>
             </SidebarMenuItem>
           </SidebarMenu>
