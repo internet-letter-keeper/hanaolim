@@ -1,3 +1,4 @@
+import type { PointItem } from "@/types/point";
 import Txt from "./atoms/Text";
 
 type Props = {
@@ -18,20 +19,25 @@ function formatDate(date: Date): string {
 export default function PointItem({ item }: Props) {
   const { date, amount, balance } = item;
   return (
-    <div className="flex flex-row justify-between py-[14px] px-7 border-b border-gray-ada ">
-      <Txt size={18} weight="cm">
+    <div className="py-[14px] px-11">
+      <div>
+        <div className="flex flex-row justify-between">
+          <Txt size={18} weight="cm">
             하나은행 편지 이벤트
-      </Txt>
-      <div className="flex flex-col items-end">
-        <Txt size={12} weight="light" className=" text-blue-9a0">
-          {formatDate(date)}
-        </Txt>
-        <Txt size={16} weight="bold" className=" mt-[21px] text-green-49d">
-          +{amount.toLocaleString()} 원
-        </Txt>
-        <Txt size={13} weight="cm" className="text-blue-9a0">
-          {balance.toLocaleString()} 원
-        </Txt>
+          </Txt>
+          <div className="flex flex-col items-end">
+            <Txt size={12} weight="light" className=" text-blue-9a0">
+              {formatDate(date)}
+            </Txt>
+            <Txt size={16} weight="bold" className=" mt-[21px] text-green-49d">
+              +{amount.toLocaleString()} 원
+            </Txt>
+            <Txt size={13} weight="cm" className="mb-3.5 text-blue-9a0">
+              {balance.toLocaleString()} 원
+            </Txt>
+          </div>
+        </div>
+        <div className="h-[1px] bg-gray-ada" />
       </div>
     </div>
   );
