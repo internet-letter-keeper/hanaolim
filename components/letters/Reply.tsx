@@ -1,0 +1,44 @@
+import { Letter } from "@/types/letters";
+import { Txt } from "../atoms";
+
+type Props = {
+  reply: Letter;
+};
+
+export default function LettersItem({ reply }: Props) {
+  const { id, writer, content, createDt } = reply;
+
+  return (
+    <div className={`mt-4`}>
+      <div key={id} className="bg-white p-4">
+        <div className="flex justify-between items-start ">
+          <div className="flex items-center gap-1">
+            <Txt size={18} weight="cm" className="text-green-49d">
+              To. {writer}
+            </Txt>
+          </div>
+          <div className="flex">
+            <Txt
+              size={12}
+              weight="cm"
+              className=" text-blue-9a0 whitespace-nowrap"
+            >
+              {createDt}
+            </Txt>
+          </div>
+        </div>
+
+        <div className="flex">
+          <Txt
+            size={15}
+            weight="cm"
+            align="left"
+            className=" text-blue-9a0 mt-1 line-clamp-2 break-words"
+          >
+            {content}
+          </Txt>
+        </div>
+      </div>
+    </div>
+  );
+}
