@@ -10,7 +10,8 @@ export default function OnboardingPage() {
         width={122}
         height={40}
       />
-      <OnboardingCard mode={"soldier"} className="mt-16" />
+      <div className="h-14" />
+      <OnboardingCard mode={"soldier"} />
       <OnboardingCard mode={"viewer"} />
     </div>
   );

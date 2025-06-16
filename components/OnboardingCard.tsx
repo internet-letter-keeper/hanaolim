@@ -8,10 +8,9 @@ import Txt from "./atoms/Text";
 
 type Props = {
   mode: "soldier" | "viewer";
-  className?: string;
 };
 
-export default function OnboardingOption({ className, mode }: Props) {
+export default function OnboardingOption({ mode }: Props) {
   const selectedMode = modeMap[mode === "soldier" ? "soldier" : "viewer"];
 
   const { title, label, imgSrc, iconAlt, imgAlt } = selectedMode;
@@ -19,9 +18,8 @@ export default function OnboardingOption({ className, mode }: Props) {
   return (
     <Button
       className={cn(
-        "w-[300px] h-[130px] rounded-[20px] p-[18px] border bg-green-5f2 border-green-9e7 text-gray- ",
-        { "bg-blue-0f5 border-blue-af0": mode === "viewer" },
-        className
+        "px-[300px] h-[130px] rounded-[20px] p-[18px] border bg-green-5f2 border-green-9e7",
+        { "bg-blue-0f5 border-blue-af0": mode === "viewer" }
       )}
     >
       <div className="flex flex-row gap-[9px]">
