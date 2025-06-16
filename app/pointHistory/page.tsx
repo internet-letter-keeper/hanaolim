@@ -14,7 +14,7 @@ export default function PointHistoryPage() {
         {/* 포인트 잔액 */}
         {dummyData[0].balance.toLocaleString()} 원
       </Txt>
-      <div className="flex-1 flex flex-col bg-white-fff -m-4">
+      <div className="flex-1 flex flex-col bg-white-fff -m-4 pb-8">
         <div>
           {/* 잔액/내역 구분선 */}
           <div className="h-[1px] bg-gray-530 mb-4 mt-7 mx-7" />
