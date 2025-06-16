@@ -45,7 +45,7 @@ export default function Modal({
   return (
     <div
       ref={overlay}
-      className="fixed inset-0 z-10 bg-modal-overlay"
+      className="fixed inset-0 z-10 sm:w-sm w-full -translate-x-1/2 left-1/2 bg-modal-overlay"
       onClick={onClickOverlay}
     >
       <div className="absolute w-11/12 sm:w-[22rem] p-[24px] bg-white rounded-[10px] text-center -translate-x-1/2 -translate-y-1/2 top-1/2 left-1/2">
@@ -62,7 +62,7 @@ export default function Modal({
             textSize={16}
             weight="medium"
             onClick={onClickWhiteBtn}
-            className="h-[40px]"
+            className="h-[50px]"
           />
           <PrimaryButton
             title={greenBtnText}
@@ -70,7 +70,7 @@ export default function Modal({
             textSize={16}
             weight="medium"
             onClick={onClickGreenBtn}
-            className="h-[40px]"
+            className="h-[50px]"
           />
         </div>
       </div>
