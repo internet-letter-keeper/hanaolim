@@ -2,7 +2,7 @@
 
 import Image from "next/image";
 import { useState } from "react";
-import OnboardingCard from "@/components/OnboardingCard";
+import OnboardingCard from "@/components/OnboardngCard";
 import Input from "@/components/atoms/Input";
 import { Modal } from "@/components/common";
 
