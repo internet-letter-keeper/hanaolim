@@ -1,4 +1,6 @@
-export const modeMap = {
+import { OnboardingModeMap } from "@/types/mode";
+
+export const ModeMap: OnboardingModeMap = {
   soldier: {
     title: "나를 군인으로 등록하기",
     label: "등록하기",
