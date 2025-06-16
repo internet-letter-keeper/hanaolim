@@ -24,7 +24,7 @@ export default function BasicHeader({
 
   return (
     <header
-      className={cn("flex items-center px-4 py-3 bg-white-7f9", className)}
+      className={cn("flex items-center px-2 py-1 mt-2 bg-white-7f9", className)}
     >
       {showBackButton && (
         <button onClick={handleBack} className="mr-2">
