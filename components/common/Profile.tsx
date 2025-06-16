@@ -1,11 +1,20 @@
+import { dDayConCatString } from "@/utils/date";
 import Image from "next/image";
-import { Txt } from "../atoms";
+import { Button, Txt } from "../atoms";
 
 type Props = {
-  name?: string;
+  userName: string;
+  endDate?: Date;
+  code?: string;
+  level?: 1 | 2 | 3 | 4;
 };
 
-export default function Profile({ name = "별돌이" }: Props) {
+export default function Profile({
+  userName = "별돌이",
+  endDate,
+  code,
+  level,
+}: Props) {
   if (!endDate) return;
   const dDay = dDayConCatString(endDate);
 
@@ -13,22 +22,53 @@ export default function Profile({ name = "별돌이" }: Props) {
     <div className="flex items-center justify-center gap-4">
       <div className="flex border border-green-49d rounded-full p-[6px] items-center justify-center">
         <Image
-          src="/icons/ic-white-byeoldol.svg"
-          alt="byeoldol-icon"
+          src={`${code ? `/icons/ic-profilepic-${level}.svg` : "/icons/ic-white-byeoldol.svg"}`}
+          alt="profile-icon"
           width={55}
           height={55}
         />
       </div>
       <div>
-        <Txt size={20} className="text-gray-353" weight="medium">
-          안녕하세요&nbsp;
-        </Txt>
-        <Txt size={20} className="text-green-49d" weight="medium">
-          {name}
-        </Txt>
-        <Txt size={20} className="text-gray-353" weight="medium">
-          님
-        </Txt>
+        {code ? (
+          <div className="flex flex-col">
+            <div className="flex w-fit items-center justify-center bg-green-49d rounded-[4px] px-2 py-[1px]">
+              <Txt size={13} className="text-white-fff" weight="medium">
+                {dDay}
+              </Txt>
+            </div>
+            <div className="flex flex-row">
+              <Txt size={20} className="text-green-49d" weight="medium">
+                {userName}
+              </Txt>
+              <Txt size={20} weight="medium">
+                님의 관물대
+              </Txt>
+            </div>
+            <Button className="flex flex-row gap-2 items-end">
+              <Txt size={13} weight="medium" className="underline">
+                {code}
+              </Txt>
+              <Image
+                src="/icons/ic-copy.svg"
+                alt="copy-icon"
+                width={12}
+                height={12}
+              />
+            </Button>
+          </div>
+        ) : (
+          <>
+            <Txt size={20} className="text-gray-353" weight="medium">
+              안녕하세요&nbsp;
+            </Txt>
+            <Txt size={20} className="text-green-49d" weight="medium">
+              {userName}
+            </Txt>
+            <Txt size={20} className="text-gray-353" weight="medium">
+              님
+            </Txt>
+          </>
+        )}
       </div>
     </div>
   );
