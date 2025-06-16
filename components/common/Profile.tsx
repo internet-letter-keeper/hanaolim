@@ -6,6 +6,9 @@ type Props = {
 };
 
 export default function Profile({ name = "별돌이" }: Props) {
+  if (!endDate) return;
+  const dDay = dDayConCatString(endDate);
+
   return (
     <div className="flex items-center justify-center gap-4">
       <div className="flex border border-green-49d rounded-full p-[6px] items-center justify-center">
