@@ -6,7 +6,7 @@ import { ComponentPropsWithoutRef, forwardRef, ElementRef } from "react";
 import { cn } from "@/lib/utils";
 
 type ProgressProps = ComponentPropsWithoutRef<typeof ProgressPrimitive.Root> & {
-  value?: number;
+  value: number;
   variant?: "green" | "yellow";
 };
 
