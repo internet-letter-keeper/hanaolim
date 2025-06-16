@@ -53,7 +53,7 @@ export default function LettersPage() {
           <div className="relative mt-4">
             <Input
               placeholder="작성자, 내용 ..."
-              inputType="search"
+              usage="search"
               className="pr-10"
             />
             <Image

@@ -1,27 +1,18 @@
 "use client";
 
 import Image from "next/image";
+import { Letter } from "@/types/letters";
 import { cn } from "@/lib/utils";
-import { PrimaryButton, Txt } from "@/components/atoms";
-import { fontMap } from "@/components/atoms/Text";
-
-type LetterDetail = {
-  id: number;
-  writer: string;
-  content: string;
-  createDt: string;
-  fileUrl?: string;
-  parentId?: number;
-};
+import { Txt } from "@/components/atoms";
 
 type Props = {
-  lettersDetail: LetterDetail;
+  lettersDetail: Letter;
 };
 
 export default function LettersDetail({ lettersDetail }: Props) {
   const { id, fileUrl, parentId, writer, content, createDt } = lettersDetail;
   return (
-    <div className={cn("bg-white rounded-lg shadow-sm p-4", fontMap.cm)}>
+    <div className={cn("bg-white rounded-lg shadow-sm p-4")}>
       <div className="flex justify-center items-center">
         <div className="flex items-center gap-1 mt-2 mb-4">
           <Image

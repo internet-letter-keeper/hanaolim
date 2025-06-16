@@ -2,7 +2,6 @@ import { notFound } from "next/navigation";
 import { use } from "react";
 import { cn } from "@/lib/utils";
 import { PrimaryButton } from "@/components/atoms";
-import { fontMap } from "@/components/atoms/Text";
 import BasicHeader from "@/components/common/BasicHeader";
 import LettersDetail from "@/components/letters/LettersDetail";
 import { dummyLetters } from "@/public/dummyLetters";
@@ -24,7 +23,7 @@ export default function LetterDetailPage({ params, isSoldier }: Props) {
       <BasicHeader />
       {/* 여기서부터 편지 상세 페이지 */}
 
-      <div className={cn("py-4", fontMap.cm)}>
+      <div className={cn("py-4")}>
         <LettersDetail lettersDetail={letter} />
       </div>
 

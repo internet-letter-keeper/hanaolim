@@ -2,18 +2,11 @@
 
 import Image from "next/image";
 import { useRouter } from "next/navigation";
-import Txt, { fontMap } from "../atoms/Text";
-
-type LetterItem = {
-  id: number;
-  writer: string;
-  content: string;
-  createDt: string;
-  isFavorite?: boolean;
-};
+import { Letter } from "@/types/letters";
+import Txt from "../atoms/Text";
 
 type Props = {
-  letters: LetterItem;
+  letters: Letter;
 };
 
 export default function LettersItem({ letters }: Props) {
@@ -26,7 +19,7 @@ export default function LettersItem({ letters }: Props) {
   };
 
   return (
-    <div className={`mt-4 ${fontMap.cm}`}>
+    <div className={`mt-4`}>
       <div
         key={id}
         className="border-b border-gray-ada pb-3"
