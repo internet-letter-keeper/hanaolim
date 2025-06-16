@@ -5,9 +5,9 @@ import Txt from "@/components/atoms/Text";
 import { Progress } from "@/components/ui/progress";
 
 type Props = {
-  endDate: string;
+  endDate: Date;
   userName?: string;
-  startDate?: string;
+  startDate?: Date;
 };
 
 export default function ProfileBanner({ userName, startDate, endDate }: Props) {
@@ -61,7 +61,7 @@ export default function ProfileBanner({ userName, startDate, endDate }: Props) {
 
         {/* 진행 바 + 전역일 디데이 */}
         <div className="mt-[4px]">
-          <Progress value={progressPercent} />
+          <Progress variant="green" />
           <div className="flex items-baseline gap-[2px] mt-[4px]">
             <Txt size={12} weight="cm" className="text-white">
               전역까지
