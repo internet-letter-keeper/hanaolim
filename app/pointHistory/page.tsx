@@ -10,7 +10,6 @@ export default function PointHistoryPage() {
   return (
     <div className="flex flex-col min-h-screen">
       <BasicHeader title="포인트 내역 조회" />
-      <div className="h-[20px]" />
       <Txt size={25} weight="bold" align="center" className="py-14">
         {/* 포인트 잔액 */}
         {dummyData[0].balance.toLocaleString()} 원
