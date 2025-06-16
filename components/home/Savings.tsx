@@ -3,10 +3,14 @@
 import Image from "next/image";
 import Txt from "@/components/atoms/Text";
 
-export default function Savings() {
+type Props = {
+  savingBalance: number;
+};
+
+export default function Savings({ savingBalance }: Props) {
   return (
     <div
-      className="flex flex-col justify-between px-6 py-4 bg-white-fff rounded-[20px] w-max h-[153px] shadow-sm"
+      className="flex flex-col justify-between px-6 py-4 bg-white-fff rounded-[20px] w-max h-[153px]"
       style={{ boxShadow: "0px 0px 5px 0px rgba(0, 0, 0, 0.15)" }}
     >
       {/* 적금 제목, 금액, 이미지 */}
@@ -16,10 +20,10 @@ export default function Savings() {
             하나 장병내일준비 적금
           </Txt>
           <Txt size={16} weight="bold" className="text-gray-939">
-            2,109,762원
+            {savingBalance.toLocaleString()}원
           </Txt>
         </div>
-        <div className="flex-shrink-0 relative w-[80px] h-[60px] ml-15">
+        <div className="flex-shrink-0 relative w-[80px] h-[60px] ml-[57px]">
           <Image
             src="/images/ic-bankbook.svg"
             alt="적금 통장"
