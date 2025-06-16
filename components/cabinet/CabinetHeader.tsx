@@ -2,8 +2,8 @@
 
 import Image from "next/image";
 import { useRouter } from "next/navigation";
-import { useState } from "react";
 import { Txt } from "../atoms";
+import { SidebarHeader, SidebarTrigger } from "../ui/sidebar";
 
 type Props = {
   isMyCabinet: boolean;
@@ -15,12 +15,6 @@ export default function CabinetHeader({ isMyCabinet }: Props) {
 
   const router = useRouter();
 
-  const [isHambergerOpened, setHambergerOpened] = useState<boolean>(false);
-
-  const openModal = () => setHambergerOpened(true);
-
-  const closeModal = () => setHambergerOpened(false);
-
   const handleBack = () => router.push("/");
 
   const shareCabinetUrl = () => alert("캐비넷 링크 복사 완료");
@@ -31,10 +25,6 @@ export default function CabinetHeader({ isMyCabinet }: Props) {
 
   return (
     <div className="flex items-center h-[35px]">
-      {isHambergerOpened && (
-        <div>{/* TODO: 햄버거 모달 */}햄버거열렸당 없애려면 새로고침</div>
-      )}
-
       {/* 군인 아닌 유저에게는 뒤로가기 버튼 안 보이게 */}
       {isSoldier && (
         <button onClick={handleBack} className="mr-[17px] cursor-pointer">
@@ -76,16 +66,9 @@ export default function CabinetHeader({ isMyCabinet }: Props) {
           </Txt>
         </div>
       )}
-
-      {/* 햄버거 버튼 */}
-      <button onClick={openModal} className="cursor-pointer">
-        <Image
-          src="/icons/ic-hambugi.svg"
-          alt="메뉴 아이콘"
-          width={18}
-          height={14}
-        />
-      </button>
+      <SidebarHeader>
+        <SidebarTrigger />
+      </SidebarHeader>
     </div>
   );
 }
