@@ -80,16 +80,13 @@ export default function WritePage() {
         <form className="flex flex-col gap-3 w-full">
           <Input
             placeholder="닉네임"
-            inputType="auth"
             className="w-1/3 text-gray-939 placeholder:text-blue-9a0 text-[15px] pl-[18px]"
             maxLength={7} // 7글자 제한
           />
           <Input
             placeholder="내용을 입력하세요."
-            inputType="auth"
             tag="textarea"
             maxLength={500} // 500자 제햔
-            className="flex w-full h-[230px] text-[15px] rounded-[10px] py-[10px] px-[18px] bg-white-fff text-gray-939 placeholder:text-blue-9a0 focus:outline-none"
           />
         </form>
 
