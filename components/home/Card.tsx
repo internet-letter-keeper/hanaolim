@@ -26,7 +26,7 @@ export default function Card() {
           123,000원
         </Txt>
 
-        <div className="mt-5 w-[80px]">
+        <div className="mt-3">
           <PrimaryButton
             title="보내기"
             color="green"
@@ -35,6 +35,7 @@ export default function Card() {
             weight="medium"
             align="center"
             padding="py-0"
+            className="w-[80px] h-[23px]"
             onClick={handleClick}
           />
         </div>
