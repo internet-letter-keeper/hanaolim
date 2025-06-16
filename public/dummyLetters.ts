@@ -22,4 +22,36 @@ export const dummyLetters = [
     createDt: "2025.05.08 12:30",
     isFavorite: false,
   },
+  {
+    id: 4,
+    writer: "별듀리이이",
+    content:
+      "별드ㄹ루댜ㄱㄴ루댜ㄱ 류ㅣㅣ두ㅣ두ㅣ둣 | 리리리리리 | 느린ㅇ훙별드리...",
+    createDt: "2025.05.08 12:30",
+    isFavorite: false,
+  },
+  {
+    id: 5,
+    writer: "별듀리이이",
+    content:
+      "별드ㄹ루댜ㄱㄴ루댜ㄱ 류ㅣㅣ두ㅣ두ㅣ둣 | 리리리리리 | 느린ㅇ훙별드리...",
+    createDt: "2025.05.08 12:30",
+    isFavorite: false,
+  },
+  // {
+  //   id: 6,
+  //   writer: "별듀리이이",
+  //   content:
+  //     "별드ㄹ루댜ㄱㄴ루댜ㄱ 류ㅣㅣ두ㅣ두ㅣ둣 | 리리리리리 | 느린ㅇ훙별드리...",
+  //   createDt: "2025.05.08 12:30",
+  //   isFavorite: false,
+  // },
+  // {
+  //   id: 7,
+  //   writer: "별듀리이이",
+  //   content:
+  //     "별드ㄹ루댜ㄱㄴ루댜ㄱ 류ㅣㅣ두ㅣ두ㅣ둣 | 리리리리리 | 느린ㅇ훙별드리...",
+  //   createDt: "2025.05.08 12:30",
+  //   isFavorite: false,
+  // },
 ];
