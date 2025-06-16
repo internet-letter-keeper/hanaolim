@@ -36,7 +36,6 @@ export default function Card() {
             align="center"
             padding="py-0"
             onClick={handleClick}
-            className="flex items-center justify-center h-[23px]"
           />
         </div>
       </div>
