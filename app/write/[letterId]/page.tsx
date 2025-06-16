@@ -3,14 +3,12 @@
 import Image from "next/image";
 import { useState, useRef } from "react";
 import { ChangeEvent } from "react";
-import { IconName } from "@/types/common/icons";
 import { uploadedFileType } from "@/types/letters";
 import { Button, Input, PrimaryButton, Txt } from "@/components/atoms";
 import { BasicHeader } from "@/components/common";
-import { FilePreview, IconPicker } from "@/components/letters";
+import { FilePreview } from "@/components/letters";
 
-export default function WritePage() {
-  const [selectedIcon, setSelectedIcon] = useState<IconName>("face");
+export default function LetterWritePage() {
   const [uploadedFile, setUploadedFile] = useState<uploadedFileType | null>(
     null
   );
@@ -45,7 +43,7 @@ export default function WritePage() {
   return (
     <div className="flex flex-col flex-1">
       <BasicHeader />
-      <div className="flex flex-col w-full px-4 relative min-h-[calc(100vh-64px)] min-h-[calc(100vh-64px)] min-h-[calc(100vh-64px)]">
+      <div className="flex flex-col w-full px-4 relative min-h-[calc(100vh-64px)]">
         <div className="flex items-center justify-center gap-2 mt-2">
           <Image
             src="/images/ic-byeoldol-face.svg"
@@ -69,20 +67,7 @@ export default function WritePage() {
             군인에게 편지를 작성해주세요!
           </Txt>
         </div>
-
-        <div className="flex flex-col gap-[14px] mb-6">
-          <Txt size={16} weight="cm" align="left">
-            관물대에 넣을 물건을 선택해주세요.
-          </Txt>
-          <IconPicker value={selectedIcon} onChange={setSelectedIcon} />
-        </div>
-
         <form className="flex flex-col gap-3 w-full">
-          <Input
-            placeholder="닉네임"
-            className="w-1/3 text-gray-939 placeholder:text-blue-9a0 text-[15px] pl-[18px]"
-            maxLength={7} // 7글자 제한
-          />
           <Input
             placeholder="내용을 입력하세요."
             tag="textarea"
@@ -130,7 +115,7 @@ export default function WritePage() {
             onDelete={handleDeleteFile}
           />
         )}
-        <div className="absolute bottom-7 right-4">
+        <div className="absolute bottom-20 right-4">
           <PrimaryButton
             title="전송"
             type="submit"
