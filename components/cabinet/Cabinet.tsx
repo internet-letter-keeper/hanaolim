@@ -20,7 +20,7 @@ export default function Cabinet({ isMyCabinet }: Props) {
   const toNextCabinet = () => setCurrentPage((prev) => prev + 1);
 
   return (
-    <div className="flex flex-col items-center relative gap-[14px]">
+    <div className="flex flex-col items-center relative mb-[14px]">
       {/* FIXME: 첫, 마지막 페이지에서 레이아웃 전체적으로 위로 올라가는 현상 수정. absolute 때문에 그런 듯함 */}
 
       {/* 관물대 첫 페이지면 이전 페이지 버튼이 안 보이게 */}
@@ -58,7 +58,7 @@ export default function Cabinet({ isMyCabinet }: Props) {
       )}
 
       {/* 페이지네이션 */}
-      <div className="bg-white-2f2 rounded-[5px] px-[15px]">
+      <div className="bg-white-2f2 rounded-[5px] px-[15px] mt-[14px]">
         <Txt className="text-blue-9a0" weight="medium" size={12}>
           {currentPage}/{totalPage}
         </Txt>
