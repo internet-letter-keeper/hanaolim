@@ -20,6 +20,7 @@ type Props = {
 const Color = {
   green: ["bg-green-49d", "text-white-fff"],
   white: ["bg-white-2f2", "text-green-49d"],
+  gray: ["bg-white-fff", "text-gray-353"],
 };
 
 const Round = {
