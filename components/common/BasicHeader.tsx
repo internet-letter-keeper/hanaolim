@@ -27,7 +27,7 @@ export default function BasicHeader({
       className={cn("flex items-center px-4 py-3 bg-white-7f9", className)}
     >
       {showBackButton && (
-        <button onClick={handleBack} className="mr-2">
+        <button onClick={handleBack} className="mr-2 cursor-pointer">
           <Image
             src="/icons/ic-chevron-left.svg"
             alt="뒤로가기"

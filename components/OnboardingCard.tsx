@@ -3,6 +3,8 @@ import { cn } from "@/lib/utils";
 import Button from "./atoms/Button";
 import Txt from "./atoms/Text";
 
+//onBording 컴포넌트에 들어갈 option 컴포넌트
+
 type Props = {
   mode: "soldier" | "viewer";
 };
