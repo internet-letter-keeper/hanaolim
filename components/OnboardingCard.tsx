@@ -1,5 +1,5 @@
-import { modeMap } from "@/constants/onboardingMode";
 import Image from "next/image";
+import { modeMap } from "@/constants/onboardingMode";
 import { cn } from "@/lib/utils";
 import Button from "./atoms/Button";
 import Txt from "./atoms/Text";
@@ -24,7 +24,7 @@ export default function OnboardingOption({ mode }: Props) {
     >
       <div className="flex flex-row gap-[9px]">
         <div className="flex flex-col gap-y-[11px] pl-1">
-          <Txt size={18} align="left" weight="bold" className="text-gray-939">
+          <Txt size={18} align="left" weight="bold">
             {title}
           </Txt>
           <div className="flex flex-row">
