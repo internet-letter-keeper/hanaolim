@@ -27,8 +27,6 @@ export default function Modal({
 }: PropsWithChildren<Props>) {
   const overlay = useRef<HTMLDivElement>(null);
 
-  const wrapper = useRef<HTMLDivElement>(null);
-
   // 모달 바깥 클릭 시 모달 닫기
   const onClickOverlay: MouseEventHandler = (e) => {
     if (e.target === overlay.current) onClickWhiteBtn();
@@ -50,10 +48,7 @@ export default function Modal({
       className="fixed inset-0 z-10 bg-modal-overlay"
       onClick={onClickOverlay}
     >
-      <div
-        ref={wrapper}
-        className="absolute w-11/12 sm:w-[22rem] p-[24px] bg-white rounded-[10px] text-center -translate-x-1/2 -translate-y-1/2 top-1/2 left-1/2"
-      >
+      <div className="absolute w-11/12 sm:w-[22rem] p-[24px] bg-white rounded-[10px] text-center -translate-x-1/2 -translate-y-1/2 top-1/2 left-1/2">
         {/* 하단 두 버튼의 상단 영역 */}
         <Txt weight="cm" size={18}>
           {children}
