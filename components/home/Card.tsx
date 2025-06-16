@@ -13,7 +13,7 @@ export default function Card() {
   };
 
   return (
-    <div className="flex items-center justify-between px-6 py-3 bg-green-5f2 border-[1px] border-green-9e7  rounded-[20px] w-max h-[150px] overflow-hidden gap-3">
+    <div className="flex items-center justify-between pl-[23px] pr-[25px] py-[19px] bg-green-5f2 border-[1px] border-green-9e7 rounded-[20px] w-max h-[150px] overflow-hidden">
       {/* 카드 정보 */}
       <div className="flex flex-col items-start">
         <Txt size={16} weight="bold" className="text-gray-353">
@@ -42,7 +42,7 @@ export default function Card() {
       </div>
 
       {/* 카드 이미지 */}
-      <div className="flex-shrink-0 relative w-[80px] h-[130px] ml-9">
+      <div className="flex-shrink-0 relative ml-[42px] w-[80px] h-[130px]">
         <Image
           src="/images/ic-hanacard.svg"
           alt="하나 나라사랑카드"
