@@ -4,8 +4,8 @@ import {
   FriendsList,
   LetterMoneyButton,
   StatusMessage,
+  DropDownModal,
 } from "@/components/cabinet";
-import DropDownModal from "@/components/cabinet/DropDownModal";
 import { SidebarProvider } from "@/components/ui/sidebar";
 
 type Props = {
@@ -21,7 +21,7 @@ export default async function CabinetPage({ params }: Props) {
   const message = "보고 싶다 얘들아";
 
   return (
-    <SidebarProvider className="min-h-0 flex-col" ㄴ>
+    <SidebarProvider className="flex-col">
       <div className="flex flex-col gap-4">
         <CabinetHeader isMyCabinet={isMyCabinet} />
         <FriendsList />
