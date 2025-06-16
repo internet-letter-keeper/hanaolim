@@ -1,10 +1,6 @@
 @import "tailwindcss";
 @import "tw-animate-css";
 
-<<<<<<< HEAD
-
-=======
->>>>>>> d79155c (Feat: 홈 군인 프로필 shadcn 사용하여 바 구현)
 @custom-variant dark (&:is(.dark *));
 
 @theme {
