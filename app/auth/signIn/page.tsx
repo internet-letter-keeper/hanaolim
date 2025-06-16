@@ -1,8 +1,8 @@
 import Image from "next/image";
 import { PrimaryButton, Input, Txt } from "@/components/atoms";
-import icGoogle from "@/public/icons/ic-google.png";
-import icKakao from "@/public/icons/ic-kakao.png";
-import icNaver from "@/public/icons/ic-naver.png";
+import icGoogle from "@/public/icons/ic-google.svg";
+import icKakao from "@/public/icons/ic-kakao.svg";
+import icNaver from "@/public/icons/ic-naver.svg";
 import hanaOlim from "@/public/images/ic-hanaolim-logo.svg";
 
 export default function SignInPage() {
