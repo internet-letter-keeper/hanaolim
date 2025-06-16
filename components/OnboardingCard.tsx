@@ -1,22 +1,37 @@
+"use client";
+
 import Image from "next/image";
+import { useRouter } from "next/navigation";
 import { ONBOARDING_MODE } from "@/constants/onboardingMode";
 import { cn } from "@/lib/utils";
-import { Button, Txt } from "./atoms";
+import { Txt } from "./atoms";
 
 //onBording 컴포넌트에 들어갈 option 컴포넌트
 
 type Props = {
   mode: "soldier" | "viewer";
+  onRequestRegister?: () => void;
 };
 
-export default function OnboardingOption({ mode }: Props) {
+export default function OnboardingOption({ mode, onRequestRegister }: Props) {
+  const router = useRouter();
+
+  //soldier 모드면 군인 등록으로 아니면 친구 추가 모달 띄우기
+  const handleOnclick = () => {
+    if (mode === "soldier") router.push("/registerSoldier");
+    else {
+      onRequestRegister?.();
+    }
+  };
+
   const selectedMode =
     ONBOARDING_MODE[mode === "soldier" ? "soldier" : "viewer"];
 
   const { title, label, imgSrc, iconAlt, imgAlt } = selectedMode;
 
   return (
-    <Button
+    <button
+      onClick={handleOnclick}
       className={cn(
         "h-[130px] rounded-[20px] p-[18px] border bg-green-5f2 border-green-9e7",
         { "bg-blue-0f5 border-blue-af0": mode === "viewer" }
@@ -41,6 +56,6 @@ export default function OnboardingOption({ mode }: Props) {
         </div>
         <Image src={imgSrc} alt={imgAlt} width={70} height={70} />
       </div>
-    </Button>
+    </button>
   );
 }
