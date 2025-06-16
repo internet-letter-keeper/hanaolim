@@ -1,10 +1,9 @@
 "use client";
 
+import Image from "next/image";
 import { useState } from "react";
 import { cn } from "@/lib/utils";
-import { PrimaryButton } from "@/components/atoms";
-import Input from "@/components/atoms/Input";
-import Txt, { fontMap } from "@/components/atoms/Text";
+import { PrimaryButton, Input, Txt } from "@/components/atoms";
 import BasicHeader from "@/components/common/BasicHeader";
 import LettersItem from "@/components/letters/LettersItem";
 import { dummyLetters } from "@/public/dummyLetters";
@@ -32,13 +31,14 @@ export default function LettersPage() {
       <div className="max-w-screen-sm px-2 mb-4">
         <BasicHeader title="편지 보관함" />
 
-        <div className={cn("py-4", fontMap.cm)}>
+        <div className={"py-4"}>
           <div className="flex justify-center gap-2">
             <PrimaryButton
               title="내 관물대로 퐁당"
               onClick={() => setActiveTab("send")}
               color={activeTab === "send" ? "green" : "white"}
               className="py-3"
+              weight="cm"
             />
 
             <PrimaryButton
@@ -46,11 +46,23 @@ export default function LettersPage() {
               onClick={() => setActiveTab("receive")}
               color={activeTab === "receive" ? "green" : "white"}
               className="py-3"
+              weight="cm"
             />
           </div>
 
-          <div className="flex justify-center mt-4">
-            <Input placeholder="작성자, 내용 ..." inputType="search" />
+          <div className="relative mt-4">
+            <Input
+              placeholder="작성자, 내용 ..."
+              inputType="search"
+              className="pr-10"
+            />
+            <Image
+              src="/icons/ic-search.svg"
+              alt="검색"
+              width={20}
+              height={20}
+              className="absolute right-2 top-1/2 -translate-y-1/2"
+            />
           </div>
         </div>
       </div>
