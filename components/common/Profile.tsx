@@ -8,15 +8,25 @@ type Props = {
   code?: string;
   level?: 1 | 2 | 3 | 4;
 };
-
+/**
+ * userName: 군인 이름
+ * endDate: 전역일
+ * code: 관물대 코드
+ * level: 군인 계급
+ */
 export default function Profile({
   userName = "별돌이",
   endDate,
-  code,
-  level,
+  code = "ㅇㅇㅇ",
+  level = 1,
 }: Props) {
   if (!endDate) return;
   const dDay = dDayConCatString(endDate);
+
+  const handleCopyCode = () => {
+    navigator.clipboard.writeText(code);
+    alert("복사되었습니다.");
+  };
 
   return (
     <div className="flex items-center justify-center gap-4">
@@ -44,7 +54,10 @@ export default function Profile({
                 님의 관물대
               </Txt>
             </div>
-            <Button className="flex flex-row gap-2 items-end">
+            <Button
+              className="flex flex-row gap-2 align-bottom"
+              onClick={handleCopyCode}
+            >
               <Txt size={13} weight="medium" className="underline">
                 {code}
               </Txt>
