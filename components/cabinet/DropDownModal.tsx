@@ -39,6 +39,7 @@ export default function DropDownModal() {
                     onClick={goToLetters}
                   />
                   <div className="flex gap-2">
+                    {/* TODO: 군인일 경우 버튼 '군인으로 등록하기'안보이게 분기 처리 */}
                     <PrimaryButton
                       title="군인으로 등록하기"
                       className={ButtonStyle}
