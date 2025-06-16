@@ -20,7 +20,7 @@ export default function Savings({ savingBalance }: Props) {
             {savingBalance.toLocaleString()}원
           </Txt>
         </div>
-        <div className="flex-shrink-0 relative w-[80px] h-[60px] ml-[57px]">
+        <div className="flex-shrink-0 relative pl-[57px] pr-[23px] h-[60px] ml-[57px]">
           <Image
             src="/images/ic-bankbook.svg"
             alt="적금 통장"
@@ -34,7 +34,7 @@ export default function Savings({ savingBalance }: Props) {
       {/* 조건 달성 여부 */}
       <div className="flex flex-col gap-1 mt-2 w-full">
         <div className="flex items-center w-full">
-          <div className="flex items-center justify-center w-[50px] h-[20px] bg-green-49d rounded-[10px] mr-2">
+          <div className="flex items-center justify-center px-[14px] h-[20px] bg-green-49d rounded-[10px] mr-2">
             <Txt size={12} weight="medium" className="text-white-2f2">
               달성
             </Txt>
@@ -50,7 +50,7 @@ export default function Savings({ savingBalance }: Props) {
         </div>
 
         <div className="flex items-center w-full">
-          <div className="flex items-center justify-center w-[50px] h-[20px] bg-white-2f2 rounded-[10px] mr-2">
+          <div className="flex items-center justify-center px-[9px] h-[20px] bg-white-2f2 rounded-[10px] mr-2">
             <Txt size={12} weight="medium" className="text-green-49d">
               미달성
             </Txt>
