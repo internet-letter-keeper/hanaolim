@@ -123,13 +123,13 @@ export default function SignInPage() {
 
       {/* 회원가입 안내 */}
       <div className="flex items-center mt-[45px]">
-        <Txt size={12} className="not-italic  text-gray-353">
+        <Txt size={12} className="text-gray-353">
           가입한 계정이 없으신가요?
         </Txt>
         <button onClick={goToSignUp} className="ml-[14px] mb-1">
           <Txt
             size={12}
-            className="not-italic  text-gray-353 underline underline-offset-auto"
+            className="text-gray-353 underline underline-offset-auto"
           >
             회원가입
           </Txt>
