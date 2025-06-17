@@ -28,9 +28,9 @@ export default function Point({ pointAccrue }: Props) {
         <Txt size={14} weight="medium" className="text-gray-939">
           포인트 적립까지
         </Txt>
-
         <div className="flex items-center gap-[13px] relative">
           <Txt size={14} weight="heavy" className="text-yellow-32b">
+
             {pointAccrue.myStamp}/{pointAccrue.totalStamp}
           </Txt>
           <Image

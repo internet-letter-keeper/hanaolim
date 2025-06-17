@@ -57,8 +57,6 @@ export default function ProfileBanner({ userName, startDate, endDate }: Props) {
             대한민국 군인
           </Txt>
         </div>
-
-        {/* 진행 바 + 전역일 디데이 */}
         <div className="mt-[4px] w-full">
           <Progress variant="green" />
           <div className="flex items-baseline gap-[2px] mt-[4px]">

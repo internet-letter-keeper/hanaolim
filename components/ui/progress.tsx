@@ -18,6 +18,7 @@ export const Progress = forwardRef<
   const indicatorBg = variant === "green" ? "bg-green-a3b" : "bg-yellow-32b";
   const maxWidth = variant === "green" ? "min-w-[208px]" : "min-w-[258px]";
 
+
   return (
     <ProgressPrimitive.Root
       ref={ref}
