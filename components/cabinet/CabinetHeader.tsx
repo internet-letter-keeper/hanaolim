@@ -31,7 +31,7 @@ export default function CabinetHeader({ isMyCabinet }: Props) {
           <Image
             src="/icons/ic-chevron-left.svg"
             alt="뒤로가기"
-            width={10}
+            width={12}
             height={20}
           />
         </button>
@@ -40,7 +40,7 @@ export default function CabinetHeader({ isMyCabinet }: Props) {
       {/* 내 관물대일 때 vs 아닐 때 분기처리 */}
       {isMyCabinet ? (
         <div className="flex justify-between w-full">
-          <Txt size={20} weight="cm">
+          <Txt size={23} weight="cm">
             나의 관물대
           </Txt>
 
@@ -58,7 +58,7 @@ export default function CabinetHeader({ isMyCabinet }: Props) {
         </div>
       ) : (
         <div className="items-baseline flex-1">
-          <Txt size={24} weight="bold" className="text-green-49d">
+          <Txt size={23} weight="bold" className="text-green-49d">
             {soldierName}
           </Txt>
           <Txt size={20} weight="cm">

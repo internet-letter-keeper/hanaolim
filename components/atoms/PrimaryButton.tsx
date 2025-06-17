@@ -71,7 +71,6 @@ export default function PrimaryButton({
       disabled={disabled}
       {...props}
     >
-      {icon}
       <Txt
         className={Color[color][1]}
         size={textSize}
@@ -80,6 +79,7 @@ export default function PrimaryButton({
       >
         {title}
       </Txt>
+      {icon}
     </button>
   );
 }
