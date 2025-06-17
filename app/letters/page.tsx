@@ -6,6 +6,7 @@ import { cn } from "@/lib/utils";
 import { PrimaryButton, Input, Txt } from "@/components/atoms";
 import BasicHeader from "@/components/common/BasicHeader";
 import LettersItem from "@/components/letters/LettersItem";
+import { Button } from "@/components/ui/button";
 import { dummyLetters } from "@/public/dummyLetters";
 
 export default function LettersPage() {
@@ -31,6 +32,21 @@ export default function LettersPage() {
       <div className="max-w-screen-sm px-2 mb-4">
         <BasicHeader title="편지 보관함" />
 
+        <div className="relative mt-4">
+          <Input
+            placeholder="작성자, 내용 ..."
+            usage="modal"
+            className="rounded-[10px] pr-10"
+          />
+          <img
+            src="/icons/ic-search.svg"
+            alt="검색"
+            width={20}
+            height={20}
+            className="absolute right-2 top-1/2 -translate-y-1/2 text-[#1EA698]"
+          />
+        </div>
+
         <div className={"py-4"}>
           <div className="flex justify-center gap-2">
             <PrimaryButton
@@ -47,21 +63,6 @@ export default function LettersPage() {
               color={activeTab === "receive" ? "green" : "white"}
               className="py-3"
               weight="cm"
-            />
-          </div>
-
-          <div className="relative mt-4">
-            <Input
-              placeholder="작성자, 내용 ..."
-              usage="search"
-              className="pr-10"
-            />
-            <Image
-              src="/icons/ic-search.svg"
-              alt="검색"
-              width={20}
-              height={20}
-              className="absolute right-2 top-1/2 -translate-y-1/2"
             />
           </div>
         </div>
@@ -106,7 +107,6 @@ export default function LettersPage() {
             </Txt>
           </div>
         </div>
-        <hr className=" border-gray-939 mx-4" />
 
         <div className="mx-auto px-4">
           {filteredLetters.map((letter) => (

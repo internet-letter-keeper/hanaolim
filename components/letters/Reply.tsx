@@ -21,7 +21,7 @@ export default function ReplyItem({ reply }: Props) {
           <Txt
             size={12}
             weight="cm"
-            className=" text-blue-9a0 whitespace-nowrap"
+            className=" text-gray-353 whitespace-nowrap"
           >
             {createDt}
           </Txt>
@@ -32,7 +32,7 @@ export default function ReplyItem({ reply }: Props) {
             size={15}
             weight="cm"
             align="left"
-            className=" text-blue-9a0 mt-1 line-clamp-2 break-words"
+            className=" text-gray-353 mt-1 line-clamp-2 break-words"
           >
             {content}
           </Txt>

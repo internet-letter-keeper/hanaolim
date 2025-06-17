@@ -76,6 +76,8 @@ export default function LettersDetail({ lettersDetail }: Props) {
         </div>
       )}
 
+      {/* <LetterView fileUrl={fileUrl} /> */}
+
       {/* 발신자 */}
 
       <Txt

@@ -12,5 +12,8 @@ export type Letter = {
   isFavorite?: boolean;
   fileUrl?: string;
   parentId?: number;
+  userId?: number;
+  isRead?: boolean;
 };
+
 export type ReceivedTotalLetter = { unreadLetter: number; totalLetter: number };
