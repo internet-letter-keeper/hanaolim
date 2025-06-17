@@ -27,7 +27,7 @@ export default function CabinetHeader({ isMyCabinet }: Props) {
     <div className="flex items-center h-[35px]">
       {/* 군인 아닌 유저에게는 뒤로가기 버튼 안 보이게 */}
       {isSoldier && (
-        <button onClick={handleBack} className="mr-[17px] cursor-pointer">
+        <button onClick={handleBack} className="mr-[17px]">
           <Image
             src="/icons/ic-chevron-left.svg"
             alt="뒤로가기"
@@ -44,10 +44,7 @@ export default function CabinetHeader({ isMyCabinet }: Props) {
             나의 관물대
           </Txt>
 
-          <button
-            onClick={shareCabinetUrl}
-            className="cursor-pointer mr-[19px]"
-          >
+          <button onClick={shareCabinetUrl} className="mr-[19px]">
             <Image
               src="/icons/ic-share.svg"
               alt="캐비넷 링크 공유 아이콘"

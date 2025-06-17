@@ -179,7 +179,7 @@ export default function SignUpPage() {
         <Txt size={12} className="text-black-353">
           가입한 계정이 이미 있으신가요?
         </Txt>
-        <button onClick={goToSignIn} className="ml-[14px] mb-1 cursor-pointer">
+        <button onClick={goToSignIn} className="ml-[14px] mb-1">
           <Txt
             size={12}
             className="text-black-353 underline underline-offset-auto"

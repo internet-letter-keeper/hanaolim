@@ -52,7 +52,7 @@ export default function AddFriendBtn() {
       <button
         type="button"
         onClick={openModal}
-        className="flex flex-col items-center cursor-pointer whitespace-nowrap"
+        className="flex flex-col items-center whitespace-nowrap"
       >
         <div className="flex items-center border border-green-49d justify-center bg-white p-[6px] rounded-full">
           <div className="w-[37px] h-[37px] flex items-center justify-center text-green-49d">

@@ -220,7 +220,7 @@ function SidebarTrigger({
       data-slot="sidebar-trigger"
       variant="ghost"
       size="icon"
-      className={cn("size-7 cursor-pointer relative", className)}
+      className={cn("size-7 relative", className)}
       onClick={(event) => {
         onClick?.(event);
         toggleSidebar();

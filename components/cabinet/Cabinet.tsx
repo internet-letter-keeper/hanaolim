@@ -24,7 +24,7 @@ export default function Cabinet({ isMyCabinet }: Props) {
     <div className="flex flex-col items-center relative px-10">
       {/* 관물대 첫 페이지면 이전 페이지 버튼이 안 보이게 */}
       {currentPage > 1 ? (
-        <button onClick={toPrevCabinet} className="cursor-pointer">
+        <button onClick={toPrevCabinet}>
           <Image
             src="/icons/ic-next-page.svg"
             alt="관물대 이전 페이지로"
@@ -151,7 +151,7 @@ export default function Cabinet({ isMyCabinet }: Props) {
 
       {/* 관물대 마지막 페이지면 다음 페이지 버튼이 안 보이게 */}
       {currentPage < totalPage && (
-        <button onClick={toNextCabinet} className="cursor-pointer">
+        <button onClick={toNextCabinet}>
           <Image
             src="/icons/ic-next-page.svg"
             alt="관물대 다음 페이지로"

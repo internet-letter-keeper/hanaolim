@@ -33,7 +33,7 @@ export default function OnboardingOption({ mode, onRequestRegister }: Props) {
     <button
       onClick={handleOnclick}
       className={cn(
-        "h-[130px] rounded-[20px] p-[18px] border bg-green-5f2 border-green-9e7 cursor-pointer",
+        "h-[130px] rounded-[20px] p-[18px] border bg-green-5f2 border-green-9e7",
         { "bg-blue-0f5 border-blue-af0": mode === "viewer" }
       )}
     >

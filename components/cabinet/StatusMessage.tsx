@@ -63,7 +63,7 @@ export default function StatusMessage({ message, isMyCabinet }: Props) {
 
       {isMyCabinet && (
         <button
-          className="bg-blue-af0 cursor-pointer p-[2px] rounded-[5px]"
+          className="bg-blue-af0 p-[2px] rounded-[5px]"
           onClick={openModal}
         >
           <Image

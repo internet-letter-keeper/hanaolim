@@ -81,7 +81,7 @@ export default function LetterWritePage() {
             <div className="flex flex-row gap-1 items-center">
               <Button
                 onClick={onClickImage}
-                className="cursor-pointer flex w-7 h-7 items-center justify-center rounded-[5px] bg-white-fff shadow-[0px_0px_5px_rgba(0,0,0,0.15)]"
+                className="flex w-7 h-7 items-center justify-center rounded-[5px] bg-white-fff shadow-[0px_0px_5px_rgba(0,0,0,0.15)]"
               >
                 <Image
                   src="/icons/ic-picture.svg"

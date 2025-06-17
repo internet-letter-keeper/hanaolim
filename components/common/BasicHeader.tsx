@@ -23,7 +23,7 @@ export default function BasicHeader({
   return (
     <header className={cn("flex items-center px-2 h-[40px]", className)}>
       {showBackButton && (
-        <button onClick={handleBack} className="cursor-pointer">
+        <button onClick={handleBack}>
           <Image
             src="/icons/ic-chevron-left.svg"
             alt="뒤로가기"
