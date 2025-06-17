@@ -15,6 +15,7 @@ type Props = {
   textSize?: number;
   align?: keyof typeof alignMap;
   weight?: keyof typeof fontMap;
+  icon?: React.ReactNode;
 };
 
 const Color = {
@@ -50,6 +51,7 @@ export default function PrimaryButton({
   textSize = 14,
   align = "center",
   weight = "regular",
+  icon,
   ...props
 }: Props) {
   return (
@@ -69,6 +71,7 @@ export default function PrimaryButton({
       disabled={disabled}
       {...props}
     >
+      {icon}
       <Txt
         className={Color[color][1]}
         size={textSize}
