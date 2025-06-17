@@ -9,7 +9,7 @@ type Props = {
 
 export default function Savings({ savingBalance }: Props) {
   return (
-    <div className="flex flex-col justify-between px-[23px] py-[19px] bg-white-fff rounded-[20px] w-max h-[153px] shadow-[0_0_5px_rgba(0,0,0,0.15)]">
+    <div className="flex flex-col justify-between px-[23px] py-[19px] bg-white-fff rounded-[20px] w-full h-[153px] shadow-[0_0_5px_rgba(0,0,0,0.15)]">
       {/* 적금 제목, 금액, 이미지 */}
       <div className="flex justify-between w-full">
         <div className="flex flex-col items-start gap-1">

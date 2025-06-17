@@ -15,11 +15,13 @@ type Props = {
   textSize?: number;
   align?: keyof typeof alignMap;
   weight?: keyof typeof fontMap;
+  icon?: React.ReactNode;
 };
 
 const Color = {
   green: ["bg-green-49d", "text-white-fff"],
   white: ["bg-white-2f2", "text-green-49d"],
+  gray: ["bg-white-fff", "text-gray-353"],
 };
 
 const Round = {
@@ -49,6 +51,7 @@ export default function PrimaryButton({
   textSize = 14,
   align = "center",
   weight = "regular",
+  icon,
   ...props
 }: Props) {
   return (
@@ -68,6 +71,7 @@ export default function PrimaryButton({
       disabled={disabled}
       {...props}
     >
+      {icon}
       <Txt
         className={Color[color][1]}
         size={textSize}
