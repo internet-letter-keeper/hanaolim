@@ -40,7 +40,7 @@ export default function FriendProfileCircle({
         { "flex-row gap-[10px]": isRowLayout }
       )}
     >
-      <div className="relative">
+      <div className="bg-white relative">
         {/* 계급 아이콘 */}
         <div className="flex items-center border border-green-49d justify-center bg-white p-[6px] rounded-full">
           <Image
