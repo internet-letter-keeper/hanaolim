@@ -1,6 +1,6 @@
+import { ICONS } from "@/constants/icons";
 import Image from "next/image";
 import { IconName } from "@/types/common/icons";
-import { ICONS } from "@/constants/icons";
 import { cn } from "@/lib/utils";
 import { Button } from "../atoms";
 
@@ -17,8 +17,7 @@ export default function IconPicker({ value, onChange }: Props) {
           key={id}
           type="button"
           className={cn(
-            "w-12 aspect-square flex items-center justify-center rounded-fulltransition-all duration-200",
-
+            "px-1 aspect-square flex items-center justify-center rounded-full transition-all duration-200",
             {
               "bg-white-fff shadow-[0_0_10px_0_rgba(32,155,152,0.35)]":
                 value === name,
