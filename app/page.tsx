@@ -6,7 +6,7 @@ export default function Page() {
     <>
       <div className="flex flex-col relative gap-[15px]">
         <Image
-          src="/images/ic-hanaolim-logo.svg"
+          src="/icons/ic-hanaolim.svg"
           alt="편지 아이콘"
           width={110}
           height={36}

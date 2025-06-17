@@ -33,13 +33,13 @@ export default function Point({ pointAccrue }: Props) {
             {pointAccrue.myStamp}/{pointAccrue.totalStamp}
           </Txt>
           <Image
-            src="/images/ic-coin.svg"
+            src="/images/coin.svg"
             alt="코인 아이콘"
             width={25}
             height={25}
           />
           <Image
-            src="/images/ic-question.svg"
+            src="/icons/ic-question.svg"
             alt="도움말 아이콘"
             width={15}
             height={15}

@@ -43,7 +43,7 @@ export default function Card() {
       {/* 카드 이미지 */}
       <div className="flex-shrink-0 relative ml-[42px] w-[80px] h-[130px]">
         <Image
-          src="/images/ic-hanacard.svg"
+          src="/images/hanacard.svg"
           alt="하나 나라사랑카드"
           fill
           className="object-contain"

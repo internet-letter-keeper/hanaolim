@@ -48,17 +48,12 @@ export default function WritePage() {
       <div className="flex flex-col w-full px-4 relative min-h-[calc(100dvh-64px)]">
         <div className="flex items-center justify-center gap-2 mt-2">
           <Image
-            src="/images/ic-byeoldol-face.svg"
+            src="/images/byeoldol-face.svg"
             alt="별돌이 얼굴"
             width={50}
             height={50}
           />
-          <Image
-            src="/images/ic-letter.svg"
-            alt="편지"
-            width={50}
-            height={50}
-          />
+          <Image src="/images/letter.svg" alt="편지" width={50} height={50} />
         </div>
 
         <div className="flex mt-[14px] mb-13 items-center justify-center whitespace-nowrap">

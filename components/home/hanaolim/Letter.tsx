@@ -19,7 +19,7 @@ export default function Letter({ receivedTotalLetter }: Props) {
           {receivedTotalLetter.unreadLetter}/{receivedTotalLetter.totalLetter}
         </Txt>
         <Image
-          src="/images/ic-letter.svg"
+          src="/images/letter.svg"
           alt="편지 아이콘"
           width={33}
           height={33}

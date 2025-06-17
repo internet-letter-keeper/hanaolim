@@ -5,7 +5,6 @@ import { useRouter } from "next/navigation";
 import { useRef, useState } from "react";
 import { PrimaryButton, Input, Txt } from "@/components/atoms";
 import DatePicker from "@/components/common/DatePicker";
-import hanaOlim from "@/public/images/ic-hanaolim-logo.svg";
 
 export default function SignInPage() {
   const router = useRouter();
@@ -40,7 +39,12 @@ export default function SignInPage() {
   return (
     <div className="flex flex-col items-center justify-center h-full px-[20px]">
       {/* 하나 올림 로고 */}
-      <Image src={hanaOlim} alt="하나올림 로고" width={184} height={49} />
+      <Image
+        src="/icons/ic-hanaolim.svg"
+        alt="하나올림 로고"
+        width={184}
+        height={49}
+      />
       {/* 입대일, 전역일, 계좌번호 */}
       <div className="mt-[42px] flex flex-col gap-[16px] w-full">
         {/* 입대일 */}

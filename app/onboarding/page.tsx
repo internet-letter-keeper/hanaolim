@@ -24,7 +24,7 @@ export default function OnboardingPage() {
         </Modal>
       )}
       <Image
-        src={"/images/ic-hanaolim-logo.svg"}
+        src={"/icons/ic-hanaolim.svg"}
         alt={"군장병을 위한 서비스 하나올림의 로고"}
         width={122}
         height={40}

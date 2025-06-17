@@ -3,10 +3,6 @@
 import Image from "next/image";
 import { useRouter } from "next/navigation";
 import { PrimaryButton, Input, Txt } from "@/components/atoms";
-import icGoogle from "@/public/icons/ic-google.svg";
-import icKakao from "@/public/icons/ic-kakao.svg";
-import icNaver from "@/public/icons/ic-naver.svg";
-import hanaOlim from "@/public/images/ic-hanaolim-logo.svg";
 
 export default function SignInPage() {
   const isLoginError = false; // 로그인 에러 여부
@@ -18,7 +14,12 @@ export default function SignInPage() {
   return (
     <div className="flex flex-col items-center justify-center gap-1 h-full px-[20px]">
       {/* 하나 올림 로고 */}
-      <Image src={hanaOlim} alt="하나올림 로고" width={184} height={49} />
+      <Image
+        src="/icons/ic-hanaolim.svg"
+        alt="하나올림 로고"
+        width={184}
+        height={49}
+      />
 
       {/* 통합 로그인 텍스트 */}
       <Txt weight="cm" align="center" className="text-gray-aaa mt-1">
@@ -91,25 +92,33 @@ export default function SignInPage() {
       {/* 소셜 로그인 */}
       <div className="flex items-center mt-[17px] gap-4">
         <button>
-          <div className="w-[45px] h-[45px]">
-            <Image className="w-full h-full" alt="naverImage" src={icNaver} />
-          </div>
+          <Image
+            className="w-full h-full"
+            alt="naverImage"
+            src="/icons/ic-naver.svg"
+            width={45}
+            height={45}
+          />
         </button>
 
         <button>
-          <div className="w-[45px] h-[45px]">
-            <Image className="w-full h-full" alt="kakaoImage" src={icKakao} />
-          </div>
+          <Image
+            className="w-full h-full"
+            alt="kakaoImage"
+            src="/icons/ic-kakao.svg"
+            width={45}
+            height={45}
+          />
         </button>
 
-        <button>
-          <div className="w-[45px] h-[45px] bg-white rounded-full flex items-center justify-center">
-            <Image
-              className="w-[28px] h-[28px]"
-              alt="googleImage"
-              src={icGoogle}
-            />
-          </div>
+        <button className="w-[45px] h-[45px] bg-white rounded-full flex items-center justify-center">
+          <Image
+            className="w-[28px] h-[28px]"
+            alt="googleImage"
+            src="/icons/ic-google.svg"
+            width={28}
+            height={28}
+          />
         </button>
       </div>
 

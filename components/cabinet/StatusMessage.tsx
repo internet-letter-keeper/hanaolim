@@ -33,7 +33,7 @@ export default function StatusMessage({ message, isMyCabinet }: Props) {
         >
           <div className="flex items-center justify-center gap-[10px] mb-[10px] mr-[40px]">
             <Image
-              src="/images/ic-walkie-talkie.svg"
+              src="/images/walkie-talkie.svg"
               alt="무전기 이미지"
               width={88}
               height={105}
@@ -51,7 +51,7 @@ export default function StatusMessage({ message, isMyCabinet }: Props) {
       )}
 
       <Image
-        src="/images/ic-walkie-talkie.svg"
+        src="/images/walkie-talkie.svg"
         alt="무전기 이미지"
         width={32}
         height={39}
