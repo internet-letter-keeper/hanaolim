@@ -23,6 +23,7 @@ import {
   TooltipProvider,
   TooltipTrigger,
 } from "@/components/ui/tooltip";
+import { NewIcon } from "../common";
 
 const SIDEBAR_COOKIE_NAME = "sidebar_state";
 const SIDEBAR_COOKIE_MAX_AGE = 60 * 60 * 24 * 7;
@@ -197,11 +198,20 @@ function Sidebar({
     </Sheet>
   );
 }
+
+type SidebarTriggerProps = Pick<
+  React.ComponentProps<typeof Button>,
+  "className" | "onClick"
+> & {
+  isNewMessage?: boolean;
+};
+
 function SidebarTrigger({
+  isNewMessage = false,
   className,
   onClick,
   ...props
-}: React.ComponentProps<typeof Button>) {
+}: SidebarTriggerProps) {
   const { toggleSidebar } = useSidebar();
 
   return (
@@ -210,23 +220,29 @@ function SidebarTrigger({
       data-slot="sidebar-trigger"
       variant="ghost"
       size="icon"
-      className={cn("size-7 cursor-pointer", className)}
+      className={cn("size-7 cursor-pointer relative", className)}
       onClick={(event) => {
         onClick?.(event);
         toggleSidebar();
       }}
       {...props}
     >
-      <Image
-        src="/icons/ic-hambugi.svg"
-        alt="메뉴 아이콘"
-        width={18}
-        height={14}
-      />
+      <div className="relative">
+        {isNewMessage && (
+          <NewIcon className="w-5 h-5 absolute -top-[14px] -right-[12px]" />
+        )}
+        <Image
+          src="/icons/ic-hambugi.svg"
+          alt="메뉴 아이콘"
+          width={18}
+          height={14}
+        />
+      </div>
       <span className="sr-only">Toggle Sidebar</span>
     </Button>
   );
 }
+
 function SidebarRail({ className, ...props }: React.ComponentProps<"button">) {
   const { toggleSidebar } = useSidebar();
 
@@ -240,8 +256,7 @@ function SidebarRail({ className, ...props }: React.ComponentProps<"button">) {
       title="Toggle Sidebar"
       className={cn(
         "hover:after:bg-sidebar-border absolute inset-y-0 z-20 hidden w-4 -translate-x-1/2 transition-all ease-linear group-data-[side=left]:-right-4 group-data-[side=right]:left-0 after:absolute after:inset-y-0 after:left-1/2 after:w-[2px] sm:flex",
-        "in-data-[side=left]:cursor-w-resize in-data-[side=right]:cursor-e-resize",
-        "[[data-side=left][data-state=collapsed]_&]:cursor-e-resize [[data-side=right][data-state=collapsed]_&]:cursor-w-resize",
+        "in-data-[side=left][data-state=collapsed]_&]:cursor-e-resize in-data-[side=right][data-state=collapsed]_&]:cursor-w-resize",
         "hover:group-data-[collapsible=offcanvas]:bg-sidebar group-data-[collapsible=offcanvas]:translate-x-0 group-data-[collapsible=offcanvas]:after:left-full",
         "[[data-side=left][data-collapsible=offcanvas]_&]:-right-2",
         "[[data-side=right][data-collapsible=offcanvas]_&]:-left-2",
