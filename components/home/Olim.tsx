@@ -1,10 +1,10 @@
-"use client";More actions
+"use client";
 
 import Image from "next/image";
 import { useRouter } from "next/navigation";
 import Txt from "@/components/atoms/Text";
-import Letter from "./Letter";
-import Point from "./Point";
+import Letter from "./hanaolim/Letter";
+import Point from "./hanaolim/Point";
 
 const receivedTotalLetter = { unreadLetter: 8, totalLetter: 32 };
 const pointAccrue = { myStamp: 2, totalStamp: 10 };
