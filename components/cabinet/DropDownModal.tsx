@@ -39,6 +39,7 @@ export default function DropDownModal() {
                     textSize={16}
                     color="gray"
                     onClick={goToLetters}
+                    // TODO:답장이 온 편지가 있냐 없냐에 따른 Icon 보일지 여부 분기 처리, isNewMessage 같은거 추후 추가
                     icon={<NewIcon />}
                   />
                   <div className="flex gap-2">

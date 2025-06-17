@@ -67,6 +67,9 @@ export default function CabinetHeader({ isMyCabinet }: Props) {
         </div>
       )}
       <SidebarHeader>
+        {/* TODO:새로운 메세지가 왔을 경우 분기 처리 
+          isNewMessage={true}  이런식으로 하면 됩니다
+        */}
         <SidebarTrigger />
       </SidebarHeader>
     </div>
