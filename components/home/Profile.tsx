@@ -5,9 +5,9 @@ import Txt from "@/components/atoms/Text";
 import { Progress } from "@/components/ui/progress";
 
 type Props = {
-  endDate: Date;
+  endDate: string;
   userName?: string;
-  startDate?: Date;
+  startDate?: string;
 };
 
 export default function ProfileBanner({ userName, startDate, endDate }: Props) {

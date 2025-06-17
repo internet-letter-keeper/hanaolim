@@ -1,9 +1,6 @@
-"use client";
-
 import Image from "next/image";
 import { useRouter } from "next/navigation";
-import Txt from "@/components/atoms/Text";
-import PrimaryButton from "../atoms/PrimaryButton";
+import { PrimaryButton, Txt } from "../atoms";
 
 export default function Card() {
   const router = useRouter();

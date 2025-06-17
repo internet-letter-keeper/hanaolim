@@ -1,8 +1,8 @@
 "use client";
 
+import { ONBOARDING_MODE } from "@/constants/onboardingMode";
 import Image from "next/image";
 import { useRouter } from "next/navigation";
-import { ONBOARDING_MODE } from "@/constants/onboardingMode";
 import { cn } from "@/lib/utils";
 import { Txt } from "./atoms";
 
@@ -37,13 +37,13 @@ export default function OnboardingOption({ mode, onRequestRegister }: Props) {
         { "bg-blue-0f5 border-blue-af0": mode === "viewer" }
       )}
     >
-      <div className="flex gap-[9px] justify-between">
-        <div className="flex flex-col gap-y-[11px]">
-          <Txt size={18} align="left" weight="bold">
+      <div className="flex flex-row gap-[10px]">
+        <div className="flex flex-col gap-y-[11px] pl-1">
+          <Txt size={18} align="left" weight="bold" className="text-gray-939">
             {title}
           </Txt>
-          <div className="flex gap-2">
-            <Txt size={12} weight="cm" className="text-gray-353">
+          <div className="flex flex-row">
+            <Txt size={12} weight="cm" className="text-gray-353 pr-2">
               {label}
             </Txt>
             <Image
@@ -54,7 +54,9 @@ export default function OnboardingOption({ mode, onRequestRegister }: Props) {
             />
           </div>
         </div>
-        <Image src={imgSrc} alt={imgAlt} width={70} height={70} />
+        <div>
+          <Image src={imgSrc} alt={imgAlt} width={70} height={70} />
+        </div>
       </div>
     </button>
   );
