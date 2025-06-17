@@ -13,3 +13,4 @@ export type Letter = {
   fileUrl?: string;
   parentId?: number;
 };
+export type ReceivedTotalLetter = { unreadLetter: number; totalLetter: number };
