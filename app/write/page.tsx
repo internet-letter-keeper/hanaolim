@@ -93,18 +93,23 @@ export default function WritePage() {
         <div className="flex flex-row justify-between w-full items-center mt-5">
           {/* 파일이 없을 때만 업로드 버튼 표시 */}
           {!uploadedFile && (
-            <Button
-              onClick={onClickImage}
-              className="cursor-pointer flex w-7 h-7 items-center justify-center rounded-[5px] bg-white-fff shadow-[0px_0px_5px_rgba(0,0,0,0.15)]"
-            >
-              <Image
-                src="/icons/ic-picture.svg"
-                alt="사진"
-                width={20}
-                height={20}
-                className="w-auto h-auto"
-              />
-            </Button>
+            <div className="flex flex-row gap-1 items-center">
+              <Button
+                onClick={onClickImage}
+                className="cursor-pointer flex w-7 h-7 items-center justify-center rounded-[5px] bg-white-fff shadow-[0px_0px_5px_rgba(0,0,0,0.15)]"
+              >
+                <Image
+                  src="/icons/ic-picture.svg"
+                  alt="사진"
+                  width={20}
+                  height={20}
+                  className="w-auto h-auto"
+                />
+              </Button>
+              <Txt size={12} weight="cm" className="text-blue-9a0">
+                ※ 최대 1개의 파일만 첨부할 수 있습니다.
+              </Txt>
+            </div>
           )}
 
           {/* 파일이 있을 때는 빈 div로 공간 */}
@@ -116,13 +121,6 @@ export default function WritePage() {
             onChange={handleFileChange}
             accept="image/*,video/*"
             className="hidden"
-          />
-
-          <PrimaryButton
-            title="전송"
-            type="submit"
-            rounded="sm"
-            className="w-20 py-1 font-bold"
           />
         </div>
 
