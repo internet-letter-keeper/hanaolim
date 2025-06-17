@@ -32,9 +32,8 @@ export default function ProfileBanner({ userName, startDate, endDate }: Props) {
 
   // 복무 진행률 (%) = (복무한 일 수 / 전체 복무 기간) × 100
   const progressPercent = Math.min(100, (passedDays / totalDays) * 100);
-
   return (
-    <div className="flex items-center gap-3 px-4 py-3 bg-gray-530 border-[1.5px] border-green-a3b rounded-[30px] w-max h-[89px] relative overflow-hidden">
+    <div className="flex items-center gap-3 px-4 py-3 bg-gray-530 border-[1.5px] border-green-a3b rounded-[30px] w-full h-[89px] relative overflow-hidden">
       {/* 캐릭터 이미지 */}
       <div className="flex-shrink-0 relative w-[85px] h-[85px]">
         <Image
@@ -44,10 +43,10 @@ export default function ProfileBanner({ userName, startDate, endDate }: Props) {
           priority
         />
       </div>
-      <div className="flex flex-col justify-center flex-1">
+      <div className="flex flex-col justify-center flex-1 min-w-0">
         {/* 군인 이름 */}
         <div className="flex justify-between items-baseline w-full">
-          <Txt size={20} weight="cm" className="text-yellow-895">
+          <Txt size={20} weight="cm" className="text-yellow-895 truncate">
             {userName || "별돌이"}
           </Txt>
           <Txt
@@ -60,7 +59,7 @@ export default function ProfileBanner({ userName, startDate, endDate }: Props) {
         </div>
 
         {/* 진행 바 + 전역일 디데이 */}
-        <div className="mt-[4px]">
+        <div className="mt-[4px] w-full">
           <Progress variant="green" />
           <div className="flex items-baseline gap-[2px] mt-[4px]">
             <Txt size={12} weight="cm" className="text-white">
