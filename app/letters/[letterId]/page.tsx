@@ -3,6 +3,7 @@ import { cn } from "@/lib/utils";
 import { PrimaryButton } from "@/components/atoms";
 import BasicHeader from "@/components/common/BasicHeader";
 import LettersDetail from "@/components/letters/LettersDetail";
+import ReplyItem from "@/components/letters/Reply";
 import { dummyLetters } from "@/public/dummyLetters";
 
 type Props = {
@@ -35,6 +36,7 @@ export default async function LetterDetailPage({ params, isSoldier }: Props) {
             <PrimaryButton title="답장하기" className="px-3 w-1/4 py-[5px]" />
           </a>
         )}
+        {isReply && <ReplyItem reply={letter} />}
       </div>
     </>
   );
