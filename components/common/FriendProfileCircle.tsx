@@ -1,10 +1,10 @@
 "use client";
 
+import { dDayConCatString } from "@/utils/date";
 import Image from "next/image";
 import { useRouter } from "next/navigation";
 import { FriendProfile } from "@/types/common/profile";
 import { cn } from "@/lib/utils";
-import { dDayConCatString } from "@/utils/date";
 import Txt from "@/components/atoms/Text";
 
 const AltMap: Record<FriendProfile["level"], string> = {
@@ -39,7 +39,7 @@ export default function FriendProfileCircle({
         "flex-row gap-[10px]": isRowLayout,
       })}
     >
-      <div className="bg-white relative">
+      <div className="relative">
         {/* 계급 아이콘 */}
         <div className="flex items-center border border-green-49d justify-center bg-white p-[6px] rounded-full">
           <Image
