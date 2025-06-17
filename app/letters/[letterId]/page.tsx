@@ -22,12 +22,12 @@ export default async function LetterDetailPage({ params, isSoldier }: Props) {
 
   return (
     <>
-      <div className="w-full" />
       <BasicHeader />
 
-      <div className="py-4 flex justify-center items-center">
-        <div className={cn("bg-white rounded-lg shadow-sm p-4")}>
-          <div className="flex items-center gap-1 mt-2 mb-4">
+      {/* 원본 편지 */}
+      <div className="py-4 flex justify-center">
+        <div className="bg-white shadow-sm p-4 w-[90%] max-w-md">
+          <div className="flex justify-center gap-1 mt-2 mb-4">
             <Image
               src={"/images/byeoldol-face.svg"}
               alt="별돌이 얼굴"
@@ -45,18 +45,21 @@ export default async function LetterDetailPage({ params, isSoldier }: Props) {
         </div>
       </div>
 
-      <div className="flex justify-end text-center w-full">
-        {isSoldier && !reply && (
+      {/* 답장 작성 버튼 */}
+      {isSoldier && !reply && (
+        <div className="flex justify-end px-6 mt-2">
           <a href={`/write/${letter.id}`}>
-            <PrimaryButton title="답장하기" className="px-3 w-1/4 py-[5px]" />
+            <PrimaryButton title="답장하기" className="px-3 w-28 py-[5px]" />
           </a>
-        )}
-      </div>
+        </div>
+      )}
 
-      {/* 답장이 있을 경우 아래에 추가 표시 */}
+      {/* 답장 편지 */}
       {reply && (
-        <div className="mt-6">
-          <LettersDetail lettersDetail={reply} />
+        <div className="flex justify-center mt-4">
+          <div className="bg-white shadow-sm p-4 w-[90%] max-w-md">
+            <LettersDetail lettersDetail={reply} isReply />
+          </div>
         </div>
       )}
     </>

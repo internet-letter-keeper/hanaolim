@@ -6,39 +6,45 @@ import { Txt } from "@/components/atoms";
 
 type Props = {
   lettersDetail: Letter;
+  isReply?: boolean;
 };
 
-export default function LettersDetail({ lettersDetail }: Props) {
-  const { id, fileUrl, parentId, writer, content, createDt } = lettersDetail;
+export default function LettersDetail({
+  lettersDetail,
+  isReply = false,
+}: Props) {
+  const { fileUrl, writer, content, createDt } = lettersDetail;
+
   return (
-    <div className="flex justify-center items-center">
-      <div className="flex">
-        <Txt size={18} weight="cm" className="text-green-49d mb-1">
+    <div>
+      {/* 받는 사람 */}
+      <div className="flex justify-between items-center mb-1">
+        <Txt size={16} weight="cm" className="text-green-49d">
           To. {writer}
         </Txt>
       </div>
 
       <div className="flex">
-        <Txt size={12} weight="cm" className="text-blue-9a0 mb-4">
+        <Txt size={12} weight="cm" className="text-blue-9a0">
           {createDt}
         </Txt>
       </div>
 
-      {/* 편지 본문 */}
-      <div className="flex">
+      {/* 내용 */}
+      <div className="mt-4 mb-4">
         <Txt
           size={15}
           weight="cm"
           align="left"
-          className="leading-relaxed whitespace-pre-line mb-6"
+          className="leading-relaxed whitespace-pre-line"
         >
           {content}
         </Txt>
       </div>
 
-      {/* 사진 영상 */}
+      {/* 첨부 미디어 */}
       {fileUrl && (
-        <div className="w-full bg-gray-200 flex items-center justify-center rounded-md mb-6">
+        <div className="w-full bg-gray-200 flex items-center justify-center rounded-md mb-4">
           {fileUrl.endsWith(".mp4") || fileUrl.endsWith(".webm") ? (
             <video
               src={fileUrl}
@@ -59,17 +65,12 @@ export default function LettersDetail({ lettersDetail }: Props) {
         </div>
       )}
 
-      {/* <LetterView fileUrl={fileUrl} /> */}
-
-      {/* 발신자 */}
-
-      <Txt
-        size={18}
-        weight="cm"
-        className="flex justify-end text-green-49d mb-1"
-      >
-        From. {writer}
-      </Txt>
+      {/* 보내는 사람 */}
+      <div className="flex justify-end">
+        <Txt size={16} weight="cm" className="text-green-49d">
+          From. {writer}
+        </Txt>
+      </div>
     </div>
   );
 }
