@@ -77,34 +77,17 @@ export default function LettersPage() {
             </Txt>
             개
           </Txt>
-          <div className="flex gap-3">
-            <Txt
-              weight="cm"
-              size={13}
-              className={cn(
-                filter === "all" ? "text-[#209B98]" : "text-black-939",
-                "cursor-pointer underline"
-              )}
-              onClick={() => onChangeFilter("all")}
-            >
-              전체
-            </Txt>
+        </div>
 
-            <Txt weight="cm" size={13}>
-              |
-            </Txt>
-
-            <Txt
-              weight="cm"
-              size={13}
-              className={cn(
-                filter === "favorite" ? "text-green-49d" : "text-black-939",
-                "cursor-pointer underline"
-              )}
-              onClick={() => onChangeFilter("favorite")}
-            >
-              즐겨찾는 편지
-            </Txt>
+        <div className="flex px-4 gap-x-2">
+          <div className="flex items-center gap-1 rounded-full border border-green-49d px-2 py-0.5 text-green-49d text-[12px]">
+            즐겨찾기
+          </div>
+          <div className="flex items-center gap-1 rounded-full border border-green-49d px-2 py-0.5 text-green-49d text-[12px]">
+            답장
+          </div>
+          <div className="flex items-center gap-1 rounded-full border border-green-49d px-2 py-0.5 text-green-49d text-[12px]">
+            안읽음
           </div>
         </div>
 
