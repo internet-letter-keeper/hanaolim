@@ -24,7 +24,7 @@ export default function CabinetHeader({ isMyCabinet }: Props) {
   const isSoldier = true;
 
   return (
-    <div className="flex items-center h-[35px]">
+    <header className={"flex items-center px-2 h-[40px]"}>
       {/* 군인 아닌 유저에게는 뒤로가기 버튼 안 보이게 */}
       {isSoldier && (
         <button onClick={handleBack} className="mr-[17px]">
@@ -69,6 +69,6 @@ export default function CabinetHeader({ isMyCabinet }: Props) {
         */}
         <SidebarTrigger />
       </SidebarHeader>
-    </div>
+    </header>
   );
 }

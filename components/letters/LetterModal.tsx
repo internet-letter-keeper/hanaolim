@@ -56,7 +56,7 @@ export default function LetterModal({ letterId, onHandleModal }: Props) {
     <>
       <div
         ref={overlay}
-        className="fixed inset-0 z-10 sm:w-sm w-full -translate-x-1/2 left-1/2 bg-modal-overlay"
+        className="fixed inset-0 z-100 sm:w-sm w-full -translate-x-1/2 left-1/2 bg-modal-overlay"
         onClick={onClickOverlay}
       >
         <div

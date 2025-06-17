@@ -8,7 +8,6 @@
   --code-theme1: #ffffff;
   --code-theme2: #f2f2f2;
   --code-theme3: #f6f7f9;
-  --code-theme29: #fafafa;
 
   /* 그레이 */
   --code-theme4: #000000;
@@ -19,6 +18,7 @@
   --code-theme9: #dfdfdf;
   --code-theme10: #d7d7d6;
   --code-theme27: #dadada;
+  --code-theme28: rgba(57, 57, 57, 0.5);
 
   /* 그린 */
   --code-theme11: #00a49d;
@@ -46,7 +46,6 @@
   --color-white-fff: var(--code-theme1);
   --color-white-2f2: var(--code-theme2);
   --color-white-7f9: var(--code-theme3);
-  --color-white-afa: var(--code-theme29);
 
   --color-gray-000: var(--code-theme4);
   --color-gray-530: var(--code-theme5);
@@ -56,6 +55,7 @@
   --color-gray-fdf: var(--code-theme9);
   --color-gray-7d6: var(--code-theme10);
   --color-gray-ada: var(--code-theme27);
+  --color-modal-overlay: var(--code-theme28);
 
   --color-green-49d: var(--code-theme11);
   --color-green-5f2: var(--code-theme12);
@@ -145,38 +145,4 @@
 @font-face {
   font-family: "Hana2-Heavy";
   src: url("/fonts/Hana2-Heavy.ttf") format("truetype");
-}
-
-:root {
-  --sidebar: hsl(0 0% 98%);
-  --sidebar-foreground: hsl(240 5.3% 26.1%);
-  --sidebar-primary: hsl(240 5.9% 10%);
-  --sidebar-primary-foreground: hsl(0 0% 98%);
-  --sidebar-accent: hsl(240 4.8% 95.9%);
-  --sidebar-accent-foreground: hsl(240 5.9% 10%);
-  --sidebar-border: hsl(220 13% 91%);
-  --sidebar-ring: hsl(217.2 91.2% 59.8%);
-}
-
-.dark {
-  --sidebar: hsl(240 5.9% 10%);
-  --sidebar-foreground: hsl(240 4.8% 95.9%);
-  --sidebar-primary: hsl(224.3 76.3% 48%);
-  --sidebar-primary-foreground: hsl(0 0% 100%);
-  --sidebar-accent: hsl(240 3.7% 15.9%);
-  --sidebar-accent-foreground: hsl(240 4.8% 95.9%);
-  --sidebar-border: hsl(240 3.7% 15.9%);
-  --sidebar-ring: hsl(217.2 91.2% 59.8%);
-}
-
-@layer base {
-  * {
-    @apply border-border outline-ring/50;
-  }
-  body {
-    @apply bg-background text-foreground;
-  }
-  button {
-    @apply cursor-pointer;
-  }
 }

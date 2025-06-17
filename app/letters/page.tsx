@@ -1,12 +1,10 @@
 "use client";
 
-import Image from "next/image";
 import { useState } from "react";
 import { cn } from "@/lib/utils";
 import { PrimaryButton, Input, Txt } from "@/components/atoms";
 import BasicHeader from "@/components/common/BasicHeader";
 import LettersItem from "@/components/letters/LettersItem";
-import { Button } from "@/components/ui/button";
 import { dummyLetters } from "@/public/dummyLetters";
 
 export default function LettersPage() {
@@ -29,7 +27,7 @@ export default function LettersPage() {
 
   return (
     <div className="flex flex-col min-h-screen w-full">
-      <div className="max-w-screen-sm px-2 mb-4">
+      <div className="max-w-screen-sm mb-4">
         <BasicHeader title="편지 보관함" />
 
         <div className="relative mt-4">
