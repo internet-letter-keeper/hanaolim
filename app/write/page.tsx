@@ -45,7 +45,7 @@ export default function WritePage() {
   return (
     <div className="flex flex-col">
       <BasicHeader />
-      <div className="flex flex-col w-full px-4">
+      <div className="flex flex-col w-full px-4 relative min-h-[calc(100vh-64px)]">
         <div className="flex items-center justify-center gap-2 mt-2">
           <Image
             src="/images/ic-byeoldol-face.svg"
