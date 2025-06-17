@@ -2,7 +2,6 @@
 
 import Image from "next/image";
 import { Letter } from "@/types/letters";
-import { cn } from "@/lib/utils";
 import { Txt } from "@/components/atoms";
 
 type Props = {
@@ -12,18 +11,7 @@ type Props = {
 export default function LettersDetail({ lettersDetail }: Props) {
   const { id, fileUrl, parentId, writer, content, createDt } = lettersDetail;
   return (
-    <div className={cn("bg-white rounded-lg shadow-sm p-4")}>
-      <div className="flex justify-center items-center">
-        <div className="flex items-center gap-1 mt-2 mb-4">
-          <Image
-            src={"/images/byeoldol-face.svg"}
-            alt="별돌이 얼굴"
-            width={50}
-            height={50}
-          />
-          <Image src={"/images/letter.svg"} alt="편지" width={50} height={50} />
-        </div>
-      </div>
+    <div className="flex justify-center items-center">
       <div className="flex">
         <Txt size={18} weight="cm" className="text-green-49d mb-1">
           To. {writer}
