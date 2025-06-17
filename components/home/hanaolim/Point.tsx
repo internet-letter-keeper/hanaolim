@@ -3,7 +3,7 @@
 import Image from "next/image";
 import { useRouter } from "next/navigation";
 import { useState } from "react";
-import { PointAccrue } from "@/types/points";
+import { PointAccrue } from "@/types/point";
 import Txt from "@/components/atoms/Text";
 import { Progress } from "@/components/ui/progress";
 import PointRuleTooltip from "./PointRuleTooltip";
@@ -30,7 +30,6 @@ export default function Point({ pointAccrue }: Props) {
         </Txt>
         <div className="flex items-center gap-[13px] relative">
           <Txt size={14} weight="heavy" className="text-yellow-32b">
-
             {pointAccrue.myStamp}/{pointAccrue.totalStamp}
           </Txt>
           <Image

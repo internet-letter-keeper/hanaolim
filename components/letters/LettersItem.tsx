@@ -1,6 +1,5 @@
 "use client";
 
-import { Mail } from "lucide-react";
 import Image from "next/image";
 import { useRouter } from "next/navigation";
 import { Letter } from "@/types/letters";
