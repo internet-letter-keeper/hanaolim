@@ -1,6 +1,7 @@
 "use client";
 
 import { useRouter } from "next/navigation";
+import { cn } from "@/lib/utils";
 import {
   Sidebar,
   SidebarContent,
@@ -9,6 +10,7 @@ import {
   useSidebar,
 } from "@/components/ui/sidebar";
 import PrimaryButton from "../atoms/PrimaryButton";
+import { NewIcon } from "../common";
 import Profile from "../common/Profile";
 
 const ButtonStyle = "border border-gray-353/25 py-3";
@@ -33,10 +35,11 @@ export default function DropDownModal() {
                 <div className="flex flex-col gap-2">
                   <PrimaryButton
                     title="편지 보관함"
-                    className={ButtonStyle}
+                    className={cn(ButtonStyle, "gap-1")}
                     textSize={16}
                     color="gray"
                     onClick={goToLetters}
+                    icon={<NewIcon />}
                   />
                   <div className="flex gap-2">
                     {/* TODO: 군인일 경우 버튼 '군인으로 등록하기'안보이게 분기 처리 */}
