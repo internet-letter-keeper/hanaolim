@@ -53,17 +53,31 @@ export default function LettersDetail({ lettersDetail }: Props) {
         </Txt>
       </div>
 
-      {/* 비디오 썸네일 */}
-      {/* <div className="w-full h-[120px] bg-gray-200 flex items-center justify-center rounded-md mb-6">
-        <Image
-          src={fileUrl}
-          alt="재생 버튼"
-          width={40}
-          height={40}
-        />
-      </div> */}
+      {/* 사진 영상 */}
+      {fileUrl && (
+        <div className="w-full bg-gray-200 flex items-center justify-center rounded-md mb-6">
+          {fileUrl.endsWith(".mp4") || fileUrl.endsWith(".webm") ? (
+            <video
+              src={fileUrl}
+              width={100}
+              height={120}
+              controls
+              className="rounded-md w-full h-auto object-contain"
+            />
+          ) : (
+            <Image
+              src={fileUrl}
+              alt="첨부 이미지"
+              width={100}
+              height={120}
+              className="rounded-md w-full h-full object-contain"
+            />
+          )}
+        </div>
+      )}
 
       {/* 발신자 */}
+
       <Txt
         size={18}
         weight="cm"
