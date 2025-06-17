@@ -6,7 +6,7 @@ import { ComponentPropsWithoutRef, forwardRef, ElementRef } from "react";
 import { cn } from "@/lib/utils";
 
 type ProgressProps = ComponentPropsWithoutRef<typeof ProgressPrimitive.Root> & {
-  value: number;
+  value?: number;
   variant?: "green" | "yellow";
 };
 
@@ -16,12 +16,17 @@ export const Progress = forwardRef<
 >(({ className, value = 0, variant = "green", ...props }, ref) => {
   const rootBg = variant === "green" ? "bg-green-fa7" : "bg-white-fff";
   const indicatorBg = variant === "green" ? "bg-green-a3b" : "bg-yellow-32b";
-  const width = variant === "green" ? "w-[208px]" : "w-[258px]";
+  const maxWidth = variant === "green" ? "min-w-[208px]" : "min-w-[258px]";
 
   return (
     <ProgressPrimitive.Root
       ref={ref}
-      className={cn("relative h-[8px] rounded-full", rootBg, width, className)}
+      className={cn(
+        "relative h-[8px] rounded-full w-full",
+        rootBg,
+        maxWidth,
+        className
+      )}
       {...props}
       value={value}
     >
