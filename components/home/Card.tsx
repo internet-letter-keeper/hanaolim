@@ -13,7 +13,7 @@ export default function Card() {
   };
 
   return (
-    <div className="flex items-center justify-between pl-[23px] pr-[25px] py-[19px] bg-green-5f2 border-[1px] border-green-9e7 rounded-[20px] w-max h-[150px] overflow-hidden">
+    <div className="flex items-center justify-between w-full px-[23px] py-[19px] bg-green-5f2 border-[1px] border-green-9e7 rounded-[20px] h-[150px] overflow-hidden">
       {/* 카드 정보 */}
       <div className="flex flex-col items-start">
         <Txt size={16} weight="bold" className="text-gray-353">
