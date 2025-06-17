@@ -33,11 +33,7 @@ export default function AddFriendBtn() {
           onClickWhiteBtn={closeModal}
         >
           보고 싶은 군인을 등록해주세요
-          <Input
-            placeholder="코드 입력"
-            inputType="modal"
-            className="mt-[20px]"
-          />
+          <Input placeholder="코드 입력" usage="modal" className="mt-[20px]" />
         </Modal>
       )}
 
