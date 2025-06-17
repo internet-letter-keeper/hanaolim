@@ -31,7 +31,7 @@ export default function Olim() {
           </Txt>
 
           <div
-            className="flex items-center gap-[4px] mt-[10px] cursor-pointer"
+            className="flex items-center gap-[4px] mt-[10px] mb-[23px] cursor-pointer"
             onClick={() => router.push("/cabinet/Cabinet")}
           >
             <Txt size={12} weight="cm" className="text-gray-353">
