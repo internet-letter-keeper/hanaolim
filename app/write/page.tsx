@@ -43,9 +43,9 @@ export default function WritePage() {
   };
 
   return (
-    <div className="flex flex-col">
+    <div className="flex flex-col flex-1">
       <BasicHeader />
-      <div className="flex flex-col w-full px-4">
+      <div className="flex flex-col w-full px-4 relative min-h-[calc(100vh-64px)]">
         <div className="flex items-center justify-center gap-2 mt-2">
           <Image
             src="/images/ic-byeoldol-face.svg"
@@ -70,7 +70,7 @@ export default function WritePage() {
           </Txt>
         </div>
 
-        <div className="flex flex-col gap-[14px] mb-8">
+        <div className="flex flex-col gap-[14px] mb-6">
           <Txt size={16} weight="cm" align="left">
             관물대에 넣을 물건을 선택해주세요.
           </Txt>
@@ -80,34 +80,36 @@ export default function WritePage() {
         <form className="flex flex-col gap-3 w-full">
           <Input
             placeholder="닉네임"
-            inputType="auth"
             className="w-1/3 text-gray-939 placeholder:text-blue-9a0 text-[15px] pl-[18px]"
             maxLength={7} // 7글자 제한
           />
           <Input
             placeholder="내용을 입력하세요."
-            inputType="auth"
             tag="textarea"
             maxLength={500} // 500자 제햔
-            className="flex w-full h-[230px] text-[15px] rounded-[10px] py-[10px] px-[18px] bg-white-fff text-gray-939 placeholder:text-blue-9a0 focus:outline-none"
           />
         </form>
 
         <div className="flex flex-row justify-between w-full items-center mt-5">
           {/* 파일이 없을 때만 업로드 버튼 표시 */}
           {!uploadedFile && (
-            <Button
-              onClick={onClickImage}
-              className="cursor-pointer flex w-7 h-7 items-center justify-center rounded-[5px] bg-white-fff shadow-[0px_0px_5px_rgba(0,0,0,0.15)]"
-            >
-              <Image
-                src="/icons/ic-picture.svg"
-                alt="사진"
-                width={20}
-                height={20}
-                className="w-auto h-auto"
-              />
-            </Button>
+            <div className="flex flex-row gap-1 items-center">
+              <Button
+                onClick={onClickImage}
+                className="cursor-pointer flex w-7 h-7 items-center justify-center rounded-[5px] bg-white-fff shadow-[0px_0px_5px_rgba(0,0,0,0.15)]"
+              >
+                <Image
+                  src="/icons/ic-picture.svg"
+                  alt="사진"
+                  width={20}
+                  height={20}
+                  className="w-auto h-auto"
+                />
+              </Button>
+              <Txt size={12} weight="cm" className="text-blue-9a0">
+                ※ 최대 1개의 파일만 첨부할 수 있습니다.
+              </Txt>
+            </div>
           )}
 
           {/* 파일이 있을 때는 빈 div로 공간 */}
@@ -120,13 +122,6 @@ export default function WritePage() {
             accept="image/*,video/*"
             className="hidden"
           />
-
-          <PrimaryButton
-            title="전송"
-            type="submit"
-            rounded="sm"
-            className="w-20 py-1 font-bold"
-          />
         </div>
 
         {uploadedFile && (
@@ -135,6 +130,16 @@ export default function WritePage() {
             onDelete={handleDeleteFile}
           />
         )}
+        <div className="absolute bottom-7 right-4">
+          <PrimaryButton
+            title="전송"
+            type="submit"
+            rounded="sm"
+            weight="medium"
+            className="w-20 py-1"
+            textSize={16}
+          />
+        </div>
       </div>
     </div>
   );

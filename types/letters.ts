@@ -3,3 +3,5 @@ export type uploadedFileType = {
   url: string;
   type: "image" | "video";
 };
+
+export type ReceivedTotalLetter = { unreadLetter: number; totalLetter: number };

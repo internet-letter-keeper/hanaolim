@@ -1,5 +1,6 @@
 "use client";
 
+import { dDayConCatString } from "@/utils/date";
 import Image from "next/image";
 import { useRouter } from "next/navigation";
 import { FriendProfile } from "@/types/common/profile";
@@ -26,11 +27,7 @@ export default function FriendProfileCircle({
 
   const { userName, endDate, code, level } = profile;
 
-  const untilEndDate = Math.floor(
-    (new Date().getTime() - new Date(endDate).getTime()) / (1000 * 60 * 60 * 24)
-  );
-
-  const dDay = untilEndDate < 0 ? `D${untilEndDate}` : `D+${untilEndDate}`;
+  const dDay = dDayConCatString(endDate);
 
   const onClick = () => navigation.push(`/cabinet/${code}`);
 
@@ -43,7 +40,7 @@ export default function FriendProfileCircle({
         { "flex-row gap-[10px]": isRowLayout }
       )}
     >
-      <div className="bg-white relative">
+      <div className="relative">
         {/* 계급 아이콘 */}
         <div className="flex items-center border border-green-49d justify-center bg-white p-[6px] rounded-full">
           <Image

@@ -32,11 +32,7 @@ export default function SignInPage() {
           <Txt size={19} weight="cm" align="left" className="min-w-1/4">
             이메일
           </Txt>
-          <Input
-            placeholder="이메일을 입력해주세요"
-            inputType="auth"
-            maxLength={30}
-          />
+          <Input placeholder="이메일을 입력해주세요" maxLength={30} />
         </div>
 
         {/* 비밀번호 */}
@@ -44,11 +40,7 @@ export default function SignInPage() {
           <Txt size={19} weight="cm" align="left" className="min-w-1/4 ">
             비밀번호
           </Txt>
-          <Input
-            placeholder="비밀번호를 입력해주세요"
-            inputType="auth"
-            maxLength={20}
-          />
+          <Input placeholder="비밀번호를 입력해주세요" maxLength={20} />
         </div>
 
         {/* 로그인 에러 메시지 */}
