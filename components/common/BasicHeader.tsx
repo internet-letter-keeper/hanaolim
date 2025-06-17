@@ -3,7 +3,7 @@
 import Image from "next/image";
 import { useRouter } from "next/navigation";
 import { cn } from "@/lib/utils";
-import Txt from "../atoms/Text";
+import { Txt } from "../atoms";
 
 type Props = {
   title?: string;
@@ -13,25 +13,21 @@ type Props = {
 
 export default function BasicHeader({
   title,
-  className,
   showBackButton = true,
+  className,
 }: Props) {
   const router = useRouter();
 
-  const handleBack = () => {
-    router.back();
-  };
+  const handleBack = () => router.back();
 
   return (
-    <header
-      className={cn("flex items-center px-4 py-3 bg-white-7f9", className)}
-    >
+    <header className={cn("flex items-center px-2 h-[40px]", className)}>
       {showBackButton && (
-        <button onClick={handleBack} className="mr-2 cursor-pointer">
+        <button onClick={handleBack} className="cursor-pointer">
           <Image
             src="/icons/ic-chevron-left.svg"
             alt="뒤로가기"
-            width={10}
+            width={12}
             height={20}
           />
         </button>
@@ -39,7 +35,7 @@ export default function BasicHeader({
       <Txt size={22} weight="cm" align="center" className="flex-1">
         {title}
       </Txt>
-      {showBackButton && <div className="w-[10px]" />}
+      {showBackButton && <div className="w-[12px]" />}
     </header>
   );
 }

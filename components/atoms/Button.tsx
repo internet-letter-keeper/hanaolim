@@ -19,7 +19,7 @@ export default function Button({
 }: PropsWithChildren<Props>) {
   return (
     <button
-      className={className}
+      className={`${className} cursor-pointer`}
       onClick={onClick}
       type={type}
       disabled={disabled}
