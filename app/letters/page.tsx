@@ -8,22 +8,24 @@ import LettersItem from "@/components/letters/LettersItem";
 import { dummyLetters } from "@/public/dummyLetters";
 
 export default function LettersPage() {
-  const [activeTab, setActiveTab] = useState<"send" | "receive">("send");
-  const [filter, setFilter] = useState<"all" | "favorite">("all");
+  type FilterType = "all" | "favorite" | "hasReply" | "unread";
 
-  const totalCount = dummyLetters.length;
-  const favoriteCount = dummyLetters.filter(
-    (letter) => letter.isFavorite
-  ).length;
+  const [activeTab, setActiveTab] = useState("send");
+  const [filter, setFilter] = useState<FilterType>("all");
 
-  const onChangeFilter = (value: "all" | "favorite") => {
-    setFilter(value);
+  const onChangeFilter = (value: FilterType) => {
+    setFilter((prev) => (prev === value ? "all" : value));
   };
 
-  const filteredLetters =
-    filter === "all"
-      ? dummyLetters
-      : dummyLetters.filter((letter) => letter.isFavorite);
+  const filteredLetters = dummyLetters
+    .filter((l) => l.parentId === undefined)
+    .filter((l) => {
+      if (filter === "favorite") return l.isFavorite;
+      if (filter === "hasReply")
+        return dummyLetters.some((r) => r.parentId === l.id);
+      if (filter === "unread") return l.isRead === false;
+      return true;
+    });
 
   return (
     <div className="flex flex-col min-h-screen w-full">
@@ -45,7 +47,7 @@ export default function LettersPage() {
           />
         </div>
 
-        <div className={"py-4"}>
+        <div className="py-4">
           <div className="flex justify-center gap-2">
             <PrimaryButton
               title="내 관물대로 퐁당"
@@ -69,33 +71,58 @@ export default function LettersPage() {
       <div className="flex-1 py-4 bg-white h-screen -m-4">
         <div className="flex justify-between items-center px-4 mb-2">
           <Txt weight="cm" size={13}>
-            총&nbsp;
-            <Txt>
-              {cn(filter === "all" ? `${totalCount}` : `${favoriteCount}`)}
-            </Txt>
-            개
+            총 <Txt>{filteredLetters.length}</Txt> 개
           </Txt>
         </div>
 
+        {/* 필터 버튼들 */}
         <div className="flex px-4 gap-x-2">
-          <div className="flex items-center gap-1 rounded-full border border-green-49d px-2 py-0.5 text-green-49d text-[12px]">
+          <div
+            onClick={() => onChangeFilter("favorite")}
+            className={cn(
+              "cursor-pointer flex items-center gap-1 rounded-full border border-green-49d px-2 py-0.5 text-[12px]",
+              filter === "favorite"
+                ? "bg-green-49d text-white"
+                : "text-green-49d bg-white"
+            )}
+          >
             즐겨찾기
           </div>
-          <div className="flex items-center gap-1 rounded-full border border-green-49d px-2 py-0.5 text-green-49d text-[12px]">
+
+          <div
+            onClick={() => onChangeFilter("hasReply")}
+            className={cn(
+              "cursor-pointer flex items-center gap-1 rounded-full border border-green-49d px-2 py-0.5 text-[12px]",
+              filter === "hasReply"
+                ? "bg-green-49d text-white"
+                : "text-green-49d bg-white"
+            )}
+          >
             답장
           </div>
-          <div className="flex items-center gap-1 rounded-full border border-green-49d px-2 py-0.5 text-green-49d text-[12px]">
+
+          <div
+            onClick={() => onChangeFilter("unread")}
+            className={cn(
+              "cursor-pointer flex items-center gap-1 rounded-full border border-green-49d px-2 py-0.5 text-[12px]",
+              filter === "unread"
+                ? "bg-green-49d text-white"
+                : "text-green-49d bg-white"
+            )}
+          >
             안읽음
           </div>
         </div>
 
         <div className="mx-auto px-4">
           {filteredLetters.map((letter) => (
-            <LettersItem key={letter.id} letters={letter} />
+            <LettersItem
+              key={letter.id}
+              letters={letter}
+              allLetters={dummyLetters}
+            />
           ))}
         </div>
-
-        {/* <div className="h-16" /> */}
       </div>
     </div>
   );
