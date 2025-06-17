@@ -3,3 +3,5 @@ export type PointItem = {
   amount: number;
   balance: number;
 };
+
+export type PointAccrue = { myStamp: number; totalStamp: number };
