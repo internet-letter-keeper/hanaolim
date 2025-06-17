@@ -21,7 +21,7 @@ export default function BasicHeader({
   const handleBack = () => router.back();
 
   return (
-    <header className={cn("flex items-center px-2 py-3", className)}>
+    <header className={cn("flex items-center px-2 h-[40px]", className)}>
       {showBackButton && (
         <button onClick={handleBack} className="cursor-pointer">
           <Image
