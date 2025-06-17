@@ -3,6 +3,7 @@
 import Image from "next/image";
 import { useState } from "react";
 import { Txt } from "@/components/atoms";
+import { NewIcon } from "../common";
 
 type Props = {
   isMyCabinet: boolean;
@@ -20,9 +21,7 @@ export default function Cabinet({ isMyCabinet }: Props) {
   const toNextCabinet = () => setCurrentPage((prev) => prev + 1);
 
   return (
-    <div className="flex flex-col items-center relative gap-[14px]">
-      {/* FIXME: 첫, 마지막 페이지에서 레이아웃 전체적으로 위로 올라가는 현상 수정. absolute 때문에 그런 듯함 */}
-
+    <div className="flex flex-col items-center relative px-10">
       {/* 관물대 첫 페이지면 이전 페이지 버튼이 안 보이게 */}
       {currentPage > 1 ? (
         <button onClick={toPrevCabinet} className="cursor-pointer">
@@ -31,20 +30,124 @@ export default function Cabinet({ isMyCabinet }: Props) {
             alt="관물대 이전 페이지로"
             width={20}
             height={20}
-            className="scale-x-[-1] left-0 absolute top-1/2"
+            className="absolute w-[5%] scale-x-[-1] left-0 top-[45%]"
           />
         </button>
       ) : (
         <div />
       )}
 
-      {/* TODO: 관물대에 아이템 넣기 구현 */}
-      <Image
-        src="/images/img-cabinet.svg"
-        alt="관물대 이미지"
-        width={270}
-        height={470}
-      />
+      <div className="relative w-full">
+        <Image
+          src="/images/img-cabinet.svg"
+          alt="관물대 이미지"
+          layout="responsive"
+          width={10}
+          height={10}
+        />
+
+        <Image
+          src="/images/ic-byeoldol-face-blackhat.svg"
+          alt="별돌이 얼굴 이미지"
+          width={67}
+          height={67}
+          className="absolute w-[24%] top-[6%] left-[51%]"
+        />
+        <Txt
+          weight="medium"
+          className="absolute top-[16%] left-[64%] text-white"
+        >
+          정소은
+        </Txt>
+        <NewIcon className="absolute top-[6%] left-[52%] text-white" />
+        <Image
+          src="/images/ic-helmet.svg"
+          alt="군모 이미지"
+          width={67}
+          height={67}
+          className="absolute w-[24%] top-[9%] left-[30%]"
+        />
+
+        <Txt
+          weight="medium"
+          className="absolute top-[16%] left-[40%] text-white truncate max-w-[7ch]"
+        >
+          윤서연가나다라
+        </Txt>
+
+        <button onClick={() => alert("편지 오픈")} className="cursor-pointer">
+          <Image
+            src="/images/ic-bag.svg"
+            alt="가방 이미지"
+            width={67}
+            height={67}
+            className="absolute w-[24%] top-[7%] left-[8%]"
+          />
+          <Txt
+            weight="medium"
+            className="absolute top-[8%] left-[21%] text-white truncate max-w-[7ch]"
+          >
+            최수빈가
+          </Txt>
+        </button>
+
+        <Image
+          src="/images/ic-keyring.svg"
+          alt="군번줄 이미지"
+          width={67}
+          height={67}
+          className="absolute w-[24%] top-[25%] left-[18%]"
+        />
+        <Txt
+          weight="medium"
+          className="absolute w-[24%] z-10 top-[35%] left-[20%] text-white"
+        >
+          우재현
+        </Txt>
+
+        <Image
+          src="/images/ic-vest.svg"
+          alt="조끼 이미지"
+          width={67}
+          height={67}
+          className="absolute w-[24%] top-[50%] left-[8%]"
+        />
+        <Txt
+          weight="medium"
+          className="absolute z-10 top-[60%] left-[20%] text-white"
+        >
+          우재현
+        </Txt>
+
+        <Image
+          src="/images/ic-shoes.svg"
+          alt="군화 이미지"
+          width={67}
+          height={67}
+          className="absolute w-[24%] top-[78%] left-[13%]"
+        />
+        <Txt
+          weight="medium"
+          className="absolute z-10 top-[67%] left-[60%] text-white"
+        >
+          임아현
+        </Txt>
+
+        <Image
+          src="/images/ic-gun.svg"
+          alt="총 이미지"
+          width={67}
+          height={67}
+          className="absolute w-[40%] top-[62%] left-[37%]"
+        />
+
+        <Txt
+          weight="medium"
+          className="absolute z-10 top-[85%] left-[25%] text-white text-md"
+        >
+          윤서연
+        </Txt>
+      </div>
 
       {/* 관물대 마지막 페이지면 다음 페이지 버튼이 안 보이게 */}
       {currentPage < totalPage && (
@@ -54,7 +157,7 @@ export default function Cabinet({ isMyCabinet }: Props) {
             alt="관물대 다음 페이지로"
             width={20}
             height={20}
-            className="absolute right-0 top-1/2"
+            className="absolute w-[5%] right-0 top-[45%]"
           />
         </button>
       )}
