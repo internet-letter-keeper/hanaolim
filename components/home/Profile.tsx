@@ -36,12 +36,7 @@ export default function ProfileBanner({ userName, startDate, endDate }: Props) {
     <div className="flex items-center gap-3 px-4 py-3 bg-gray-530 border-[1.5px] border-green-a3b rounded-[30px] w-full h-[89px] relative overflow-hidden">
       {/* 캐릭터 이미지 */}
       <div className="flex-shrink-0 relative w-[85px] h-[85px]">
-        <Image
-          src="/images/ic-byeoldol.svg"
-          alt="별돌이 프로필"
-          fill
-          priority
-        />
+        <Image src="/images/byeoldol.svg" alt="별돌이 프로필" fill priority />
       </div>
       <div className="flex flex-col justify-center flex-1 min-w-0">
         {/* 군인 이름 */}

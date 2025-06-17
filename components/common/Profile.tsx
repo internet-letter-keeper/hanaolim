@@ -1,6 +1,6 @@
 import { useToast } from "@/contexts/toast/ToastContext";
-import Image from "next/image";
 import { dDayConCatString } from "@/utils/date";
+import Image from "next/image";
 import { Button, Txt } from "../atoms";
 
 type Props = {
@@ -34,7 +34,7 @@ export default function Profile({
     <div className="flex items-center justify-center gap-4">
       <div className="flex border border-green-49d rounded-full p-[6px] items-center justify-center">
         <Image
-          src={`${code ? `/icons/ic-profilepic-${level}.svg` : "/icons/ic-white-byeoldol.svg"}`}
+          src={`${code ? `/images/profilepic-${level}.svg` : "/Image/white-byeoldol.svg"}`}
           alt="profile-icon"
           width={55}
           height={55}

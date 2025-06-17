@@ -39,7 +39,7 @@ export default function Cabinet({ isMyCabinet }: Props) {
 
       <div className="relative w-full">
         <Image
-          src="/images/img-cabinet.svg"
+          src="/images/cabinet.svg"
           alt="관물대 이미지"
           layout="responsive"
           width={10}
@@ -47,7 +47,7 @@ export default function Cabinet({ isMyCabinet }: Props) {
         />
 
         <Image
-          src="/images/ic-byeoldol-face-blackhat.svg"
+          src="/images/cabinet-byeoldol-face-blackhat.svg"
           alt="별돌이 얼굴 이미지"
           width={67}
           height={67}
@@ -61,7 +61,7 @@ export default function Cabinet({ isMyCabinet }: Props) {
         </Txt>
         <NewIcon className="absolute top-[6%] left-[52%] text-white" />
         <Image
-          src="/images/ic-helmet.svg"
+          src="/images/cabinet-helmet.svg"
           alt="군모 이미지"
           width={67}
           height={67}
@@ -77,7 +77,7 @@ export default function Cabinet({ isMyCabinet }: Props) {
 
         <button onClick={() => alert("편지 오픈")} className="cursor-pointer">
           <Image
-            src="/images/ic-bag.svg"
+            src="/images/cabinet-bag.svg"
             alt="가방 이미지"
             width={67}
             height={67}
@@ -92,7 +92,7 @@ export default function Cabinet({ isMyCabinet }: Props) {
         </button>
 
         <Image
-          src="/images/ic-keyring.svg"
+          src="/images/cabinet-keyring.svg"
           alt="군번줄 이미지"
           width={67}
           height={67}
@@ -106,7 +106,7 @@ export default function Cabinet({ isMyCabinet }: Props) {
         </Txt>
 
         <Image
-          src="/images/ic-vest.svg"
+          src="/images/cabinet-vest.svg"
           alt="조끼 이미지"
           width={67}
           height={67}
@@ -120,7 +120,7 @@ export default function Cabinet({ isMyCabinet }: Props) {
         </Txt>
 
         <Image
-          src="/images/ic-shoes.svg"
+          src="/images/cabinet-shoes.svg"
           alt="군화 이미지"
           width={67}
           height={67}
@@ -134,7 +134,7 @@ export default function Cabinet({ isMyCabinet }: Props) {
         </Txt>
 
         <Image
-          src="/images/ic-gun.svg"
+          src="/images/cabinet-gun.svg"
           alt="총 이미지"
           width={67}
           height={67}

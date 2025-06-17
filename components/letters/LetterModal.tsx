@@ -88,7 +88,7 @@ export default function LetterModal({ letterId, onHandleModal }: Props) {
             {letter?.content}
           </Txt>
           {/* TODO: letterId로 테이블에서 fileUrl 찾아와야 함 임시로 넣음 */}
-          <LetterView fileUrl={"/images/ic-letter.svg"} />
+          <LetterView fileUrl={"/images/letter.svg"} />
           <div className="flex w-full justify-between">
             <Txt
               align="left"

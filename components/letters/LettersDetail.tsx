@@ -16,17 +16,12 @@ export default function LettersDetail({ lettersDetail }: Props) {
       <div className="flex justify-center items-center">
         <div className="flex items-center gap-1 mt-2 mb-4">
           <Image
-            src={"/images/ic-byeoldol-face.svg"}
+            src={"/images/byeoldol-face.svg"}
             alt="별돌이 얼굴"
             width={50}
             height={50}
           />
-          <Image
-            src={"/images/ic-letter.svg"}
-            alt="편지"
-            width={50}
-            height={50}
-          />
+          <Image src={"/images/letter.svg"} alt="편지" width={50} height={50} />
         </div>
       </div>
       <div className="flex">

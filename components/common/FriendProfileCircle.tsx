@@ -43,7 +43,7 @@ export default function FriendProfileCircle({
         {/* 계급 아이콘 */}
         <div className="flex items-center border border-green-49d justify-center bg-white p-[6px] rounded-full">
           <Image
-            src={`/icons/ic-profilepic-${level}.svg`}
+            src={`/images/profilepic-${level}.svg`}
             alt={AltMap[level]}
             width={37}
             height={37}

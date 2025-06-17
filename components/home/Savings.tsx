@@ -22,7 +22,7 @@ export default function Savings({ savingBalance }: Props) {
         </div>
         <div className="flex-shrink-0 relative ml-[57px] w-[80px] h-[60px]">
           <Image
-            src="/images/ic-bankbook.svg"
+            src="/images/bankbook.svg"
             alt="적금 통장"
             fill
             className="object-contain"

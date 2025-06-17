@@ -48,7 +48,7 @@ export default function Olim() {
 
         <div className="flex-shrink-0 relative mt-[36px] w-[98px] h-[91px]">
           <Image
-            src="/images/ic-hanabox.svg"
+            src="/images/hanabox.svg"
             alt="하나 편지코인박스"
             fill
             className="object-contain"

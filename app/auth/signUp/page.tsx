@@ -10,7 +10,6 @@ import {
   checkPasswordValidation,
 } from "@/lib/validation";
 import { Input, PrimaryButton, Txt } from "@/components/atoms";
-import hanaOlim from "@/public/images/ic-hanaolim-logo.svg";
 
 export default function SignUpPage() {
   const router = useRouter();
@@ -89,7 +88,12 @@ export default function SignUpPage() {
   return (
     <div className="flex flex-col items-center justify-center h-full px-[20px]">
       {/* 하나 올림 로고 */}
-      <Image src={hanaOlim} alt="하나올림 로고" width={184} height={49} />
+      <Image
+        src="/icons/ic-hanaolim.svg"
+        alt="하나올림 로고"
+        width={184}
+        height={49}
+      />
 
       {/* Input 버튼 */}
       <div className="mt-[52px] flex flex-col gap-[17px] w-full">
