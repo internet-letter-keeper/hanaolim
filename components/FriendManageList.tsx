@@ -6,7 +6,7 @@ export default function FriendManageList() {
   return (
     <div>
       {dummyFriends.map((profile) => (
-        <div key={profile.code}>
+        <div key={profile.id}>
           <div className="flex flex-row items-center justify-between pt-[12px] pb-[20px] px-7">
             <FriendProfileCircle isRowLayout profile={profile} />
             <button className="cursor-pointer border-[1px] border-gray-353 px-[17px] rounded-[5px] mt-[8px]">
