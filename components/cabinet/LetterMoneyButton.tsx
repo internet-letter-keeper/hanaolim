@@ -1,5 +1,6 @@
 "use client";
 
+import { useToast } from "@/contexts/toast/ToastContext";
 import Image from "next/image";
 import { Txt } from "../atoms";
 
@@ -31,7 +32,11 @@ function SoldierSupportButton({ type, onClick }: SoldierSupportProps) {
 }
 
 export default function LetterMoneyButton() {
-  const onCoinClick = () => alert("용돈 보내기 버튼 클릭");
+  const { showToast } = useToast();
+
+  const onCoinClick = () => {
+    showToast("계좌번호가 복사되었습니다!");
+  };
 
   const onLetterClick = () => alert("편지 쓰기 버튼 클릭");
 

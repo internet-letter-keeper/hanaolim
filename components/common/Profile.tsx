@@ -1,5 +1,6 @@
-import { dDayConCatString } from "@/utils/date";
+import { useToast } from "@/contexts/toast/ToastContext";
 import Image from "next/image";
+import { dDayConCatString } from "@/utils/date";
 import { Button, Txt } from "../atoms";
 
 type Props = {
@@ -20,12 +21,13 @@ export default function Profile({
   code = "ㅇㅇㅇ",
   level = 1,
 }: Props) {
+  const { showToast } = useToast();
   if (!endDate) return;
   const dDay = dDayConCatString(endDate);
 
   const handleCopyCode = () => {
     navigator.clipboard.writeText(code);
-    alert("복사되었습니다.");
+    showToast("코드가 복사되었습니다!");
   };
 
   return (

@@ -1,3 +1,4 @@
+import { ToastProvider } from "@/contexts/toast/ToastProvider";
 import {
   Cabinet,
   CabinetHeader,
@@ -21,15 +22,17 @@ export default async function CabinetPage({ params }: Props) {
   const message = "보고 싶다 얘들아";
 
   return (
-    <SidebarProvider  defaultOpen={false} className="flex-col">
-      <div className="flex flex-col gap-4">
-        <CabinetHeader isMyCabinet={isMyCabinet} />
-        <FriendsList />
-        <StatusMessage isMyCabinet={isMyCabinet} message={message} />
-        <Cabinet isMyCabinet={isMyCabinet} />
-        {!isMyCabinet && <LetterMoneyButton />}
-      </div>
-      <DropDownModal />
-    </SidebarProvider>
+    <ToastProvider>
+      <SidebarProvider defaultOpen={false} className="flex-col">
+        <div className="flex flex-col gap-4">
+          <CabinetHeader isMyCabinet={isMyCabinet} />
+          <FriendsList />
+          <StatusMessage isMyCabinet={isMyCabinet} message={message} />
+          <Cabinet isMyCabinet={isMyCabinet} />
+          {!isMyCabinet && <LetterMoneyButton />}
+        </div>
+        <DropDownModal />
+      </SidebarProvider>
+    </ToastProvider>
   );
 }
