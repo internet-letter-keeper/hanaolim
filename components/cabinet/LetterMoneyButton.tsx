@@ -14,7 +14,7 @@ function SoldierSupportButton({ type, onClick }: SoldierSupportProps) {
     <button
       type="button"
       onClick={onClick}
-      className="flex flex-col items-center gap-[6px] cursor-pointer"
+      className="flex flex-col items-center gap-[6px]"
     >
       <div className="flex items-center w-[50px] h-[50px] justify-center bg-white border rounded-full border-blue-9a0">
         <Image

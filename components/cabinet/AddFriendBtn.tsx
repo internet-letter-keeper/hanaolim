@@ -33,11 +33,7 @@ export default function AddFriendBtn() {
           onClickWhiteBtn={closeModal}
         >
           보고 싶은 군인을 등록해주세요
-          <Input
-            placeholder="코드 입력"
-            inputType="modal"
-            className="mt-[20px]"
-          />
+          <Input placeholder="코드 입력" usage="modal" className="mt-[20px]" />
         </Modal>
       )}
 
@@ -56,7 +52,7 @@ export default function AddFriendBtn() {
       <button
         type="button"
         onClick={openModal}
-        className="flex flex-col items-center cursor-pointer whitespace-nowrap"
+        className="flex flex-col items-center whitespace-nowrap"
       >
         <div className="flex items-center border border-green-49d justify-center bg-white p-[6px] rounded-full">
           <div className="w-[37px] h-[37px] flex items-center justify-center text-green-49d">

@@ -1,10 +1,10 @@
 "use client";
 
-import { dDayConCatString } from "@/utils/date";
 import Image from "next/image";
 import { useRouter } from "next/navigation";
 import { FriendProfile } from "@/types/common/profile";
 import { cn } from "@/lib/utils";
+import { dDayConCatString } from "@/utils/date";
 import Txt from "@/components/atoms/Text";
 
 const AltMap: Record<FriendProfile["level"], string> = {
@@ -35,10 +35,9 @@ export default function FriendProfileCircle({
     <button
       type="button"
       onClick={onClick}
-      className={cn(
-        "cursor-pointer whitespace-nowrap flex items-center flex-col",
-        { "flex-row gap-[10px]": isRowLayout }
-      )}
+      className={cn("whitespace-nowrap flex items-center flex-col", {
+        "flex-row gap-[10px]": isRowLayout,
+      })}
     >
       <div className="relative">
         {/* 계급 아이콘 */}
