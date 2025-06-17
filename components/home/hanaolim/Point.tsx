@@ -67,3 +67,4 @@ export default function Point({ pointAccrue }: Props) {
       </Txt>
     </div>
   );
+}
