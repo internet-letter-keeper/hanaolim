@@ -1,40 +1,39 @@
+"use client";
+
+import { ONBOARDING_MODE } from "@/constants/onboardingMode";
 import Image from "next/image";
+import { useRouter } from "next/navigation";
 import { cn } from "@/lib/utils";
-import Button from "./atoms/Button";
-import Txt from "./atoms/Text";
+import { Txt } from "./atoms";
 
 //onBording 컴포넌트에 들어갈 option 컴포넌트
 
 type Props = {
   mode: "soldier" | "viewer";
+  onRequestRegister?: () => void;
 };
 
-const modeMap = {
-  soldier: {
-    title: "나를 군인으로 등록하기",
-    label: "등록하기",
-    imgSrc: "/images/ic-byeoldol-face.svg",
-    iconAlt: "사용자를 군인으로 등록하는 페이지로 이동하는 버튼",
-    imgAlt: "가운데 별이 박혀 있는 군모를 쓴 하나은행 마스코트 별돌이",
-  },
-  viewer: {
-    title: "보고 싶은 군인 추가하기",
-    label: "추가하기",
-    imgSrc: "/images/ic-letter.svg",
-    iconAlt: "보고 싶은 군인을 추가할 수 있는 페이지로 이동하는 버튼",
-    imgAlt: "편지 모양 아이콘",
-  },
-};
+export default function OnboardingOption({ mode, onRequestRegister }: Props) {
+  const router = useRouter();
 
-export default function OnboardingOption({ mode }: Props) {
-  const selectedMode = modeMap[mode === "soldier" ? "soldier" : "viewer"];
+  //soldier 모드면 군인 등록으로 아니면 친구 추가 모달 띄우기
+  const handleOnclick = () => {
+    if (mode === "soldier") router.push("/registerSoldier");
+    else {
+      onRequestRegister?.();
+    }
+  };
+
+  const selectedMode =
+    ONBOARDING_MODE[mode === "soldier" ? "soldier" : "viewer"];
 
   const { title, label, imgSrc, iconAlt, imgAlt } = selectedMode;
 
   return (
-    <Button
+    <button
+      onClick={handleOnclick}
       className={cn(
-        "w-[300px] h-[130px] rounded-[20px] p-[18px] border bg-green-5f2 border-green-9e7",
+        "h-[130px] rounded-[20px] p-[18px] border bg-green-5f2 border-green-9e7 cursor-pointer",
         { "bg-blue-0f5 border-blue-af0": mode === "viewer" }
       )}
     >
@@ -59,6 +58,6 @@ export default function OnboardingOption({ mode }: Props) {
           <Image src={imgSrc} alt={imgAlt} width={70} height={70} />
         </div>
       </div>
-    </Button>
+    </button>
   );
 }

@@ -5,8 +5,8 @@ import { PrimaryButton, Txt } from "../atoms";
 export default function Card() {
   const router = useRouter();
 
-  const handleClick = () => {
-    router.push("/splash");
+  const handleSendClick = () => {
+    router.push("/hanaBank");
   };
 
   return (
@@ -33,7 +33,7 @@ export default function Card() {
             align="center"
             padding="py-0"
             className="w-[80px] h-[23px]"
-            onClick={handleClick}
+            onClick={handleSendClick}
           />
         </div>
       </div>
