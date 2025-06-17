@@ -23,7 +23,7 @@ export default function StatusMessage({ message, isMyCabinet }: Props) {
   };
 
   return (
-    <div>
+    <div className="flex px-[16px] py-[3px] items-center border bg-blue-0f5 border-blue-af0 rounded-[15px]">
       {isModalOpened && (
         <Modal
           greenBtnText="저장"
@@ -43,39 +43,37 @@ export default function StatusMessage({ message, isMyCabinet }: Props) {
 
           <Input
             placeholder="상태 메시지"
-            inputType="modal"
+            usage="modal"
             defaultValue={message}
             maxLength={20}
           />
         </Modal>
       )}
 
-      <div className="flex px-[16px] py-[8px] items-center border bg-blue-0f5 border-blue-af0 rounded-[15px]">
-        <Image
-          src="/images/ic-walkie-talkie.svg"
-          alt="무전기 이미지"
-          width={32}
-          height={39}
-        />
+      <Image
+        src="/images/ic-walkie-talkie.svg"
+        alt="무전기 이미지"
+        width={32}
+        height={39}
+      />
 
-        <Txt className="w-full ml-[7px] text-gray-353 truncate" align="left">
-          {message}
-        </Txt>
+      <Txt className="w-full ml-[7px] text-gray-353 truncate" align="left">
+        {message}
+      </Txt>
 
-        {isMyCabinet && (
-          <button
-            className="bg-blue-af0 cursor-pointer p-[2px] rounded-[5px]"
-            onClick={openModal}
-          >
-            <Image
-              src="/icons/ic-pencil.svg"
-              alt="수정 아이콘"
-              width={25}
-              height={25}
-            />
-          </button>
-        )}
-      </div>
+      {isMyCabinet && (
+        <button
+          className="bg-blue-af0 cursor-pointer p-[2px] rounded-[5px]"
+          onClick={openModal}
+        >
+          <Image
+            src="/icons/ic-pencil.svg"
+            alt="수정 아이콘"
+            width={25}
+            height={25}
+          />
+        </button>
+      )}
     </div>
   );
 }
