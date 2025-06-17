@@ -59,7 +59,7 @@ export default function LetterWritePage() {
           />
         </div>
 
-        <div className="flex mt-[14px] mb-13 items-center justify-center">
+        <div className="flex mt-[14px] mb-13 items-center justify-center whitespace-nowrap">
           <Txt size={20} weight="bold" className="text-green-49d">
             별돌이&nbsp;
           </Txt>

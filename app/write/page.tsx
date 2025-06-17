@@ -45,7 +45,7 @@ export default function WritePage() {
   return (
     <div className="flex flex-col flex-1">
       <BasicHeader />
-      <div className="flex flex-col w-full px-4 relative min-h-[calc(100vh-64px)]">
+      <div className="flex flex-col w-full px-4 relative min-h-[calc(100dvh-64px)]">
         <div className="flex items-center justify-center gap-2 mt-2">
           <Image
             src="/images/ic-byeoldol-face.svg"
@@ -61,7 +61,7 @@ export default function WritePage() {
           />
         </div>
 
-        <div className="flex mt-[14px] mb-13 items-center justify-center">
+        <div className="flex mt-[14px] mb-13 items-center justify-center whitespace-nowrap">
           <Txt size={20} weight="bold" className="text-green-49d">
             별돌이&nbsp;
           </Txt>
@@ -130,7 +130,7 @@ export default function WritePage() {
             onDelete={handleDeleteFile}
           />
         )}
-        <div className="absolute bottom-7 right-4">
+        <div className="absolute bottom-0.5 right-0.5 sm:bottom-1.5 sm:right-1 md:bottom-7 md:right-4 ">
           <PrimaryButton
             title="전송"
             type="submit"

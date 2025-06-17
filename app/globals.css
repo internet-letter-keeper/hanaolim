@@ -8,6 +8,7 @@
   --code-theme1: #ffffff;
   --code-theme2: #f2f2f2;
   --code-theme3: #f6f7f9;
+  --code-theme29: #fafafa;
 
   /* 그레이 */
   --code-theme4: #000000;
@@ -46,6 +47,7 @@
   --color-white-fff: var(--code-theme1);
   --color-white-2f2: var(--code-theme2);
   --color-white-7f9: var(--code-theme3);
+  --color-white-afa: var(--code-theme29);
 
   --color-gray-000: var(--code-theme4);
   --color-gray-530: var(--code-theme5);
