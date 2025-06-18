@@ -1,0 +1,112 @@
+generator client {
+  provider = "prisma-client-js"
+  output   = "../lib/generated/prisma"
+}
+
+datasource db {
+  provider = "mysql"
+  url      = env("DATABASE_URL")
+}
+
+/// This model or at least one of its fields has comments in the database, and requires an additional setup for migrations: Read more: https://pris.ly/d/database-comments
+model ACCOUNT {
+  accountId      Int     @id @default(autoincrement()) @db.UnsignedInt
+  accountNum     String  @db.VarChar(30)
+  accountBalance Int
+  savingsBalance Int
+  soldierId      Int     @db.UnsignedInt
+  SOLDIER        SOLDIER @relation(fields: [soldierId], references: [soldierId], onDelete: NoAction, onUpdate: NoAction, map: "ACCOUNT_ibfk_1")
+
+  @@index([soldierId], map: "soldierId")
+}
+
+/// This model or at least one of its fields has comments in the database, and requires an additional setup for migrations: Read more: https://pris.ly/d/database-comments
+model FAVORITE {
+  favoriteId Int      @id @default(autoincrement()) @db.UnsignedInt
+  isFavorite Boolean?
+  userId     Int      @db.UnsignedInt
+  letterId   Int      @db.UnsignedInt
+  USER       USER     @relation(fields: [userId], references: [userId], onDelete: NoAction, onUpdate: NoAction, map: "FAVORITE_ibfk_1")
+  LETTER     LETTER   @relation(fields: [letterId], references: [letterId], onDelete: NoAction, onUpdate: NoAction, map: "FAVORITE_ibfk_2")
+
+  @@index([letterId], map: "letterId")
+  @@index([userId], map: "userId")
+}
+
+/// This model or at least one of its fields has comments in the database, and requires an additional setup for migrations: Read more: https://pris.ly/d/database-comments
+model FOLLOW {
+  followId  Int     @id @default(autoincrement()) @db.UnsignedInt
+  userId    Int     @db.UnsignedInt
+  soldierId Int     @db.UnsignedInt
+  USER      USER    @relation(fields: [userId], references: [userId], onDelete: NoAction, onUpdate: NoAction, map: "FOLLOW_ibfk_1")
+  SOLDIER   SOLDIER @relation(fields: [soldierId], references: [soldierId], onDelete: NoAction, onUpdate: NoAction, map: "FOLLOW_ibfk_2")
+
+  @@index([soldierId], map: "soldierId")
+  @@index([userId], map: "userId")
+}
+
+/// This model or at least one of its fields has comments in the database, and requires an additional setup for migrations: Read more: https://pris.ly/d/database-comments
+model LETTER {
+  letterId                     Int        @id @default(autoincrement()) @db.UnsignedInt
+  nickname                     String?    @db.VarChar(20)
+  content                      String     @db.Text
+  fileUrl                      String?    @db.VarChar(255)
+  iconId                       Int?
+  createDate                   DateTime   @default(now()) @db.Timestamp(0)
+  readDate                     DateTime?  @db.Timestamp(0)
+  parentLetterId               Int?       @db.UnsignedInt
+  receiverId                   Int        @db.UnsignedInt
+  senderId                     Int        @db.UnsignedInt
+  FAVORITE                     FAVORITE[]
+  USER_LETTER_receiverIdToUSER USER       @relation("LETTER_receiverIdToUSER", fields: [receiverId], references: [userId], onDelete: NoAction, onUpdate: NoAction, map: "LETTER_ibfk_1")
+  USER_LETTER_senderIdToUSER   USER       @relation("LETTER_senderIdToUSER", fields: [senderId], references: [userId], onDelete: NoAction, onUpdate: NoAction, map: "LETTER_ibfk_2")
+  LETTER                       LETTER?    @relation("LETTERToLETTER", fields: [parentLetterId], references: [letterId], onDelete: NoAction, onUpdate: NoAction, map: "LETTER_ibfk_3")
+  other_LETTER                 LETTER[]   @relation("LETTERToLETTER")
+
+  @@index([parentLetterId], map: "parentLetterId")
+  @@index([receiverId], map: "receiverId")
+  @@index([senderId], map: "senderId")
+}
+
+/// This model or at least one of its fields has comments in the database, and requires an additional setup for migrations: Read more: https://pris.ly/d/database-comments
+model POINT {
+  pointId    Int      @id @default(autoincrement()) @db.UnsignedInt
+  point      Int
+  createDate DateTime @default(now()) @db.Timestamp(0)
+  soldierId  Int      @db.UnsignedInt
+  SOLDIER    SOLDIER  @relation(fields: [soldierId], references: [soldierId], onDelete: NoAction, onUpdate: NoAction, map: "POINT_ibfk_1")
+
+  @@index([soldierId], map: "soldierId")
+}
+
+/// This model or at least one of its fields has comments in the database, and requires an additional setup for migrations: Read more: https://pris.ly/d/database-comments
+model SOLDIER {
+  soldierId     Int       @id @default(autoincrement()) @db.UnsignedInt
+  startDate     DateTime  @db.Date
+  endDate       DateTime  @db.Date
+  code          String    @db.VarChar(20)
+  statusMessage String?   @db.VarChar(50)
+  pointProgress Int       @default(0)
+  userId        Int       @db.UnsignedInt
+  ACCOUNT       ACCOUNT[]
+  FOLLOW        FOLLOW[]
+  POINT         POINT[]
+  USER          USER      @relation(fields: [userId], references: [userId], onDelete: NoAction, onUpdate: NoAction, map: "SOLDIER_ibfk_1")
+
+  @@index([userId], map: "userId")
+}
+
+/// This model or at least one of its fields has comments in the database, and requires an additional setup for migrations: Read more: https://pris.ly/d/database-comments
+model USER {
+  userId                         Int        @id @default(autoincrement()) @db.UnsignedInt
+  email                          String     @unique(map: "email") @db.VarChar(40)
+  password                       String?    @db.VarChar(255)
+  userName                       String     @db.VarChar(50)
+  isSoldier                      Boolean
+  isSocial                       Boolean    @default(false)
+  FAVORITE                       FAVORITE[]
+  FOLLOW                         FOLLOW[]
+  LETTER_LETTER_receiverIdToUSER LETTER[]   @relation("LETTER_receiverIdToUSER")
+  LETTER_LETTER_senderIdToUSER   LETTER[]   @relation("LETTER_senderIdToUSER")
+  SOLDIER                        SOLDIER[]
+}
