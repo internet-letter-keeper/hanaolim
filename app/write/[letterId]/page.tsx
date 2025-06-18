@@ -4,7 +4,7 @@ import Image from "next/image";
 import { useState, useRef } from "react";
 import { ChangeEvent } from "react";
 import { uploadedFileType } from "@/types/letters";
-import { Button, Input, PrimaryButton, Txt } from "@/components/atoms";
+import { Input, PrimaryButton, Txt } from "@/components/atoms";
 import { BasicHeader } from "@/components/common";
 import { FilePreview } from "@/components/letters";
 
@@ -12,6 +12,7 @@ export default function LetterWritePage() {
   const [uploadedFile, setUploadedFile] = useState<uploadedFileType | null>(
     null
   );
+
   const fileInputRef = useRef<HTMLInputElement>(null);
 
   const onClickImage = () => {
@@ -74,7 +75,7 @@ export default function LetterWritePage() {
           {/* 파일이 없을 때만 업로드 버튼 표시 */}
           {!uploadedFile && (
             <div className="flex flex-row gap-1 items-center">
-              <Button
+              <button
                 onClick={onClickImage}
                 className="flex w-7 h-7 items-center justify-center rounded-[5px] bg-white-fff shadow-[0px_0px_5px_rgba(0,0,0,0.15)]"
               >
@@ -85,7 +86,7 @@ export default function LetterWritePage() {
                   height={20}
                   className="w-auto h-auto"
                 />
-              </Button>
+              </button>
               <Txt size={12} weight="cm" className="text-blue-9a0">
                 ※ 최대 1개의 파일만 첨부할 수 있습니다.
               </Txt>

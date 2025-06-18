@@ -2,41 +2,42 @@ export const dummyLetters = [
   {
     id: 1,
     writer: "별송이",
-    content:
-      "별드리ㅣㅣㅣㅣㅣㅣㅣ 리리리리리리리리 | 리리리드ㄹㅇㄹ느ㄴㄹㅌㅍ 느린ㅇ훙별드리...",
+    content: "별드리...",
     createDt: "2025.05.10 14:42",
     isFavorite: true,
+    isRead: true,
   },
   {
     id: 2,
     writer: "별듀리이이",
-    content:
-      "별드ㄹ루댜ㄱㄴ루댜ㄱ 류ㅣㅣ두ㅣ두ㅣ둣 | 리리리리리 | 느린ㅇ훙별드리...",
+    content: "별드ㄹ루댜...",
     createDt: "2025.05.08 12:30",
+    isFavorite: false,
+    isRead: false,
   },
   {
     id: 3,
     writer: "별듀리이이",
-    content:
-      "별드ㄹ루댜ㄱㄴ루댜ㄱ 류ㅣㅣ두ㅣ두ㅣ둣 | 리리리리리 | 느린ㅇ훙별드리...",
+    content: "별드ㄹ루댜...",
     createDt: "2025.05.08 12:30",
     isFavorite: false,
+    isRead: true,
   },
   {
     id: 4,
     writer: "별듀리이이",
-    content:
-      "별드ㄹ루댜ㄱㄴ루댜ㄱ 류ㅣㅣ두ㅣ두ㅣ둣 | 리리리리리 | 느린ㅇ훙별드리...",
+    content: "별드ㄹ루댜...",
     createDt: "2025.05.08 12:30",
-    isFavorite: false,
+    isFavorite: true,
+    isRead: false,
   },
   {
     id: 5,
     writer: "별듀리이이",
-    content:
-      "별드ㄹ루댜ㄱㄴ루댜ㄱ 류ㅣㅣ두ㅣ두ㅣ둣 | 리리리리리 | 느린ㅇ훙별드리...",
+    content: "별드ㄹ루댜...",
     createDt: "2025.05.08 12:30",
     isFavorite: false,
+    isRead: false,
   },
   {
     id: 6,
@@ -44,14 +45,15 @@ export const dummyLetters = [
     content: "답장.....",
     createDt: "2025.05.08 12:30",
     isFavorite: false,
+    isRead: true,
     parentId: 1,
   },
   {
     id: 7,
     writer: "별듀리이이",
-    content:
-      "별드ㄹ루댜ㄱㄴ루댜ㄱ 류ㅣㅣ두ㅣ두ㅣ둣 | 리리리리리 | 느린ㅇ훙별드리...",
+    content: "별드ㄹ루댜...",
     createDt: "2025.05.08 12:30",
     isFavorite: false,
+    isRead: true,
   },
 ];
