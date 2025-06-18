@@ -8,7 +8,7 @@ import {
   checkEmailValidation,
   checkNameValidation,
   checkPasswordValidation,
-} from "@/lib/validation";
+} from "@/lib/validations/validation";
 import { Input, PrimaryButton, Txt } from "@/components/atoms";
 
 export default function SignUpPage() {
