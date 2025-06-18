@@ -1,9 +1,8 @@
+import Image from "next/image";
 import { notFound } from "next/navigation";
-import { cn } from "@/lib/utils";
 import { PrimaryButton } from "@/components/atoms";
 import BasicHeader from "@/components/common/BasicHeader";
 import LettersDetail from "@/components/letters/LettersDetail";
-import ReplyItem from "@/components/letters/Reply";
 import { dummyLetters } from "@/public/dummyLetters";
 
 type Props = {
@@ -18,26 +17,50 @@ export default async function LetterDetailPage({ params, isSoldier }: Props) {
 
   if (!letter) return notFound();
 
-  const isReply = dummyLetters.some((l) => l.parentId === +letter.id);
+  const reply = dummyLetters.find((letter) => letter.parentId === +letter.id);
 
   return (
     <>
-      <div className="w-full" />
       <BasicHeader />
 
-      <div className={cn("py-4")}>
-        <LettersDetail lettersDetail={letter} />
+      {/* 원본 편지 */}
+      <div className="py-4 flex justify-center">
+        <div className="bg-white shadow-sm p-4 w-[90%] max-w-md">
+          <div className="flex justify-center gap-1 mt-2 mb-4">
+            <Image
+              src={"/images/byeoldol-face.svg"}
+              alt="별돌이 얼굴"
+              width={50}
+              height={50}
+            />
+            <Image
+              src={"/images/letter.svg"}
+              alt="편지"
+              width={50}
+              height={50}
+            />
+          </div>
+          <LettersDetail lettersDetail={letter} />
+        </div>
       </div>
 
-      {/* 답장 버튼 (군인이고 답장이 아직 없을 경우만) */}
-      <div className="flex justify-end text-center w-full">
-        {isSoldier && !isReply && (
+      {/* 답장 작성 버튼 */}
+      {isSoldier && !reply && (
+        <div className="flex justify-end px-6 mt-2">
           <a href={`/write/${letter.id}`}>
-            <PrimaryButton title="답장하기" className="px-3 w-1/4 py-[5px]" />
+            <PrimaryButton title="답장하기" className="px-3 w-28 py-[5px]" />
           </a>
-        )}
-        {isReply && <ReplyItem reply={letter} />}
-      </div>
+        </div>
+      )}
+
+      {/* 답장 편지 */}
+      {reply && (
+        <div className="flex justify-center mt-4">
+          <div className="bg-white shadow-sm p-4 w-[90%] max-w-md">
+            <LettersDetail lettersDetail={reply} isReply />
+          </div>
+        </div>
+      )}
     </>
   );
 }

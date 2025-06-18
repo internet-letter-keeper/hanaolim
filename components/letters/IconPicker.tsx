@@ -2,7 +2,6 @@ import { ICONS } from "@/constants/icons";
 import Image from "next/image";
 import { IconName } from "@/types/common/icons";
 import { cn } from "@/lib/utils";
-import { Button } from "../atoms";
 
 type Props = {
   value: IconName;
@@ -13,7 +12,7 @@ export default function IconPicker({ value, onChange }: Props) {
   return (
     <div className="flex items-center gap-1">
       {ICONS.map(({ id, name, src }) => (
-        <Button
+        <button
           key={id}
           type="button"
           className={cn(
@@ -32,7 +31,7 @@ export default function IconPicker({ value, onChange }: Props) {
             height={33}
             className="object-contain w-[33px] h-[33px]"
           />
-        </Button>
+        </button>
       ))}
     </div>
   );
