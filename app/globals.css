@@ -148,3 +148,7 @@
   font-family: "Hana2-Heavy";
   src: url("/fonts/Hana2-Heavy.ttf") format("truetype");
 }
+
+button {
+  @apply cursor-pointer;
+}
