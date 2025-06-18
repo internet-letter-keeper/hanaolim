@@ -1,7 +1,7 @@
 import { useToast } from "@/contexts/toast/ToastContext";
 import { dDayConCatString } from "@/utils/date";
 import Image from "next/image";
-import { Button, Txt } from "../atoms";
+import { Txt } from "../atoms";
 
 type Props = {
   userName: string;
@@ -56,7 +56,7 @@ export default function Profile({
                 님의 관물대
               </Txt>
             </div>
-            <Button
+            <button
               className="flex flex-row gap-2 align-bottom"
               onClick={handleCopyCode}
             >
@@ -69,7 +69,7 @@ export default function Profile({
                 width={12}
                 height={12}
               />
-            </Button>
+            </button>
           </div>
         ) : (
           <>

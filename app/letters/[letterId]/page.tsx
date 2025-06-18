@@ -1,6 +1,5 @@
 import Image from "next/image";
 import { notFound } from "next/navigation";
-import { cn } from "@/lib/utils";
 import { PrimaryButton } from "@/components/atoms";
 import BasicHeader from "@/components/common/BasicHeader";
 import LettersDetail from "@/components/letters/LettersDetail";
