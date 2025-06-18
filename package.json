@@ -7,6 +7,7 @@
     "build": "next build",
     "start": "next start",
     "lint": "next lint",
+    "mysql": "mysql -u root -p -h 13.209.70.240 -P 3309",
     "db:pull": "prisma db pull",
     "db:gen": "prisma generate",
     "format": "prettier --write ."
