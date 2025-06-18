@@ -36,15 +36,17 @@ export default function RocketSplash({ onSkip }: RocketSplashProps) {
         </button>
       </div>
       <div className="flex flex-col items-center gap-8">
-        <div className="text-center">
-          <Txt size={20} weight="bold">
-            일주일 동안&nbsp;
-            <Txt size={20} weight="bold" className="text-green-49d">
-              {receivedTotalLetter.unreadLetter}장
+        {receivedTotalLetter.unreadLetter > 0 && (
+          <div className="text-center">
+            <Txt size={23} weight="bold">
+              안 읽은 편지&nbsp;
+              <Txt size={25} weight="bold" className="text-green-49d">
+                {receivedTotalLetter.unreadLetter}장
+              </Txt>
+              보러 갈까요~?
             </Txt>
-            의 편지가 도착했어요!
-          </Txt>
-        </div>
+          </div>
+        )}
 
         <video
           ref={videoRef}
@@ -59,7 +61,7 @@ export default function RocketSplash({ onSkip }: RocketSplashProps) {
 
         <div className="text-center">
           <Txt size={30} weight="bold">
-            총 받은 편지 &nbsp;
+            총 받은 편지&nbsp;
           </Txt>
           <Txt size={30} weight="bold" className="text-green-49d">
             {receivedTotalLetter.totalLetter}장
