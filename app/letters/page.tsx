@@ -77,7 +77,7 @@ export default function LettersPage() {
       <div className="flex-1 bg-white h-screen -m-4">
         <div className="flex justify-between items-center px-4 mb-2">
           <Txt weight="cm" size={13}>
-            총 <Txt>{filteredLetters.length}</Txt> 개
+            총 {filteredLetters.length}개
           </Txt>
         </div>
 
