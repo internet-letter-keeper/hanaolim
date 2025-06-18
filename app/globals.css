@@ -20,11 +20,7 @@
   --code-theme10: #d7d7d6;
   --code-theme27: #dadada;
   --code-theme28: rgba(57, 57, 57, 0.5);
-<<<<<<< HEAD
-  --code-theme29: #f3f4f6;
-=======
   --code-theme29: #f3f5f6;
->>>>>>> 3d1b404 (Feat: 로켓 스플래시 배경색 추가)
 
   /* 그린 */
   --code-theme11: #00a49d;
@@ -63,11 +59,7 @@
   --color-gray-7d6: var(--code-theme10);
   --color-gray-ada: var(--code-theme27);
   --color-modal-overlay: var(--code-theme28);
-<<<<<<< HEAD
-  --color-gray-4f6: var(--code-theme29);
-=======
   --color-gray-5f6: var(--code-theme29);
->>>>>>> 3d1b404 (Feat: 로켓 스플래시 배경색 추가)
 
   --color-green-49d: var(--code-theme11);
   --color-green-5f2: var(--code-theme12);
