@@ -7,9 +7,13 @@
     "build": "next build",
     "start": "next start",
     "lint": "next lint",
+    "mysql": "mysql -u root -p -h 13.209.70.240 -P 3309",
+    "db:pull": "prisma db pull",
+    "db:gen": "prisma generate",
     "format": "prettier --write ."
   },
   "dependencies": {
+    "@prisma/client": "6.10.0",
     "@radix-ui/react-dialog": "^1.1.14",
     "@radix-ui/react-progress": "^1.1.7",
     "@radix-ui/react-separator": "^1.1.7",
@@ -34,6 +38,7 @@
     "eslint-config-next": "15.3.3",
     "eslint-config-prettier": "^10.1.5",
     "prettier": "^3.5.3",
+    "prisma": "^6.10.0",
     "tailwindcss": "^4",
     "tw-animate-css": "^1.3.4",
     "typescript": "^5"
