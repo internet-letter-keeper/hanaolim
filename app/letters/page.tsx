@@ -6,16 +6,18 @@ import BasicHeader from "@/components/common/BasicHeader";
 import LettersItem from "@/components/letters/LettersItem";
 import { dummyLetters } from "@/public/dummyLetters";
 
-const getFilteredButtonStyles = (filter: string) =>
-  `flex items-center gap-1 rounded-full border border-green-49d px-2 py-0.5 text-[12px] ${
-    filter === "unread" ? "bg-green-49d text-white" : "text-green-49d bg-white"
-  }`;
-
 export default function LettersPage() {
   type FilterType = "all" | "favorite" | "hasReply" | "unread";
 
   const [activeTab, setActiveTab] = useState("send");
   const [filter, setFilter] = useState<FilterType>("all");
+
+  const getFilteredButtonStyles = (filterType: FilterType) =>
+    `flex items-center gap-1 rounded-full border border-green-49d px-2 py-0.5 text-[12px] ${
+      filter === filterType
+        ? "bg-green-49d text-white"
+        : "text-green-49d bg-white"
+    }`;
 
   const onChangeFilter = (value: FilterType) => {
     setFilter((prev) => (prev === value ? "all" : value));
@@ -83,20 +85,20 @@ export default function LettersPage() {
         <div className="flex px-4 gap-x-2">
           <button
             onClick={() => onChangeFilter("favorite")}
-            className={getFilteredButtonStyles(filter)}
+            className={getFilteredButtonStyles("favorite")}
           >
             즐겨찾기
           </button>
 
           <button
             onClick={() => onChangeFilter("hasReply")}
-            className={getFilteredButtonStyles(filter)}
+            className={getFilteredButtonStyles("hasReply")}
           >
             답장
           </button>
           <button
             onClick={() => onChangeFilter("unread")}
-            className={getFilteredButtonStyles(filter)}
+            className={getFilteredButtonStyles("unread")}
           >
             안읽음
           </button>
