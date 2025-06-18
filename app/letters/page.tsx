@@ -1,11 +1,15 @@
 "use client";
 
 import { useState } from "react";
-import { cn } from "@/lib/utils";
 import { PrimaryButton, Input, Txt } from "@/components/atoms";
 import BasicHeader from "@/components/common/BasicHeader";
 import LettersItem from "@/components/letters/LettersItem";
 import { dummyLetters } from "@/public/dummyLetters";
+
+const getFilteredButtonStyles = (filter: string) =>
+  `flex items-center gap-1 rounded-full border border-green-49d px-2 py-0.5 text-[12px] ${
+    filter === "unread" ? "bg-green-49d text-white" : "text-green-49d bg-white"
+  }`;
 
 export default function LettersPage() {
   type FilterType = "all" | "favorite" | "hasReply" | "unread";
@@ -77,41 +81,25 @@ export default function LettersPage() {
 
         {/* 필터 버튼들 */}
         <div className="flex px-4 gap-x-2">
-          <div
+          <button
             onClick={() => onChangeFilter("favorite")}
-            className={cn(
-              "cursor-pointer flex items-center gap-1 rounded-full border border-green-49d px-2 py-0.5 text-[12px]",
-              filter === "favorite"
-                ? "bg-green-49d text-white"
-                : "text-green-49d bg-white"
-            )}
+            className={getFilteredButtonStyles(filter)}
           >
             즐겨찾기
-          </div>
+          </button>
 
-          <div
+          <button
             onClick={() => onChangeFilter("hasReply")}
-            className={cn(
-              "cursor-pointer flex items-center gap-1 rounded-full border border-green-49d px-2 py-0.5 text-[12px]",
-              filter === "hasReply"
-                ? "bg-green-49d text-white"
-                : "text-green-49d bg-white"
-            )}
+            className={getFilteredButtonStyles(filter)}
           >
             답장
-          </div>
-
-          <div
+          </button>
+          <button
             onClick={() => onChangeFilter("unread")}
-            className={cn(
-              "cursor-pointer flex items-center gap-1 rounded-full border border-green-49d px-2 py-0.5 text-[12px]",
-              filter === "unread"
-                ? "bg-green-49d text-white"
-                : "text-green-49d bg-white"
-            )}
+            className={getFilteredButtonStyles(filter)}
           >
             안읽음
-          </div>
+          </button>
         </div>
 
         <div className="mx-auto px-4">
