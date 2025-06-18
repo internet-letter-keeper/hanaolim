@@ -23,7 +23,7 @@ export default function RocketSplash({ onSkip }: RocketSplashProps) {
   if (!isVisible) return null;
 
   return (
-    <div className="bg-gray-5f6 overflow-hidden h-screen -m-4 flex flex-col justify-between">
+    <div className="bg-gray-4f6 overflow-hidden h-screen -m-4 flex flex-col justify-between">
       <div className="flex justify-end m-3">
         {/* Skip 버튼 */}
         <button
@@ -63,7 +63,7 @@ export default function RocketSplash({ onSkip }: RocketSplashProps) {
             총 받은 편지 &nbsp;
           </Txt>
           <Txt size={30} weight="bold" className="text-green-49d">
-            59장
+            {receivedTotalLetter.totalLetter}장
           </Txt>
         </div>
       </div>
@@ -74,6 +74,7 @@ export default function RocketSplash({ onSkip }: RocketSplashProps) {
         alt="편지 이미지"
         width={393}
         height={262}
+        className="w-full"
       />
     </div>
   );
