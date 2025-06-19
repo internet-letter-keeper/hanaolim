@@ -2,6 +2,7 @@
 
 import Image from "next/image";
 import { useEffect, useState } from "react";
+import { cn } from "@/lib/utils";
 
 type Props = {
   onFinish: () => void;
@@ -11,7 +12,6 @@ export default function SplashScreen({ onFinish }: Props) {
   const [fadeOut, setFadeOut] = useState(false);
 
   useEffect(() => {
-    console.log("fadeOut:", fadeOut);
     const t1 = setTimeout(() => setFadeOut(true), 1000);
     const t2 = setTimeout(() => {
       onFinish();
@@ -25,9 +25,10 @@ export default function SplashScreen({ onFinish }: Props) {
 
   return (
     <div
-      className={`absolute inset-0 -m-4 z-50 transition-opacity duration-1000 ease-in-out ${
-        fadeOut ? "opacity-0" : "opacity-100"
-      }`}
+      className={cn(
+        "absolute inset-0 -m-4 z-50 transition-opacity duration-1000 ease-in-out opacity-100",
+        { "opacity-0": fadeOut }
+      )}
     >
       <Image
         src="/images/home-splash.png"

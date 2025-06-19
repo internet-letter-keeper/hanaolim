@@ -7,7 +7,7 @@ import { Txt } from "../atoms";
 
 export default function PointPop() {
   return (
-    <div className="absolute top-20 left-1/2 -translate-x-1/2 z-50 flex flex-col items-center gap-1 animate-pointPop pointer-events-none">
+    <div className="absolute top-20 left-1/2 -translate-x-1/2 z-50 flex flex-col items-center gap-1 pointer-events-none">
       <Image
         src="/images/point-earn.svg"
         alt="폭죽 이미지"

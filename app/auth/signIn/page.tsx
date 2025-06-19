@@ -15,26 +15,27 @@ export default function SignInPage() {
   const goToSignUp = () => router.push("/auth/signUp");
 
   //스플래시 화면 구현하기
-  const [showSplash, setShowSplash] = useState<null | boolean>(null);
+  const [showSplash, setShowSplash] = useState<boolean | null>(null);
 
   useEffect(() => {
     const alreadySeen = localStorage.getItem("splashSeen");
 
     if (!alreadySeen) {
-      console.log("본 적 없음");
       setShowSplash(true);
     } else {
       setShowSplash(false);
     }
   }, []);
 
-  // splash / preloader (스플래시 렌더 전에 나오는 화면) 표시용 content
+  //splash / preloader (스플래시 렌더 전에 나오는 화면) 표시용 content
   let splashContent = null;
+
   if (showSplash === null) {
     splashContent = <Preloader />;
   } else if (showSplash) {
     splashContent = <SplashScreen onFinish={() => setShowSplash(false)} />;
   }
+
   if (splashContent) {
     return <div className="relative w-full h-screen">{splashContent}</div>;
   }
