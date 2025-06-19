@@ -47,7 +47,7 @@ export default function Point({ pointAccrue }: Props) {
             onClick={toggleTooltip}
           />
           {showTooltip && (
-            <div className="absolute top-full right-0 mt-3 z-10">
+            <div className="absolute top-full -left-27.5 mt-3 z-10">
               <PointRuleTooltip />
             </div>
           )}
