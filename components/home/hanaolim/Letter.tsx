@@ -1,6 +1,7 @@
 "use client";
 
 import Image from "next/image";
+import { useRouter } from "next/navigation";
 import { ReceivedTotalLetter } from "@/types/letters";
 import Txt from "@/components/atoms/Text";
 
@@ -9,8 +10,18 @@ type Props = {
 };
 
 export default function Letter({ receivedTotalLetter }: Props) {
+  const router = useRouter();
+
+  const handleClick = (e: React.MouseEvent) => {
+    e.stopPropagation();
+    router.push("/letters");
+  };
+
   return (
-    <div className="flex justify-between items-center px-[17px] py-2 w-3/5 h-[61px] rounded-[15px] bg-blue-0f5 border border-blue-af0">
+    <div
+      onClick={handleClick}
+      className="flex justify-between items-center px-[17px] py-2 w-3/5 h-[61px] rounded-[15px] bg-blue-0f5 border border-blue-af0 cursor-pointer"
+    >
       <Txt size={14} weight="medium" className="text-gray-939">
         받은 편지
       </Txt>
