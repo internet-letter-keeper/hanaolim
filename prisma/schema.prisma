@@ -79,19 +79,20 @@ model POINT {
   @@index([soldierId], map: "soldierId")
 }
 
+
 /// This model or at least one of its fields has comments in the database, and requires an additional setup for migrations: Read more: https://pris.ly/d/database-comments
 model SOLDIER {
-  soldierId        Int       @id @default(autoincrement()) @db.UnsignedInt
-  startDate        DateTime  @db.Date
-  endDate          DateTime  @db.Date
-  code             String    @db.VarChar(20)
-  statusMessage    String?   @db.VarChar(50)
-  earnedPointCount Int       @default(0)
-  userId           Int       @db.UnsignedInt
-  ACCOUNT          ACCOUNT[]
-  FOLLOW           FOLLOW[]
-  POINT            POINT[]
-  USER             USER      @relation(fields: [userId], references: [userId], onDelete: NoAction, onUpdate: NoAction, map: "SOLDIER_ibfk_1")
+  soldierId     Int       @id @default(autoincrement()) @db.UnsignedInt
+  startDate     DateTime  @db.Date
+  endDate       DateTime  @db.Date
+  code          String    @db.VarChar(20)
+  statusMessage String?   @db.VarChar(50)
+  letterExp     Int       @default(0)
+  userId        Int       @db.UnsignedInt
+  ACCOUNT       ACCOUNT[]
+  FOLLOW        FOLLOW[]
+  POINT         POINT[]
+  USER          USER      @relation(fields: [userId], references: [userId], onDelete: NoAction, onUpdate: NoAction, map: "SOLDIER_ibfk_1")
 
   @@index([userId], map: "userId")
 }
