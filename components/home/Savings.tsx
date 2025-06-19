@@ -1,6 +1,7 @@
 "use client";
 
 import Image from "next/image";
+import { useRouter } from "next/navigation";
 import Txt from "@/components/atoms/Text";
 
 type Props = {
@@ -8,8 +9,17 @@ type Props = {
 };
 
 export default function Savings({ savingBalance }: Props) {
+  const router = useRouter();
+
+  const handleSendClick = () => {
+    router.push("/hanaBank");
+  };
+
   return (
-    <div className="flex flex-col justify-between px-[23px] py-[19px] bg-white-fff rounded-[20px] w-full h-[153px] shadow-[0_0_5px_rgba(0,0,0,0.15)]">
+    <div
+      onClick={handleSendClick}
+      className="flex flex-col justify-between px-[23px] py-[19px] bg-white-fff rounded-[20px] w-full h-[153px] shadow-[0_0_5px_rgba(0,0,0,0.15)] cursor-pointer"
+    >
       {/* 적금 제목, 금액, 이미지 */}
       <div className="flex justify-between w-full">
         <div className="flex flex-col items-start gap-1">
