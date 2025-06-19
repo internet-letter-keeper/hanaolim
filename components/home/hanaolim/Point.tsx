@@ -16,14 +16,20 @@ export default function Point({ pointAccrue }: Props) {
   const router = useRouter();
   const [showTooltip, setShowTooltip] = useState(false);
 
-  const handleClick = () => {
+  const handleClick = (e: React.MouseEvent) => {
+    e.stopPropagation();
     router.push("/pointHistory");
   };
 
-  const toggleTooltip = () => setShowTooltip((prev) => !prev);
-
+  const toggleTooltip = (e: React.MouseEvent) => {
+    e.stopPropagation();
+    setShowTooltip((prev) => !prev);
+  };
   return (
-    <div className="relative w-full px-[17px] py-3 rounded-[15px] bg-yellow-4d8 border border-yellow-9af flex flex-col gap-[6px]">
+    <div
+      onClick={handleClick}
+      className="relative w-full px-[17px] py-3 rounded-[15px] bg-yellow-4d8 border border-yellow-9af flex flex-col gap-[6px] cursor-pointer"
+    >
       <div className="flex items-center justify-between w-full">
         <Txt size={14} weight="medium" className="text-gray-939">
           포인트 적립까지
