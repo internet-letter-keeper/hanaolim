@@ -2,10 +2,11 @@
 
 import Image from "next/image";
 import { useRouter } from "next/navigation";
-import { MouseEventHandler, useEffect, useRef } from "react";
+import { MouseEventHandler, useEffect, useRef, useState } from "react";
 import { dummyLetters } from "@/public/dummyLetters";
 import { Txt } from "../atoms";
 import LetterView from "./LetterView";
+import PointPop from "./PopPoint";
 
 // 답장 페이지 또는 편지 상세 페이지로 이동하기 위해 letterId 받아옴
 // 모달 제어를 위해 콜백 함수 받아옴 (onHandle), 페이지에서 useState 이용해서 모달 제어
@@ -52,6 +53,15 @@ export default function LetterModal({ letterId, onHandleModal }: Props) {
     return () => document.removeEventListener("keydown", onKeyDown);
   }, [onKeyDown]);
 
+  //포인트 적립 애니메이션 제어
+  const [showPoint, setShowPoint] = useState(false);
+
+  useEffect(() => {
+    setShowPoint(true);
+    const timeout = setTimeout(() => setShowPoint(false), 1400);
+    return () => clearTimeout(timeout);
+  }, []);
+
   return (
     <>
       <div
@@ -59,6 +69,7 @@ export default function LetterModal({ letterId, onHandleModal }: Props) {
         className="fixed inset-0 z-100 sm:w-sm w-full -translate-x-1/2 left-1/2 bg-modal-overlay"
         onClick={onClickOverlay}
       >
+        {showPoint && <PointPop />}
         <div
           className="absolute top-1/2 left-1/2 -translate-x-1/2 -translate-y-1/2
                      w-11/12 sm:w-[22rem] p-6 bg-white rounded-[10px]
