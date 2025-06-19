@@ -7,5 +7,5 @@ export const ICONS: Icon[] = [
   { id: 4, name: "vest", src: "/images/cabinet-vest.svg" },
   { id: 5, name: "face", src: "/images/cabinet-keyring.svg" },
   { id: 6, name: "helmet", src: "/images/cabinet-helmet.svg" },
-  { id: 7, name: "gun", src: "/images/gun.svg" },
+  { id: 7, name: "gun", src: "/images/cabinet-gun.svg" },
 ];

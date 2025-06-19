@@ -1,12 +1,19 @@
 "use client";
 
 import Image from "next/image";
-import { useState } from "react";
+import { useEffect, useState } from "react";
 import { Card, Olim, Profile, Savings } from "@/components/home";
 import RocketSplash from "@/components/home/RocketSplash";
 
 export default function Page() {
   const [showSplash, setShowSplash] = useState(true);
+
+  useEffect(() => {
+    const isSeen = localStorage.getItem("isSplashSeen");
+    if (isSeen === "true") {
+      setShowSplash(false);
+    }
+  }, []);
 
   const handleSkip = () => setShowSplash(false);
 
