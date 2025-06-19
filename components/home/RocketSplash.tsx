@@ -16,6 +16,7 @@ export default function RocketSplash({ onSkip }: RocketSplashProps) {
   const [isVisible, setIsVisible] = useState(true);
 
   const handleSkip = () => {
+    localStorage.setItem("isSplashSeen", "true");
     setIsVisible(false);
     onSkip();
   };
@@ -35,7 +36,6 @@ export default function RocketSplash({ onSkip }: RocketSplashProps) {
           </Txt>
         </button>
       </div>
-
       <div className="flex flex-col items-center gap-8">
         {receivedTotalLetter.unreadLetter > 0 && (
           <div className="text-center">
@@ -69,7 +69,6 @@ export default function RocketSplash({ onSkip }: RocketSplashProps) {
           </Txt>
         </div>
       </div>
-
       {/* 하단 편지 이미지 */}
       <Image
         src="/images/letter-dummy.svg"
