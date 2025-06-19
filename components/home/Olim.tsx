@@ -6,7 +6,7 @@ import Txt from "@/components/atoms/Text";
 import Letter from "./hanaolim/Letter";
 import Point from "./hanaolim/Point";
 
-const receivedTotalLetter = { unreadLetter: 8, totalLetter: 32 };
+const receivedTotalLetter = { unreadLetter: 0, totalLetter: 32 };
 const pointAccrue = { myStamp: 2, totalStamp: 10 };
 
 export default function Olim() {
