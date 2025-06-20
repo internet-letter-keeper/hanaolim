@@ -10,12 +10,11 @@ import {
 import { SidebarProvider } from "@/components/ui/sidebar";
 
 type Props = {
-  params: Promise<{ code: string }>;
+  params: Promise<{ soldierId: string }>;
 };
 
 export default async function CabinetPage({ params }: Props) {
-  // TODO: api 연결 후 내 관물대인지 확인하는 로직 작성
-  // const { code } = await params;
+  const { soldierId } = await params;
 
   const isMyCabinet = true;
 
