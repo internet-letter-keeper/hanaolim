@@ -10,10 +10,9 @@ import prisma from "../db";
  */
 export const deleteFriend = async (followId: number) => {
   try {
-    const deletedData = await prisma.follow.delete({ where: { followId } });
+    await prisma.follow.delete({ where: { followId } });
     return {
       success: true,
-      deletedData,
     };
   } catch (error) {
     return {
