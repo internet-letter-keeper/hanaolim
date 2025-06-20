@@ -48,7 +48,7 @@ export default function ProfileBanner({ userName, startDate, endDate }: Props) {
             weight="medium"
             className="text-green-fa7 leading-[16px]"
           >
-            {rank} ({dDay})
+            대한민국 군인
           </Txt>
         </div>
         <div className="mt-[4px] w-full">
