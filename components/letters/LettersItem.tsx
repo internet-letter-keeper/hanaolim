@@ -1,29 +1,41 @@
+"use client";
+
 import Image from "next/image";
 import { useRouter } from "next/navigation";
 import { useState } from "react";
-import { Letter } from "@/types/letters";
-import Txt from "../atoms/Text";
+import { Txt } from "../atoms";
+
+type CustomLetter = {
+  letterId: number;
+  nickname: string;
+  content: string;
+  createDate: string | Date;
+  readDate?: string | null;
+  isFavorite: boolean;
+  parentLetterId?: number | null;
+};
 
 type Props = {
-  letters: Letter;
-  allLetters: Letter[];
+  letters: CustomLetter;
+  allLetters: CustomLetter[];
 };
 
 export default function LettersItem({ letters, allLetters }: Props) {
   const {
-    id,
-    writer,
+    letterId,
+    nickname,
     content,
-    createDt,
+    createDate,
     isFavorite: initialFavorite,
-    isRead,
+    readDate,
   } = letters;
+
+  const isRead = !!readDate;
+  const hasReply = allLetters.some((l) => l.parentLetterId === letterId);
   const [isFavorite, setIsFavorite] = useState(initialFavorite);
 
   const router = useRouter();
-  const handleClick = () => router.push(`/letters/${id}`);
-
-  const hasReply = allLetters.some((l) => l.parentId === id);
+  const handleClick = () => router.push(`/letters/${letterId}`);
 
   const handleToggleFavorite = (e: React.MouseEvent) => {
     e.stopPropagation();
@@ -31,7 +43,7 @@ export default function LettersItem({ letters, allLetters }: Props) {
   };
 
   return (
-    <div className="mt-4">
+    <div className="mt-4 bg-white">
       <div
         className="border rounded-[10px] border-[#209B98] pb-3 p-3"
         onClick={handleClick}
@@ -42,10 +54,10 @@ export default function LettersItem({ letters, allLetters }: Props) {
             weight="cm"
             className={isRead ? "text-[#AAAAAA]" : "text-gray-353"}
           >
-            {writer}
+            {nickname}
           </Txt>
           <span className="text-[12px] text-blue-9a0 whitespace-nowrap">
-            {createDt}
+            {createDate as string}
           </span>
         </div>
 
@@ -74,7 +86,6 @@ export default function LettersItem({ letters, allLetters }: Props) {
             <div />
           )}
 
-          {/* 즐겨찾기 아이콘 클릭 시 토글 */}
           <Image
             src={
               isFavorite
