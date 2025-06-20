@@ -13,6 +13,7 @@ import {
 
 /**
  * 파일 업로드 처리 함수
+ * @usage 편지쓰기
  * @param file 업로드할 파일
  * @returns string public에 업로드 된 파일 명 반환
  */
@@ -30,6 +31,7 @@ const uploadFile = async (file: File | null): Promise<string | undefined> => {
 
 /**
  * FormData에서 편지 데이터 추출 및 검증
+ * @usage 편지쓰기
  * @param formData
  * @returns  검증된 데이터 반환
  */
@@ -55,10 +57,11 @@ const extractAndValidateLetterData = async (
 
 /**
  * 편지 작성 API
+ * @usage 편지쓰기
  * @param data 편지 내용
  * @param senderId 보내는 사람의 id
  * @returns 성공했을 경우: success: true
- * @error "편지 작성에 실패했습니다."
+ * @throws "편지 작성에 실패했습니다."
  */
 const createLetter = async (data: LetterFormData, senderId: number) => {
   try {
@@ -88,13 +91,19 @@ const createLetter = async (data: LetterFormData, senderId: number) => {
     throw new Error(ERROR_MESSAGES.LETTER.LETTER_POST_FAILED);
   }
 };
-
+/**
+ * 군인에게 편지를 생성
+ * @usage 편지쓰기
+ * @param formData
+ * @returns createLetter 함수
+ */
 export const postLetter = async (formData: FormData) => {
   const session = await requireAuth();
 
   const data = await extractAndValidateLetterData(formData);
 
   // 일반 편지인 경우 필수 필드 검증
+  //TODO: 검증 로직 추가
   if (!data.iconId) {
     throw new Error(ERROR_MESSAGES.LETTER.INVALID_INPUT_DATA);
   }
@@ -102,12 +111,19 @@ export const postLetter = async (formData: FormData) => {
   return createLetter(data, +session.user.userId!);
 };
 
+/**
+ * 군인이 편지에 대한 답장 생성
+ * @usage 편지쓰기
+ * @param formData 편지 데이터
+ * @returns createLetter 함수
+ */
 export const postLetterReply = async (formData: FormData) => {
   const session = await requireAuth();
 
   const data = await extractAndValidateLetterData(formData);
 
   // 답장인 경우 필수 필드 검증
+  //TODO: 검증 로직 추가
   if (!data.parentLetterId) {
     throw new Error(ERROR_MESSAGES.LETTER.INVALID_INPUT_DATA);
   }
