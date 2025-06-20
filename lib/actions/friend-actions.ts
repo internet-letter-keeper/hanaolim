@@ -83,3 +83,22 @@ export const getAccountNumBySoldierId = async (soldierId: number) => {
 
   return res.Account[0].accountNum;
 };
+
+/**
+ * 군인의 user테이블 정보 조회
+ * @param soldierId
+ * @returns Soldier 테이블과 User테이블의 userName, isSoldier, isSocial
+ */
+export const getUserBySoldierId = async (soldierId: number) =>
+  prisma.soldier.findUnique({
+    where: { soldierId },
+    include: {
+      User: {
+        select: {
+          userName: true,
+          isSoldier: true,
+          isSocial: true,
+        },
+      },
+    },
+  });
