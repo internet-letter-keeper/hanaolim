@@ -31,7 +31,7 @@ export default function LettersItem({ letters, allLetters }: Props) {
   };
 
   return (
-    <div className="mt-4">
+    <div className="mt-4 bg-white">
       <div
         className="border rounded-[10px] border-[#209B98] pb-3 p-3"
         onClick={handleClick}
