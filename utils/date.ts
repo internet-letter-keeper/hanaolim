@@ -1,5 +1,10 @@
 import { SoldierRank } from "@/types/common/profile";
 
+/**
+ * 전역일까지 남은 일 수 계산
+ * @param endDate 전역일
+ * @returns number - 전역일까지 남은 일 수
+ */
 export const untilEndDate = (endDate: Date) =>
   endDate
     ? Math.floor(
@@ -8,16 +13,25 @@ export const untilEndDate = (endDate: Date) =>
       )
     : 0;
 
-export const dDayConCatString = (endDate: Date) =>
-  untilEndDate(endDate) < 0
-    ? `D${untilEndDate(endDate)}`
-    : `D+${untilEndDate(endDate)}`;
+/**
+ * 전역일 D-day 계산
+ * @param endDate 전역일
+ * @returns string - D-day형식
+ */
+export const dDayConCatString = (endDate: Date) => {
+  const untilEnd = untilEndDate(endDate);
 
-export function calculateRankByStartDate(
-  startDate: Date,
-  currentDate = new Date()
-): SoldierRank {
+  return untilEnd < 0 ? `D${untilEnd}` : `D+${untilEnd}`;
+};
+
+/**
+ * 입대일 기준으로 계급 계산
+ * @param startDate 입대일
+ * @returns SoldierRank - "이병" | "일병" | "상병" | "병장";
+ */
+export function calculateRankByStartDate(startDate: Date): SoldierRank {
   const startDay = startDate.getDate();
+  const currentDate = new Date();
 
   // 첫 진급 기준: 1일이면 2개월 후, 아니면 3개월 후
   const firstPromotionDate = new Date(startDate);
