@@ -102,3 +102,14 @@ export const getUserBySoldierId = async (soldierId: number) =>
       },
     },
   });
+
+/**
+ * 상태 메시지 변경
+ * @param soldierId
+ * @param statusMessage
+ * @returns Soldier
+ */
+export const patchStatusMessage = async (
+  soldierId: number,
+  statusMessage: string
+) => prisma.soldier.update({ where: { soldierId }, data: { statusMessage } });
