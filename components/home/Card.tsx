@@ -12,7 +12,10 @@ export default function Card() {
   };
 
   return (
-    <div className="flex items-center justify-between w-full px-[23px] py-[19px] bg-green-5f2 border-[1px] border-green-9e7 rounded-[20px] h-[150px] overflow-hidden">
+    <div
+      onClick={handleSendClick}
+      className="flex items-center justify-between w-full px-[23px] py-[19px] bg-green-5f2 border-[1px] border-green-9e7 rounded-[20px] h-[150px] overflow-hidden cursor-pointer"
+    >
       {/* 카드 정보 */}
       <div className="flex flex-col items-start">
         <Txt size={16} weight="bold" className="text-gray-353">
@@ -35,7 +38,6 @@ export default function Card() {
             align="center"
             padding="py-0"
             className="w-[80px] h-[23px]"
-            onClick={handleSendClick}
           />
         </div>
       </div>

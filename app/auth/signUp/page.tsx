@@ -3,6 +3,7 @@
 import Image from "next/image";
 import { useRouter } from "next/navigation";
 import { useRef, useState } from "react";
+import { isEmailDuplicated, postSignUp } from "@/lib/actions/auth-actions";
 import {
   checkConfirmPasswordValidation,
   checkEmailValidation,
@@ -31,7 +32,7 @@ export default function SignUpPage() {
   const [passwordMessage, setPasswordMessage] = useState("");
 
   // 회원가입 버튼 클릭 핸들러
-  const handleSignUp = () => {
+  const handleSignUp = async () => {
     // 이름 유효성 검사
     const nameValidation = checkNameValidation(nameRef.current?.value || "");
     if (nameValidation.valid) {
@@ -79,10 +80,25 @@ export default function SignUpPage() {
       return;
     }
 
-    // 이 자리에서 서버로 데이터 전송 가
-    // 예: fetch("/api/signup", { method: "POST", body: JSON.stringify(...) })
+    // 회원가입 api 호출
 
-    alert("회원가입 진행!");
+    const duplicated = await isEmailDuplicated(emailRef.current?.value || "");
+    if (duplicated) {
+      alert("이미 사용 중인 이메일입니다.");
+      return;
+    }
+    const result = await postSignUp({
+      email: emailRef.current?.value || "",
+      userName: nameRef.current?.value || "",
+      password: passwordRef.current?.value || "",
+    });
+    if (result.ok) {
+      alert("회원가입 완료!");
+      router.push("/auth/signIn");
+    } else {
+      alert(result.error);
+      return;
+    }
   };
 
   return (
