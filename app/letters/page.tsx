@@ -10,8 +10,8 @@ type FilterType = "all" | "favorite" | "hasReply" | "unread";
 
 type CustomLetter = Letter & {
   isFavorite: boolean;
-  isRead: boolean;
   nickname: string;
+  readDate?: string | null;
 };
 
 export default function LettersPage() {
@@ -19,7 +19,7 @@ export default function LettersPage() {
   const [filter, setFilter] = useState<FilterType>("all");
   const [letters, setLetters] = useState<CustomLetter[]>([]);
 
-  const currentUserId = 1; // 로그인 유저 ID (임시)
+  const currentUserId = 1;
 
   useEffect(() => {
     const fetchLetters = async () => {
@@ -32,7 +32,6 @@ export default function LettersPage() {
           isFavorite: l.Favorite.some(
             (f) => f.userId === currentUserId && f.isFavorite
           ),
-          isRead: !!l.readDate,
           nickname: l.nickname ?? "이름 없음",
         })
       );
@@ -53,7 +52,7 @@ export default function LettersPage() {
       if (filter === "favorite") return l.isFavorite;
       if (filter === "hasReply")
         return letters.some((r) => r.parentLetterId === l.letterId);
-      if (filter === "unread") return !l.isRead;
+      if (filter === "unread") return !l.readDate;
       return true;
     });
 
@@ -102,7 +101,6 @@ export default function LettersPage() {
           </Txt>
         </div>
 
-        {/* 필터 버튼 */}
         <div className="flex px-4 gap-x-2">
           {(["favorite", "hasReply", "unread"] as FilterType[]).map((type) => {
             const isActive = filter === type;

@@ -10,8 +10,8 @@ type CustomLetter = {
   nickname: string;
   content: string;
   createDate: string | Date;
+  readDate?: string | null;
   isFavorite: boolean;
-  isRead: boolean;
   parentLetterId?: number | null;
 };
 
@@ -27,14 +27,15 @@ export default function LettersItem({ letters, allLetters }: Props) {
     content,
     createDate,
     isFavorite: initialFavorite,
-    isRead,
+    readDate,
   } = letters;
+
+  const isRead = !!readDate;
+  const hasReply = allLetters.some((l) => l.parentLetterId === letterId);
   const [isFavorite, setIsFavorite] = useState(initialFavorite);
 
   const router = useRouter();
   const handleClick = () => router.push(`/letters/${letterId}`);
-
-  const hasReply = allLetters.some((l) => l.parentLetterId === letterId);
 
   const handleToggleFavorite = (e: React.MouseEvent) => {
     e.stopPropagation();
