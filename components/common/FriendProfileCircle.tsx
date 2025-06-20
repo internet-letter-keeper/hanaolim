@@ -3,19 +3,24 @@
 import { dDayConCatString } from "@/utils/date";
 import Image from "next/image";
 import { useRouter } from "next/navigation";
-import { FriendProfile } from "@/types/common/profile";
+import {
+  FriendProfile,
+  SoldierProfile,
+  SoldierRank,
+  SoldierRankToNum,
+} from "@/types/common/profile";
 import { cn } from "@/lib/utils";
 import Txt from "@/components/atoms/Text";
 
-const AltMap: Record<FriendProfile["level"], string> = {
-  1: "이병",
-  2: "일병",
-  3: "상병",
-  4: "병장",
+const RankNumMap: Record<SoldierRank, SoldierRankToNum> = {
+  이병: 1,
+  일병: 2,
+  상병: 3,
+  병장: 4,
 };
 
 type Props = {
-  profile: FriendProfile;
+  profile: FriendProfile | SoldierProfile;
   isRowLayout?: boolean;
 };
 
@@ -25,11 +30,11 @@ export default function FriendProfileCircle({
 }: Props) {
   const navigation = useRouter();
 
-  const { userName, endDate, code, level } = profile;
+  const { userName, rank, endDate, soldierId } = profile;
 
   const dDay = dDayConCatString(endDate);
 
-  const onClick = () => navigation.push(`/cabinet/${code}`);
+  const onClick = () => navigation.push(`/cabinet/${soldierId}`);
 
   return (
     <button
@@ -43,8 +48,8 @@ export default function FriendProfileCircle({
         {/* 계급 아이콘 */}
         <div className="flex items-center border border-green-49d justify-center bg-white p-[6px] rounded-full">
           <Image
-            src={`/images/profilepic-${level}.svg`}
-            alt={AltMap[level]}
+            src={`/images/profilepic-${RankNumMap[rank]}.svg`}
+            alt={rank}
             width={37}
             height={37}
           />

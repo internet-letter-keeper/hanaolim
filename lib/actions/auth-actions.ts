@@ -88,3 +88,11 @@ export const postSoldier = async (soldier: SoldierData) => {
     return { ok: false, error: "군인등록에 실패했습니다." };
   }
 };
+
+/**
+ * DB에 있는 유저인지 확인
+ * @param userId
+ * @returns userId의 유저 정보
+ */
+export const isUserExists = async (userId: number) =>
+  prisma.user.findUnique({ where: { userId } });
