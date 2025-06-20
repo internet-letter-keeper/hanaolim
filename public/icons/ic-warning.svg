@@ -1,0 +1,19 @@
+<svg
+  xmlns="http://www.w3.org/2000/svg"
+  width="24"
+  height="24"
+  viewBox="0 0 24 24"
+>
+  <defs>
+    <mask id="warning-mask">
+      <rect width="100%" height="100%" fill="white"/>
+      <rect x="11" y="7" width="2" height="7" rx="1" fill="black"/>
+      <circle cx="12" cy="17" r="1.5" fill="black"/>
+    </mask>
+  </defs>
+  <path
+    d="M12 2c.37 0 .72.2.91.53l9 15.59c.4.69-.09 1.55-.91 1.55H3c-.82 0-1.31-.86-.91-1.55l9-15.59c.19-.33.54-.53.91-.53z"
+    fill="#FFC107"
+    mask="url(#warning-mask)"
+  />
+</svg>
