@@ -1,11 +1,17 @@
-/**
- * 친구 프로필 원형 아이콘
- * level: 1-이병, 2-일병, 3-상병, 4-병장
- */
-export type FriendProfile = {
-  id: number;
+export type SoldierRank = "이병" | "일병" | "상병" | "병장";
+
+export type SoldierRankToNum = 1 | 2 | 3 | 4;
+
+export type SoldierProfile = {
+  soldierId: number;
   userName: string;
   endDate: Date;
-  code: string;
-  level: 1 | 2 | 3 | 4;
+  rank: SoldierRank;
 };
+
+/**
+ * 친구 프로필 원형 아이콘
+ */
+export type FriendProfile = {
+  followId: number;
+} & SoldierProfile;
