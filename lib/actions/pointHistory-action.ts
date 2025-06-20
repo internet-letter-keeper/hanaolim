@@ -1,7 +1,12 @@
 import { PointItemType } from "@/types/point";
 import prisma from "../db";
 
-//NOTE: 포인트 내역을 확인
+/**
+ * 포인트 적립 내역 불러오기
+ * @param soldierId
+ * @returns soldierId의 포인트 내역
+ * @throws soldierId가 숫자가 아닐 때
+ */
 export const getPointHistory = async (
   soldierId: number
 ): Promise<PointItemType[]> => {
@@ -34,8 +39,17 @@ export const getPointHistory = async (
 };
 
 //TODO: 무한스크롤 안 할 시 그냥 위에서 누적합한 거로 쓰기
-//NOTE: 포인트 총합을 확인 (무한스크롤 때문에 분리)
+
+/**
+ * 포인트 총합 불러오기
+ * @param soldierId
+ * @returns soldierId의 포인트 총합
+ * @throws soldierId가 숫자가 아닐 때
+ */
 export const getPointSum = async (soldierId: number) => {
+  if (!Number.isInteger(soldierId)) {
+    throw new Error("soldierId must be a number");
+  }
   const pointSum = await prisma.point.aggregate({
     where: { soldierId },
     _sum: { point: true },
