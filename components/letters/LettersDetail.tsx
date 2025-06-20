@@ -7,23 +7,29 @@ type Props = {
   lettersDetail: {
     content: string;
     fileUrl?: string;
-    nickname: string;
+    senderNickname?: string;
+    senderUserName: string;
+    receiverName: string;
     createDate: Date | string;
   };
-  isReply?: boolean;
 };
 
-export default function LettersDetail({
-  lettersDetail,
-  // isReply = false,
-}: Props) {
-  const { fileUrl, nickname, content, createDate } = lettersDetail;
+export default function LettersDetail({ lettersDetail }: Props) {
+  const {
+    fileUrl,
+    senderNickname,
+    senderUserName,
+    receiverName,
+    content,
+    createDate,
+  } = lettersDetail;
 
   return (
     <div>
+      {/* 받는 사람 */}
       <div className="flex justify-between items-center mb-1">
         <Txt size={16} weight="cm" className="text-green-49d">
-          To. {nickname}
+          To. {receiverName}
         </Txt>
       </div>
 
@@ -33,6 +39,7 @@ export default function LettersDetail({
         </Txt>
       </div>
 
+      {/* 편지 내용 */}
       <div className="mt-4 mb-4">
         <Txt
           size={15}
@@ -44,6 +51,7 @@ export default function LettersDetail({
         </Txt>
       </div>
 
+      {/* 첨부파일 */}
       {fileUrl && (
         <div className="w-full bg-gray-200 flex items-center justify-center rounded-md mb-4">
           {fileUrl.endsWith(".mp4") || fileUrl.endsWith(".webm") ? (
@@ -66,9 +74,12 @@ export default function LettersDetail({
         </div>
       )}
 
+      {/* 보내는 사람 */}
+      {/* 보내는 사람 닉네임 없을 경우(군인) : 답장 */}
       <div className="flex justify-end">
         <Txt size={16} weight="cm" className="text-green-49d">
-          From. {nickname}
+          From. {senderUserName}
+          {senderNickname ? ` (${senderNickname})` : ""}
         </Txt>
       </div>
     </div>
