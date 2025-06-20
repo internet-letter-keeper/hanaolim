@@ -2,13 +2,16 @@
 
 import Image from "next/image";
 import { useRouter } from "next/navigation";
-import { useEffect, useState } from "react";
+import { signIn } from "next-auth/react";
+import { useEffect, useRef, useState } from "react";
 import SplashScreen from "@/components/HomeSplashScreen";
 import Preloader from "@/components/Preloader";
 import { PrimaryButton, Input, Txt } from "@/components/atoms";
 
 export default function SignInPage() {
-  const isLoginError = false; // 로그인 에러 여부
+  const isLoginError: boolean = false; // 로그인 에러 상태 (예시로 false로 설정)
+  const emailRef = useRef<HTMLInputElement>(null);
+  const passwordRef = useRef<HTMLInputElement>(null);
 
   const router = useRouter();
 
@@ -40,6 +43,29 @@ export default function SignInPage() {
     return <div className="relative w-full h-screen">{splashContent}</div>;
   }
 
+  // 로그인 버튼 클릭 핸들러
+  const handleSignIn = async () => {
+    const email = emailRef.current?.value;
+    const password = passwordRef.current?.value;
+
+    if (!email || !password) {
+      // 이메일 또는 비밀번호가 비어있을 경우 에러 처리
+      alert("이메일과 비밀번호를 입력해주세요.");
+      return;
+    }
+    const result = await signIn("credentials", {
+      email,
+      password,
+      redirect: false,
+    });
+
+    if (result?.error === "CredentialsSignin") {
+      alert("이메일 또는 비밀번호가 잘못되었습니다.");
+    } else if (result?.ok) {
+      router.push("/");
+    }
+  };
+
   return (
     <div className="flex flex-col items-center justify-center gap-1 h-full px-[20px] relative">
       {/* 하나 올림 로고 */}
@@ -62,7 +88,11 @@ export default function SignInPage() {
           <Txt size={19} weight="cm" align="left" className="min-w-1/4">
             이메일
           </Txt>
-          <Input placeholder="이메일을 입력해주세요" maxLength={30} />
+          <Input
+            placeholder="이메일을 입력해주세요"
+            maxLength={30}
+            customRef={emailRef}
+          />
         </div>
 
         {/* 비밀번호 */}
@@ -70,7 +100,11 @@ export default function SignInPage() {
           <Txt size={19} weight="cm" align="left" className="min-w-1/4 ">
             비밀번호
           </Txt>
-          <Input placeholder="비밀번호를 입력해주세요" maxLength={20} />
+          <Input
+            placeholder="비밀번호를 입력해주세요"
+            maxLength={20}
+            customRef={passwordRef}
+          />
         </div>
 
         {/* 로그인 에러 메시지 */}
@@ -88,6 +122,7 @@ export default function SignInPage() {
           align="center"
           weight="cm"
           className="h-[38px] "
+          onClick={handleSignIn}
         />
 
         {/* 또는 */}

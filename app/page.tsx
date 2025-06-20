@@ -1,11 +1,15 @@
 "use client";
 
 import Image from "next/image";
+import Link from "next/dist/client/link";
+import { useSession } from "next-auth/react";
 import { useEffect, useState } from "react";
+import Txt from "@/components/atoms/Text";
 import { Card, Olim, Profile, Savings } from "@/components/home";
 import RocketSplash from "@/components/home/RocketSplash";
 
 export default function Page() {
+  const { data: session } = useSession();
   const [showSplash, setShowSplash] = useState(true);
 
   useEffect(() => {
@@ -13,6 +17,7 @@ export default function Page() {
     if (isSeen === "true") {
       setShowSplash(false);
     }
+    console.log("Session Data:", session);
   }, []);
 
   const handleSkip = () => setShowSplash(false);
@@ -22,12 +27,33 @@ export default function Page() {
       {showSplash && <RocketSplash onSkip={handleSkip} />}
       {!showSplash && (
         <div className="flex flex-col relative gap-[15px]">
-          <Image
-            src="/icons/ic-hanaolim.svg"
-            alt="하나올림 로고"
-            width={110}
-            height={36}
-          />
+          <div className="flex justify-between items-center">
+            <Image
+              src="/icons/ic-hanaolim.svg"
+              alt="하나올림 로고"
+              width={110}
+              height={36}
+            />
+            {session?.user ? (
+              <Link href="api/auth/signout">
+                <Txt
+                  size={12}
+                  className="text-gray-353 underline underline-offset-auto"
+                >
+                  로그아웃
+                </Txt>
+              </Link>
+            ) : (
+              <Link href="/auth/signIn">
+                <Txt
+                  size={12}
+                  className="text-gray-353 underline underline-offset-auto"
+                >
+                  로그인
+                </Txt>
+              </Link>
+            )}
+          </div>
           <Profile endDate={new Date()} />
           <Olim />
           <Card />
