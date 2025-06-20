@@ -13,7 +13,10 @@ export default function Olim() {
   const router = useRouter();
 
   return (
-    <div className="flex flex-col justify-between pl-[26px] py-[27px] pr-[22px] bg-white-fff rounded-[20px] shadow-[0_0_5px_rgba(0,0,0,0.15)]">
+    <div
+      onClick={() => router.push("/cabinet/Cabinet")}
+      className="flex flex-col justify-between pl-[26px] py-[27px] pr-[22px] bg-white-fff rounded-[20px] shadow-[0_0_5px_rgba(0,0,0,0.15)] cursor-pointer"
+    >
       <div className="flex justify-between w-full">
         <div className="flex flex-col items-start flex-shrink">
           <Txt size={22} weight="bold" className="text-green-49d mb-1">
