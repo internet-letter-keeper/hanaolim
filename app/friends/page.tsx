@@ -4,7 +4,7 @@ import { ToastProvider } from "@/contexts/toast/ToastProvider";
 import { useSession } from "next-auth/react";
 import { useEffect, useState } from "react";
 import { FriendProfile } from "@/types/common/profile";
-import { getFriendsList } from "@/lib/actions/cabinet";
+import { getFriendsList } from "@/lib/actions/friend-actions";
 import FriendManageList from "@/components/FriendManageList";
 import { Txt } from "@/components/atoms";
 import { BasicHeader } from "@/components/common";
