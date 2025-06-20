@@ -28,7 +28,7 @@ CREATE TABLE `SOLDIER` (
   `endDate` DATE NOT NULL COMMENT '전역일',
   `code` VARCHAR(20) NOT NULL,
   `statusMessage` VARCHAR(50) NULL COMMENT '상태 메세지',
-  `pointProgress` INT NOT NULL DEFAULT 0 COMMENT '포인트 게이지',
+  `letterExp` INT NOT NULL DEFAULT 0 COMMENT '편지 적립 횟수',
   `userId` INT UNSIGNED NOT NULL,
   FOREIGN KEY (`userId`) REFERENCES `USER`(`userId`)
 );

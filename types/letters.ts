@@ -4,16 +4,21 @@ export type uploadedFileType = {
   type: "image" | "video";
 };
 
-export type Letter = {
-  id: number;
-  writer: string;
+type Letter = {
+  letterId: number;
+  nickname?: string;
   content: string;
-  createDt: string;
-  isFavorite?: boolean;
   fileUrl?: string;
-  parentId?: number;
-  userId?: number;
-  isRead?: boolean;
+  iconId?: number;
+  createDate: string;
+  readDate?: string | null;
+  parentLetterId?: number | null;
+  receiverId: number;
+  senderId: number;
+  Favorite: {
+    isFavorite: boolean;
+    userId: number;
+  }[];
 };
 
 export type ReceivedTotalLetter = { unreadLetter: number; totalLetter: number };
