@@ -1,0 +1,15 @@
+<svg
+  xmlns="http://www.w3.org/2000/svg"
+  width="24"
+  height="24"
+  viewBox="0 0 24 24"
+>
+  <defs>
+    <mask id="exclamation-mask">
+      <rect width="100%" height="100%" fill="white"/>
+      <rect x="11" y="6" width="2" height="8" rx="1" fill="black"/>
+      <circle cx="12" cy="17" r="1.5" fill="black"/>
+    </mask>
+  </defs>
+  <circle cx="12" cy="12" r="12" fill="#FF3B3B" mask="url(#exclamation-mask)" />
+</svg>
