@@ -1,28 +1,59 @@
 "use client";
 
-import { useState } from "react";
+import { useState, useEffect } from "react";
+import { Letter } from "@/lib/generated/prisma";
 import { PrimaryButton, Input, Txt } from "@/components/atoms";
 import BasicHeader from "@/components/common/BasicHeader";
 import LettersItem from "@/components/letters/LettersItem";
-import { dummyLetters } from "@/public/dummyLetters";
+
+type FilterType = "all" | "favorite" | "hasReply" | "unread";
+
+type CustomLetter = Letter & {
+  isFavorite: boolean;
+  isRead: boolean;
+  nickname: string;
+};
 
 export default function LettersPage() {
-  type FilterType = "all" | "favorite" | "hasReply" | "unread";
-
   const [activeTab, setActiveTab] = useState("send");
   const [filter, setFilter] = useState<FilterType>("all");
+  const [letters, setLetters] = useState<CustomLetter[]>([]);
+
+  const currentUserId = 1; // 로그인 유저 ID (임시)
+
+  useEffect(() => {
+    const fetchLetters = async () => {
+      const res = await fetch("/api/letters");
+      const data = await res.json();
+
+      const mapped: CustomLetter[] = data.map(
+        (l: Letter & { Favorite: any[] }) => ({
+          ...l,
+          isFavorite: l.Favorite.some(
+            (f) => f.userId === currentUserId && f.isFavorite
+          ),
+          isRead: !!l.readDate,
+          nickname: l.nickname ?? "이름 없음",
+        })
+      );
+
+      setLetters(mapped);
+    };
+
+    fetchLetters();
+  }, []);
 
   const onChangeFilter = (value: FilterType) => {
     setFilter((prev) => (prev === value ? "all" : value));
   };
 
-  const filteredLetters = dummyLetters
-    .filter((l) => l.parentId === undefined)
+  const filteredLetters = letters
+    .filter((l) => l.parentLetterId === null)
     .filter((l) => {
       if (filter === "favorite") return l.isFavorite;
       if (filter === "hasReply")
-        return dummyLetters.some((r) => r.parentId === l.id);
-      if (filter === "unread") return l.isRead === false;
+        return letters.some((r) => r.parentLetterId === l.letterId);
+      if (filter === "unread") return !l.isRead;
       return true;
     });
 
@@ -30,7 +61,6 @@ export default function LettersPage() {
     <div className="flex flex-col min-h-screen w-full">
       <div className="max-w-screen-sm mb-4">
         <BasicHeader title="편지 보관함" />
-
         <div className="relative mt-4">
           <Input
             placeholder="작성자, 내용 ..."
@@ -45,7 +75,6 @@ export default function LettersPage() {
             className="absolute right-2 top-1/2 -translate-y-1/2 text-[#1EA698]"
           />
         </div>
-
         <div className="py-4">
           <div className="flex justify-center gap-2">
             <PrimaryButton
@@ -55,7 +84,6 @@ export default function LettersPage() {
               className="py-3 my-2 border-b border-[#D6E9E7]"
               weight="cm"
             />
-
             <PrimaryButton
               title="친구 관물대"
               onClick={() => setActiveTab("receive")}
@@ -74,7 +102,7 @@ export default function LettersPage() {
           </Txt>
         </div>
 
-        {/* 필터 버튼들 */}
+        {/* 필터 버튼 */}
         <div className="flex px-4 gap-x-2">
           {(["favorite", "hasReply", "unread"] as FilterType[]).map((type) => {
             const isActive = filter === type;
@@ -105,9 +133,9 @@ export default function LettersPage() {
         <div className="mx-auto px-4">
           {filteredLetters.map((letter) => (
             <LettersItem
-              key={letter.id}
+              key={letter.letterId}
               letters={letter}
-              allLetters={dummyLetters}
+              allLetters={letters}
             />
           ))}
         </div>
