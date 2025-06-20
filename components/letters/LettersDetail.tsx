@@ -15,7 +15,7 @@ type Props = {
 
 export default function LettersDetail({
   lettersDetail,
-  isReply = false,
+  // isReply = false,
 }: Props) {
   const { fileUrl, nickname, content, createDate } = lettersDetail;
 
