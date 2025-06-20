@@ -1,9 +1,10 @@
 "use client";
 
 import { createContext, useContext } from "react";
+import { ToastType } from "@/types/toast";
 
 type ToastContextType = {
-  showToast: (message: string, position?: string) => void;
+  showToast: (message: string, position?: string, type?: ToastType) => void;
 };
 
 /**
