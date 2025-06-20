@@ -28,7 +28,7 @@ export default async function CabinetPage({ params }: Props) {
           <FriendsList />
           <StatusMessage isMyCabinet={isMyCabinet} message={message} />
           <Cabinet isMyCabinet={isMyCabinet} />
-          {!isMyCabinet && <LetterMoneyButton />}
+          {!isMyCabinet && <LetterMoneyButton soldierId={+soldierId} />}
         </div>
         <DropDownModal />
       </SidebarProvider>

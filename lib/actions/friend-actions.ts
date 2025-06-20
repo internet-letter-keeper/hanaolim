@@ -65,3 +65,21 @@ export const getFriendsList = async (
     };
   });
 };
+
+/**
+ * 군인의 계좌번호 조회
+ * @param soldierId
+ * @returns 계좌번호
+ * @throws soldierId에 해당하는 계좌번호를 찾을 수 없을 때
+ */
+export const getAccountNumBySoldierId = async (soldierId: number) => {
+  const res = await prisma.soldier.findUnique({
+    where: { soldierId },
+    select: { Account: { select: { accountNum: true } } },
+  });
+
+  if (!res)
+    throw new Error("계좌번호를 불러오지 못했습니다. 다시 시도해주세요.");
+
+  return res.Account[0].accountNum;
+};
