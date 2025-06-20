@@ -2,7 +2,7 @@
 
 import Image from "next/image";
 import { useRouter } from "next/navigation";
-import { useRef, useState } from "react";
+import { ChangeEvent, useState } from "react";
 import { PrimaryButton, Input, Txt } from "@/components/atoms";
 import DatePicker from "@/components/common/DatePicker";
 
@@ -11,7 +11,7 @@ export default function SignInPage() {
   const [joinDate, setJoinDate] = useState<Date | null>(null);
   const [releaseDate, setReleaseDate] = useState<Date | null>(null);
   const [errorMessage, setErrorMessage] = useState("");
-  const accountRef = useRef<HTMLInputElement>(null);
+  const [accountNumber, setAccountNumber] = useState("");
 
   const handleSubmit = async () => {
     if (!joinDate) {
@@ -24,8 +24,8 @@ export default function SignInPage() {
       return;
     }
 
-    if (!accountRef.current?.value) {
-      setErrorMessage("계좌번호를 입력하여 주세요");
+    if (!accountNumber || accountNumber.length < 16) {
+      setErrorMessage("계좌번호를 올바르게 입력하여 주세요");
       return;
     }
 
@@ -36,6 +36,28 @@ export default function SignInPage() {
     alert("등록이 완료되었습니다!");
     router.push("/");
   };
+
+  const handleAccountChange = (e: ChangeEvent<HTMLInputElement>) => {
+    const raw = e.target.value.replace(/\D/g, ""); // 숫자만 남김
+    let formatted = "";
+
+    if (raw.length <= 3) {
+      formatted = raw;
+    } else if (raw.length <= 9) {
+      formatted = `${raw.slice(0, 3)}-${raw.slice(3)}`;
+    } else {
+      formatted = `${raw.slice(0, 3)}-${raw.slice(3, 9)}-${raw.slice(9, 14)}`;
+    }
+
+    setAccountNumber(formatted);
+  };
+
+  // // handleSubmit 함수에서 accountNumber 검사로 변경
+  // if (!accountNumber || accountNumber.length < 16) {
+  //   setErrorMessage("계좌번호를 올바르게 입력하여 주세요");
+  //   return;
+  // }
+
   return (
     <div className="flex flex-col items-center justify-center h-full px-[20px]">
       {/* 하나 올림 로고 */}
@@ -70,8 +92,9 @@ export default function SignInPage() {
           </Txt>
           <Input
             placeholder="000-000000-00000"
-            maxLength={20}
-            customRef={accountRef}
+            maxLength={16}
+            onChange={handleAccountChange}
+            value={accountNumber}
           />
         </div>
       </div>

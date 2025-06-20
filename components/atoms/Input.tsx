@@ -1,4 +1,9 @@
-import { InputHTMLAttributes, TextareaHTMLAttributes, Ref } from "react";
+import {
+  InputHTMLAttributes,
+  TextareaHTMLAttributes,
+  Ref,
+  ChangeEventHandler,
+} from "react";
 import { cn } from "@/lib/utils";
 
 // auth: 로그인, 회원가입용, 글쓰기 input
@@ -28,9 +33,9 @@ type Props = {
   tag?: "input" | "textarea";
   className?: string;
   customRef?: Ref<HTMLInputElement> | Ref<HTMLTextAreaElement>;
-} & InputHTMLAttributes<HTMLInputElement> &
-  TextareaHTMLAttributes<HTMLTextAreaElement>;
-
+  onChange?: ChangeEventHandler<HTMLInputElement | HTMLTextAreaElement>;
+} & Omit<InputHTMLAttributes<HTMLInputElement>, "onChange"> &
+  Omit<TextareaHTMLAttributes<HTMLTextAreaElement>, "onChange">;
 /**
  * @param placeholder - placeholder 안내 문구
  * @param usage - 사용처 ('auth' 또는 'modal' 또는 'search')
