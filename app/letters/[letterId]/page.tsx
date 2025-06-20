@@ -13,6 +13,10 @@ export default async function LetterDetailPage({ params }: Props) {
 
   const letter = await prisma.letter.findUnique({
     where: { letterId: +letterId },
+    include: {
+      User_Letter_senderIdToUser: true,
+      User_Letter_receiverIdToUser: true,
+    },
   });
 
   if (!letter) return notFound();
@@ -32,7 +36,9 @@ export default async function LetterDetailPage({ params }: Props) {
               content: letter.content,
               fileUrl: letter.fileUrl ?? "",
               createDate: letter.createDate,
-              nickname: letter.nickname ?? "이름 없음",
+              senderNickname: letter.nickname ?? "",
+              senderUserName: letter.User_Letter_senderIdToUser.userName,
+              receiverName: letter.User_Letter_receiverIdToUser.userName,
             }}
           />
         </div>
@@ -51,12 +57,13 @@ export default async function LetterDetailPage({ params }: Props) {
           <div className="bg-white shadow-sm p-4 w-[90%] max-w-md">
             <LettersDetail
               lettersDetail={{
-                content: reply.content,
-                fileUrl: reply.fileUrl ?? "",
-                createDate: reply.createDate,
-                nickname: reply.nickname ?? "이름 없음",
+                content: letter.content,
+                fileUrl: letter.fileUrl ?? "",
+                createDate: letter.createDate,
+                senderNickname: letter.nickname ?? "",
+                senderUserName: letter.User_Letter_senderIdToUser.userName,
+                receiverName: letter.User_Letter_receiverIdToUser.userName,
               }}
-              isReply
             />
           </div>
         </div>
