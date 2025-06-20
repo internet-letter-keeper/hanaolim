@@ -2,10 +2,8 @@
 
 import { useToast } from "@/contexts/toast/ToastContext";
 import { useRouter } from "next/navigation";
-import { useSession } from "next-auth/react";
 import { startTransition, useState } from "react";
 import { FriendProfile } from "@/types/common/profile";
-import { getFriendsList } from "@/lib/actions/friend-actions";
 import { deleteFriend } from "@/lib/actions/friends-action";
 import { Txt } from "./atoms";
 import { Modal } from "./common";
