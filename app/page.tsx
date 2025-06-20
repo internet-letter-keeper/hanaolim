@@ -17,7 +17,6 @@ export default function Page() {
     if (isSeen === "true") {
       setShowSplash(false);
     }
-    console.log("Session Data:", session);
   }, []);
 
   const handleSkip = () => setShowSplash(false);
