@@ -1,6 +1,11 @@
+"use client";
+
 import { useToast } from "@/contexts/toast/ToastContext";
+import { useRouter } from "next/navigation";
+import { useSession } from "next-auth/react";
 import { startTransition, useState } from "react";
 import { FriendProfile } from "@/types/common/profile";
+import { getFriendsList } from "@/lib/actions/friend-actions";
 import { deleteFriend } from "@/lib/actions/friends-action";
 import { Txt } from "./atoms";
 import { Modal } from "./common";
@@ -8,12 +13,13 @@ import FriendProfileCircle from "./common/FriendProfileCircle";
 
 type Props = {
   friends: FriendProfile[];
-  onRefresh: () => void;
 };
 
-export default function FriendManageList({ friends, onRefresh }: Props) {
+export default function FriendManageList({ friends }: Props) {
   const [isModalOpened, setModalOpened] = useState<boolean>(false);
   const [selectedFollowId, setSelectedFollowId] = useState<number | null>(null);
+
+  const router = useRouter();
 
   const { showToast } = useToast();
 
@@ -42,7 +48,7 @@ export default function FriendManageList({ friends, onRefresh }: Props) {
 
       showToast(toastMessage, basePosition, toastType);
       closeModal();
-      onRefresh();
+      router.refresh();
     });
   };
 
