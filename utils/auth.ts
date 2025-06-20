@@ -1,13 +1,14 @@
-import { useRouter } from "next/navigation";
+import { ERROR_MESSAGES } from "@/constants/errorMessages";
 import { auth } from "@/lib/auth";
 
 /**
- * 세션을 체크하고 사용자 ID를 반환하는 유틸리티 함수
+ * 세션을 체크하는 유틸리티 함수
+ * @return session
  */
 export const requireAuth = async () => {
   const session = await auth();
-  const route = useRouter();
   if (!session?.user.userId) {
-    route.push("/auth/signIn");
+    throw new Error(ERROR_MESSAGES.AUTH.LOGIN_REQUIRED);
   }
+  return session;
 };
