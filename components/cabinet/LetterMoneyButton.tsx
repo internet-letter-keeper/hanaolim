@@ -18,7 +18,7 @@ function SoldierSupportButton({ type, onClick }: SoldierSupportProps) {
     >
       <div className="flex items-center w-[50px] h-[50px] justify-center bg-white border rounded-full border-blue-9a0">
         <Image
-          src={`/images/ic-${type}.svg`}
+          src={`/images/${type}.svg`}
           alt={type === "coin" ? "동전 아이콘" : "편지 아이콘"}
           width={34}
           height={34}
