@@ -1,36 +1,45 @@
 "use client";
 
 import Image from "next/image";
-import { Letter } from "@/types/letters";
 import { Txt } from "@/components/atoms";
 
 type Props = {
-  lettersDetail: Letter;
-  isReply?: boolean;
+  lettersDetail: {
+    content: string;
+    fileUrl?: string;
+    senderNickname?: string;
+    senderUserName: string;
+    receiverName: string;
+    createDate: Date | string;
+  };
 };
 
-export default function LettersDetail({
-  lettersDetail,
-  isReply = false,
-}: Props) {
-  const { fileUrl, writer, content, createDt } = lettersDetail;
+export default function LettersDetail({ lettersDetail }: Props) {
+  const {
+    fileUrl,
+    senderNickname,
+    senderUserName,
+    receiverName,
+    content,
+    createDate,
+  } = lettersDetail;
 
   return (
     <div>
       {/* 받는 사람 */}
       <div className="flex justify-between items-center mb-1">
         <Txt size={16} weight="cm" className="text-green-49d">
-          To. {writer}
+          To. {receiverName}
         </Txt>
       </div>
 
       <div className="flex">
         <Txt size={12} weight="cm" className="text-blue-9a0">
-          {createDt}
+          {createDate as string}
         </Txt>
       </div>
 
-      {/* 내용 */}
+      {/* 편지 내용 */}
       <div className="mt-4 mb-4">
         <Txt
           size={15}
@@ -42,7 +51,7 @@ export default function LettersDetail({
         </Txt>
       </div>
 
-      {/* 첨부 미디어 */}
+      {/* 첨부파일 */}
       {fileUrl && (
         <div className="w-full bg-gray-200 flex items-center justify-center rounded-md mb-4">
           {fileUrl.endsWith(".mp4") || fileUrl.endsWith(".webm") ? (
@@ -66,9 +75,11 @@ export default function LettersDetail({
       )}
 
       {/* 보내는 사람 */}
+      {/* 보내는 사람 닉네임 없을 경우(군인) : 답장 */}
       <div className="flex justify-end">
         <Txt size={16} weight="cm" className="text-green-49d">
-          From. {writer}
+          From. {senderUserName}
+          {senderNickname ? ` (${senderNickname})` : ""}
         </Txt>
       </div>
     </div>
