@@ -1,3 +1,4 @@
+import { requireAuth } from "@/utils/auth";
 import { PointItemType } from "@/types/point";
 import {
   getPointHistory,
@@ -8,8 +9,9 @@ import { Txt } from "@/components/atoms";
 import { BasicHeader } from "@/components/common";
 
 export default async function PointHistoryPage() {
-  // TODO: soldierId 추후 세션에서 가져오기
-  const soldierId = 3;
+  const session = await requireAuth();
+
+  const soldierId = session?.user.soldier.soldierId!;
   const pointSum = await getPointSum(soldierId);
   const pointList: PointItemType[] = await getPointHistory(soldierId);
 

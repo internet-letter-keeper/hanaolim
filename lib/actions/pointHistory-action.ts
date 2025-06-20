@@ -9,7 +9,7 @@ export const getPointHistory = async (
   if (!Number.isInteger(soldierId)) {
     throw new Error("soldierId must be a number");
   }
-  //1. 포인트 리스트 조회하기 (최신순)
+  //1. 포인트 리스트 조회하면서 누적합 구하기 (최신순)
   const pointList = await prisma.$queryRawUnsafe<
     {
       pointId: number;
