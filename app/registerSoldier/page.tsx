@@ -2,11 +2,15 @@
 
 import Image from "next/image";
 import { useRouter } from "next/navigation";
+import { useSession } from "next-auth/react";
 import { ChangeEvent, useState } from "react";
+import { postSoldier } from "@/lib/actions/auth-actions";
 import { PrimaryButton, Input, Txt } from "@/components/atoms";
 import DatePicker from "@/components/common/DatePicker";
 
 export default function SignInPage() {
+  const { data: session, update } = useSession();
+
   const router = useRouter();
   const [joinDate, setJoinDate] = useState<Date | null>(null);
   const [releaseDate, setReleaseDate] = useState<Date | null>(null);
@@ -23,6 +27,10 @@ export default function SignInPage() {
       setErrorMessage("전역일을 선택하여 주세요");
       return;
     }
+    if (joinDate >= releaseDate) {
+      setErrorMessage("전역일은 입대일 이후여야 합니다.");
+      return;
+    }
 
     if (!accountNumber || accountNumber.length < 16) {
       setErrorMessage("계좌번호를 올바르게 입력하여 주세요");
@@ -30,11 +38,31 @@ export default function SignInPage() {
     }
 
     // 유효성 통과 후 처리
-    setErrorMessage(""); // 에러 초기화
-    setJoinDate(null);
-    setReleaseDate(null);
-    alert("등록이 완료되었습니다!");
-    router.push("/");
+    if (session?.user.userId === undefined) {
+      setErrorMessage("유효한 사용자 정보가 없습니다.");
+      return;
+    }
+
+    const result = await postSoldier({
+      userId: session?.user.userId,
+      startDate: joinDate,
+      endDate: releaseDate,
+      accountNumber: accountNumber,
+    });
+    if (result.ok) {
+      setErrorMessage(""); // 에러 초기화
+      setJoinDate(null);
+      setReleaseDate(null);
+      await update({
+        ...session.user,
+        soldier: result.data,
+      }); // 세션 업데이트
+      alert("군인등록 완료!");
+      router.push("/");
+    } else {
+      alert("군인등록에 실패했습니다. 다시 시도해 주세요.");
+      return;
+    }
   };
 
   const handleAccountChange = (e: ChangeEvent<HTMLInputElement>) => {

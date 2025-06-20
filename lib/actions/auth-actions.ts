@@ -1,21 +1,10 @@
 "use server";
 
 import bcrypt from "bcryptjs";
+import { SoldierData, UserData } from "@/types/common/auth";
 import prisma from "../db";
 
-type UserData = {
-  email: string;
-  userName: string;
-  password: string;
-};
-
-type SoldierData = {
-  userId: number;
-  startDate: Date;
-  endDate: Date;
-  accountNumber: string;
-};
-
+// 로그인을 위한 유저 정보 불러오기
 export const getUserByEmail = async (email: string) =>
   prisma.user.findUnique({
     where: {
@@ -26,6 +15,7 @@ export const getUserByEmail = async (email: string) =>
     },
   });
 
+// 회원가입
 export const postSignUp = async (user: UserData) => {
   try {
     const newUser = await prisma.user.create({
@@ -52,6 +42,7 @@ export const postSignUp = async (user: UserData) => {
   }
 };
 
+// 이메일 중복 확인 / 회원가입과 함께 진행
 export const isEmailDuplicated = async (email: string): Promise<boolean> => {
   const existingUser = await prisma.user.findUnique({
     where: { email },
@@ -60,6 +51,7 @@ export const isEmailDuplicated = async (email: string): Promise<boolean> => {
   return existingUser !== null;
 };
 
+// 군인으로 등록하기
 export const postSoldier = async (soldier: SoldierData) => {
   try {
     const postSoldier = await prisma.soldier.create({
@@ -72,6 +64,8 @@ export const postSoldier = async (soldier: SoldierData) => {
         soldierId: true,
         startDate: true,
         endDate: true,
+        letterExp: true,
+        statusMessage: true,
       },
     });
 
@@ -94,3 +88,11 @@ export const postSoldier = async (soldier: SoldierData) => {
     return { ok: false, error: "군인등록에 실패했습니다." };
   }
 };
+
+/**
+ * DB에 있는 유저인지 확인
+ * @param userId
+ * @returns userId의 유저 정보
+ */
+export const isUserExists = async (userId: number) =>
+  prisma.user.findUnique({ where: { userId } });
