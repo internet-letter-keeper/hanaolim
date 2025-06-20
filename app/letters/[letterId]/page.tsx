@@ -17,7 +17,7 @@ export default async function LetterDetailPage({ params, isSoldier }: Props) {
 
   if (!letter) return notFound();
 
-  const reply = dummyLetters.find((letter) => letter.parentId === +letter.id);
+  const reply = dummyLetters.find((l) => l.parentId === +letter.id);
 
   return (
     <>
