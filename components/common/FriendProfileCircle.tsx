@@ -1,8 +1,6 @@
-"use client";
-
 import { dDayConCatString } from "@/utils/date";
 import Image from "next/image";
-import { useRouter } from "next/navigation";
+import Link from "next/link";
 import {
   FriendProfile,
   SoldierProfile,
@@ -28,18 +26,13 @@ export default function FriendProfileCircle({
   profile,
   isRowLayout = false,
 }: Props) {
-  const navigation = useRouter();
-
   const { userName, rank, endDate, soldierId } = profile;
 
   const dDay = dDayConCatString(endDate);
 
-  const onClick = () => navigation.push(`/cabinet/${soldierId}`);
-
   return (
-    <button
-      type="button"
-      onClick={onClick}
+    <Link
+      href={`/cabinet/${soldierId}`}
       className={cn("whitespace-nowrap flex items-center flex-col", {
         "flex-row gap-[10px]": isRowLayout,
       })}
@@ -67,6 +60,6 @@ export default function FriendProfileCircle({
       <Txt className="mt-[12px]" weight="medium" size={isRowLayout ? 12 : 14}>
         {userName}
       </Txt>
-    </button>
+    </Link>
   );
 }
