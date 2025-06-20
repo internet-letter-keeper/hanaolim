@@ -46,6 +46,7 @@ export const {
           userId: dbUser.userId,
           isSoldier: dbUser.isSoldier,
           isSocial: dbUser.isSocial,
+          soldier: dbUser.Soldier[0] || null,
         };
       },
     }),
@@ -78,6 +79,7 @@ export const {
         token.userName = userData.userName;
         token.isSoldier = userData.isSoldier;
         token.isSocial = userData.isSocial;
+        token.soldier = userData.soldier;
       }
       return token;
     },
@@ -88,7 +90,9 @@ export const {
         session.user.userName = token.userName;
         session.user.isSoldier = token.isSoldier;
         session.user.isSocial = token.isSocial;
+        session.user.soldier = token.soldier || null;
       }
+
       return session;
     },
   },
