@@ -52,7 +52,6 @@ export default function LetterMoneyButton({ soldierId }: Props) {
     }
   };
 
-  // FIXME: 편지 작성 페이지 route 이름 확정되면 수정
   const onLetterClick = () => router.push(`/write/${soldierId}`);
 
   return (
