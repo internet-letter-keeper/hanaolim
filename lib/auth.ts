@@ -30,18 +30,15 @@ export const {
 
         // zod validation을 사용하여 credentials 검증
         const validator = credentialValidator.safeParse(credentials);
-        console.log("validator", validator);
         if (!validator.success) return null;
 
         const { email, password } = validator.data;
 
         const dbUser = await getUserByEmail(email);
         if (!dbUser || !dbUser.password) return null;
-        console.log("dbUser", dbUser);
         // 비밀번호가 일치하는지 확인
         const isValid = await bcrypt.compare(password, dbUser.password);
         if (!isValid) return null;
-        console.log("isValid", isValid);
         // 비밀번호가 일치하면 사용자 정보를 반환
         return {
           email: dbUser.email,
