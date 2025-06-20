@@ -35,7 +35,7 @@ export default async function CabinetPage({ params }: Props) {
       <SidebarProvider defaultOpen={false} className="flex-col">
         <div className="flex flex-col gap-4">
           <CabinetHeader isMyCabinet={isMyCabinet} soldierInfo={soldierInfo} />
-          <FriendsList />
+          <FriendsList soldierId={+soldierId} />
           <StatusMessage isMyCabinet={isMyCabinet} soldierInfo={soldierInfo} />
           <Cabinet isMyCabinet={isMyCabinet} />
           {!isMyCabinet && <LetterMoneyButton soldierId={+soldierId} />}
