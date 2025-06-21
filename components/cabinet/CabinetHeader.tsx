@@ -19,7 +19,7 @@ export default async function CabinetHeader({
 
   const isSoldier = session.user.isSoldier;
 
-  const soldierName = soldierInfo?.User.userName;
+  const soldierName = isMyCabinet ? "나" : soldierInfo?.User.userName + "님";
 
   return (
     <header className={"flex items-center px-2 h-[40px]"}>
@@ -35,26 +35,15 @@ export default async function CabinetHeader({
         </Link>
       )}
 
-      {/* 내 관물대일 때 vs 아닐 때 분기처리 */}
-      {isMyCabinet && isSoldier ? (
-        <div className="flex flex-1 justify-between mr-4">
-          <Txt size={23} weight="cm">
-            나의 관물대
-          </Txt>
-          <CopyCodeBtn />
-        </div>
-      ) : (
-        <div className="items-baseline flex-1">
-          <Txt size={23} weight="bold" className="text-green-49d">
-            {soldierName}
-          </Txt>
-          <Txt size={20} weight="cm">
-            &nbsp;님의 관물대
-          </Txt>
-        </div>
-      )}
+      {/* 타이틀 */}
+      <Txt size={23} weight="cm" className="flex-1" align="left">
+        {soldierName}의 관물대
+      </Txt>
 
-      <SidebarHeader>
+      {/* 내 관물대일 때 vs 아닐 때 분기처리 */}
+      {isMyCabinet && <CopyCodeBtn />}
+
+      <SidebarHeader className="ml-4">
         {/* TODO:새로운 메세지가 왔을 경우 분기 처리 
           isNewMessage={true}  이런식으로 하면 됩니다
         */}

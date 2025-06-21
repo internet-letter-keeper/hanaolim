@@ -13,7 +13,7 @@ export default function StatusMessage({ isMyCabinet, soldierInfo }: Props) {
   const { statusMessage, soldierId } = soldierInfo;
 
   return (
-    <div className="flex mx-2 px-3 py-1 gap-1 items-center bg-blue-0f5 border border-blue-af0 rounded-[15px]">
+    <div className="flex mx-2 px-3 py-1 gap-1 items-center bg-[#f14a7615] border border-[#f14a7620] rounded-[15px]">
       <Image
         src="/images/walkie-talkie.svg"
         alt="무전기 이미지"
