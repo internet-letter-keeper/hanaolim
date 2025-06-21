@@ -1,7 +1,7 @@
 "use client";
 
-import { useToast } from "@/contexts/toast/ToastContext";
 import Image from "next/image";
+import { useToast } from "@/contexts/toast/ToastContext";
 
 export default function CopyCodeBtn() {
   const { showToast } = useToast();

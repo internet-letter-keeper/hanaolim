@@ -3,9 +3,9 @@
 import Image from "next/image";
 import { useRouter } from "next/navigation";
 import { useRef, useState } from "react";
-import { patchStatusMessage } from "@/lib/actions/friend-actions";
 import { Input } from "@/components/atoms";
 import { Modal } from "@/components/common";
+import { patchStatusMessage } from "@/lib/actions/friend-actions";
 
 type Props = {
   soldierId: number;

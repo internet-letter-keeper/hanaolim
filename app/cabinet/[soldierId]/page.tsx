@@ -1,6 +1,3 @@
-import { ToastProvider } from "@/contexts/toast/ToastProvider";
-import { requireAuth } from "@/utils/auth";
-import { getUserBySoldierId } from "@/lib/actions/friend-actions";
 import {
   Cabinet,
   CabinetHeader,
@@ -10,6 +7,9 @@ import {
   DropDownModal,
 } from "@/components/cabinet";
 import { SidebarProvider } from "@/components/ui/sidebar";
+import { ToastProvider } from "@/contexts/toast/ToastProvider";
+import { getUserBySoldierId } from "@/lib/actions/friend-actions";
+import { requireAuth } from "@/utils/auth";
 
 type Props = {
   params: Promise<{ soldierId: string }>;

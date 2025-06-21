@@ -1,8 +1,8 @@
-import { requireAuth } from "@/utils/auth";
-import { calculateRankByStartDate } from "@/utils/date";
-import { getFriendsList } from "@/lib/actions/friend-actions";
 import { AddFriendBtn } from "@/components/cabinet";
 import { FriendProfileCircle } from "@/components/common";
+import { getFriendsList } from "@/lib/actions/friend-actions";
+import { requireAuth } from "@/utils/auth";
+import { calculateRankByStartDate } from "@/utils/date";
 
 type Props = {
   soldierId: number;

@@ -1,11 +1,11 @@
 "use client";
 
-import { useToast } from "@/contexts/toast/ToastContext";
 import { useRouter } from "next/navigation";
 import { useSession } from "next-auth/react";
 import { useRef, useState } from "react";
-import { postFriend } from "@/lib/actions/friend-actions";
 import { Input, Txt } from "@/components/atoms";
+import { useToast } from "@/contexts/toast/ToastContext";
+import { postFriend } from "@/lib/actions/friend-actions";
 import { Modal } from "../common";
 
 export default function AddFriendBtn() {

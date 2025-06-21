@@ -1,10 +1,10 @@
-import { requireAuth } from "@/utils/auth";
 import Image from "next/image";
 import Link from "next/link";
 import { SoldierUserInfo } from "@/types/common/profile";
+import { requireAuth } from "@/utils/auth";
+import { CopyCodeBtn } from ".";
 import { Txt } from "../atoms";
 import { SidebarHeader, SidebarTrigger } from "../ui/sidebar";
-import CopyCodeBtn from "./CopyCodeBtn";
 
 type Props = {
   isMyCabinet: boolean;

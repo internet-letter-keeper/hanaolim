@@ -1,6 +1,6 @@
 import Image from "next/image";
-import { SoldierUserInfo } from "@/types/common/profile";
 import { cn } from "@/lib/utils";
+import { SoldierUserInfo } from "@/types/common/profile";
 import { Txt } from "../atoms";
 import EditStatusMsgBtn from "./EditStatusMsgBtn";
 
