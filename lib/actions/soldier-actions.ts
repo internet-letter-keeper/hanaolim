@@ -43,6 +43,12 @@ export const getSoldierInfo = async (soldierId: string) => {
   }
 };
 
+/**
+ * 군인아이디에 따른 이름 반환
+ * @param soldierId 군인 아이디
+ * @returns 군인이름
+ * @throw 가져오는데 실패했을 경우
+ */
 export const getSoldierName = async (soldierId: number) => {
   try {
     const soldier = await db.soldier.findUnique({
@@ -67,5 +73,36 @@ export const getSoldierName = async (soldierId: number) => {
     };
   } catch (error) {
     throw new Error("정보를 가져오는데 실패했습니다");
+  }
+};
+
+/**
+ * 입대일과 전역일 업데이트
+ * @param soldierId
+ * @param startDate
+ * @param endDate
+ * @throws 변경에 실패했을 때
+ */
+export const updateSoldierDates = async (
+  soldierId: number,
+  startDate: Date,
+  endDate: Date
+) => {
+  console.log("dhsdofsdfsdf", startDate, endDate);
+  try {
+    const res = await db.soldier.update({
+      where: {
+        soldierId: soldierId,
+      },
+      data: {
+        startDate: startDate,
+        endDate: endDate,
+      },
+    });
+    return {
+      success: true,
+    };
+  } catch (error) {
+    throw new Error("입대일/전역일 변경에 실패했습니다.");
   }
 };

@@ -105,6 +105,8 @@ export const isUserExists = async (userId: number) =>
  * @param userId
  * @param currentPassword
  * @returns 비밀번호 일치 여부
+ * @throw 사용자를 찾을 수 없을 때
+ * @throw 비밀번호 확인에 실패했을 경우
  */
 export const verifyCurrentPassword = async (
   userId: number,
@@ -128,7 +130,7 @@ export const verifyCurrentPassword = async (
 
     return { success: true, isValid: isPasswordValid };
   } catch (error) {
-    throw new Error("비밀번호 변경에 실패했습니다.ㄴ");
+    throw new Error("현재 비밀번호 확인에 실패했습니다.");
   }
 };
 
@@ -137,6 +139,7 @@ export const verifyCurrentPassword = async (
  * @param userId
  * @param newPassword
  * @returns 변경 성공 여부
+ * @throw 비밀번호 변경에 실패했을 경우
  */
 export const changePassword = async (userId: number, newPassword: string) => {
   requireAuth();
