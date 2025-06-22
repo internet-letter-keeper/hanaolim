@@ -54,7 +54,6 @@ export default function DropDownModal() {
                     />
                   </div>
                   <div className="flex gap-2">
-                    {/* TODO: 군인일 경우 버튼 '군인으로 등록하기'안보이게 분기 처리 */}
                     {!isSoldier && (
                       <PrimaryButton
                         title="군인으로 등록하기"
