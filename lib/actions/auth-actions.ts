@@ -2,8 +2,8 @@
 
 import bcrypt from "bcryptjs";
 import { SoldierData, UserData } from "@/types/common/auth";
+import { generateRandomCode, requireAuth } from "@/utils/auth";
 import prisma from "../db";
-import { generateRandomCode } from "@/utils/auth";
 
 // 로그인을 위한 유저 정보 불러오기
 export const getUserByEmail = async (email: string) =>
@@ -99,3 +99,57 @@ export const postSoldier = async (soldier: SoldierData) => {
  */
 export const isUserExists = async (userId: number) =>
   prisma.user.findUnique({ where: { userId } });
+
+/**
+ * 현재 비밀번호가 일치하는지 확인
+ * @param userId
+ * @param currentPassword
+ * @returns 비밀번호 일치 여부
+ */
+export const verifyCurrentPassword = async (
+  userId: number,
+  currentPassword: string
+): Promise<{ success: boolean; isValid: boolean }> => {
+  requireAuth();
+  try {
+    const user = await prisma.user.findUnique({
+      where: { userId },
+      select: { password: true },
+    });
+
+    if (!user || !user.password) {
+      throw new Error("사용자를 찾을 수 없습니다.");
+    }
+
+    const isPasswordValid = await bcrypt.compare(
+      currentPassword,
+      user.password
+    );
+
+    return { success: true, isValid: isPasswordValid };
+  } catch (error) {
+    throw new Error("비밀번호 변경에 실패했습니다.ㄴ");
+  }
+};
+
+/**
+ * 비밀번호 변경
+ * @param userId
+ * @param newPassword
+ * @returns 변경 성공 여부
+ */
+export const changePassword = async (userId: number, newPassword: string) => {
+  requireAuth();
+  try {
+    const hashedPassword = await bcrypt.hash(newPassword, 10);
+
+    await prisma.user.update({
+      where: { userId },
+      data: { password: hashedPassword },
+    });
+
+    return { success: true };
+  } catch (error) {
+    throw new Error("비밀번호 변경에 실패했습니다.");
+  }
+};

@@ -1,7 +1,7 @@
 "use server";
 
-import { calculateRankByStartDate } from "@/utils/date";
 import { FriendProfile, SoldierRank } from "@/types/common/profile";
+import { calculateRankByStartDate } from "@/utils/date";
 import prisma from "../db";
 import { isUserExists } from "./auth-actions";
 
