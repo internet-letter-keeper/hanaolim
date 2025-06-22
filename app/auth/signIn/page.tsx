@@ -29,7 +29,7 @@ export default function SignInPage() {
     }
   }, []);
 
-  //splash / preloader (스플래시 렌더 전에 나오는 화면) 표시용 content
+  //splash 렌더 (브라우저 종료 시 쿠키 사라짐)
   let splashContent = null;
 
   if (showSplash === null) {
@@ -38,7 +38,7 @@ export default function SignInPage() {
     splashContent = (
       <SplashScreen
         onFinish={() => {
-          document.cookie = "splashSeen=true; path=/; max-age=86400";
+          document.cookie = "splashSeen=true; path=/;";
           setShowSplash(false);
         }}
       />
