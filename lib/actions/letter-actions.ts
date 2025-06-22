@@ -1,8 +1,9 @@
 "use server";
 
-import { Letter } from "@/types/letters";
 import prisma from "@/lib/db";
+import { Letter } from "@/types/letters";
 
+// 편지 목록 불러오기 api
 export async function getLettersByUserId(userId: number) {
   try {
     const lettersFromDb = await prisma.letter.findMany({
@@ -34,6 +35,45 @@ export async function getLettersByUserId(userId: number) {
     return { ok: true, data: letters };
   } catch (error) {
     console.error("편지 불러오기 에러:", error);
+    return { ok: false, data: null };
+  }
+}
+
+// 편지 상세 조회 api
+export async function getLetterDetail(letterId: number, currentUserId: number) {
+  try {
+    const letter = await prisma.letter.findUnique({
+      where: {
+        letterId,
+      },
+      include: {
+        Favorite: true,
+      },
+    });
+
+    if (!letter) {
+      return { ok: false, data: null };
+    }
+
+    const result: Letter = {
+      letterId: letter.letterId,
+      nickname: letter.nickname ?? "",
+      content: letter.content,
+      fileUrl: letter.fileUrl ?? undefined,
+      iconId: letter.iconId ?? undefined,
+      createDate: letter.createDate.toISOString(),
+      readDate: letter.readDate ? letter.readDate.toISOString() : null,
+      parentLetterId: letter.parentLetterId ?? null,
+      receiverId: letter.receiverId,
+      senderId: letter.senderId,
+      isFavorite: letter.Favorite.some(
+        (f) => f.userId === currentUserId && f.isFavorite
+      ),
+    };
+
+    return { ok: true, data: result };
+  } catch (error) {
+    console.error("편지 상세 조회 에러:", error);
     return { ok: false, data: null };
   }
 }
