@@ -81,20 +81,20 @@ export default function LettersPageClient({
           />
         </div>
 
-        <div className="py-4">
+        <div className="py-1">
           <div className="flex justify-center gap-2">
             <PrimaryButton
               title="내 관물대"
               onClick={() => setActiveTab("send")}
               color={activeTab === "send" ? "green" : "white"}
-              className="py-3 my-2 border-b border-[#D6E9E7]"
+              className="py-2 my-4 border-b border-[#D6E9E7]"
               weight="cm"
             />
             <PrimaryButton
               title="친구 관물대"
               onClick={() => setActiveTab("receive")}
               color={activeTab === "receive" ? "green" : "white"}
-              className="py-3 my-2 border-b border-[#D6E9E7]"
+              className="py-2 my-4 border-b border-[#D6E9E7]"
               weight="cm"
             />
           </div>
@@ -141,6 +141,7 @@ export default function LettersPageClient({
               key={letter.letterId}
               letters={letter}
               allLetters={letters}
+              currentUserId={currentUserId}
             />
           ))}
         </div>

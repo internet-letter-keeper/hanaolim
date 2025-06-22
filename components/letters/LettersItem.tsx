@@ -13,14 +13,21 @@ type CustomLetter = {
   readDate?: string | null;
   isFavorite: boolean;
   parentLetterId?: number | null;
+  receiverId: number;
+  senderId: number;
 };
 
 type Props = {
   letters: CustomLetter;
   allLetters: CustomLetter[];
+  currentUserId: number;
 };
 
-export default function LettersItem({ letters, allLetters }: Props) {
+export default function LettersItem({
+  letters,
+  allLetters,
+  currentUserId,
+}: Props) {
   const {
     letterId,
     nickname,
@@ -28,15 +35,15 @@ export default function LettersItem({ letters, allLetters }: Props) {
     createDate,
     isFavorite: initialFavorite,
     readDate,
+    receiverId,
+    senderId,
   } = letters;
 
   const isRead = !!readDate;
-  const hasReply = allLetters.some((l) => l.parentLetterId === letterId);
   const [isFavorite, setIsFavorite] = useState(initialFavorite);
 
-  // 클라이언트에서 날짜 포맷
+  // 날짜 포맷
   const [formattedDate, setFormattedDate] = useState("");
-
   useEffect(() => {
     const date = new Date(createDate);
     const formatted = date.toLocaleString("ko-KR", {
@@ -45,6 +52,16 @@ export default function LettersItem({ letters, allLetters }: Props) {
     });
     setFormattedDate(formatted);
   }, [createDate]);
+
+  // 답장 존재 여부
+  const hasReply = allLetters.some((l) => l.parentLetterId === letterId);
+
+  // 답장하기 보여줄 조건: 내가 받은 편지 && 내가 아직 답장 안 한 편지
+  const shouldShowReplyButton =
+    receiverId === currentUserId &&
+    !allLetters.some(
+      (l) => l.parentLetterId === letterId && l.senderId === currentUserId
+    );
 
   const handleToggleFavorite = (e: React.MouseEvent) => {
     e.stopPropagation();
@@ -79,7 +96,21 @@ export default function LettersItem({ letters, allLetters }: Props) {
         </Txt>
 
         <div className="flex justify-between items-center w-full mt-2">
-          {hasReply ? (
+          {shouldShowReplyButton && (
+            <div className="flex items-center gap-1 rounded-full border border-red-a76 px-2 py-0.5">
+              <Image
+                src="/icons/ic-isReply.svg"
+                alt="답장하기"
+                width={14}
+                height={15}
+              />
+              <Txt size={12} className="text-red-a76">
+                답장하기
+              </Txt>
+            </div>
+          )}
+
+          {!shouldShowReplyButton && senderId === currentUserId && hasReply && (
             <div className="flex items-center gap-1 rounded-full border border-red-a76 px-2 py-0.5">
               <Image
                 src="/icons/ic-isReply.svg"
@@ -91,9 +122,10 @@ export default function LettersItem({ letters, allLetters }: Props) {
                 답장도착
               </Txt>
             </div>
-          ) : (
-            <div />
           )}
+
+          {!shouldShowReplyButton &&
+            (!hasReply || receiverId === currentUserId) && <div />}
 
           <Image
             src={
