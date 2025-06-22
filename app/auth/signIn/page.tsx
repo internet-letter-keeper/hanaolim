@@ -5,7 +5,6 @@ import { useRouter } from "next/navigation";
 import { signIn } from "next-auth/react";
 import { useEffect, useRef, useState } from "react";
 import SplashScreen from "@/components/HomeSplashScreen";
-import Preloader from "@/components/Preloader";
 import { PrimaryButton, Input, Txt } from "@/components/atoms";
 
 export default function SignInPage() {
@@ -21,7 +20,7 @@ export default function SignInPage() {
   const [showSplash, setShowSplash] = useState<boolean | null>(null);
 
   useEffect(() => {
-    const alreadySeen = localStorage.getItem("splashSeen");
+    const alreadySeen = document.cookie.includes("splashSeen=true");
 
     if (!alreadySeen) {
       setShowSplash(true);
@@ -34,9 +33,16 @@ export default function SignInPage() {
   let splashContent = null;
 
   if (showSplash === null) {
-    splashContent = <Preloader />;
+    return null;
   } else if (showSplash) {
-    splashContent = <SplashScreen onFinish={() => setShowSplash(false)} />;
+    splashContent = (
+      <SplashScreen
+        onFinish={() => {
+          document.cookie = "splashSeen=true; path=/; max-age=86400";
+          setShowSplash(false);
+        }}
+      />
+    );
   }
 
   if (splashContent) {
