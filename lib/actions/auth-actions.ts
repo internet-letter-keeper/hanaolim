@@ -3,7 +3,7 @@
 import bcrypt from "bcryptjs";
 import { SoldierData, UserData } from "@/types/common/auth";
 import prisma from "../db";
-import { generateRandomCode } from "../utils";
+import { generateRandomCode } from "@/utils/auth";
 
 // 로그인을 위한 유저 정보 불러오기
 export const getUserByEmail = async (email: string) =>
