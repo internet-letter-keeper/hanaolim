@@ -42,3 +42,30 @@ export const getSoldierInfo = async (soldierId: string) => {
     };
   }
 };
+
+export const getSoldierName = async (soldierId: number) => {
+  try {
+    const soldier = await db.soldier.findUnique({
+      where: {
+        soldierId: soldierId,
+      },
+      include: {
+        User: {
+          select: {
+            userName: true,
+          },
+        },
+      },
+    });
+
+    if (!soldier) {
+      return { userName: "" };
+    }
+
+    return {
+      userName: soldier.User.userName,
+    };
+  } catch (error) {
+    throw new Error("정보를 가져오는데 실패했습니다");
+  }
+};
