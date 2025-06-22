@@ -1,7 +1,10 @@
 "use client";
 
-import { useToast } from "@/contexts/toast/ToastContext";
 import Image from "next/image";
+import { useRouter } from "next/navigation";
+import { useSession } from "next-auth/react";
+import { useToast } from "@/contexts/toast/ToastContext";
+import { getAccountNumBySoldierId } from "@/lib/actions/friend-actions";
 import { Txt } from "../atoms";
 
 type SoldierSupportProps = {
@@ -11,11 +14,7 @@ type SoldierSupportProps = {
 
 function SoldierSupportButton({ type, onClick }: SoldierSupportProps) {
   return (
-    <button
-      type="button"
-      onClick={onClick}
-      className="flex flex-col items-center gap-[6px]"
-    >
+    <button onClick={onClick} className="flex flex-col items-center gap-[6px]">
       <div className="flex items-center w-[50px] h-[50px] justify-center bg-white border rounded-full border-blue-9a0">
         <Image
           src={`/images/${type}.svg`}
@@ -31,14 +30,29 @@ function SoldierSupportButton({ type, onClick }: SoldierSupportProps) {
   );
 }
 
-export default function LetterMoneyButton() {
+type Props = {
+  soldierId: number;
+};
+
+export default function LetterMoneyButton({ soldierId }: Props) {
+  const router = useRouter();
+
+  const { data } = useSession();
+
   const { showToast } = useToast();
 
-  const onCoinClick = () => {
-    showToast("계좌번호가 복사되었습니다!");
+  const onCoinClick = async () => {
+    // 소셜로그인이면 soldierId 해당 군인의 계좌번호 복사, 이메일 로그인이면 하나원큐로 이동
+    if (data?.user.isSocial) {
+      const accountNum = await getAccountNumBySoldierId(soldierId);
+      navigator.clipboard.writeText(accountNum);
+      showToast("계좌번호가 복사되었습니다");
+    } else {
+      router.push("/hanaBank");
+    }
   };
 
-  const onLetterClick = () => alert("편지 쓰기 버튼 클릭");
+  const onLetterClick = () => router.push(`/write/${soldierId}`);
 
   return (
     <div className="flex items-center justify-end gap-2">

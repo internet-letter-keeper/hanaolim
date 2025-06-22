@@ -9,6 +9,21 @@ export type SoldierProfile = {
   rank: SoldierRank;
 };
 
+export type SoldierUserInfo = {
+  User: {
+    userName: string;
+    isSoldier: boolean;
+    isSocial: boolean;
+  };
+} & {
+  soldierId: number;
+  startDate: Date;
+  endDate: Date;
+  statusMessage: string | null;
+  letterExp: number;
+  userId: number;
+};
+
 /**
  * 친구 프로필 원형 아이콘
  */

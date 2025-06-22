@@ -1,14 +1,23 @@
 "use client";
 
 import { useRouter } from "next/navigation";
-import { useState } from "react";
+import { useSession } from "next-auth/react";
+import { useRef, useState } from "react";
 import { Input, Txt } from "@/components/atoms";
+import { useToast } from "@/contexts/toast/ToastContext";
+import { postFriend } from "@/lib/actions/friend-actions";
 import { Modal } from "../common";
 
 export default function AddFriendBtn() {
   const router = useRouter();
 
-  const isLogggedIn = true;
+  const { showToast } = useToast();
+
+  const { data } = useSession();
+
+  const isLogggedIn = !!data?.user.userId;
+
+  const userId = data?.user.userId;
 
   const [isModalOpened, setModalOpened] = useState<boolean>(false);
 
@@ -16,12 +25,27 @@ export default function AddFriendBtn() {
 
   const closeModal = () => setModalOpened(false);
 
-  const navigateToSignIn = () => router.push("/auth/signIn");
+  const soldierCodeRef = useRef<HTMLInputElement>(null);
 
-  const addFriendHandler = () => {
-    alert("군인 코드 입력 완료");
-    closeModal();
+  const addFriendHandler = async () => {
+    if (soldierCodeRef.current?.value && userId) {
+      const { success, message } = await postFriend(
+        soldierCodeRef.current.value,
+        userId
+      );
+
+      if (!success) {
+        showToast(message, "inset-20 top-30", "error");
+        return;
+      }
+
+      closeModal();
+      showToast(message, "inset-20 top-1/2");
+      router.refresh();
+    }
   };
+
+  const navigateToSignIn = () => router.push("/auth/signIn");
 
   return (
     <>
@@ -33,7 +57,13 @@ export default function AddFriendBtn() {
           onClickWhiteBtn={closeModal}
         >
           보고 싶은 군인을 등록해주세요
-          <Input placeholder="코드 입력" usage="modal" className="mt-[20px]" />
+          <Input
+            placeholder="코드 입력"
+            usage="modal"
+            className="mt-[20px]"
+            maxLength={8}
+            customRef={soldierCodeRef}
+          />
         </Modal>
       )}
 
