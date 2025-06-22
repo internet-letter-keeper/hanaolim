@@ -1,6 +1,7 @@
 "use client";
 
 import { useRouter } from "next/navigation";
+import { useSession } from "next-auth/react";
 import { useState } from "react";
 import { Txt } from "@/components/atoms";
 import { BasicHeader, Modal } from "@/components/common";
@@ -12,6 +13,8 @@ const containerStyle =
 export default function MyPage() {
   //TODO: 군인인지 아닌지에 따른 입대일 전역일 버튼 표시
 
+  const { data: session } = useSession();
+  const { userName, email, isSoldier } = session?.user || {};
   const router = useRouter();
   const [showLogoutModal, setShowLogoutModal] = useState(false);
   const [showWithdrawModal, setShowWithdrawModal] = useState(false);
@@ -34,10 +37,10 @@ export default function MyPage() {
       <BasicHeader title="내 정보" />
       <div className="flex flex-col items-start border-b border-gray-aaa pb-5 pl-4 mt-9 mb-9">
         <Txt className="text-gray-353" size={22} weight="cm">
-          최수비
+          {userName}
         </Txt>
         <Txt className="text-gray-353" size={16} weight="cm">
-          sososos@gmail.com
+          {email}
         </Txt>
       </div>
       <div className={containerStyle}>
@@ -51,16 +54,18 @@ export default function MyPage() {
             비밀번호 변경
           </Txt>
         </button>
-        <button
-          className={buttonStyle + "border-t border-gray-aaa"}
-          onClick={() => {
-            router.push("/my/soldier");
-          }}
-        >
-          <Txt className="text-gray-353/80" size={17}>
-            입대/전역일 변경
-          </Txt>
-        </button>
+        {isSoldier && (
+          <button
+            className={buttonStyle + "border-t border-gray-aaa"}
+            onClick={() => {
+              router.push("/my/soldier");
+            }}
+          >
+            <Txt className="text-gray-353/80" size={17}>
+              입대/전역일 변경
+            </Txt>
+          </button>
+        )}
       </div>
       <div className={containerStyle + " mt-8"}>
         <button
