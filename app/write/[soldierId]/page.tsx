@@ -13,12 +13,12 @@ import { IconName } from "@/types/common/icons";
 import { uploadedFileType } from "@/types/letters";
 import { getIconIdByName } from "@/utils/icon";
 
-export default async function WritePage({
+export default function WritePage({
   params,
 }: {
   params: Promise<{ soldierId: string }>;
 }) {
-  const { soldierId } = await params;
+  const [soldierId, setSoldierId] = useState<string>("");
   const [userName, setUserName] = useState<string>("");
   const [selectedIcon, setSelectedIcon] = useState<IconName>("face");
   const [uploadedFile, setUploadedFile] = useState<uploadedFileType | null>(
@@ -29,6 +29,9 @@ export default async function WritePage({
   // params와 userName을 가져오는 useEffect
   useEffect(() => {
     const fetchData = async () => {
+      const { soldierId } = await params;
+      setSoldierId(soldierId);
+
       const { userName: name } = await getSoldierName(+soldierId);
       setUserName(name || "별돌이");
     };

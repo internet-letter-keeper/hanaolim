@@ -15,8 +15,8 @@ type Props = {
   params: Promise<{ soldierId: string; letterId: string }>;
 };
 
-export default async function LetterWritePage({ params }: Props) {
-  const { soldierId, letterId } = await params;
+export default function LetterWritePage({ params }: Props) {
+  const [soldierId, setSoldierId] = useState<number>("");
   const [userName, setUserName] = useState<string>("");
   const [uploadedFile, setUploadedFile] = useState<uploadedFileType | null>(
     null
@@ -27,6 +27,7 @@ export default async function LetterWritePage({ params }: Props) {
   const [letter, postLetterAction, isPending] = useActionState(
     async (_pre: unknown, formData: FormData) => {
       // soldierId와 parentLetterId 추가
+      const { soldierId, letterId } = await params;
       formData.append("soldierId", soldierId);
       formData.append("parentLetterId", letterId);
 
@@ -75,6 +76,8 @@ export default async function LetterWritePage({ params }: Props) {
 
   useEffect(() => {
     const fetchData = async () => {
+      const { soldierId } = await params;
+
       const { userName: name } = await getSoldierName(+soldierId);
       setUserName(name || "별돌이");
     };
