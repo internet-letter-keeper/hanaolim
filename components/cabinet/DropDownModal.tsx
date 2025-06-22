@@ -1,6 +1,7 @@
 "use client";
 
 import { useRouter } from "next/navigation";
+import { useSession } from "next-auth/react";
 import {
   Sidebar,
   SidebarContent,
@@ -16,12 +17,13 @@ import Profile from "../common/Profile";
 const ButtonStyle = "border border-gray-353/25 py-3";
 
 export default function DropDownModal() {
-  // TODO: 세션 프로바이더로 나중에 받아와서 구분하기
-
+  const { data: session } = useSession();
+  const isSoldier = session?.user?.isSoldier;
   const router = useRouter();
   const goToLetters = () => router.push("/letters");
   const goToRegisterSoldier = () => router.push("/registerSoldier");
   const goToFriends = () => router.push("/friends");
+  const goToMy = () => router.push("/my");
 
   const { toggleSidebar } = useSidebar();
   return (
@@ -33,24 +35,35 @@ export default function DropDownModal() {
               <div className="flex flex-col m-7 mt-10 gap-6">
                 <Profile userName="별돌이" endDate={new Date()} />
                 <div className="flex flex-col gap-2">
-                  <PrimaryButton
-                    title="편지 보관함"
-                    className={cn(ButtonStyle, "gap-1")}
-                    textSize={16}
-                    color="gray"
-                    onClick={goToLetters}
-                    // TODO:답장이 온 편지가 있냐 없냐에 따른 Icon 보일지 여부 분기 처리, isNewMessage 같은거 추후 추가
-                    icon={<NewIcon />}
-                  />
+                  <div className="flex gap-2">
+                    <PrimaryButton
+                      title="편지 보관함"
+                      className={cn(ButtonStyle, "gap-1")}
+                      textSize={16}
+                      color="gray"
+                      onClick={goToLetters}
+                      // TODO:답장이 온 편지가 있냐 없냐에 따른 Icon 보일지 여부 분기 처리, isNewMessage 같은거 추후 추가
+                      icon={<NewIcon />}
+                    />
+                    <PrimaryButton
+                      title="내 정보"
+                      className={cn(ButtonStyle, "gap-1")}
+                      textSize={16}
+                      color="gray"
+                      onClick={goToMy}
+                    />
+                  </div>
                   <div className="flex gap-2">
                     {/* TODO: 군인일 경우 버튼 '군인으로 등록하기'안보이게 분기 처리 */}
-                    <PrimaryButton
-                      title="군인으로 등록하기"
-                      className={ButtonStyle}
-                      color="gray"
-                      textSize={16}
-                      onClick={goToRegisterSoldier}
-                    />
+                    {!isSoldier && (
+                      <PrimaryButton
+                        title="군인으로 등록하기"
+                        className={ButtonStyle}
+                        color="gray"
+                        textSize={16}
+                        onClick={goToRegisterSoldier}
+                      />
+                    )}
                     <PrimaryButton
                       title="친구 관리"
                       className={ButtonStyle}
