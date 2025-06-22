@@ -1,15 +1,15 @@
 "use client";
 
 import Image from "next/image";
-import { useRouter } from "next/navigation";
-import { useState } from "react";
+import Link from "next/link";
+import { useState, useEffect } from "react";
 import { Txt } from "../atoms";
 
 type CustomLetter = {
   letterId: number;
   nickname: string;
   content: string;
-  createDate: string | Date;
+  createDate: string;
   readDate?: string | null;
   isFavorite: boolean;
   parentLetterId?: number | null;
@@ -34,8 +34,17 @@ export default function LettersItem({ letters, allLetters }: Props) {
   const hasReply = allLetters.some((l) => l.parentLetterId === letterId);
   const [isFavorite, setIsFavorite] = useState(initialFavorite);
 
-  const router = useRouter();
-  const handleClick = () => router.push(`/letters/${letterId}`);
+  // 클라이언트에서 날짜 포맷
+  const [formattedDate, setFormattedDate] = useState("");
+
+  useEffect(() => {
+    const date = new Date(createDate);
+    const formatted = date.toLocaleString("ko-KR", {
+      dateStyle: "medium",
+      timeStyle: "short",
+    });
+    setFormattedDate(formatted);
+  }, [createDate]);
 
   const handleToggleFavorite = (e: React.MouseEvent) => {
     e.stopPropagation();
@@ -43,10 +52,10 @@ export default function LettersItem({ letters, allLetters }: Props) {
   };
 
   return (
-    <div className="mt-4 bg-white">
-      <div
-        className="border rounded-[10px] border-[#209B98] pb-3 p-3"
-        onClick={handleClick}
+    <div className="flex w-full mt-4 bg-white mx-auto">
+      <Link
+        href={`/letters/${letterId}`}
+        className="w-full block border rounded-[10px] border-[#209B98] pb-3 p-3"
       >
         <div className="flex justify-between items-start">
           <Txt
@@ -54,10 +63,10 @@ export default function LettersItem({ letters, allLetters }: Props) {
             weight="cm"
             className={isRead ? "text-[#AAAAAA]" : "text-gray-353"}
           >
-            {nickname}
+            {nickname ?? ""}
           </Txt>
           <span className="text-[12px] text-blue-9a0 whitespace-nowrap">
-            {createDate as string}
+            {formattedDate}
           </span>
         </div>
 
@@ -99,7 +108,7 @@ export default function LettersItem({ letters, allLetters }: Props) {
             className="cursor-pointer"
           />
         </div>
-      </div>
+      </Link>
     </div>
   );
 }
