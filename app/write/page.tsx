@@ -3,11 +3,11 @@
 import Image from "next/image";
 import { useState, useRef } from "react";
 import { ChangeEvent } from "react";
-import { IconName } from "@/types/common/icons";
-import { uploadedFileType } from "@/types/letters";
 import { Input, PrimaryButton, Txt } from "@/components/atoms";
 import { BasicHeader } from "@/components/common";
 import { FilePreview, IconPicker } from "@/components/letters";
+import { IconName } from "@/types/common/icons";
+import { uploadedFileType } from "@/types/letters";
 
 export default function WritePage() {
   const [selectedIcon, setSelectedIcon] = useState<IconName>("face");
@@ -78,6 +78,10 @@ export default function WritePage() {
             className="w-1/3 text-gray-939 placeholder:text-blue-9a0 text-[15px] pl-[18px]"
             maxLength={7} // 7글자 제한
           />
+          <Txt size={11} weight="cm" className="text-blue-9a0" align="left">
+            ※ 닉네임은 관물대에서만 보여지며, 상대방에게는 실명이 전달됩니다.
+          </Txt>
+
           <Input
             placeholder="내용을 입력하세요."
             tag="textarea"
