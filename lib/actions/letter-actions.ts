@@ -6,7 +6,7 @@ type LetterWithUsers = Letter & {
   User_Letter_receiverIdToUser: { userName: string };
 };
 
-export async function getAllLetters(): Promise<LetterWithUsers[]> {
+export const getAllLetters = async (): Promise<LetterWithUsers[]> => {
   const letters = await prisma.letter.findMany({
     where: { parentLetterId: null }, // 답장이 아닌 원편지만 가져옴
     include: {
@@ -20,4 +20,4 @@ export async function getAllLetters(): Promise<LetterWithUsers[]> {
   });
 
   return letters;
-}
+};
