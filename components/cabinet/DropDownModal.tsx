@@ -33,7 +33,7 @@ export default function DropDownModal() {
           <SidebarMenu>
             <SidebarMenuItem>
               <div className="flex flex-col m-7 mt-10 gap-6">
-                <Profile userName="별돌이" endDate={new Date()} />
+                <Profile />
                 <div className="flex flex-col gap-2">
                   <div className="flex gap-2">
                     <PrimaryButton
