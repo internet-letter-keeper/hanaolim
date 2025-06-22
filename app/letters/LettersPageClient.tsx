@@ -43,13 +43,24 @@ export default function LettersPageClient({
     return letters
       .filter((l) => l.parentLetterId === null)
       .filter((l) => {
+        // 관물대 필터링: activeTab 기준
+        if (activeTab === "send") {
+          // 내가 받은 편지만 (내가 receiver)
+          if (l.receiverId !== currentUserId) return false;
+        } else if (activeTab === "receive") {
+          // 내가 보낸 편지만 (내가 sender)
+          if (l.senderId !== currentUserId) return false;
+        }
+
+        // 추가 필터링
         if (filter === "favorite") return l.isFavorite;
         if (filter === "hasReply")
           return letters.some((r) => r.parentLetterId === l.letterId);
         if (filter === "unread") return !l.readDate;
+
         return true;
       });
-  }, [letters, filter]);
+  }, [letters, filter, activeTab, currentUserId]);
 
   return (
     <div className="flex flex-col min-h-screen w-full">
