@@ -1,17 +1,17 @@
 "use client";
 
+import Image from "next/image";
+import Txt from "@/components/atoms/Text";
+import { Progress } from "@/components/ui/progress";
 import {
   untilEndDate,
   dDayConCatString,
   calculateRankByStartDate,
 } from "@/utils/date";
-import Image from "next/image";
-import Txt from "@/components/atoms/Text";
-import { Progress } from "@/components/ui/progress";
 
 type Props = {
   endDate: Date;
-  userName?: string;
+  userName: string;
   startDate?: string;
 };
 
@@ -41,7 +41,7 @@ export default function ProfileBanner({ userName, startDate, endDate }: Props) {
       <div className="flex flex-col justify-center flex-1 min-w-0">
         <div className="flex justify-between items-baseline w-full">
           <Txt size={20} weight="cm" className="text-yellow-895 truncate">
-            {userName || "별돌이"}
+            {userName}
           </Txt>
           <Txt
             size={12}
