@@ -15,6 +15,7 @@ type Props = {
   accountBalance: number;
   savingsBalance: number;
   letterExp: number;
+  unreadLetter: number;
 };
 
 export default function HomePage({
@@ -25,6 +26,7 @@ export default function HomePage({
   accountBalance,
   savingsBalance,
   letterExp,
+  unreadLetter,
 }: Props) {
   const [showSplash, setShowSplash] = useState(true);
 
@@ -39,7 +41,13 @@ export default function HomePage({
 
   return (
     <>
-      {showSplash && <RocketSplash onSkip={handleSkip} />}
+      {showSplash && (
+        <RocketSplash
+          onSkip={handleSkip}
+          letterExp={letterExp}
+          unreadLetter={unreadLetter}
+        />
+      )}
       {!showSplash && (
         <div className="flex flex-col relative gap-[15px]">
           <div className="flex justify-between items-center">
@@ -64,7 +72,7 @@ export default function HomePage({
             startDate={startDate}
             endDate={new Date(endDate)}
           />
-          <Olim letterExp={letterExp} />
+          <Olim letterExp={letterExp} unreadLetter={unreadLetter} />
           <Card accountNum={accountNum} accountBalance={accountBalance} />
           <Savings savingsBalance={savingsBalance} />
         </div>

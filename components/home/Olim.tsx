@@ -6,11 +6,12 @@ import Txt from "@/components/atoms/Text";
 import Letter from "./hanaolim/Letter";
 import Point from "./hanaolim/Point";
 
-const receivedTotalLetter = { unreadLetter: 0, totalLetter: 32 };
+type Props = {
+  letterExp: number;
+  unreadLetter: number;
+};
 
-type Props = { letterExp: number };
-
-export default function Olim({ letterExp }: Props) {
+export default function Olim({ letterExp, unreadLetter }: Props) {
   const router = useRouter();
 
   return (
@@ -26,12 +27,12 @@ export default function Olim({ letterExp }: Props) {
           <Txt size={18} weight="bold" className="leading-tight">
             읽지 않은 편지{" "}
             <Txt size={18} weight="bold" className="text-green-49d">
-              {receivedTotalLetter.unreadLetter}장
+              {unreadLetter}장
             </Txt>
             을
           </Txt>
           <Txt size={18} weight="bold" className="leading-tight">
-            확인해보세요!
+            확인해 보세요!
           </Txt>
 
           <div
@@ -63,7 +64,7 @@ export default function Olim({ letterExp }: Props) {
 
       {/* 편지+포인트 */}
       <div className="flex flex-col gap-[12px]">
-        <Letter letterExp={letterExp} />
+        <Letter letterExp={letterExp} unreadLetter={unreadLetter} />
         <Point letterExp={letterExp} />
       </div>
     </div>
