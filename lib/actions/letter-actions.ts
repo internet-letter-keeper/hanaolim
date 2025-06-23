@@ -201,7 +201,9 @@ export const getNonReplyLettersByUserId = async (
   } catch (error) {
     return { ok: false, data: null };
   }
-  
+};
+
+/*
  * 읽지 않은 편지 존재 유무
  * @param userId number - 현재 로그인한 유저 ID
  * @returns { isNew : boolean }
