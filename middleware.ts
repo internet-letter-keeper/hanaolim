@@ -22,6 +22,12 @@ export async function middleware(req: NextRequest) {
   const session = await auth();
   const didLogin = !!session?.user;
   const isSoldier = !!session?.user?.isSoldier;
+  console.log("------------------------");
+  console.log(session);
+  console.log(
+    "!!session.user.follow?.soldierId",
+    !!session!.user.follow?.soldierId
+  );
 
   const { pathname } = req.nextUrl;
 
@@ -44,6 +50,13 @@ export async function middleware(req: NextRequest) {
     //군인X , 로그인X -> 가입으로
     if (!didLogin) {
       return NextResponse.redirect(new URL(`/auth/signIn`, req.url));
+    }
+    if (didLogin && !isSoldier && !!session.user.follow) {
+      return NextResponse.redirect(
+        new URL(`/cabinet/${session.user.follow.soldierId}`, req.url)
+      );
+    } else {
+      return NextResponse.redirect(new URL("onboarding", req.url));
     }
   }
   return NextResponse.next();
