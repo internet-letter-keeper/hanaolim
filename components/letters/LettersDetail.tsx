@@ -10,7 +10,7 @@ type Props = {
     senderNickname?: string;
     senderUserName: string;
     receiverName: string;
-    createDate: Date | string;
+    createDate: string;
   };
 };
 
@@ -35,7 +35,7 @@ export default function LettersDetail({ lettersDetail }: Props) {
 
       <div className="flex">
         <Txt size={12} weight="cm" className="text-blue-9a0">
-          {createDate as string}
+          {createDate}
         </Txt>
       </div>
 
@@ -54,7 +54,10 @@ export default function LettersDetail({ lettersDetail }: Props) {
       {/* 첨부파일 */}
       {fileUrl && (
         <div className="w-full bg-gray-200 flex items-center justify-center rounded-md mb-4">
-          {fileUrl.endsWith(".mp4") || fileUrl.endsWith(".webm") ? (
+          {fileUrl.endsWith(".mp4") ||
+          fileUrl.endsWith(".webm") ||
+          fileUrl.endsWith(".WEBM") ||
+          fileUrl.endsWith(".MP4") ? (
             <video
               src={fileUrl}
               width={100}

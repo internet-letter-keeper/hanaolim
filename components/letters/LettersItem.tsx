@@ -3,23 +3,13 @@
 import Image from "next/image";
 import Link from "next/link";
 import { useState, useEffect } from "react";
+import { patchFavorite } from "@/lib/actions/letter-actions";
+import { Letter } from "@/types/letters";
 import { Txt } from "../atoms";
 
-type CustomLetter = {
-  letterId: number;
-  nickname: string;
-  content: string;
-  createDate: string;
-  readDate?: string | null;
-  isFavorite: boolean;
-  parentLetterId?: number | null;
-  receiverId: number;
-  senderId: number;
-};
-
 type Props = {
-  letters: CustomLetter;
-  allLetters: CustomLetter[];
+  letters: Letter;
+  allLetters: Letter[];
   currentUserId: number;
 };
 
@@ -37,6 +27,8 @@ export default function LettersItem({
     readDate,
     receiverId,
     senderId,
+    receiverName,
+    senderName,
   } = letters;
 
   const isRead = !!readDate;
@@ -63,9 +55,14 @@ export default function LettersItem({
       (l) => l.parentLetterId === letterId && l.senderId === currentUserId
     );
 
-  const handleToggleFavorite = (e: React.MouseEvent) => {
+  const handleToggleFavorite = async (e: React.MouseEvent) => {
+    e.preventDefault();
     e.stopPropagation();
-    setIsFavorite((prev) => !prev);
+    const res = await patchFavorite(letterId, currentUserId);
+
+    if (res.ok && typeof res.isFavorite === "boolean") {
+      setIsFavorite(res.isFavorite);
+    }
   };
 
   return (
@@ -127,18 +124,19 @@ export default function LettersItem({
           {!shouldShowReplyButton &&
             (!hasReply || receiverId === currentUserId) && <div />}
 
-          <Image
-            src={
-              isFavorite
-                ? "/icons/ic-favorite-colered.svg"
-                : "/icons/ic-favorite-none.svg"
-            }
-            alt="즐겨찾기"
-            width={20}
-            height={20}
-            onClick={handleToggleFavorite}
-            className="cursor-pointer"
-          />
+          <button>
+            <Image
+              src={
+                isFavorite
+                  ? "/icons/ic-favorite-colered.svg"
+                  : "/icons/ic-favorite-none.svg"
+              }
+              alt="즐겨찾기"
+              width={20}
+              height={20}
+              onClick={handleToggleFavorite}
+            />
+          </button>
         </div>
       </Link>
     </div>

@@ -68,8 +68,12 @@ export default function SignInPage() {
     if (result?.error === "CredentialsSignin") {
       alert("이메일 또는 비밀번호가 잘못되었습니다.");
     } else if (result?.ok) {
-      router.push("/");
+      router.push("/onboarding");
     }
+  };
+
+  const snsButtonAction = async (provider: string) => {
+    await signIn(provider, { redirectTo: "/onboarding" });
   };
 
   return (
@@ -162,7 +166,10 @@ export default function SignInPage() {
 
       {/* 소셜 로그인 */}
       <div className="flex items-center mt-[17px] gap-4">
-        <button>
+        <button
+          onClick={() => snsButtonAction("naver")}
+          className="cursor-pointer"
+        >
           <Image
             className="w-full h-full"
             alt="naverImage"
@@ -172,7 +179,10 @@ export default function SignInPage() {
           />
         </button>
 
-        <button>
+        <button
+          onClick={() => snsButtonAction("kakao")}
+          className="cursor-pointer"
+        >
           <Image
             className="w-full h-full"
             alt="kakaoImage"
@@ -182,7 +192,10 @@ export default function SignInPage() {
           />
         </button>
 
-        <button className="w-[45px] h-[45px] bg-white rounded-full flex items-center justify-center">
+        <button
+          onClick={() => snsButtonAction("google")}
+          className="w-[45px] h-[45px] bg-white rounded-full flex items-center justify-center cursor-pointer"
+        >
           <Image
             className="w-[28px] h-[28px]"
             alt="googleImage"
