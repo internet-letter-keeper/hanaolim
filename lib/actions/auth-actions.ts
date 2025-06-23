@@ -71,7 +71,7 @@ export const postSoldier = async (soldier: SoldierData) => {
         userId: soldier.userId,
         startDate: soldier.startDate,
         endDate: soldier.endDate,
-        code: genCode || "", // 코드가 없을 경우 빈 문자열로 설정
+        code: String(genCode),
       },
       select: {
         soldierId: true,
@@ -141,7 +141,7 @@ export const generateShortCode = async (length = 8) => {
   });
 
   if (alreadyExists) {
-    generateShortCode(length); // 재귀 호출로 중복 코드 생성
+    await generateShortCode(length); // 재귀 호출로 중복 코드 생성
   } else {
     return result; // 중복되지 않는 코드 반환
   }
