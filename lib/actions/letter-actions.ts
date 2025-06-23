@@ -3,24 +3,26 @@
 import prisma from "@/lib/db";
 import { Letter } from "../generated/prisma";
 
-type LetterWithUsers = Letter & {
-  User_Letter_senderIdToUser: { userName: string };
-  User_Letter_receiverIdToUser: { userName: string };
-};
-
-export const getAllLetters = async (): Promise<LetterWithUsers[]> => {
-  const letters = await prisma.letter.findMany({
-    where: { parentLetterId: null }, // 답장이 아닌 원편지만 가져옴
-    include: {
-      User_Letter_senderIdToUser: {
-        select: { userName: true },
+/**
+ * 편지 목록 불러오기 api
+ * @param userId
+ * @returns userId에 해당하는 편지들 목록
+ */
+export const getLettersByUserId = async (userId: number) => {
+  try {
+    const lettersList = await prisma.letter.findMany({
+      where: {
+        OR: [{ senderId: userId }, { receiverId: userId }],
+      },
+      include: {
+        Favorite: true,
       },
       orderBy: {
         createDate: "desc",
       },
     });
 
-    const letters: Letter[] = lettersFromDb.map((l) => ({
+    const letters: Letter[] = lettersList.map((l) => ({
       letterId: l.letterId,
       nickname: l.nickname ?? "",
       content: l.content,
@@ -39,10 +41,10 @@ export const getAllLetters = async (): Promise<LetterWithUsers[]> => {
     console.error("편지 불러오기 에러:", error);
     return { ok: false, data: null };
   }
-}
+};
 
 // 편지 상세 조회 api
-export async function getLetterDetail(letterId: number, currentUserId: number) {
+export const getLetterDetail = async (letterId: number, userId: number) => {
   try {
     const letter = await prisma.letter.findUnique({
       where: {
@@ -69,7 +71,7 @@ export async function getLetterDetail(letterId: number, currentUserId: number) {
       receiverId: letter.receiverId,
       senderId: letter.senderId,
       isFavorite: letter.Favorite.some(
-        (f) => f.userId === currentUserId && f.isFavorite
+        (f) => f.userId === userId && f.isFavorite
       ),
     };
     return { ok: true, data: result };
@@ -77,4 +79,40 @@ export async function getLetterDetail(letterId: number, currentUserId: number) {
     console.error("편지 상세 조회 에러:", error);
     return { ok: false, data: null };
   }
-}
+};
+
+// 즐겨찾기 추가 삭제 api
+export const patchFavorite = async (letterId: number, userId: number) => {
+  try {
+    // 현재 즐겨찾기 상태 확인
+    const existing = await prisma.favorite.findFirst({
+      where: {
+        letterId,
+        userId,
+      },
+    });
+
+    if (existing) {
+      // 있으면 즐겨찾기 해제
+      await prisma.favorite.delete({
+        where: {
+          favoriteId: existing.favoriteId,
+        },
+      });
+      return { ok: true, isFavorite: false };
+    } else {
+      // 없으면 즐겨찾기
+      await prisma.favorite.create({
+        data: {
+          letterId,
+          userId,
+          isFavorite: true,
+        },
+      });
+      return { ok: true, isFavorite: true };
+    }
+  } catch (error) {
+    console.error("즐겨찾기 실패:", error);
+    return { ok: false, isFavorite: null };
+  }
+};

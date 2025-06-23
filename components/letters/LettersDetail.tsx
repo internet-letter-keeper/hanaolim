@@ -10,7 +10,7 @@ type Props = {
     senderNickname?: string;
     senderUserName: string;
     receiverName: string;
-    createDate: Date | string;
+    createDate: string;
   };
 };
 
@@ -35,7 +35,7 @@ export default function LettersDetail({ lettersDetail }: Props) {
 
       <div className="flex">
         <Txt size={12} weight="cm" className="text-blue-9a0">
-          {createDate as string}
+          {createDate}
         </Txt>
       </div>
 
