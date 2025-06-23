@@ -20,16 +20,20 @@ export default function ProfileBanner({ userName, startDate, endDate }: Props) {
   const endDateObj = new Date(endDate);
   const today = new Date();
 
+  // 남은 복무일
   const until = untilEndDate(endDateObj);
-  const dDay = dDayConCatString(endDateObj);
-  const rank = calculateRankByStartDate(startDateObj);
 
+  // 전체 복무일
   const totalDays = Math.ceil(
     (endDateObj.getTime() - startDateObj.getTime()) / (1000 * 60 * 60 * 24)
   );
+
+  // 현재까지 복무일
   const passedDays = Math.ceil(
     (today.getTime() - startDateObj.getTime()) / (1000 * 60 * 60 * 24)
   );
+
+  // 복무 진행률 게이지 계산
   const progressPercent = Math.min(100, (passedDays / totalDays) * 100);
 
   return (
@@ -53,17 +57,40 @@ export default function ProfileBanner({ userName, startDate, endDate }: Props) {
         </div>
         <div className="mt-[4px] w-full">
           <Progress variant="green" value={progressPercent} />
-          <div className="flex items-baseline gap-[2px] mt-[4px]">
-            <Txt size={12} weight="cm" className="text-white">
-              전역까지
-            </Txt>
-            <Txt size={12} weight="heavy" className="text-yellow-895">
-              {until}일
-            </Txt>
-            <Txt size={12} weight="cm" className="text-white">
-              남았어요!
-            </Txt>
-          </div>
+          {until < 0 ? (
+            // 전역 전
+            <div className="flex items-baseline gap-[2px] mt-[4px]">
+              <Txt size={12} weight="cm" className="text-white">
+                전역까지
+              </Txt>
+              <Txt size={12} weight="heavy" className="text-yellow-895">
+                {Math.abs(until)}일
+              </Txt>
+              <Txt size={12} weight="cm" className="text-white">
+                남았어요!
+              </Txt>
+            </div>
+          ) : until === 0 ? (
+            // 전역 당일
+            <div className="flex items-baseline gap-[2px] mt-[4px]">
+              <Txt size={12} weight="medium" className="text-yellow-895">
+                오늘 전역을 축하합니다!
+              </Txt>
+            </div>
+          ) : (
+            // 전역 이후
+            <div className="flex items-baseline gap-[2px] mt-[4px]">
+              <Txt size={12} weight="cm" className="text-white">
+                전역을 축하합니다! (
+              </Txt>
+              <Txt size={12} weight="heavy" className="text-yellow-895">
+                전역 {until}일째
+              </Txt>
+              <Txt size={12} weight="cm" className="text-white">
+                )
+              </Txt>
+            </div>
+          )}
         </div>
       </div>
     </div>
