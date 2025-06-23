@@ -1,8 +1,8 @@
 import { notFound } from "next/navigation";
-import prisma from "@/lib/db";
 import { PrimaryButton } from "@/components/atoms";
 import BasicHeader from "@/components/common/BasicHeader";
 import LettersDetail from "@/components/letters/LettersDetail";
+import prisma from "@/lib/db";
 
 type Props = {
   params: { letterId: string };
@@ -23,19 +23,24 @@ export default async function LetterDetailPage({ params }: Props) {
 
   const reply = await prisma.letter.findFirst({
     where: { parentLetterId: letter.letterId },
+    include: {
+      User_Letter_senderIdToUser: true,
+      User_Letter_receiverIdToUser: true,
+    },
   });
 
   return (
     <>
       <BasicHeader />
 
+      {/* 원본 편지 */}
       <div className="py-4 flex justify-center">
         <div className="bg-white shadow-sm p-4 w-[90%] max-w-md">
           <LettersDetail
             lettersDetail={{
               content: letter.content,
               fileUrl: letter.fileUrl ?? "",
-              createDate: letter.createDate,
+              createDate: letter.createDate.toISOString(),
               senderNickname: letter.nickname ?? "",
               senderUserName: letter.User_Letter_senderIdToUser.userName,
               receiverName: letter.User_Letter_receiverIdToUser.userName,
@@ -44,6 +49,7 @@ export default async function LetterDetailPage({ params }: Props) {
         </div>
       </div>
 
+      {/* 답장 없을 경우 버튼 */}
       {!reply && (
         <div className="flex justify-end px-6 mt-2">
           <a href={`/write/${letter.letterId}`}>
@@ -52,17 +58,18 @@ export default async function LetterDetailPage({ params }: Props) {
         </div>
       )}
 
+      {/* 답장 있을 경우 보여줌 */}
       {reply && (
         <div className="flex justify-center mt-4">
           <div className="bg-white shadow-sm p-4 w-[90%] max-w-md">
             <LettersDetail
               lettersDetail={{
-                content: letter.content,
-                fileUrl: letter.fileUrl ?? "",
-                createDate: letter.createDate,
-                senderNickname: letter.nickname ?? "",
-                senderUserName: letter.User_Letter_senderIdToUser.userName,
-                receiverName: letter.User_Letter_receiverIdToUser.userName,
+                content: reply.content,
+                fileUrl: reply.fileUrl ?? "",
+                createDate: reply.createDate.toISOString(),
+                senderNickname: reply.nickname ?? "",
+                senderUserName: reply.User_Letter_senderIdToUser.userName,
+                receiverName: reply.User_Letter_receiverIdToUser.userName,
               }}
             />
           </div>
