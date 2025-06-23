@@ -22,6 +22,12 @@ export async function middleware(req: NextRequest) {
   const session = await auth();
   const didLogin = !!session?.user;
   const isSoldier = !!session?.user?.isSoldier;
+  console.log("------------------------");
+  console.log(session);
+  console.log(
+    "!!session.user.follow?.soldierId",
+    !!session!.user.follow?.soldierId
+  );
 
   const { pathname } = req.nextUrl;
 
@@ -39,13 +45,25 @@ export async function middleware(req: NextRequest) {
     }
   }
 
+  //홈으로 접근할 경우
   if (pathname === "/") {
     console.log("홈 페이지 접근");
     //군인X , 로그인X -> 가입으로
     if (!didLogin) {
       return NextResponse.redirect(new URL(`/auth/signIn`, req.url));
     }
+    // 군인X, 로그인O, 팔로우 유무에 따른 라우팅
+    if (didLogin && !isSoldier && !!session.user.follow.followId) {
+      //팔로우가 있을 경우
+      return NextResponse.redirect(
+        new URL(`/cabinet/${session.user.follow.soldierId}`, req.url)
+      );
+    } else {
+      // 팔로우가 없을 경우
+      return NextResponse.redirect(new URL("onboarding", req.url));
+    }
   }
+
   return NextResponse.next();
 }
 
