@@ -3,16 +3,15 @@
 import Image from "next/image";
 import { useRouter } from "next/navigation";
 import { useState } from "react";
-import { PointAccrue } from "@/types/point";
 import Txt from "@/components/atoms/Text";
 import { Progress } from "@/components/ui/progress";
 import PointRuleTooltip from "./PointRuleTooltip";
 
 type Props = {
-  pointAccrue: PointAccrue;
+  letterExp: number;
 };
 
-export default function Point({ pointAccrue }: Props) {
+export default function Point({ letterExp }: Props) {
   const router = useRouter();
   const [showTooltip, setShowTooltip] = useState(false);
 
@@ -25,6 +24,9 @@ export default function Point({ pointAccrue }: Props) {
     e.stopPropagation();
     setShowTooltip((prev) => !prev);
   };
+
+  const progressPercent = ((letterExp % 10) / 10) * 100;
+
   return (
     <div
       onClick={handleClick}
@@ -36,7 +38,7 @@ export default function Point({ pointAccrue }: Props) {
         </Txt>
         <div className="flex items-center gap-[13px] relative">
           <Txt size={14} weight="heavy" className="text-yellow-32b">
-            {pointAccrue.myStamp}/{pointAccrue.totalStamp}
+            {letterExp % 10}/10
           </Txt>
           <Image
             src="/images/coin.svg"
@@ -60,16 +62,22 @@ export default function Point({ pointAccrue }: Props) {
         </div>
       </div>
 
-      <Progress variant="yellow" />
+      {/* 포인트 게이지 */}
+      <Progress variant="yellow" value={progressPercent} />
 
-      <Txt
-        size={12}
-        weight="medium"
-        className="text-gray-353 underline self-end cursor-pointer"
-        onClick={handleClick}
-      >
-        포인트 내역보기
-      </Txt>
+      <div className="flex justify-between">
+        <Txt size={12} weight="medium" className="text-gray-353">
+          총 {Math.floor(letterExp / 10)}회 적립
+        </Txt>
+        <Txt
+          size={12}
+          weight="medium"
+          className="text-gray-353 underline self-end cursor-pointer"
+          onClick={handleClick}
+        >
+          포인트 내역보기
+        </Txt>
+      </div>
     </div>
   );
 }
