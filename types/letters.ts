@@ -10,8 +10,8 @@ export type Letter = {
   content: string;
   fileUrl?: string;
   iconId?: number;
-  createDate: string;
-  readDate?: string | null;
+  createDate: Date;
+  readDate?: Date | null;
   parentLetterId?: number | null;
   receiverId: number;
   senderId: number;

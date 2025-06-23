@@ -22,6 +22,7 @@ export default function LettersPageClient({
   const [filter, setFilter] = useState<FilterType>("all");
   const [searchText, setSearchText] = useState("");
   const [searching, setSearching] = useState(false);
+  const [favorites, setFavorites] = useState(initialLetters);
 
   const letters = useMemo(() => initialLetters, [initialLetters]);
 
@@ -77,6 +78,12 @@ export default function LettersPageClient({
 
   const handleSearch = () => {
     setSearching(true);
+  };
+
+  const handleFavoriteChange = (letterId: number, isFavorite: boolean) => {
+    setFavorites((prev) =>
+      prev.map((l) => (l.letterId === letterId ? { ...l, isFavorite } : l))
+    );
   };
 
   return (
@@ -163,6 +170,7 @@ export default function LettersPageClient({
               letters={letter}
               allLetters={letters}
               currentUserId={currentUserId}
+              onFavoriteChange={handleFavoriteChange}
             />
           ))}
         </div>

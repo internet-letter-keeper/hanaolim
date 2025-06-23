@@ -11,12 +11,14 @@ type Props = {
   letters: Letter;
   allLetters: Letter[];
   currentUserId: number;
+  onFavoriteChange: (letterId: number, newState: boolean) => void;
 };
 
 export default function LettersItem({
   letters,
   allLetters,
   currentUserId,
+  onFavoriteChange,
 }: Props) {
   const {
     letterId,
@@ -55,13 +57,19 @@ export default function LettersItem({
       (l) => l.parentLetterId === letterId && l.senderId === currentUserId
     );
 
+  // 즐겨찾기 토클
   const handleToggleFavorite = async (e: React.MouseEvent) => {
     e.preventDefault();
     e.stopPropagation();
-    const res = await patchFavorite(letterId, currentUserId);
 
-    if (res.ok && typeof res.isFavorite === "boolean") {
-      setIsFavorite(res.isFavorite);
+    const newFavorite = !isFavorite;
+    setIsFavorite(newFavorite); // 로컬 즉시 반영
+    onFavoriteChange(letterId, newFavorite); // 부모 상태도 업데이트
+
+    const res = await patchFavorite(letterId, currentUserId);
+    if (!res.ok) {
+      setIsFavorite(!newFavorite); // 실패 시 롤백
+      onFavoriteChange(letterId, !newFavorite);
     }
   };
 
