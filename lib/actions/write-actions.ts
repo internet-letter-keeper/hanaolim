@@ -1,10 +1,10 @@
 "use server";
 
-import { ERROR_MESSAGES } from "@/constants/errorMessages";
-import { requireAuth } from "@/utils/auth";
 import { existsSync, mkdirSync } from "fs";
 import { writeFile } from "fs/promises";
 import path from "path";
+import { ERROR_MESSAGES } from "@/constants/errorMessages";
+import { requireAuth } from "@/utils/auth";
 import prisma from "../db";
 import {
   letterValidator,
@@ -34,6 +34,7 @@ const uploadFile = async (file: File | null): Promise<string | undefined> => {
  * @usage 편지쓰기
  * @param formData
  * @returns  검증된 데이터 반환
+ * @throw 입력된 정보가 잘못됐을 경우
  */
 const extractAndValidateLetterData = async (
   formData: FormData
@@ -48,7 +49,6 @@ const extractAndValidateLetterData = async (
 
   const validator = letterValidator.safeParse(formEntries);
   if (!validator.success) {
-    console.error("Validation error:", validator.error);
     throw new Error(ERROR_MESSAGES.LETTER.INVALID_INPUT_DATA);
   }
 
@@ -91,11 +91,13 @@ const createLetter = async (data: LetterFormData, senderId: number) => {
     throw new Error(ERROR_MESSAGES.LETTER.LETTER_POST_FAILED);
   }
 };
+
 /**
  * 군인에게 편지를 생성
  * @usage 편지쓰기
  * @param formData
  * @returns createLetter 함수
+ * @throw 입력이 잘못되었을 경우
  */
 export const postLetter = async (formData: FormData) => {
   const session = await requireAuth();
@@ -116,6 +118,7 @@ export const postLetter = async (formData: FormData) => {
  * @usage 편지쓰기
  * @param formData 편지 데이터
  * @returns createLetter 함수
+ * @throw 입력이 잘못되었을 경우
  */
 export const postLetterReply = async (formData: FormData) => {
   const session = await requireAuth();
