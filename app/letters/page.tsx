@@ -1,8 +1,12 @@
 import { getLettersByUserId } from "@/lib/actions/letter-actions";
+import { requireAuth } from "@/utils/auth";
 import LettersPageClient from "./LettersPageClient";
 
 export default async function LettersPage() {
-  const currentUserId = 1;
+  const session = await requireAuth();
+
+  const currentUserId = session?.user?.userId!;
+
   const { ok, data } = await getLettersByUserId(currentUserId);
 
   if (!ok || !data) {
