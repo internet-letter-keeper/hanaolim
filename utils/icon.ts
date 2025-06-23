@@ -1,4 +1,4 @@
-import { ICONS } from "@/constants/icons";
+import { ICON_POSITION, ICONS } from "@/constants/icons";
 
 /**
  * 아이콘 이름을 ID로 매핑하는 함수
@@ -12,12 +12,21 @@ export const getIconIdByName = (iconName: string): number => {
 };
 
 /**
- * 아이콘 ID를 이름으로 매핑하는 함수
- * 기본값 face
- * @param iconId 아이콘 아이디
- * @returns 아이콘 이름
+ * 아이콘이 관물대 위에 표시되는 위치 className을 반환하는 함수
+ * @param idx 관물대 각 페이지별 편지의 순서
+ * @returns className
  */
-export const getIconNameById = (iconId: number): string => {
-  const icon = ICONS.find((icon) => icon.id === iconId);
-  return icon ? icon.name : "face";
+export const getIconPositionByIdx = (idx: number): string => {
+  const icon = ICON_POSITION.find(({ positionId }) => positionId === idx);
+  return icon ? icon.iconPosition : "";
+};
+
+/**
+ * 편지의 iconId로 아이콘 이미지, 대체 텍스트를 불러오는 함수
+ * @param iconId
+ * @returns \{ 아이콘 이미지, 대체 텍스트 }
+ */
+export const getIconInfoByIconId = (iconId: number) => {
+  const icon = ICONS.find(({ id }) => id === iconId);
+  return icon ? { src: icon.src, alt: icon.alt } : { src: "", alt: "" };
 };
