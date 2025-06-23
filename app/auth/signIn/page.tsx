@@ -5,7 +5,6 @@ import { useRouter } from "next/navigation";
 import { signIn } from "next-auth/react";
 import { useEffect, useRef, useState } from "react";
 import SplashScreen from "@/components/HomeSplashScreen";
-import Preloader from "@/components/Preloader";
 import { PrimaryButton, Input, Txt } from "@/components/atoms";
 
 export default function SignInPage() {
@@ -21,7 +20,7 @@ export default function SignInPage() {
   const [showSplash, setShowSplash] = useState<boolean | null>(null);
 
   useEffect(() => {
-    const alreadySeen = localStorage.getItem("splashSeen");
+    const alreadySeen = document.cookie.includes("splashSeen=true");
 
     if (!alreadySeen) {
       setShowSplash(true);
@@ -30,13 +29,20 @@ export default function SignInPage() {
     }
   }, []);
 
-  //splash / preloader (스플래시 렌더 전에 나오는 화면) 표시용 content
+  //splash 렌더 (브라우저 종료 시 쿠키 사라짐)
   let splashContent = null;
 
   if (showSplash === null) {
-    splashContent = <Preloader />;
+    return null;
   } else if (showSplash) {
-    splashContent = <SplashScreen onFinish={() => setShowSplash(false)} />;
+    splashContent = (
+      <SplashScreen
+        onFinish={() => {
+          document.cookie = "splashSeen=true; path=/;";
+          setShowSplash(false);
+        }}
+      />
+    );
   }
 
   if (splashContent) {
@@ -62,8 +68,12 @@ export default function SignInPage() {
     if (result?.error === "CredentialsSignin") {
       alert("이메일 또는 비밀번호가 잘못되었습니다.");
     } else if (result?.ok) {
-      router.push("/");
+      router.push("/onboarding");
     }
+  };
+
+  const snsButtonAction = async (provider: string) => {
+    await signIn(provider, { redirectTo: "/onboarding" });
   };
 
   return (
@@ -104,6 +114,7 @@ export default function SignInPage() {
             placeholder="비밀번호를 입력해주세요"
             maxLength={20}
             customRef={passwordRef}
+            type="password"
           />
         </div>
 
@@ -155,7 +166,10 @@ export default function SignInPage() {
 
       {/* 소셜 로그인 */}
       <div className="flex items-center mt-[17px] gap-4">
-        <button>
+        <button
+          onClick={() => snsButtonAction("naver")}
+          className="cursor-pointer"
+        >
           <Image
             className="w-full h-full"
             alt="naverImage"
@@ -165,7 +179,10 @@ export default function SignInPage() {
           />
         </button>
 
-        <button>
+        <button
+          onClick={() => snsButtonAction("kakao")}
+          className="cursor-pointer"
+        >
           <Image
             className="w-full h-full"
             alt="kakaoImage"
@@ -175,7 +192,10 @@ export default function SignInPage() {
           />
         </button>
 
-        <button className="w-[45px] h-[45px] bg-white rounded-full flex items-center justify-center">
+        <button
+          onClick={() => snsButtonAction("google")}
+          className="w-[45px] h-[45px] bg-white rounded-full flex items-center justify-center cursor-pointer"
+        >
           <Image
             className="w-[28px] h-[28px]"
             alt="googleImage"

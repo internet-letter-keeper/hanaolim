@@ -4,7 +4,12 @@ import Image from "next/image";
 import { useRouter } from "next/navigation";
 import { PrimaryButton, Txt } from "../atoms";
 
-export default function Card() {
+type Props = {
+  accountNum: string;
+  accountBalance: number;
+};
+
+export default function Card({ accountNum, accountBalance }: Props) {
   const router = useRouter();
 
   const handleSendClick = () => {
@@ -22,10 +27,10 @@ export default function Card() {
           하나 나라사랑카드(체크)
         </Txt>
         <Txt size={12} weight="bold" className="text-blue-9a0">
-          입출금 424-912949-15293
+          입출금 {accountNum}
         </Txt>
         <Txt size={16} weight="bold" className="text-gray-900">
-          123,000원
+          {accountBalance.toLocaleString()}원
         </Txt>
 
         <div className="mt-3">

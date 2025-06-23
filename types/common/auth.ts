@@ -1,7 +1,8 @@
 export type UserData = {
   email: string;
   userName: string;
-  password: string;
+  password?: string;
+  isSocial?: boolean;
 };
 
 export type SoldierData = {
@@ -9,4 +10,5 @@ export type SoldierData = {
   startDate: Date;
   endDate: Date;
   accountNumber: string;
+  code?: string;
 };
