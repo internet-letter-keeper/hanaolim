@@ -1,10 +1,10 @@
 "use server";
 
-import db from "@/lib/db";
+import prisma from "@/lib/db";
 
 export const getSoldierInfo = async (soldierId: string) => {
   try {
-    const soldier = await db.soldier.findUnique({
+    const soldier = await prisma.soldier.findUnique({
       where: {
         soldierId: parseInt(soldierId),
       },
@@ -51,7 +51,7 @@ export const getSoldierInfo = async (soldierId: string) => {
  */
 export const getSoldierName = async (soldierId: number) => {
   try {
-    const soldier = await db.soldier.findUnique({
+    const soldier = await prisma.soldier.findUnique({
       where: {
         soldierId: soldierId,
       },
@@ -90,7 +90,7 @@ export const updateSoldierDates = async (
 ) => {
   console.log("dhsdofsdfsdf", startDate, endDate);
   try {
-    const res = await db.soldier.update({
+    const res = await prisma.soldier.update({
       where: {
         soldierId: soldierId,
       },
