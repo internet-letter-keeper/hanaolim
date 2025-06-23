@@ -2,7 +2,7 @@
 
 import Image from "next/image";
 import Link from "next/link";
-import { useEffect, useState } from "react";
+import { useState } from "react";
 import Txt from "@/components/atoms/Text";
 import { Card, Olim, Profile, Savings } from "@/components/home";
 import RocketSplash from "@/components/home/RocketSplash";
@@ -29,13 +29,6 @@ export default function HomePage({
   unreadLetter,
 }: Props) {
   const [showSplash, setShowSplash] = useState(true);
-
-  useEffect(() => {
-    const isSeen = localStorage.getItem("isSplashSeen");
-    if (isSeen === "true") {
-      setShowSplash(false);
-    }
-  }, []);
 
   const handleSkip = () => setShowSplash(false);
 

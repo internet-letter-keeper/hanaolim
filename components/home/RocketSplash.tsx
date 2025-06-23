@@ -19,7 +19,6 @@ export default function RocketSplash({
   const [isVisible, setIsVisible] = useState(true);
 
   const handleSkip = () => {
-    localStorage.setItem("isSplashSeen", "true");
     setIsVisible(false);
     onSkip();
   };
