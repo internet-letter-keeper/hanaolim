@@ -15,10 +15,7 @@ type Props = {
   accountBalance: number;
   savingsBalance: number;
   letterExp: number;
-<<<<<<< HEAD
   unreadLetter: number;
-=======
->>>>>>> 5d7e5aa (Feat: 홈 하나올림 내 포인트 컴포넌트 API 연결)
 };
 
 export default function HomePage({
