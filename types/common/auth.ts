@@ -10,5 +10,5 @@ export type SoldierData = {
   startDate: Date;
   endDate: Date;
   accountNumber: string;
-  code: string;
+  code?: string;
 };
