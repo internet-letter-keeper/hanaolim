@@ -133,3 +133,35 @@ export const postLetterReply = async (formData: FormData) => {
 
   return createLetter(data, +session.user.userId!);
 };
+
+/**
+ * 편지의 sender Name을 반환하는 api
+ * @param letterId 편지 아이디
+ * @returns 편지를 보낸 사람의 이름
+ * @throw id에 해당하는 편지가 없은 경우
+ * @throw 정보를 가져오는데 실패했을 경우
+ */
+export const getSenderName = async (letterId: number) => {
+  try {
+    const letter = await prisma.letter.findUnique({
+      where: {
+        letterId: letterId,
+      },
+      include: {
+        User_Letter_senderIdToUser: {
+          select: {
+            userName: true,
+          },
+        },
+      },
+    });
+
+    if (!letter) {
+      throw new Error("편지를 찾을 수 없습니다.");
+    }
+
+    return letter.User_Letter_senderIdToUser.userName;
+  } catch (error) {
+    throw new Error("정보를 가져오는데 실패했습니다.");
+  }
+};
