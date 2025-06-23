@@ -10,7 +10,7 @@ import {
 import { cn } from "@/lib/utils";
 import Txt from "@/components/atoms/Text";
 
-const RankNumMap: Record<SoldierRank, SoldierRankToNum> = {
+export const RankNumMap: Record<SoldierRank, SoldierRankToNum> = {
   이병: 1,
   일병: 2,
   상병: 3,

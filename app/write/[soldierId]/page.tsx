@@ -1,33 +1,48 @@
 "use client";
 
-import { getIconIdByName } from "@/utils/icon";
 import Image from "next/image";
 import { useRouter } from "next/navigation";
-import { useState, useRef, useActionState } from "react";
+import { useState, useRef, useActionState, useEffect } from "react";
 import { ChangeEvent } from "react";
-import { IconName } from "@/types/common/icons";
-import { uploadedFileType } from "@/types/letters";
-import { postLetter } from "@/lib/actions/write-actions";
 import { Input, PrimaryButton, Txt } from "@/components/atoms";
 import { BasicHeader } from "@/components/common";
 import { FilePreview, IconPicker } from "@/components/letters";
+import { getSoldierName } from "@/lib/actions/soldier-actions";
+import { postLetter } from "@/lib/actions/write-actions";
+import { IconName } from "@/types/common/icons";
+import { uploadedFileType } from "@/types/letters";
+import { getIconIdByName } from "@/utils/icon";
 
 export default function WritePage({
   params,
 }: {
   params: Promise<{ soldierId: string }>;
 }) {
+  const [soldierId, setSoldierId] = useState<string>("");
+  const [userName, setUserName] = useState<string>("");
   const [selectedIcon, setSelectedIcon] = useState<IconName>("face");
   const [uploadedFile, setUploadedFile] = useState<uploadedFileType | null>(
     null
   );
   const router = useRouter();
 
+  // params와 userName을 가져오는 useEffect
+  useEffect(() => {
+    const fetchData = async () => {
+      const { soldierId } = await params;
+      setSoldierId(soldierId);
+
+      const { userName: name } = await getSoldierName(+soldierId);
+      setUserName(name || "별돌이");
+    };
+
+    fetchData();
+  }, [params]);
+
   // 편지 작성 액션
   const [letter, postLetterAction, isPending] = useActionState(
     async (_pre: unknown, formData: FormData) => {
       // soldierId 추가
-      const { soldierId } = await params;
       formData.append("soldierId", soldierId);
 
       // 선택된 아이콘 ID 추가
@@ -94,7 +109,7 @@ export default function WritePage({
 
         <div className="flex mt-[14px] mb-13 items-center justify-center whitespace-nowrap">
           <Txt size={20} weight="bold" className="text-green-49d">
-            별돌이&nbsp;
+            {userName}&nbsp;
           </Txt>
           <Txt size={20} weight="bold">
             군인에게 편지를 작성해주세요!
@@ -116,6 +131,9 @@ export default function WritePage({
             maxLength={7} // 7글자 제한
             required
           />
+          <Txt size={11} weight="cm" className="text-blue-9a0" align="left">
+            ※ 닉네임은 관물대에서만 보여지며, 상대방에게는 실명이 전달됩니다.
+          </Txt>
           <Input
             name="content"
             placeholder="내용을 입력하세요."

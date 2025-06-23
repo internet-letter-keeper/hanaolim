@@ -3,9 +3,8 @@
 import prisma from "@/lib/db";
 import { Letter } from "@/types/letters";
 
-// 편지 목록 불러오기 api
 /**
- *
+ * 편지 목록 불러오기 api
  * @param userId
  * @returns userId에 해당하는 편지들 목록
  */
@@ -75,7 +74,6 @@ export const getLetterDetail = async (letterId: number, userId: number) => {
         (f) => f.userId === userId && f.isFavorite
       ),
     };
-
     return { ok: true, data: result };
   } catch (error) {
     console.error("편지 상세 조회 에러:", error);

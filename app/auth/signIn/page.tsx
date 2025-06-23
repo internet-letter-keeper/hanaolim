@@ -110,6 +110,7 @@ export default function SignInPage() {
             placeholder="비밀번호를 입력해주세요"
             maxLength={20}
             customRef={passwordRef}
+            type="password"
           />
         </div>
 

@@ -161,6 +161,7 @@ export default function SignUpPage() {
               placeholder="영문자,숫자,특수문자를 포함한 8~20자"
               maxLength={20}
               customRef={passwordRef}
+              type="password"
             />
             {passwordError && (
               <Txt size={12} align="left" className="text-red-a76 ">
