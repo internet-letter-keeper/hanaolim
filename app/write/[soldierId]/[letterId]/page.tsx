@@ -7,8 +7,7 @@ import { ChangeEvent } from "react";
 import { Input, PrimaryButton, Txt } from "@/components/atoms";
 import { BasicHeader } from "@/components/common";
 import { FilePreview } from "@/components/letters";
-import { getSoldierName } from "@/lib/actions/soldier-actions";
-import { postLetterReply } from "@/lib/actions/write-actions";
+import { getSenderName, postLetterReply } from "@/lib/actions/write-actions";
 import { uploadedFileType } from "@/types/letters";
 
 type Props = {
@@ -75,9 +74,9 @@ export default function LetterWritePage({ params }: Props) {
 
   useEffect(() => {
     const fetchData = async () => {
-      const { soldierId } = await params;
+      const { letterId } = await params;
 
-      const { userName: name } = await getSoldierName(+soldierId);
+      const name = await getSenderName(+letterId);
       setUserName(name || "별돌이");
     };
 
