@@ -3,6 +3,7 @@
 import Image from "next/image";
 import Link from "next/link";
 import { useState, useEffect } from "react";
+import { patchFavorite } from "@/lib/actions/letter-actions";
 import { Txt } from "../atoms";
 
 type CustomLetter = {
@@ -63,9 +64,14 @@ export default function LettersItem({
       (l) => l.parentLetterId === letterId && l.senderId === currentUserId
     );
 
-  const handleToggleFavorite = (e: React.MouseEvent) => {
+  const handleToggleFavorite = async (e: React.MouseEvent) => {
+    e.preventDefault();
     e.stopPropagation();
-    setIsFavorite((prev) => !prev);
+    const res = await patchFavorite(letterId, currentUserId);
+
+    if (res.ok && typeof res.isFavorite === "boolean") {
+      setIsFavorite(res.isFavorite);
+    }
   };
 
   return (
@@ -127,18 +133,19 @@ export default function LettersItem({
           {!shouldShowReplyButton &&
             (!hasReply || receiverId === currentUserId) && <div />}
 
-          <Image
-            src={
-              isFavorite
-                ? "/icons/ic-favorite-colered.svg"
-                : "/icons/ic-favorite-none.svg"
-            }
-            alt="즐겨찾기"
-            width={20}
-            height={20}
-            onClick={handleToggleFavorite}
-            className="cursor-pointer"
-          />
+          <button>
+            <Image
+              src={
+                isFavorite
+                  ? "/icons/ic-favorite-colered.svg"
+                  : "/icons/ic-favorite-none.svg"
+              }
+              alt="즐겨찾기"
+              width={20}
+              height={20}
+              onClick={handleToggleFavorite}
+            />
+          </button>
         </div>
       </Link>
     </div>

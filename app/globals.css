@@ -4,7 +4,7 @@
 @custom-variant dark (&:is(.dark *));
 
 @theme {
-  /* 화이트 */
+  /* 화이트  */
   --code-theme1: #ffffff;
   --code-theme2: #f2f2f2;
   --code-theme3: #f6f7f9;
