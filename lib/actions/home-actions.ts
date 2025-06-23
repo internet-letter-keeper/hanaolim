@@ -8,12 +8,11 @@ type ProfileInfo = {
   endDate: string;
 };
 
-type CardInfo = {
+type AccountInfo = {
   accountNum: string;
   accountBalance: number;
+  savingsBalance: number;
 };
-
-type Savings = { savingsBalance: number };
 
 /**
  * 홈화면에 표시할 유저 이름 + 병사 날짜 정보 조회
@@ -59,13 +58,7 @@ export const getProfileInfo = async (userId: number): Promise<ProfileInfo> => {
  * @returns { accountNum, accountBalance, savingsBalance }
  * @throws userId에 해당하는 군 복무 정보 또는 계좌 정보가 없을 경우
  */
-export const getAccountInfo = async (
-  userId: number
-): Promise<{
-  accountNum: string;
-  accountBalance: number;
-  savingsBalance: number;
-}> => {
+export const getAccountInfo = async (userId: number): Promise<AccountInfo> => {
   const soldier = await prisma.soldier.findFirst({
     where: { userId },
     select: {
