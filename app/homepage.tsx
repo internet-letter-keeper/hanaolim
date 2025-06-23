@@ -11,9 +11,17 @@ type Props = {
   userName: string;
   startDate: string;
   endDate: string;
+  accountNum: string;
+  accountBalance: number;
 };
 
-export default function HomePage({ userName, startDate, endDate }: Props) {
+export default function HomePage({
+  userName,
+  startDate,
+  endDate,
+  accountNum,
+  accountBalance,
+}: Props) {
   const [showSplash, setShowSplash] = useState(true);
 
   useEffect(() => {
@@ -53,7 +61,7 @@ export default function HomePage({ userName, startDate, endDate }: Props) {
             endDate={new Date(endDate)}
           />
           <Olim />
-          <Card />
+          <Card accountNum={accountNum} accountBalance={accountBalance} />
           <Savings savingBalance={0} />
         </div>
       )}
