@@ -9,7 +9,7 @@ import { Letter } from "@/types/letters";
  * @param userId
  * @returns userId에 해당하는 편지들 목록
  */
-export async function getLettersByUserId(userId: number) {
+export const getLettersByUserId = async (userId: number) => {
   try {
     const lettersList = await prisma.letter.findMany({
       where: {
@@ -42,10 +42,10 @@ export async function getLettersByUserId(userId: number) {
     console.error("편지 불러오기 에러:", error);
     return { ok: false, data: null };
   }
-}
+};
 
 // 편지 상세 조회 api
-export async function getLetterDetail(letterId: number, userId: number) {
+export const getLetterDetail = async (letterId: number, userId: number) => {
   try {
     const letter = await prisma.letter.findUnique({
       where: {
@@ -81,10 +81,10 @@ export async function getLetterDetail(letterId: number, userId: number) {
     console.error("편지 상세 조회 에러:", error);
     return { ok: false, data: null };
   }
-}
+};
 
 // 즐겨찾기 추가 삭제 api
-export async function patchFavorite(letterId: number, userId: number) {
+export const patchFavorite = async (letterId: number, userId: number) => {
   try {
     // 현재 즐겨찾기 상태 확인
     const existing = await prisma.favorite.findFirst({
@@ -117,4 +117,4 @@ export async function patchFavorite(letterId: number, userId: number) {
     console.error("즐겨찾기 실패:", error);
     return { ok: false, isFavorite: null };
   }
-}
+};
