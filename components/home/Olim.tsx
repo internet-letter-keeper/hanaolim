@@ -24,14 +24,14 @@ export default function Olim({ letterExp }: Props) {
             하나올림
           </Txt>
           <Txt size={18} weight="bold" className="leading-tight">
-            일주일 동안{" "}
+            읽지 않은 편지{" "}
             <Txt size={18} weight="bold" className="text-green-49d">
               {receivedTotalLetter.unreadLetter}장
             </Txt>
-            의 편지가
+            을
           </Txt>
           <Txt size={18} weight="bold" className="leading-tight">
-            도착했어요!
+            확인해보세요!
           </Txt>
 
           <div
@@ -63,7 +63,7 @@ export default function Olim({ letterExp }: Props) {
 
       {/* 편지+포인트 */}
       <div className="flex flex-col gap-[12px]">
-        <Letter receivedTotalLetter={receivedTotalLetter} />
+        <Letter letterExp={letterExp} />
         <Point letterExp={letterExp} />
       </div>
     </div>
