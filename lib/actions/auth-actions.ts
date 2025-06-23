@@ -146,7 +146,10 @@ export const generateShortCode = async (length = 8) => {
     await generateShortCode(length); // 재귀 호출로 중복 코드 생성
   } else {
     return result; // 중복되지 않는 코드 반환
+  }
+};
 
+/**
  * 현재 비밀번호가 일치하는지 확인
  * @param userId
  * @param currentPassword
