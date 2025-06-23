@@ -4,7 +4,7 @@ import Credential from "next-auth/providers/credentials";
 import Google from "next-auth/providers/google";
 import Kakao from "next-auth/providers/kakao";
 import Naver from "next-auth/providers/naver";
-import { getUserByEmail } from "./actions/auth-actions";
+import { getUserByEmail, postSignUp } from "./actions/auth-actions";
 import { credentialValidator } from "./validations/zodValidation";
 
 //
@@ -47,6 +47,7 @@ export const {
           isSoldier: dbUser.isSoldier,
           isSocial: dbUser.isSocial,
           soldier: dbUser.Soldier[0] || null,
+          follow: dbUser.Follow[0] || null,
         };
       },
     }),
@@ -55,17 +56,48 @@ export const {
     strategy: "jwt",
   },
   pages: {
-    signIn: "/auth/signin",
-    // error: "/auth/error",       // 에러 발생 시 보여줄 페이지
+    signIn: "/auth/signIn",
+    signOut: "/auth/signOut",
+    error: "/auth/error", // 에러 발생 시 보여줄 페이지
   },
   callbacks: {
     async signIn({ user, account }) {
       // credentials인지 sns인지
       if (account?.provider === "credentials") {
-        // 이미 authorize 함수에서 검증을 했으므로 true를 반환
         return true;
-      } else {
         // SNS 로그인인 경우
+      } else {
+        if (!user || !user.email) return false;
+        const dbUser = await getUserByEmail(user.email);
+
+        if (!dbUser) {
+          // DB에 유저가 없으면 회원가입을 진행해야 함
+          const newUser = {
+            email: user.email,
+            userName: user.name || "이름없음",
+            isSocial: true,
+          };
+
+          const signUp = await postSignUp(newUser);
+          if (!signUp.ok || !signUp.data) return false;
+
+          user.userId = signUp.data.userId;
+          user.email = signUp.data.email;
+          user.userName = signUp.data.userName;
+          user.isSoldier = signUp.data.isSoldier;
+          user.isSocial = signUp.data.isSocial;
+          user.soldier = {}; // SNS 회원가입 시 군인 정보는 없으므로
+          user.follow = {};
+        } else {
+          // DB에 유저가 이미 존재하면 로그인 성공
+          user.userId = dbUser.userId;
+          user.email = dbUser.email;
+          user.userName = dbUser.userName;
+          user.isSoldier = dbUser.isSoldier;
+          user.isSocial = dbUser.isSocial;
+          user.soldier = dbUser.Soldier[0] || null;
+          user.follow = dbUser.Follow[0] || null;
+        }
         return true;
       }
     },
@@ -79,7 +111,8 @@ export const {
         token.userName = userData.userName;
         token.isSoldier = userData.isSoldier;
         token.isSocial = userData.isSocial;
-        token.soldier = userData.soldier;
+        token.soldier = userData.soldier?.soldierId ? userData.soldier : null;
+        token.follow = userData.follow?.followId ? userData.follow : null;
       }
       return token;
     },
@@ -91,8 +124,8 @@ export const {
         session.user.isSoldier = token.isSoldier;
         session.user.isSocial = token.isSocial;
         session.user.soldier = token.soldier || null;
+        session.user.follow = token.follow || null;
       }
-
       return session;
     },
   },
