@@ -35,9 +35,7 @@ export async function middleware(req: NextRequest) {
   if (userPages.some((page) => pathname.startsWith(page))) {
     //군인일 경우 자신의 캐비넷으로
     if (didLogin && isSoldier) {
-      return NextResponse.redirect(
-        new URL(`/cabinet/${session.user.soldier.soldierId}`, req.url)
-      );
+      return NextResponse.redirect(new URL("/", req.url));
     }
   }
 
