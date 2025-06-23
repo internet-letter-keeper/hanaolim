@@ -1,7 +1,7 @@
 "use server";
 
 import prisma from "@/lib/db";
-import { Letter } from "../generated/prisma";
+import { Letter } from "@/types/letters";
 
 /**
  * 편지 목록 불러오기 api
