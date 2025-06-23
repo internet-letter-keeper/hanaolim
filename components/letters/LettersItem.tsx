@@ -4,23 +4,12 @@ import Image from "next/image";
 import Link from "next/link";
 import { useState, useEffect } from "react";
 import { patchFavorite } from "@/lib/actions/letter-actions";
+import { Letter } from "@/types/letters";
 import { Txt } from "../atoms";
 
-type CustomLetter = {
-  letterId: number;
-  nickname: string;
-  content: string;
-  createDate: string;
-  readDate?: string | null;
-  isFavorite: boolean;
-  parentLetterId?: number | null;
-  receiverId: number;
-  senderId: number;
-};
-
 type Props = {
-  letters: CustomLetter;
-  allLetters: CustomLetter[];
+  letters: Letter;
+  allLetters: Letter[];
   currentUserId: number;
 };
 
@@ -38,6 +27,8 @@ export default function LettersItem({
     readDate,
     receiverId,
     senderId,
+    receiverName,
+    senderName,
   } = letters;
 
   const isRead = !!readDate;

@@ -3,6 +3,7 @@ import {
   TextareaHTMLAttributes,
   Ref,
   ChangeEventHandler,
+  KeyboardEventHandler,
 } from "react";
 import { cn } from "@/lib/utils";
 
@@ -34,6 +35,7 @@ type Props = {
   className?: string;
   customRef?: Ref<HTMLInputElement> | Ref<HTMLTextAreaElement>;
   onChange?: ChangeEventHandler<HTMLInputElement | HTMLTextAreaElement>;
+  onKeyDown?: KeyboardEventHandler<HTMLInputElement | HTMLTextAreaElement>;
 } & Omit<InputHTMLAttributes<HTMLInputElement>, "onChange"> &
   Omit<TextareaHTMLAttributes<HTMLTextAreaElement>, "onChange">;
 /**

@@ -1,18 +1,27 @@
+import EmptyState from "@/components/EmptyList";
 import PointItem from "@/components/PointItem";
 import { Txt } from "@/components/atoms";
 import { BasicHeader } from "@/components/common";
-import { createDummyData } from "@/public/dummy";
+import {
+  getPointHistory,
+  getPointSum,
+} from "@/lib/actions/pointHistory-action";
+import { PointItemType } from "@/types/point";
+import { requireAuth } from "@/utils/auth";
 
-// TODO: dummy data 추후 실제 데이터로 변경
-const dummyData = createDummyData();
+export default async function PointHistoryPage() {
+  const session = await requireAuth();
 
-export default function PointHistoryPage() {
+  const soldierId = session?.user.soldier.soldierId!;
+  const pointSum = await getPointSum(soldierId);
+  const pointList: PointItemType[] = await getPointHistory(soldierId);
+
   return (
     <div className="flex flex-col min-h-screen">
       <BasicHeader title="포인트 내역 조회" />
       <Txt size={25} weight="bold" align="center" className="py-14">
         {/* 포인트 잔액 */}
-        {dummyData[0].balance.toLocaleString()} 원
+        {pointSum.toLocaleString()} 원
       </Txt>
       <div className="flex-1 flex flex-col bg-white-fff -m-4 pb-8">
         <div>
@@ -20,10 +29,17 @@ export default function PointHistoryPage() {
           <div className="h-[1px] bg-gray-530 mb-4 mt-7 mx-7" />
         </div>
         {/* 포인트 입금 내역 */}
-        {dummyData.map((item) => (
-          <PointItem key={`${item.date}_${item.amount}`} item={item} />
-        ))}
+        {pointList.length > 0 ? (
+          pointList.map((item) => (
+            <PointItem key={`${item.pointId}`} item={item} />
+          ))
+        ) : (
+          <EmptyState>
+            포인트 내역이 없어요 <br /> 편지를 읽고 포인트를 받아 보세요!
+          </EmptyState>
+        )}
       </div>
+      {/* TODO: 무한스크롤 - 데이터 가져오는 중 */}
     </div>
   );
 }

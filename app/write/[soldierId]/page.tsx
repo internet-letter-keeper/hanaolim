@@ -3,9 +3,9 @@
 import Image from "next/image";
 import { useRouter } from "next/navigation";
 import { useState, useRef, useActionState, useEffect } from "react";
-import { ChangeEvent } from "react";
+import { ChangeEvent, FormEvent } from "react";
 import { Input, PrimaryButton, Txt } from "@/components/atoms";
-import { BasicHeader } from "@/components/common";
+import { BasicHeader, Modal } from "@/components/common";
 import { FilePreview, IconPicker } from "@/components/letters";
 import { getSoldierName } from "@/lib/actions/soldier-actions";
 import { postLetter } from "@/lib/actions/write-actions";
@@ -16,14 +16,16 @@ import { getIconIdByName } from "@/utils/icon";
 export default function WritePage({
   params,
 }: {
-  params: Promise<{ soldierId: string }>;
+  params: Promise<{ soldierId: number }>;
 }) {
-  const [soldierId, setSoldierId] = useState<string>("");
+  const [soldierId, setSoldierId] = useState<number>(0);
   const [userName, setUserName] = useState<string>("");
   const [selectedIcon, setSelectedIcon] = useState<IconName>("face");
   const [uploadedFile, setUploadedFile] = useState<uploadedFileType | null>(
     null
   );
+  const [showModal, setShowModal] = useState(false);
+  const [pendingFormData, setPendingFormData] = useState<FormData | null>(null);
   const router = useRouter();
 
   // params와 userName을 가져오는 useEffect
@@ -66,6 +68,30 @@ export default function WritePage({
   );
 
   const fileInputRef = useRef<HTMLInputElement>(null);
+
+  // Form submit 처리 (모달 띄우기)
+  const handleFormSubmit = (e: FormEvent<HTMLFormElement>) => {
+    e.preventDefault(); // 기본 form submit 방지
+
+    const formData = new FormData(e.currentTarget);
+    setPendingFormData(formData);
+    setShowModal(true);
+  };
+
+  // 모달에서 전송 확인
+  const handleConfirmSubmit = () => {
+    if (pendingFormData) {
+      postLetterAction(pendingFormData);
+      setShowModal(false);
+      setPendingFormData(null);
+    }
+  };
+
+  // 모달에서 수정 선택
+  const handleCancelSubmit = () => {
+    setShowModal(false);
+    setPendingFormData(null);
+  };
 
   const onClickImage = () => {
     fileInputRef.current?.click();
@@ -112,7 +138,7 @@ export default function WritePage({
             {userName}&nbsp;
           </Txt>
           <Txt size={20} weight="bold">
-            군인에게 편지를 작성해주세요!
+            님에게 편지를 작성해주세요!
           </Txt>
         </div>
 
@@ -123,12 +149,16 @@ export default function WritePage({
           <IconPicker value={selectedIcon} onChange={setSelectedIcon} />
         </div>
 
-        <form className="flex flex-col gap-3 w-full" action={postLetterAction}>
+        {/* form의 onSubmit으로 모달 처리 */}
+        <form
+          className="flex flex-col gap-3 w-full"
+          onSubmit={handleFormSubmit}
+        >
           <Input
             name="nickname"
             placeholder="닉네임"
             className="w-1/3 text-gray-939 placeholder:text-blue-9a0 text-[15px] pl-[18px]"
-            maxLength={7} // 7글자 제한
+            maxLength={7}
             required
           />
           <Txt size={11} weight="cm" className="text-blue-9a0" align="left">
@@ -138,12 +168,11 @@ export default function WritePage({
             name="content"
             placeholder="내용을 입력하세요."
             tag="textarea"
-            maxLength={500} // 500자 제한
+            maxLength={500}
             required
           />
 
           <div className="flex flex-row justify-between w-full items-center mt-5">
-            {/* 파일이 없을 때만 업로드 버튼 표시 */}
             {!uploadedFile && (
               <div className="flex flex-row gap-1 items-center">
                 <button
@@ -165,7 +194,6 @@ export default function WritePage({
               </div>
             )}
 
-            {/* 파일이 있을 때는 빈 div로 공간 */}
             {uploadedFile && <div />}
 
             <input
@@ -195,6 +223,19 @@ export default function WritePage({
           </div>
         </form>
       </div>
+
+      {/* 모달 */}
+      {showModal && (
+        <Modal
+          greenBtnText="전송"
+          whiteBtnText="수정"
+          onClickGreenBtn={handleConfirmSubmit}
+          onClickWhiteBtn={handleCancelSubmit}
+        >
+          한번 작성한 글은
+          <br /> 수정 또는 삭제가 불가능합니다.
+        </Modal>
+      )}
     </div>
   );
 }
