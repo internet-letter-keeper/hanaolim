@@ -9,9 +9,11 @@ import RocketSplash from "@/components/home/RocketSplash";
 
 type Props = {
   userName: string;
+  startDate: string;
+  endDate: string;
 };
 
-export default function HomePage({ userName }: Props) {
+export default function HomePage({ userName, startDate, endDate }: Props) {
   const [showSplash, setShowSplash] = useState(true);
 
   useEffect(() => {
@@ -45,7 +47,11 @@ export default function HomePage({ userName }: Props) {
               </Txt>
             </Link>
           </div>
-          <Profile endDate={new Date()} userName={userName} />
+          <Profile
+            userName={userName}
+            startDate={startDate}
+            endDate={new Date(endDate)}
+          />
           <Olim />
           <Card />
           <Savings savingBalance={0} />
