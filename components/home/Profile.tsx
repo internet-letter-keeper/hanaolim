@@ -3,20 +3,16 @@
 import Image from "next/image";
 import Txt from "@/components/atoms/Text";
 import { Progress } from "@/components/ui/progress";
-import {
-  untilEndDate,
-  dDayConCatString,
-  calculateRankByStartDate,
-} from "@/utils/date";
+import { untilEndDate } from "@/utils/date";
 
 type Props = {
-  endDate: Date;
   userName: string;
-  startDate?: string;
+  startDate: string;
+  endDate: Date;
 };
 
 export default function ProfileBanner({ userName, startDate, endDate }: Props) {
-  const startDateObj = new Date(startDate ?? "2024-06-01");
+  const startDateObj = new Date(startDate);
   const endDateObj = new Date(endDate);
   const today = new Date();
 
