@@ -13,3 +13,7 @@ export const credentialValidator = z.object({
   email: z.string().email("유효한 이메일 형식이 아닙니다."),
   password: passwordLogic,
 });
+
+export const emailValidator = z
+  .string()
+  .email("유효한 이메일 형식이 아닙니다.");
