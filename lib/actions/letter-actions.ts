@@ -141,6 +141,67 @@ export const patchFavorite = async (letterId: number, userId: number) => {
 };
 
 /**
+ * 군인이 받은 원본 편지의 개수
+ * @param soldierId
+ * @returns 받은 원본 편지[]
+ */
+export const getTotalReceivedNonReplyLettersCnt = async (soldierId: number) =>
+  prisma.letter.count({
+    where: {
+      receiverId: soldierId,
+      parentLetterId: null,
+    },
+  });
+
+/**
+ * 답장이 아닌 원본 편지만 가져오기, 7개씩 페이지네이션
+ * @param soldierId
+ * @param page 페이지네이션. 가져올 페이지
+ * @param totalLettersCnt 군인이 받은 편지의 총 개수
+ * @usage 관물대
+ * @returns 받은 원본 편지[]
+ */
+export const getNonReplyLettersByUserId = async (
+  soldierId: number,
+  page: number = 1,
+  totalLettersCnt: number
+) => {
+  try {
+    // TODO: 변수명 바꾸기
+
+    const FIRST_PAGE_SIZE = totalLettersCnt % 7;
+    const PAGE_SIZE = 7;
+
+    let skip = 0;
+    let take = 0;
+
+    if (page === 1) {
+      take = FIRST_PAGE_SIZE;
+    } else {
+      skip = FIRST_PAGE_SIZE + (page - 2) * PAGE_SIZE;
+      take = PAGE_SIZE;
+    }
+
+    const letters = await prisma.letter.findMany({
+      where: {
+        receiverId: soldierId,
+        parentLetterId: null,
+      },
+      orderBy: {
+        createDate: "desc",
+      },
+      skip,
+      take,
+    });
+
+    return {
+      ok: true,
+      data: letters,
+    };
+  } catch (error) {
+    return { ok: false, data: null };
+  }
+  
  * 읽지 않은 편지 존재 유무
  * @param userId number - 현재 로그인한 유저 ID
  * @returns { isNew : boolean }
