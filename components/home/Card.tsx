@@ -4,12 +4,12 @@ import Image from "next/image";
 import { useRouter } from "next/navigation";
 import { PrimaryButton, Txt } from "../atoms";
 
-type CardProps = {
+type Props = {
   accountNum: string;
   accountBalance: number;
 };
 
-export default function Card({ accountNum, accountBalance }: CardProps) {
+export default function Card({ accountNum, accountBalance }: Props) {
   const router = useRouter();
 
   const handleSendClick = () => {

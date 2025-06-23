@@ -13,6 +13,7 @@ type Props = {
   endDate: string;
   accountNum: string;
   accountBalance: number;
+  savingsBalance: number;
 };
 
 export default function HomePage({
@@ -21,6 +22,7 @@ export default function HomePage({
   endDate,
   accountNum,
   accountBalance,
+  savingsBalance,
 }: Props) {
   const [showSplash, setShowSplash] = useState(true);
 
@@ -62,7 +64,7 @@ export default function HomePage({
           />
           <Olim />
           <Card accountNum={accountNum} accountBalance={accountBalance} />
-          <Savings savingBalance={0} />
+          <Savings savingsBalance={savingsBalance} />
         </div>
       )}
     </>
