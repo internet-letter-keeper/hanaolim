@@ -1,10 +1,10 @@
 "use server";
 
-import { ERROR_MESSAGES } from "@/constants/errorMessages";
-import { requireAuth } from "@/utils/auth";
 import { existsSync, mkdirSync } from "fs";
 import { writeFile } from "fs/promises";
 import path from "path";
+import { ERROR_MESSAGES } from "@/constants/errorMessages";
+import { requireAuth } from "@/utils/auth";
 import prisma from "../db";
 import {
   letterValidator,
@@ -34,6 +34,7 @@ const uploadFile = async (file: File | null): Promise<string | undefined> => {
  * @usage 편지쓰기
  * @param formData
  * @returns  검증된 데이터 반환
+ * @throw 입력된 정보가 잘못됐을 경우
  */
 const extractAndValidateLetterData = async (
   formData: FormData
@@ -48,7 +49,6 @@ const extractAndValidateLetterData = async (
 
   const validator = letterValidator.safeParse(formEntries);
   if (!validator.success) {
-    console.error("Validation error:", validator.error);
     throw new Error(ERROR_MESSAGES.LETTER.INVALID_INPUT_DATA);
   }
 
@@ -91,11 +91,13 @@ const createLetter = async (data: LetterFormData, senderId: number) => {
     throw new Error(ERROR_MESSAGES.LETTER.LETTER_POST_FAILED);
   }
 };
+
 /**
  * 군인에게 편지를 생성
  * @usage 편지쓰기
  * @param formData
  * @returns createLetter 함수
+ * @throw 입력이 잘못되었을 경우
  */
 export const postLetter = async (formData: FormData) => {
   const session = await requireAuth();
@@ -116,6 +118,7 @@ export const postLetter = async (formData: FormData) => {
  * @usage 편지쓰기
  * @param formData 편지 데이터
  * @returns createLetter 함수
+ * @throw 입력이 잘못되었을 경우
  */
 export const postLetterReply = async (formData: FormData) => {
   const session = await requireAuth();
@@ -129,4 +132,36 @@ export const postLetterReply = async (formData: FormData) => {
   }
 
   return createLetter(data, +session.user.userId!);
+};
+
+/**
+ * 편지의 sender Name을 반환하는 api
+ * @param letterId 편지 아이디
+ * @returns 편지를 보낸 사람의 이름
+ * @throw id에 해당하는 편지가 없은 경우
+ * @throw 정보를 가져오는데 실패했을 경우
+ */
+export const getSenderName = async (letterId: number) => {
+  try {
+    const letter = await prisma.letter.findUnique({
+      where: {
+        letterId: letterId,
+      },
+      include: {
+        User_Letter_senderIdToUser: {
+          select: {
+            userName: true,
+          },
+        },
+      },
+    });
+
+    if (!letter) {
+      throw new Error("편지를 찾을 수 없습니다.");
+    }
+
+    return letter.User_Letter_senderIdToUser.userName;
+  } catch (error) {
+    throw new Error("정보를 가져오는데 실패했습니다.");
+  }
 };

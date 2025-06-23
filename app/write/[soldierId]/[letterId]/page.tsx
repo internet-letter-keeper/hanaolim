@@ -2,22 +2,25 @@
 
 import Image from "next/image";
 import { useRouter } from "next/navigation";
-import { useState, useRef, useActionState } from "react";
-import { ChangeEvent } from "react";
-import { uploadedFileType } from "@/types/letters";
-import { postLetterReply } from "@/lib/actions/write-actions";
+import { useState, useRef, useActionState, useEffect } from "react";
+import { ChangeEvent, FormEvent } from "react";
 import { Input, PrimaryButton, Txt } from "@/components/atoms";
-import { BasicHeader } from "@/components/common";
+import { BasicHeader, Modal } from "@/components/common";
 import { FilePreview } from "@/components/letters";
+import { getSenderName, postLetterReply } from "@/lib/actions/write-actions";
+import { uploadedFileType } from "@/types/letters";
 
 type Props = {
   params: Promise<{ soldierId: string; letterId: string }>;
 };
 
 export default function LetterWritePage({ params }: Props) {
+  const [userName, setUserName] = useState<string>("");
   const [uploadedFile, setUploadedFile] = useState<uploadedFileType | null>(
     null
   );
+  const [showModal, setShowModal] = useState(false);
+  const [pendingFormData, setPendingFormData] = useState<FormData | null>(null);
   const router = useRouter();
 
   // 편지 작성 액션 (답장용)
@@ -37,13 +40,37 @@ export default function LetterWritePage({ params }: Props) {
       if (result?.success) {
         router.push(`/cabinet/${soldierId}`);
       }
-      
+
       return result;
     },
     null
   );
 
   const fileInputRef = useRef<HTMLInputElement>(null);
+
+  // Form submit 처리 (모달 띄우기)
+  const handleFormSubmit = (e: FormEvent<HTMLFormElement>) => {
+    e.preventDefault(); // 기본 form submit 방지
+
+    const formData = new FormData(e.currentTarget);
+    setPendingFormData(formData);
+    setShowModal(true);
+  };
+
+  // 모달에서 전송 확인
+  const handleConfirmSubmit = () => {
+    if (pendingFormData) {
+      postLetterAction(pendingFormData);
+      setShowModal(false);
+      setPendingFormData(null);
+    }
+  };
+
+  // 모달에서 수정 선택
+  const handleCancelSubmit = () => {
+    setShowModal(false);
+    setPendingFormData(null);
+  };
 
   const onClickImage = () => {
     fileInputRef.current?.click();
@@ -71,6 +98,17 @@ export default function LetterWritePage({ params }: Props) {
     }
   };
 
+  useEffect(() => {
+    const fetchData = async () => {
+      const { letterId } = await params;
+
+      const name = await getSenderName(+letterId);
+      setUserName(name || "별돌이");
+    };
+
+    fetchData();
+  }, [params]);
+
   return (
     <div className="flex flex-col flex-1">
       <BasicHeader />
@@ -87,19 +125,23 @@ export default function LetterWritePage({ params }: Props) {
 
         <div className="flex mt-[14px] mb-13 items-center justify-center whitespace-nowrap">
           <Txt size={20} weight="bold" className="text-green-49d">
-            별돌이&nbsp;
+            {userName}&nbsp;
           </Txt>
           <Txt size={20} weight="bold">
-            군인에게 편지를 작성해주세요!
+            님에게 편지를 작성해주세요!
           </Txt>
         </div>
 
-        <form className="flex flex-col gap-3 w-full" action={postLetterAction}>
+        {/* form의 onSubmit으로 모달 처리 */}
+        <form
+          className="flex flex-col gap-3 w-full"
+          onSubmit={handleFormSubmit}
+        >
           <Input
             name="content"
             placeholder="내용을 입력하세요."
             tag="textarea"
-            maxLength={500} // 500자 제한
+            maxLength={500}
             required
           />
 
@@ -137,7 +179,12 @@ export default function LetterWritePage({ params }: Props) {
               className="hidden"
             />
           </div>
-
+          {uploadedFile && (
+            <FilePreview
+              uploadedFile={uploadedFile}
+              onDelete={handleDeleteFile}
+            />
+          )}
           <div className="flex justify-end mt-4">
             <PrimaryButton
               title="전송"
@@ -150,14 +197,20 @@ export default function LetterWritePage({ params }: Props) {
             />
           </div>
         </form>
-
-        {uploadedFile && (
-          <FilePreview
-            uploadedFile={uploadedFile}
-            onDelete={handleDeleteFile}
-          />
-        )}
       </div>
+
+      {/* 모달 */}
+      {showModal && (
+        <Modal
+          greenBtnText="전송"
+          whiteBtnText="수정"
+          onClickGreenBtn={handleConfirmSubmit}
+          onClickWhiteBtn={handleCancelSubmit}
+        >
+          한번 작성한 글은
+          <br /> 수정 또는 삭제가 불가능합니다.
+        </Modal>
+      )}
     </div>
   );
 }

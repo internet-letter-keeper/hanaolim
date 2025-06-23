@@ -7,8 +7,6 @@ import Naver from "next-auth/providers/naver";
 import { getUserByEmail, postSignUp } from "./actions/auth-actions";
 import { credentialValidator } from "./validations/zodValidation";
 
-//
-
 export const {
   handlers: { GET, POST },
   auth,

@@ -4,6 +4,7 @@ import { useState, useRef, useEffect } from "react";
 
 type DatePickerProps = {
   onChange?: (date: Date) => void;
+  value?: Date | null;
 };
 
 function isSameDate(a: Date, b: Date) {
@@ -20,11 +21,18 @@ function formatDate(date: Date) {
   ).padStart(2, "0")}`;
 }
 
-export default function DatePicker({ onChange }: DatePickerProps) {
-  const [selectedDate, setSelectedDate] = useState<Date | null>(null);
-  const [viewDate, setViewDate] = useState(new Date());
+export default function DatePicker({ onChange, value }: DatePickerProps) {
+  const [selectedDate, setSelectedDate] = useState<Date | null>(value || null);
+  const [viewDate, setViewDate] = useState(value || new Date());
   const [showCalendar, setShowCalendar] = useState(false);
   const calendarRef = useRef<HTMLDivElement>(null);
+
+  useEffect(() => {
+    if (value) {
+      setSelectedDate(value);
+      setViewDate(value);
+    }
+  }, [value]);
 
   const today = new Date();
   const year = viewDate.getFullYear();
