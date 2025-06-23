@@ -2,6 +2,7 @@ import { notFound } from "next/navigation";
 import { PrimaryButton } from "@/components/atoms";
 import BasicHeader from "@/components/common/BasicHeader";
 import LettersDetail from "@/components/letters/LettersDetail";
+import { patchReadDate } from "@/lib/actions/letter-actions";
 import prisma from "@/lib/db";
 
 type Props = {
@@ -20,6 +21,10 @@ export default async function LetterDetailPage({ params }: Props) {
   });
 
   if (!letter) return notFound();
+
+  if (letter.readDate === null && letter.receiverId !== letter.senderId) {
+    await patchReadDate(+letterId);
+  }
 
   const reply = await prisma.letter.findFirst({
     where: { parentLetterId: letter.letterId },

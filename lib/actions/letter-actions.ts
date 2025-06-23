@@ -53,7 +53,7 @@ export const getLettersByUserId = async (userId: number) => {
 // 편지 상세 조회 api
  * @param letterId 
  * @param userId
- * @usage 편지 상세페이지
+ * @usage 편지 상세 페이지
  * @returns 
  */
 export const getLetterDetail = async (letterId: number, userId: number) => {
@@ -139,3 +139,22 @@ export const patchFavorite = async (letterId: number, userId: number) => {
     return { ok: false, isFavorite: null };
   }
 };
+
+/**
+ *
+ * @param letterId
+ * @usage 편지 상세 페이지
+ * @returns 읽음 처리
+ */
+export async function patchReadDate(letterId: number) {
+  try {
+    prisma.letter.update({
+      where: { letterId },
+      data: { readDate: new Date() },
+    });
+    return { ok: true };
+  } catch (err) {
+    console.error("읽음 처리 실패", err);
+    return { ok: false };
+  }
+}
