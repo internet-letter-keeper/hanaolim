@@ -10,7 +10,6 @@ import {
   SidebarMenuItem,
   useSidebar,
 } from "@/components/ui/sidebar";
-import { getIsNew } from "@/lib/actions/letter-actions";
 import { cn } from "@/lib/utils";
 import { PrimaryButton } from "../atoms";
 import { NewIcon } from "../common";
