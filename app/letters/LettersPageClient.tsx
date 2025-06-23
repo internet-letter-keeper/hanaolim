@@ -19,6 +19,8 @@ type Letter = {
   parentLetterId?: number | null;
   receiverId: number;
   senderId: number;
+  receiverName: string;
+  senderName: string;
   isFavorite: boolean;
 };
 
@@ -33,35 +35,64 @@ export default function LettersPageClient({
 }: Props) {
   const [activeTab, setActiveTab] = useState<"send" | "receive">("send");
   const [filter, setFilter] = useState<FilterType>("all");
+  const [searchText, setSearchText] = useState("");
+  const [searching, setSearching] = useState(false);
 
   const letters = useMemo(() => initialLetters, [initialLetters]);
+
+  const filteredLetters = useMemo(() => {
+    let base = letters.filter((l) => l.parentLetterId === null);
+
+    base = base.filter((l) => {
+      return activeTab === "send"
+        ? l.receiverId == currentUserId
+        : l.senderId === currentUserId;
+    });
+
+    // 추가 필터링
+    if (filter === "favorite") base = base.filter((l) => l.isFavorite);
+    if (filter === "hasReply")
+      base = base.filter((l) =>
+        letters.some((r) => r.parentLetterId === l.letterId)
+      );
+    if (filter === "unread") base = base.filter((l) => !l.readDate);
+
+    // 검색 필터
+    if (searching && searchText.trim() !== "") {
+      const lower = searchText.toLowerCase();
+
+      const matchedLetters = letters.filter(
+        (l) =>
+          l.nickname.toLowerCase().includes(lower) ||
+          l.receiverName.toLowerCase().includes(lower) ||
+          l.senderName.toLowerCase().includes(lower) ||
+          l.content.toLowerCase().includes(lower)
+      );
+
+      const matchedOriginals = new Set<number>();
+
+      matchedLetters.forEach((l) => {
+        if (l.parentLetterId) {
+          // 답장인 경우 → 부모 편지 포함
+          matchedOriginals.add(l.parentLetterId);
+        } else {
+          matchedOriginals.add(l.letterId);
+        }
+      });
+
+      base = base.filter((l) => matchedOriginals.has(l.letterId));
+    }
+
+    return base;
+  }, [letters, filter, activeTab, currentUserId, searchText, searching]);
 
   const onChangeFilter = (value: FilterType) => {
     setFilter((prev) => (prev === value ? "all" : value));
   };
 
-  const filteredLetters = useMemo(() => {
-    return letters
-      .filter((l) => l.parentLetterId === null)
-      .filter((l) => {
-        // 관물대 필터링: activeTab 기준
-        if (activeTab === "send") {
-          // 내가 받은 편지만 (내가 receiver)
-          if (l.receiverId !== currentUserId) return false;
-        } else if (activeTab === "receive") {
-          // 내가 보낸 편지만 (내가 sender)
-          if (l.senderId !== currentUserId) return false;
-        }
-
-        // 추가 필터링
-        if (filter === "favorite") return l.isFavorite;
-        if (filter === "hasReply")
-          return letters.some((r) => r.parentLetterId === l.letterId);
-        if (filter === "unread") return !l.readDate;
-
-        return true;
-      });
-  }, [letters, filter, activeTab, currentUserId]);
+  const handleSearch = () => {
+    setSearching(true);
+  };
 
   return (
     <div className="flex flex-col min-h-screen w-full">
@@ -72,8 +103,10 @@ export default function LettersPageClient({
             placeholder="작성자, 내용 ..."
             usage="modal"
             className="rounded-[10px] pr-10"
+            value={searchText}
+            onChange={(e) => setSearchText(e.target.value)}
           />
-          <button>
+          <button onClick={handleSearch}>
             <Image
               src="/icons/ic-search.svg"
               alt="검색"
