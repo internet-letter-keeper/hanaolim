@@ -1,17 +1,19 @@
 "use server";
 
 import prisma from "@/lib/db";
-import { Letter } from "@/types/letters";
+import { Letter } from "../generated/prisma";
 
-// 편지 목록 불러오기 api
-export async function getLettersByUserId(userId: number) {
-  try {
-    const lettersFromDb = await prisma.letter.findMany({
-      where: {
-        OR: [{ senderId: userId }, { receiverId: userId }],
-      },
-      include: {
-        Favorite: true,
+type LetterWithUsers = Letter & {
+  User_Letter_senderIdToUser: { userName: string };
+  User_Letter_receiverIdToUser: { userName: string };
+};
+
+export const getAllLetters = async (): Promise<LetterWithUsers[]> => {
+  const letters = await prisma.letter.findMany({
+    where: { parentLetterId: null }, // 답장이 아닌 원편지만 가져옴
+    include: {
+      User_Letter_senderIdToUser: {
+        select: { userName: true },
       },
       orderBy: {
         createDate: "desc",
@@ -70,7 +72,6 @@ export async function getLetterDetail(letterId: number, currentUserId: number) {
         (f) => f.userId === currentUserId && f.isFavorite
       ),
     };
-
     return { ok: true, data: result };
   } catch (error) {
     console.error("편지 상세 조회 에러:", error);

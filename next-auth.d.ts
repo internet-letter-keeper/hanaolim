@@ -14,6 +14,7 @@ declare module "next-auth" {
         endDate?: Date;
         statusMessge?: string;
         letterExp?: number;
+        code?: string;
       };
     } & DefaultSession["user"];
   }
@@ -29,6 +30,7 @@ declare module "next-auth" {
       endDate?: Date;
       statusMessge?: string;
       letterExp?: number;
+      code?: string;
     };
   }
 }
@@ -45,6 +47,7 @@ declare module "next-auth/jwt" {
       endDate?: Date;
       statusMessge?: string;
       letterExp?: number;
+      code?: string;
     };
   }
 }
