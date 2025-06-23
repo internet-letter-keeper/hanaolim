@@ -5,24 +5,9 @@ import { useState, useMemo } from "react";
 import { PrimaryButton, Input, Txt } from "@/components/atoms";
 import BasicHeader from "@/components/common/BasicHeader";
 import LettersItem from "@/components/letters/LettersItem";
+import { Letter } from "@/types/letters";
 
 type FilterType = "all" | "favorite" | "hasReply" | "unread";
-
-type Letter = {
-  letterId: number;
-  nickname: string;
-  content: string;
-  fileUrl?: string;
-  iconId?: number;
-  createDate: string; // 서버에서 ISO string 으로 전달됨
-  readDate?: string | null;
-  parentLetterId?: number | null;
-  receiverId: number;
-  senderId: number;
-  receiverName: string;
-  senderName: string;
-  isFavorite: boolean;
-};
 
 type Props = {
   initialLetters: Letter[];
