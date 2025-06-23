@@ -1,6 +1,7 @@
 import {
   getProfileInfo,
   getAccountInfo,
+  getEarnedPoint,
 } from "@/lib/actions/home-actions";
 import { requireAuth } from "@/utils/auth";
 import HomePage from "./homepage";
@@ -12,9 +13,11 @@ export default async function Page() {
   const [
     { userName, startDate, endDate },
     { accountNum, accountBalance, savingsBalance },
+    { letterExp },
   ] = await Promise.all([
     getProfileInfo(userId),
     getAccountInfo(userId),
+    getEarnedPoint(userId),
   ]);
 
   return (
@@ -25,6 +28,7 @@ export default async function Page() {
       accountNum={accountNum}
       accountBalance={accountBalance}
       savingsBalance={savingsBalance}
+      letterExp={letterExp}
     />
   );
 }

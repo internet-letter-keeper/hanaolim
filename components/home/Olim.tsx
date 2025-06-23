@@ -7,9 +7,10 @@ import Letter from "./hanaolim/Letter";
 import Point from "./hanaolim/Point";
 
 const receivedTotalLetter = { unreadLetter: 0, totalLetter: 32 };
-const pointAccrue = { myStamp: 2, totalStamp: 10 };
 
-export default function Olim() {
+type Props = { letterExp: number };
+
+export default function Olim({ letterExp }: Props) {
   const router = useRouter();
 
   return (
@@ -63,7 +64,7 @@ export default function Olim() {
       {/* 편지+포인트 */}
       <div className="flex flex-col gap-[12px]">
         <Letter receivedTotalLetter={receivedTotalLetter} />
-        <Point pointAccrue={pointAccrue} />
+        <Point letterExp={letterExp} />
       </div>
     </div>
   );
