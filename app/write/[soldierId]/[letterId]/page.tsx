@@ -179,7 +179,12 @@ export default function LetterWritePage({ params }: Props) {
               className="hidden"
             />
           </div>
-
+          {uploadedFile && (
+            <FilePreview
+              uploadedFile={uploadedFile}
+              onDelete={handleDeleteFile}
+            />
+          )}
           <div className="flex justify-end mt-4">
             <PrimaryButton
               title="전송"
@@ -192,13 +197,6 @@ export default function LetterWritePage({ params }: Props) {
             />
           </div>
         </form>
-
-        {uploadedFile && (
-          <FilePreview
-            uploadedFile={uploadedFile}
-            onDelete={handleDeleteFile}
-          />
-        )}
       </div>
 
       {/* 모달 */}
