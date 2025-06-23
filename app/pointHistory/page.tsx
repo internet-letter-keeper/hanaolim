@@ -1,12 +1,13 @@
-import { requireAuth } from "@/utils/auth";
-import { PointItemType } from "@/types/point";
+import EmptyState from "@/components/EmptyList";
+import PointItem from "@/components/PointItem";
+import { Txt } from "@/components/atoms";
+import { BasicHeader } from "@/components/common";
 import {
   getPointHistory,
   getPointSum,
 } from "@/lib/actions/pointHistory-action";
-import PointItem from "@/components/PointItem";
-import { Txt } from "@/components/atoms";
-import { BasicHeader } from "@/components/common";
+import { PointItemType } from "@/types/point";
+import { requireAuth } from "@/utils/auth";
 
 export default async function PointHistoryPage() {
   const session = await requireAuth();
@@ -28,9 +29,15 @@ export default async function PointHistoryPage() {
           <div className="h-[1px] bg-gray-530 mb-4 mt-7 mx-7" />
         </div>
         {/* 포인트 입금 내역 */}
-        {pointList.map((item) => (
-          <PointItem key={`${item.pointId}`} item={item} />
-        ))}
+        {pointList.length > 0 ? (
+          pointList.map((item) => (
+            <PointItem key={`${item.pointId}`} item={item} />
+          ))
+        ) : (
+          <EmptyState>
+            포인트 내역이 없어요 <br /> 편지를 읽고 포인트를 받아 보세요!
+          </EmptyState>
+        )}
       </div>
       {/* TODO: 무한스크롤 - 데이터 가져오는 중 */}
     </div>
