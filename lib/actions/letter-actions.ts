@@ -201,4 +201,19 @@ export const getNonReplyLettersByUserId = async (
   } catch (error) {
     return { ok: false, data: null };
   }
+  
+ * 읽지 않은 편지 존재 유무
+ * @param userId number - 현재 로그인한 유저 ID
+ * @returns { isNew : boolean }
+ */
+export const getIsNew = async (userId: number) => {
+  console.log("dddd");
+  const unreadCount = await prisma.letter.count({
+    where: {
+      receiverId: userId,
+      readDate: null,
+    },
+  });
+  const isNew = unreadCount > 0 ? true : false;
+  return { isNew };
 };

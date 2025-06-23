@@ -3,10 +3,10 @@
 import Image from "next/image";
 import { useRouter } from "next/navigation";
 import { useSession } from "next-auth/react";
-import { ChangeEvent, useState } from "react";
-import { postSoldier } from "@/lib/actions/auth-actions";
+import { ChangeEvent, KeyboardEvent, useState } from "react";
 import { PrimaryButton, Input, Txt } from "@/components/atoms";
 import DatePicker from "@/components/common/DatePicker";
+import { postSoldier } from "@/lib/actions/auth-actions";
 
 export default function SignInPage() {
   const { data: session, update } = useSession();
@@ -80,6 +80,14 @@ export default function SignInPage() {
     setAccountNumber(formatted);
   };
 
+  const handleKeyDown = (
+    e: KeyboardEvent<HTMLInputElement | HTMLTextAreaElement>
+  ) => {
+    if (e.key === "Enter") {
+      handleSubmit();
+    }
+  };
+
   // // handleSubmit 함수에서 accountNumber 검사로 변경
   // if (!accountNumber || accountNumber.length < 16) {
   //   setErrorMessage("계좌번호를 올바르게 입력하여 주세요");
@@ -123,6 +131,7 @@ export default function SignInPage() {
             maxLength={16}
             onChange={handleAccountChange}
             value={accountNumber}
+            onKeyDown={handleKeyDown}
           />
         </div>
       </div>

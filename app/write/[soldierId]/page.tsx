@@ -16,9 +16,9 @@ import { getIconIdByName } from "@/utils/icon";
 export default function WritePage({
   params,
 }: {
-  params: Promise<{ soldierId: string }>;
+  params: Promise<{ soldierId: number }>;
 }) {
-  const [soldierId, setSoldierId] = useState<string>("");
+  const [soldierId, setSoldierId] = useState<number>(0);
   const [userName, setUserName] = useState<string>("");
   const [selectedIcon, setSelectedIcon] = useState<IconName>("face");
   const [uploadedFile, setUploadedFile] = useState<uploadedFileType | null>(
