@@ -4,19 +4,21 @@ import Image from "next/image";
 import { useRef, useState } from "react";
 import Txt from "@/components/atoms/Text";
 
-const receivedTotalLetter = { unreadLetter: 8, totalLetter: 32 };
-const pointAccrue = { myStamp: 2, totalStamp: 10 };
-
 type RocketSplashProps = {
   onSkip: () => void;
+  letterExp: number;
+  unreadLetter: number;
 };
 
-export default function RocketSplash({ onSkip }: RocketSplashProps) {
+export default function RocketSplash({
+  onSkip,
+  letterExp,
+  unreadLetter,
+}: RocketSplashProps) {
   const videoRef = useRef<HTMLVideoElement>(null);
   const [isVisible, setIsVisible] = useState(true);
 
   const handleSkip = () => {
-    localStorage.setItem("isSplashSeen", "true");
     setIsVisible(false);
     onSkip();
   };
@@ -24,7 +26,7 @@ export default function RocketSplash({ onSkip }: RocketSplashProps) {
   if (!isVisible) return null;
 
   return (
-    <div className="bg-gray-4f6 overflow-hidden h-screen -m-4 flex flex-col justify-between">
+    <div className="bg-gray-5f6 overflow-hidden h-screen -m-4 flex flex-col justify-between">
       <div className="flex justify-end m-3">
         {/* Skip 버튼 */}
         <button
@@ -37,12 +39,12 @@ export default function RocketSplash({ onSkip }: RocketSplashProps) {
         </button>
       </div>
       <div className="flex flex-col items-center gap-8">
-        {receivedTotalLetter.unreadLetter > 0 && (
+        {unreadLetter > 0 && (
           <div className="text-center">
             <Txt size={23} weight="bold">
               안 읽은 편지&nbsp;
               <Txt size={25} weight="bold" className="text-green-49d">
-                {receivedTotalLetter.unreadLetter}장
+                {unreadLetter}장
               </Txt>
               보러 갈까요~?
             </Txt>
@@ -65,7 +67,7 @@ export default function RocketSplash({ onSkip }: RocketSplashProps) {
             총 받은 편지&nbsp;
           </Txt>
           <Txt size={30} weight="bold" className="text-green-49d">
-            {receivedTotalLetter.totalLetter}장
+            {letterExp}장
           </Txt>
         </div>
       </div>
@@ -75,7 +77,6 @@ export default function RocketSplash({ onSkip }: RocketSplashProps) {
         alt="편지 이미지"
         width={393}
         height={262}
-        className="w-full"
       />
     </div>
   );

@@ -4,9 +4,9 @@ export type uploadedFileType = {
   type: "image" | "video";
 };
 
-type Letter = {
+export type Letter = {
   letterId: number;
-  nickname?: string;
+  nickname: string;
   content: string;
   fileUrl?: string;
   iconId?: number;
@@ -15,10 +15,7 @@ type Letter = {
   parentLetterId?: number | null;
   receiverId: number;
   senderId: number;
-  Favorite: {
-    isFavorite: boolean;
-    userId: number;
-  }[];
+  receiverName: string;
+  senderName: string;
+  isFavorite: boolean;
 };
-
-export type ReceivedTotalLetter = { unreadLetter: number; totalLetter: number };

@@ -86,6 +86,7 @@ model Soldier {
   endDate       DateTime  @db.Date
   statusMessage String?   @db.VarChar(50)
   letterExp     Int       @default(0)
+  code          String    @unique(map: "code") @db.VarChar(20)
   userId        Int       @db.UnsignedInt
   Account       Account[]
   Follow        Follow[]
