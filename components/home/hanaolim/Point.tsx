@@ -24,6 +24,9 @@ export default function Point({ letterExp }: Props) {
     e.stopPropagation();
     setShowTooltip((prev) => !prev);
   };
+
+  const progressPercent = ((letterExp % 10) / 10) * 100;
+
   return (
     <div
       onClick={handleClick}
@@ -59,7 +62,9 @@ export default function Point({ letterExp }: Props) {
         </div>
       </div>
 
-      <Progress variant="yellow" />
+      {/* 포인트 게이지 */}
+      <Progress variant="yellow" value={progressPercent} />
+
       <div className="flex justify-between">
         <Txt size={12} weight="medium" className="text-gray-353">
           총 {Math.floor(letterExp / 10)}회 적립
