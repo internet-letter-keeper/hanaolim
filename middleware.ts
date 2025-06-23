@@ -72,7 +72,13 @@ export async function middleware(req: NextRequest) {
     }
   }
 
-  if (pathname.startsWith("/cabinet")) {
+  if (
+    pathname.startsWith("/cabinet") ||
+    pathname === "/friends" ||
+    pathname.startsWith("/letters") ||
+    pathname.startsWith("/write") ||
+    pathname.startsWith("/pointHistory")
+  ) {
     // 군인X, 로그인O, 팔로우 유무에 따른 라우팅
     //팔로우가 없을 경우
     if (didLogin && !isSoldier && !session.user.follow) {
