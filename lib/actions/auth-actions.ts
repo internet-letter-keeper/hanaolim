@@ -17,6 +17,7 @@ export const getUserByEmail = async (email: string) =>
     },
     include: {
       Soldier: true,
+      Follow: true,
     },
   });
 
@@ -33,10 +34,10 @@ export const postSignUp = async (user: UserData) => {
     const newUser = await prisma.user.create({
       data: {
         email: user.email,
-        password: await bcrypt.hash(user.password, 10),
+        password: user.password ? await bcrypt.hash(user.password, 10) : "",
         userName: user.userName,
         isSoldier: false, // 기본값 false로 설정
-        isSocial: false, // 기본값 false로 설정
+        isSocial: user.isSocial || false, // 기본값 false로 설정
       },
       select: {
         userId: true,

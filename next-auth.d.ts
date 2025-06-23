@@ -16,6 +16,11 @@ declare module "next-auth" {
         letterExp?: number;
         code?: string;
       };
+      follow: {
+        followId?: number;
+        userId?: number;
+        soldierId?: number;
+      };
     } & DefaultSession["user"];
   }
 
@@ -31,6 +36,11 @@ declare module "next-auth" {
       statusMessge?: string;
       letterExp?: number;
       code?: string;
+    };
+    follow: {
+      followId?: number;
+      userId?: number;
+      soldierId?: number;
     };
   }
 }
@@ -48,6 +58,11 @@ declare module "next-auth/jwt" {
       statusMessge?: string;
       letterExp?: number;
       code?: string;
+    };
+    follow: {
+      followId?: number;
+      userId?: number;
+      soldierId?: number;
     };
   }
 }
