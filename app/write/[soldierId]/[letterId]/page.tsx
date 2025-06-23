@@ -103,7 +103,7 @@ export default function LetterWritePage({ params }: Props) {
             {userName}&nbsp;
           </Txt>
           <Txt size={20} weight="bold">
-            군인에게 편지를 작성해주세요!
+            님에게 편지를 작성해주세요!
           </Txt>
         </div>
 
