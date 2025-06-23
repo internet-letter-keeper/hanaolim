@@ -87,6 +87,7 @@ model Soldier {
   statusMessage String?   @db.VarChar(50)
   letterExp     Int       @default(0)
   userId        Int       @db.UnsignedInt
+  code          String    @unique(map: "code") @db.VarChar(20)
   Account       Account[]
   Follow        Follow[]
   Point         Point[]

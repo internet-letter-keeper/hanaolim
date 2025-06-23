@@ -1,7 +1,6 @@
 "use client";
 
 import { useRouter } from "next/navigation";
-import { cn } from "@/lib/utils";
 import {
   Sidebar,
   SidebarContent,
@@ -9,7 +8,8 @@ import {
   SidebarMenuItem,
   useSidebar,
 } from "@/components/ui/sidebar";
-import PrimaryButton from "../atoms/PrimaryButton";
+import { cn } from "@/lib/utils";
+import { PrimaryButton } from "../atoms";
 import { NewIcon } from "../common";
 import Profile from "../common/Profile";
 

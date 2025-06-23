@@ -11,6 +11,12 @@ export const ERROR_MESSAGES = {
   DATA: {
     NOT_FOUND: "요청한 데이터를 찾을 수 없습니다.",
   },
+
+  // 편지 관련 에러 메세지
+  LETTER: {
+    INVALID_INPUT_DATA: "입력이 잘못되었습니다.",
+    LETTER_POST_FAILED: "편지 작성에 실패했습니다.",
+  },
 } as const;
 
 export type ErrorMessageKey = keyof typeof ERROR_MESSAGES;
