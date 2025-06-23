@@ -125,6 +125,5 @@ export const getLetterCount = async (userId: number) => {
       readDate: null,
     },
   });
-
   return { unreadCount };
 };
