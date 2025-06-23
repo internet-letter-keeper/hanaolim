@@ -6,6 +6,7 @@ import { Letter } from "@/types/letters";
 /**
  * 편지 목록 불러오기 api
  * @param userId
+ * @usage 편지 보관함
  * @returns userId에 해당하는 편지들 목록
  */
 export const getLettersByUserId = async (userId: number) => {
@@ -16,6 +17,8 @@ export const getLettersByUserId = async (userId: number) => {
       },
       include: {
         Favorite: true,
+        User_Letter_receiverIdToUser: true,
+        User_Letter_senderIdToUser: true,
       },
       orderBy: {
         createDate: "desc",
@@ -33,6 +36,8 @@ export const getLettersByUserId = async (userId: number) => {
       parentLetterId: l.parentLetterId ?? null,
       receiverId: l.receiverId,
       senderId: l.senderId,
+      receiverName: l.User_Letter_receiverIdToUser?.userName,
+      senderName: l.User_Letter_senderIdToUser?.userName,
       isFavorite: l.Favorite.some((f) => f.userId === userId && f.isFavorite),
     }));
 
@@ -43,7 +48,14 @@ export const getLettersByUserId = async (userId: number) => {
   }
 };
 
+/**
+ * 
 // 편지 상세 조회 api
+ * @param letterId 
+ * @param userId
+ * @usage 편지 상세페이지
+ * @returns 
+ */
 export const getLetterDetail = async (letterId: number, userId: number) => {
   try {
     const letter = await prisma.letter.findUnique({
@@ -52,6 +64,8 @@ export const getLetterDetail = async (letterId: number, userId: number) => {
       },
       include: {
         Favorite: true,
+        User_Letter_receiverIdToUser: true,
+        User_Letter_senderIdToUser: true,
       },
     });
 
@@ -70,6 +84,8 @@ export const getLetterDetail = async (letterId: number, userId: number) => {
       parentLetterId: letter.parentLetterId ?? null,
       receiverId: letter.receiverId,
       senderId: letter.senderId,
+      receiverName: letter.User_Letter_receiverIdToUser?.userName,
+      senderName: letter.User_Letter_senderIdToUser?.userName,
       isFavorite: letter.Favorite.some(
         (f) => f.userId === userId && f.isFavorite
       ),
@@ -81,7 +97,14 @@ export const getLetterDetail = async (letterId: number, userId: number) => {
   }
 };
 
+/**
+ *
 // 즐겨찾기 추가 삭제 api
+ * @param letterId
+ * @param userId
+ * @usage 편지 보관함
+ * @returns
+ */
 export const patchFavorite = async (letterId: number, userId: number) => {
   try {
     // 현재 즐겨찾기 상태 확인
