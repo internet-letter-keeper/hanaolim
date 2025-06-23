@@ -14,6 +14,10 @@ type AccountInfo = {
   savingsBalance: number;
 };
 
+type LetterInfo = {
+  letterExp: number;
+};
+
 /**
  * 홈화면에 표시할 유저 이름 + 병사 날짜 정보 조회
  * @usage 홈 상단 프로필
@@ -82,5 +86,29 @@ export const getAccountInfo = async (userId: number): Promise<AccountInfo> => {
     accountNum: account.accountNum,
     accountBalance: account.accountBalance,
     savingsBalance: account.savingsBalance,
+  };
+};
+
+/**
+ * 유저의 현재까지 획득한 포인트(letterExp) 조회
+ * @usage 포인트 컴포넌트
+ * @param userId number - 유저 ID
+ * @returns { letterExp: number }
+ * @throws 유저의 군 복무 정보가 없을 경우
+ */
+export const getEarnedPoint = async (userId: number): Promise<LetterInfo> => {
+  const soldier = await prisma.soldier.findFirst({
+    where: { userId },
+    select: {
+      letterExp: true,
+    },
+  });
+
+  if (!soldier) {
+    throw new Error(`${userId}번 유저의 군 복무 정보가 없습니다`);
+  }
+
+  return {
+    letterExp: soldier.letterExp,
   };
 };
