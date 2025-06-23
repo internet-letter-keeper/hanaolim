@@ -5,7 +5,6 @@ import { useRouter } from "next/navigation";
 import { signIn } from "next-auth/react";
 import { useEffect, useRef, useState } from "react";
 import SplashScreen from "@/components/HomeSplashScreen";
-import Preloader from "@/components/Preloader";
 import { PrimaryButton, Input, Txt } from "@/components/atoms";
 
 export default function SignInPage() {
@@ -21,7 +20,7 @@ export default function SignInPage() {
   const [showSplash, setShowSplash] = useState<boolean | null>(null);
 
   useEffect(() => {
-    const alreadySeen = localStorage.getItem("splashSeen");
+    const alreadySeen = document.cookie.includes("splashSeen=true");
 
     if (!alreadySeen) {
       setShowSplash(true);
@@ -30,13 +29,20 @@ export default function SignInPage() {
     }
   }, []);
 
-  //splash / preloader (스플래시 렌더 전에 나오는 화면) 표시용 content
+  //splash 렌더 (브라우저 종료 시 쿠키 사라짐)
   let splashContent = null;
 
   if (showSplash === null) {
-    splashContent = <Preloader />;
+    return null;
   } else if (showSplash) {
-    splashContent = <SplashScreen onFinish={() => setShowSplash(false)} />;
+    splashContent = (
+      <SplashScreen
+        onFinish={() => {
+          document.cookie = "splashSeen=true; path=/;";
+          setShowSplash(false);
+        }}
+      />
+    );
   }
 
   if (splashContent) {

@@ -5,10 +5,10 @@ import { useRouter } from "next/navigation";
 import Txt from "@/components/atoms/Text";
 
 type Props = {
-  savingBalance: number;
+  savingsBalance: number;
 };
 
-export default function Savings({ savingBalance }: Props) {
+export default function Savings({ savingsBalance }: Props) {
   const router = useRouter();
 
   const handleSendClick = () => {
@@ -27,7 +27,7 @@ export default function Savings({ savingBalance }: Props) {
             하나 장병내일준비 적금
           </Txt>
           <Txt size={16} weight="bold">
-            {savingBalance.toLocaleString()}원
+            {savingsBalance.toLocaleString()}원
           </Txt>
         </div>
         <div className="flex-shrink-0 relative ml-[57px] w-[80px] h-[60px]">

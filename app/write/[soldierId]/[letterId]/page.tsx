@@ -2,19 +2,21 @@
 
 import Image from "next/image";
 import { useRouter } from "next/navigation";
-import { useState, useRef, useActionState } from "react";
+import { useState, useRef, useActionState, useEffect } from "react";
 import { ChangeEvent } from "react";
-import { uploadedFileType } from "@/types/letters";
-import { postLetterReply } from "@/lib/actions/write-actions";
 import { Input, PrimaryButton, Txt } from "@/components/atoms";
 import { BasicHeader } from "@/components/common";
 import { FilePreview } from "@/components/letters";
+import { getSoldierName } from "@/lib/actions/soldier-actions";
+import { postLetterReply } from "@/lib/actions/write-actions";
+import { uploadedFileType } from "@/types/letters";
 
 type Props = {
   params: Promise<{ soldierId: string; letterId: string }>;
 };
 
 export default function LetterWritePage({ params }: Props) {
+  const [userName, setUserName] = useState<string>("");
   const [uploadedFile, setUploadedFile] = useState<uploadedFileType | null>(
     null
   );
@@ -37,7 +39,7 @@ export default function LetterWritePage({ params }: Props) {
       if (result?.success) {
         router.push(`/cabinet/${soldierId}`);
       }
-      
+
       return result;
     },
     null
@@ -71,6 +73,17 @@ export default function LetterWritePage({ params }: Props) {
     }
   };
 
+  useEffect(() => {
+    const fetchData = async () => {
+      const { soldierId } = await params;
+
+      const { userName: name } = await getSoldierName(+soldierId);
+      setUserName(name || "별돌이");
+    };
+
+    fetchData();
+  }, [params]);
+
   return (
     <div className="flex flex-col flex-1">
       <BasicHeader />
@@ -87,7 +100,7 @@ export default function LetterWritePage({ params }: Props) {
 
         <div className="flex mt-[14px] mb-13 items-center justify-center whitespace-nowrap">
           <Txt size={20} weight="bold" className="text-green-49d">
-            별돌이&nbsp;
+            {userName}&nbsp;
           </Txt>
           <Txt size={20} weight="bold">
             군인에게 편지를 작성해주세요!
