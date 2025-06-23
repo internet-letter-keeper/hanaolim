@@ -2,27 +2,15 @@
 
 import Image from "next/image";
 import { Txt } from "@/components/atoms";
+import { Letter } from "@/types/letters";
 
 type Props = {
-  lettersDetail: {
-    content: string;
-    fileUrl?: string;
-    senderNickname?: string;
-    senderUserName: string;
-    receiverName: string;
-    createDate: string;
-  };
+  letter: Letter;
 };
 
-export default function LettersDetail({ lettersDetail }: Props) {
-  const {
-    fileUrl,
-    senderNickname,
-    senderUserName,
-    receiverName,
-    content,
-    createDate,
-  } = lettersDetail;
+export default function LettersDetail({ letter }: Props) {
+  const { fileUrl, nickname, senderName, receiverName, content, createDate } =
+    letter;
 
   return (
     <div>
@@ -35,7 +23,8 @@ export default function LettersDetail({ lettersDetail }: Props) {
 
       <div className="flex">
         <Txt size={12} weight="cm" className="text-blue-9a0">
-          {createDate}
+          {/* TODO: 나중에 형식 바꾸기 */}
+          {createDate.toLocaleString()}
         </Txt>
       </div>
 
@@ -81,8 +70,8 @@ export default function LettersDetail({ lettersDetail }: Props) {
       {/* 보내는 사람 닉네임 없을 경우(군인) : 답장 */}
       <div className="flex justify-end">
         <Txt size={16} weight="cm" className="text-green-49d">
-          From. {senderUserName}
-          {senderNickname ? ` (${senderNickname})` : ""}
+          From. {senderName}
+          {nickname ? ` (${nickname})` : ""}
         </Txt>
       </div>
     </div>
