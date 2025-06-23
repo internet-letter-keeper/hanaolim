@@ -5,7 +5,7 @@ import LettersDetail from "@/components/letters/LettersDetail";
 import prisma from "@/lib/db";
 
 type Props = {
-  params: Promise<{ letterId: string }>;
+  params: Promise<{ letterId: number }>;
 };
 
 export default async function LetterDetailPage({ params }: Props) {

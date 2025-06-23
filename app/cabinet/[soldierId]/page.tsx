@@ -9,10 +9,11 @@ import {
 import { SidebarProvider } from "@/components/ui/sidebar";
 import { ToastProvider } from "@/contexts/toast/ToastProvider";
 import { getUserBySoldierId } from "@/lib/actions/friend-actions";
+import { getIsNew } from "@/lib/actions/letter-actions";
 import { requireAuth } from "@/utils/auth";
 
 type Props = {
-  params: Promise<{ soldierId: string }>;
+  params: Promise<{ soldierId: number }>;
 };
 
 export default async function CabinetPage({ params }: Props) {
@@ -21,8 +22,9 @@ export default async function CabinetPage({ params }: Props) {
   const { soldierId } = await params;
 
   const soldierInfo = await getUserBySoldierId(+soldierId);
+  if (!session.user.userId) return;
+  const { isNew } = await getIsNew(+session.user.userId);
 
-  // 로그인한 유저가 군인이 아니면 false, 군인이면 현재 route param의 soldierId를 비교
   const isMyCabinet = session.user.soldier
     ? session.user.soldier.soldierId === soldierInfo?.soldierId
     : false;
@@ -40,7 +42,7 @@ export default async function CabinetPage({ params }: Props) {
           <Cabinet isMyCabinet={isMyCabinet} />
           {!isMyCabinet && <LetterMoneyButton soldierId={+soldierId} />}
         </div>
-        <DropDownModal />
+        <DropDownModal isNew={isNew} />
       </SidebarProvider>
     </ToastProvider>
   );
