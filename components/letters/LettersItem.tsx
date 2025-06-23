@@ -77,7 +77,7 @@ export default function LettersItem({
             weight="cm"
             className={isRead ? "text-[#AAAAAA]" : "text-gray-353"}
           >
-            {nickname ?? ""}
+            {currentUserId === receiverId ? senderName : receiverName}
           </Txt>
           <span className="text-[12px] text-blue-9a0 whitespace-nowrap">
             {formattedDate}
