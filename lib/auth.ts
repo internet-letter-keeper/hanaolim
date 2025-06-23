@@ -84,8 +84,6 @@ export const {
           user.userName = signUp.data.userName;
           user.isSoldier = signUp.data.isSoldier;
           user.isSocial = signUp.data.isSocial;
-          user.soldier = {}; // SNS 회원가입 시 군인 정보는 없으므로
-          user.follow = {};
         } else {
           // DB에 유저가 이미 존재하면 로그인 성공
           user.userId = dbUser.userId;
