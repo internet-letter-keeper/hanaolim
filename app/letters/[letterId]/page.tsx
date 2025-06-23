@@ -5,14 +5,14 @@ import LettersDetail from "@/components/letters/LettersDetail";
 import prisma from "@/lib/db";
 
 type Props = {
-  params: { letterId: string };
+  params: Promise<{ letterId: string }>;
 };
 
 export default async function LetterDetailPage({ params }: Props) {
-  const letterId = Number(params?.letterId);
+  const { letterId } = await params;
 
   const letter = await prisma.letter.findUnique({
-    where: { letterId },
+    where: { letterId: +letterId },
     include: {
       User_Letter_senderIdToUser: true,
       User_Letter_receiverIdToUser: true,
