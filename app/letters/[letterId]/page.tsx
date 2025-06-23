@@ -9,10 +9,10 @@ type Props = {
 };
 
 export default async function LetterDetailPage({ params }: Props) {
-  const { letterId } = params;
+  const letterId = Number(params?.letterId);
 
   const letter = await prisma.letter.findUnique({
-    where: { letterId: +letterId },
+    where: { letterId },
     include: {
       User_Letter_senderIdToUser: true,
       User_Letter_receiverIdToUser: true,
@@ -40,7 +40,10 @@ export default async function LetterDetailPage({ params }: Props) {
             lettersDetail={{
               content: letter.content,
               fileUrl: letter.fileUrl ?? "",
-              createDate: letter.createDate.toISOString(),
+              createDate: letter.createDate.toLocaleString("ko-KR", {
+                dateStyle: "medium",
+                timeStyle: "short",
+              }),
               senderNickname: letter.nickname ?? "",
               senderUserName: letter.User_Letter_senderIdToUser.userName,
               receiverName: letter.User_Letter_receiverIdToUser.userName,
@@ -66,7 +69,10 @@ export default async function LetterDetailPage({ params }: Props) {
               lettersDetail={{
                 content: reply.content,
                 fileUrl: reply.fileUrl ?? "",
-                createDate: reply.createDate.toISOString(),
+                createDate: reply.createDate.toLocaleString("ko-KR", {
+                  dateStyle: "medium",
+                  timeStyle: "short",
+                }),
                 senderNickname: reply.nickname ?? "",
                 senderUserName: reply.User_Letter_senderIdToUser.userName,
                 receiverName: reply.User_Letter_receiverIdToUser.userName,
