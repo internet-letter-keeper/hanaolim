@@ -79,7 +79,7 @@ export default function LettersPageClient({
               alt="검색"
               width={20}
               height={20}
-              className="absolute right-2 top-1/2 -translate-y-1/2 text-[#1EA698]"
+              className="absolute right-2 top-1/2 -translate-y-1/2"
             />
           </button>
         </div>
