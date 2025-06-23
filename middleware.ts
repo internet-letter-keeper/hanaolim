@@ -60,6 +60,7 @@ export async function middleware(req: NextRequest) {
   }
   if (pathname === "/onboarding") {
     // 군인X, 로그인O, 팔로우 유무에 따른 라우팅
+    //팔로우가 없을 경우
     if (didLogin && !isSoldier && !session.user.follow) {
       return;
     }
@@ -68,6 +69,14 @@ export async function middleware(req: NextRequest) {
       return NextResponse.redirect(
         new URL(`/cabinet/${session.user.follow.soldierId}`, req.url)
       );
+    }
+  }
+
+  if (pathname.startsWith("/cabinet")) {
+    // 군인X, 로그인O, 팔로우 유무에 따른 라우팅
+    //팔로우가 없을 경우
+    if (didLogin && !isSoldier && !session.user.follow) {
+      return NextResponse.redirect(new URL("/onboarding", req.url));
     }
   }
   return NextResponse.next();
