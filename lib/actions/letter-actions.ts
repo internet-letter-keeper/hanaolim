@@ -4,9 +4,14 @@ import prisma from "@/lib/db";
 import { Letter } from "@/types/letters";
 
 // 편지 목록 불러오기 api
+/**
+ *
+ * @param userId
+ * @returns userId에 해당하는 편지들 목록
+ */
 export async function getLettersByUserId(userId: number) {
   try {
-    const lettersFromDb = await prisma.letter.findMany({
+    const lettersList = await prisma.letter.findMany({
       where: {
         OR: [{ senderId: userId }, { receiverId: userId }],
       },
@@ -18,7 +23,7 @@ export async function getLettersByUserId(userId: number) {
       },
     });
 
-    const letters: Letter[] = lettersFromDb.map((l) => ({
+    const letters: Letter[] = lettersList.map((l) => ({
       letterId: l.letterId,
       nickname: l.nickname ?? "",
       content: l.content,
@@ -77,3 +82,10 @@ export async function getLetterDetail(letterId: number, currentUserId: number) {
     return { ok: false, data: null };
   }
 }
+
+// 즐겨찾기 추가 삭제 api
+// export async function patchFavorite(letterId: number, currentUserId: number){
+//   try{
+
+//   }
+// }
