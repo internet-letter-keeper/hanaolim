@@ -45,7 +45,7 @@ export async function getLettersByUserId(userId: number) {
 }
 
 // 편지 상세 조회 api
-export async function getLetterDetail(letterId: number, currentUserId: number) {
+export async function getLetterDetail(letterId: number, userId: number) {
   try {
     const letter = await prisma.letter.findUnique({
       where: {
@@ -72,7 +72,7 @@ export async function getLetterDetail(letterId: number, currentUserId: number) {
       receiverId: letter.receiverId,
       senderId: letter.senderId,
       isFavorite: letter.Favorite.some(
-        (f) => f.userId === currentUserId && f.isFavorite
+        (f) => f.userId === userId && f.isFavorite
       ),
     };
 
@@ -84,8 +84,37 @@ export async function getLetterDetail(letterId: number, currentUserId: number) {
 }
 
 // 즐겨찾기 추가 삭제 api
-// export async function patchFavorite(letterId: number, currentUserId: number){
-//   try{
+export async function patchFavorite(letterId: number, userId: number) {
+  try {
+    // 현재 즐겨찾기 상태 확인
+    const existing = await prisma.favorite.findFirst({
+      where: {
+        letterId,
+        userId,
+      },
+    });
 
-//   }
-// }
+    if (existing) {
+      // 있으면 즐겨찾기 해제
+      await prisma.favorite.delete({
+        where: {
+          favoriteId: existing.favoriteId,
+        },
+      });
+      return { ok: true, isFavorite: false };
+    } else {
+      // 없으면 즐겨찾기
+      await prisma.favorite.create({
+        data: {
+          letterId,
+          userId,
+          isFavorite: true,
+        },
+      });
+      return { ok: true, isFavorite: true };
+    }
+  } catch (error) {
+    console.error("즐겨찾기 실패:", error);
+    return { ok: false, isFavorite: null };
+  }
+}
