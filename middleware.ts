@@ -20,7 +20,6 @@ const userPages = ["/registerSoldier", "/onboarding"];
 
 export async function middleware(req: NextRequest) {
   const session = await auth();
-  console.log("session", session);
   const didLogin = !!session?.user;
   const isSoldier = !!session?.user?.isSoldier;
 
