@@ -17,5 +17,3 @@ export type Letter = {
   senderId: number;
   isFavorite: boolean;
 };
-
-export type ReceivedTotalLetter = { unreadLetter: number; totalLetter: number };
