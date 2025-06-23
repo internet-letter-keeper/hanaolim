@@ -54,16 +54,15 @@ model Letter {
   iconId                       Int?
   createDate                   DateTime   @default(now()) @db.Timestamp(0)
   readDate                     DateTime?  @db.Timestamp(0)
-  parentLetterId               Int?       @db.UnsignedInt
+  parentLetterId               Int?       @unique(map: "unique_parentLetterId") @db.UnsignedInt
   receiverId                   Int        @db.UnsignedInt
   senderId                     Int        @db.UnsignedInt
   Favorite                     Favorite[]
   User_Letter_receiverIdToUser User       @relation("Letter_receiverIdToUser", fields: [receiverId], references: [userId], onDelete: NoAction, onUpdate: NoAction, map: "Letter_ibfk_1")
   User_Letter_senderIdToUser   User       @relation("Letter_senderIdToUser", fields: [senderId], references: [userId], onDelete: NoAction, onUpdate: NoAction, map: "Letter_ibfk_2")
   Letter                       Letter?    @relation("LetterToLetter", fields: [parentLetterId], references: [letterId], onDelete: NoAction, onUpdate: NoAction, map: "Letter_ibfk_3")
-  other_Letter                 Letter[]   @relation("LetterToLetter")
+  other_Letter                 Letter?    @relation("LetterToLetter")
 
-  @@index([parentLetterId], map: "parentLetterId")
   @@index([receiverId], map: "receiverId")
   @@index([senderId], map: "senderId")
 }
