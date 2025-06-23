@@ -15,7 +15,7 @@ export type Letter = {
   parentLetterId?: number | null;
   receiverId: number;
   senderId: number;
+  receiverName: string;
+  senderName: string;
   isFavorite: boolean;
 };
-
-export type ReceivedTotalLetter = { unreadLetter: number; totalLetter: number };

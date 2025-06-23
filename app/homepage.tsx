@@ -2,7 +2,7 @@
 
 import Image from "next/image";
 import Link from "next/link";
-import { useEffect, useState } from "react";
+import { useState } from "react";
 import Txt from "@/components/atoms/Text";
 import { Card, Olim, Profile, Savings } from "@/components/home";
 import RocketSplash from "@/components/home/RocketSplash";
@@ -14,6 +14,8 @@ type Props = {
   accountNum: string;
   accountBalance: number;
   savingsBalance: number;
+  letterExp: number;
+  unreadLetter: number;
 };
 
 export default function HomePage({
@@ -23,21 +25,22 @@ export default function HomePage({
   accountNum,
   accountBalance,
   savingsBalance,
+  letterExp,
+  unreadLetter,
 }: Props) {
   const [showSplash, setShowSplash] = useState(true);
-
-  useEffect(() => {
-    const isSeen = localStorage.getItem("isSplashSeen");
-    if (isSeen === "true") {
-      setShowSplash(false);
-    }
-  }, []);
 
   const handleSkip = () => setShowSplash(false);
 
   return (
     <>
-      {showSplash && <RocketSplash onSkip={handleSkip} />}
+      {showSplash && (
+        <RocketSplash
+          onSkip={handleSkip}
+          letterExp={letterExp}
+          unreadLetter={unreadLetter}
+        />
+      )}
       {!showSplash && (
         <div className="flex flex-col relative gap-[15px]">
           <div className="flex justify-between items-center">
@@ -62,7 +65,7 @@ export default function HomePage({
             startDate={startDate}
             endDate={new Date(endDate)}
           />
-          <Olim />
+          <Olim letterExp={letterExp} unreadLetter={unreadLetter} />
           <Card accountNum={accountNum} accountBalance={accountBalance} />
           <Savings savingsBalance={savingsBalance} />
         </div>
