@@ -5,11 +5,10 @@ import { useRouter } from "next/navigation";
 import Txt from "@/components/atoms/Text";
 
 type Props = {
-  letterExp: number;
-  unreadLetter: number;
+  totalCount: number;
 };
 
-export default function Letter({ letterExp }: Props) {
+export default function Letter({ totalCount }: Props) {
   const router = useRouter();
 
   const handleClick = (e: React.MouseEvent) => {
@@ -27,7 +26,7 @@ export default function Letter({ letterExp }: Props) {
       </Txt>
       <div className="flex items-center gap-[13px]">
         <Txt size={14} weight="heavy" className="text-green-49d">
-          {letterExp}장
+          {totalCount}장
         </Txt>
         <Image
           src="/images/letter.svg"

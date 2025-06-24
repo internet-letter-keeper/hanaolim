@@ -39,7 +39,7 @@ export default async function CabinetPage({ params }: Props) {
           <CabinetHeader isMyCabinet={isMyCabinet} soldierInfo={soldierInfo} />
           <FriendsList soldierId={+soldierId} />
           <StatusMessage isMyCabinet={isMyCabinet} soldierInfo={soldierInfo} />
-          <Cabinet isMyCabinet={isMyCabinet} soldierId={+soldierId} />
+          <Cabinet isMyCabinet={isMyCabinet} userId={+soldierInfo.userId} />
           {!isMyCabinet && <LetterMoneyButton soldierId={+soldierId} />}
         </div>
         <DropDownModal isNew={isNew} />
