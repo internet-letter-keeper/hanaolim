@@ -7,6 +7,7 @@ import { ChangeEvent, KeyboardEvent, useState } from "react";
 import { PrimaryButton, Input, Txt } from "@/components/atoms";
 import DatePicker from "@/components/common/DatePicker";
 import { postSoldier } from "@/lib/actions/auth-actions";
+import { toKoreaTime } from "@/utils/date";
 
 export default function SignInPage() {
   const { data: session, update } = useSession();
@@ -42,22 +43,23 @@ export default function SignInPage() {
       setErrorMessage("유효한 사용자 정보가 없습니다.");
       return;
     }
-
     const result = await postSoldier({
       userId: session?.user.userId,
-      startDate: joinDate,
-      endDate: releaseDate,
+      startDate: toKoreaTime(joinDate),
+      endDate: toKoreaTime(releaseDate),
       accountNumber: accountNumber,
     });
     if (result.ok) {
       setErrorMessage(""); // 에러 초기화
       setJoinDate(null);
       setReleaseDate(null);
+
       await update({
         ...session.user,
         soldier: result.data,
+        isSoldier: true,
       }); // 세션 업데이트
-      alert("군인등록 완료!");
+
       router.push("/");
     } else {
       alert("군인등록에 실패했습니다. 다시 시도해 주세요.");
