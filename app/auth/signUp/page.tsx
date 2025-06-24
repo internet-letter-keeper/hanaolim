@@ -162,7 +162,7 @@ export default function SignUpPage() {
           error={!!passwordErrorMessage}
           errorMessage={passwordErrorMessage}
           type="password"
-          customRef={passwordRef}
+          
         />
         <SignUpInput
           label="비밀번호 확인"
