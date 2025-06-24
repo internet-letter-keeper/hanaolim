@@ -29,6 +29,9 @@ export default function AddFriendBtn() {
   const soldierCodeRef = useRef<HTMLInputElement>(null);
 
   const isSE = useIsSEPhone();
+  const toastPosition = isSE
+    ? "top-40 left-1/2 -translate-x-1/2"
+    : "top-60 left-1/2 -translate-x-1/2";
 
   const addFriendHandler = async () => {
     if (soldierCodeRef.current?.value && userId) {
@@ -38,23 +41,12 @@ export default function AddFriendBtn() {
       );
 
       if (!success) {
-        showToast(
-          message,
-          isSE
-            ? "top-40 left-1/2 -translate-x-1/2"
-            : "top-60 left-1/2 -translate-x-1/2",
-          "error"
-        );
+        showToast(message, toastPosition, "error");
         return;
       }
 
       closeModal();
-      showToast(
-        message,
-        isSE
-          ? "top-40 left-1/2 -translate-x-1/2"
-          : "top-60 left-1/2 -translate-x-1/2"
-      );
+      showToast(message, toastPosition);
       router.refresh();
     }
   };
