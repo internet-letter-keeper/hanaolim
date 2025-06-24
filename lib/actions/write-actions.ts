@@ -68,26 +68,50 @@ const createLetter = async (data: LetterFormData, senderId: number) => {
     const letterData: any = {
       content: data.content,
       fileUrl: data.fileUrl,
-      senderId,
     };
 
     // 일반 편지인 경우 : 군인이 receiver
-    if (data.soldierId) {
+    if (data.soldierId && !data.parentLetterId) {
+      // soldierId로부터 userId를 찾아야 함
+      const soldier = await prisma.soldier.findUnique({
+        where: { soldierId: +data.soldierId },
+        select: { userId: true },
+      });
+
+      if (!soldier) {
+        throw new Error("해당하는 군인을 찾을 수 없습니다.");
+      }
+
       letterData.nickname = data.nickname;
-      letterData.iconId = Number(data.iconId);
-      letterData.receiverId = +data.soldierId;
+      if (data.iconId) {
+        letterData.iconId = Number(data.iconId);
+      }
+      letterData.senderId = senderId;
+      letterData.receiverId = soldier.userId;
     }
 
     // 답장인 경우 : 군인이 sender
     if (data.parentLetterId) {
+      // soldierId로부터 userId를 찾아야 함
+      const soldier = await prisma.soldier.findUnique({
+        where: { soldierId: +data.soldierId },
+        select: { userId: true },
+      });
+
+      if (!soldier) {
+        throw new Error("해당하는 군인을 찾을 수 없습니다.");
+      }
+
+      letterData.senderId = soldier.userId;
       letterData.receiverId = senderId;
-      letterData.senderId = +data.soldierId;
       letterData.parentLetterId = +data.parentLetterId;
     }
 
+    console.log("Creating letter with data:", letterData);
     await prisma.letter.create({ data: letterData });
     return { success: true };
   } catch (error) {
+    console.error("Letter creation error:", error);
     throw new Error(ERROR_MESSAGES.LETTER.LETTER_POST_FAILED);
   }
 };
@@ -105,8 +129,7 @@ export const postLetter = async (formData: FormData) => {
   const data = await extractAndValidateLetterData(formData);
 
   // 일반 편지인 경우 필수 필드 검증
-  //TODO: 검증 로직 추가
-  if (!data.iconId) {
+  if (!data.soldierId) {
     throw new Error(ERROR_MESSAGES.LETTER.INVALID_INPUT_DATA);
   }
 

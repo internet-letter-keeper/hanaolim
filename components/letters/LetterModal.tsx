@@ -26,6 +26,7 @@ export default function LetterModal({ letterId, onHandleModal }: Props) {
   const { data } = useSession();
 
   const userId = data?.user.userId;
+  const soldierId = data?.user.soldier.soldierId;
 
   useEffect(() => {
     (async () => {
