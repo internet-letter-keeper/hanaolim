@@ -2,7 +2,7 @@
 
 import { useRouter } from "next/navigation";
 import { useSession } from "next-auth/react";
-import { useState } from "react";
+import { useState,KeyboardEvent } from "react";
 import { Input, PrimaryButton, Txt } from "@/components/atoms";
 import { BasicHeader } from "@/components/common";
 import {
@@ -90,6 +90,14 @@ export default function MyPwdPage() {
     }
   };
 
+  const handleKeyDown = (
+    e: KeyboardEvent<HTMLInputElement | HTMLTextAreaElement>
+  ) => {
+    if (e.key === "Enter") {
+      handleChangePassword();
+    }
+  };
+
   return (
     <div className="flex flex-col">
       <BasicHeader title="비밀번호 변경" />
@@ -123,6 +131,7 @@ export default function MyPwdPage() {
           value={confirmPassword}
           onChange={(e) => setConfirmPassword(e.target.value)}
           type="password"
+          onKeyDown={handleKeyDown}
         />
 
         <div style={{ minHeight: 22 }}>

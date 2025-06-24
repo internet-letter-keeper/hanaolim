@@ -11,11 +11,9 @@ const containerStyle =
   "flex flex-col bg-white  shadow-[0px_0px_5px_0px_rgba(0,0,0,0.15)] rounded-[10px] mx-5";
 
 export default function MyPage() {
-  //TODO: 군인인지 아닌지에 따른 입대일 전역일 버튼 표시
-
   const { data: session } = useSession();
   const router = useRouter();
-  const { userName, email, isSoldier } = session?.user || {};
+  const { userName, email, isSoldier, soldier, follow } = session?.user || {};
   const [showLogoutModal, setShowLogoutModal] = useState(false);
   const [showWithdrawModal, setShowWithdrawModal] = useState(false);
 
@@ -29,10 +27,11 @@ export default function MyPage() {
     alert("회원 탈퇴");
     setShowWithdrawModal(false);
   };
+  const backUrl = `cabinet/${isSoldier ? soldier?.soldierId : follow?.soldierId}`;
 
   return (
     <div>
-      <BasicHeader title="내 정보" />
+      <BasicHeader title="내 정보" backUrl={backUrl} />
       <div className="flex flex-col items-start border-b border-gray-aaa pb-5 pl-4 mt-9 mb-9">
         <Txt className="text-gray-353" size={22} weight="cm">
           {userName}

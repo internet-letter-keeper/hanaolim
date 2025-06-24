@@ -5,6 +5,7 @@ import { useSession } from "next-auth/react";
 import { useRef, useState } from "react";
 import { Input, Txt } from "@/components/atoms";
 import { useToast } from "@/contexts/toast/ToastContext";
+import { useIsSEPhone } from "@/hooks/useMobile";
 import { postFriend } from "@/lib/actions/friend-actions";
 import { Modal } from "../common";
 
@@ -27,6 +28,11 @@ export default function AddFriendBtn() {
 
   const soldierCodeRef = useRef<HTMLInputElement>(null);
 
+  const isSE = useIsSEPhone();
+  const toastPosition = isSE
+    ? "top-40 left-1/2 -translate-x-1/2"
+    : "top-60 left-1/2 -translate-x-1/2";
+
   const addFriendHandler = async () => {
     if (soldierCodeRef.current?.value && userId) {
       const { success, message } = await postFriend(
@@ -35,12 +41,12 @@ export default function AddFriendBtn() {
       );
 
       if (!success) {
-        showToast(message, "inset-20 top-30", "error");
+        showToast(message, toastPosition, "error");
         return;
       }
 
       closeModal();
-      showToast(message, "inset-20 top-1/2");
+      showToast(message, toastPosition);
       router.refresh();
     }
   };

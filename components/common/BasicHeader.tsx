@@ -8,17 +8,25 @@ import { Txt } from "../atoms";
 type Props = {
   title?: string;
   showBackButton?: boolean;
+  backUrl?: string;
   className?: string;
 };
 
 export default function BasicHeader({
   title,
   showBackButton = true,
+  backUrl,
   className,
 }: Props) {
   const router = useRouter();
 
-  const handleBack = () => router.back();
+  const handleBack = () => {
+    if (backUrl) {
+      router.push(backUrl);
+      return;
+    }
+    router.back();
+  };
 
   return (
     <header className={cn("flex items-center px-2 h-[40px]", className)}>
