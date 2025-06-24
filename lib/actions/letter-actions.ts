@@ -3,6 +3,12 @@
 import prisma from "@/lib/db";
 import { Letter } from "@/types/letters";
 
+type LetterDetailProp = {
+  letterId: number;
+  userId: number;
+  isReply?: boolean; // 생략 시 false
+};
+
 /**
  * 편지 목록 불러오기 api
  * @param userId
@@ -24,15 +30,15 @@ export const getLettersByUserId = async (userId: number) => {
         createDate: "desc",
       },
     });
-
+    //TODO: 코드 리팩토링 필요
     const letters: Letter[] = lettersList.map((l) => ({
       letterId: l.letterId,
       nickname: l.nickname ?? "",
       content: l.content,
       fileUrl: l.fileUrl ?? undefined,
       iconId: l.iconId ?? undefined,
-      createDate: l.createDate.toISOString(),
-      readDate: l.readDate ? l.readDate.toISOString() : null,
+      createDate: l.createDate,
+      readDate: l.readDate,
       parentLetterId: l.parentLetterId ?? null,
       receiverId: l.receiverId,
       senderId: l.senderId,
@@ -56,16 +62,19 @@ export const getLettersByUserId = async (userId: number) => {
  * @usage 편지 상세페이지
  * @returns 
  */
-export const getLetterDetail = async (letterId: number, userId: number) => {
+export const getLetterDetail = async ({
+  letterId,
+  userId,
+  isReply,
+}: LetterDetailProp) => {
+  const where = isReply ? { parentLetterId: letterId } : { letterId };
   try {
     const letter = await prisma.letter.findUnique({
-      where: {
-        letterId,
-      },
+      where,
       include: {
         Favorite: true,
-        User_Letter_receiverIdToUser: true,
-        User_Letter_senderIdToUser: true,
+        User_Letter_receiverIdToUser: { select: { userName: true } },
+        User_Letter_senderIdToUser: { select: { userName: true } },
       },
     });
 
@@ -73,14 +82,15 @@ export const getLetterDetail = async (letterId: number, userId: number) => {
       return { ok: false, data: null };
     }
 
+    //TODO: 코드 리팩토링 필요
     const result: Letter = {
       letterId: letter.letterId,
       nickname: letter.nickname ?? "",
       content: letter.content,
       fileUrl: letter.fileUrl ?? undefined,
       iconId: letter.iconId ?? undefined,
-      createDate: letter.createDate.toISOString(),
-      readDate: letter.readDate ? letter.readDate.toISOString() : null,
+      createDate: letter.createDate,
+      readDate: letter.readDate,
       parentLetterId: letter.parentLetterId ?? null,
       receiverId: letter.receiverId,
       senderId: letter.senderId,
@@ -92,7 +102,6 @@ export const getLetterDetail = async (letterId: number, userId: number) => {
     };
     return { ok: true, data: result };
   } catch (error) {
-    console.error("편지 상세 조회 에러:", error);
     return { ok: false, data: null };
   }
 };
@@ -167,8 +176,6 @@ export const getNonReplyLettersByUserId = async (
   totalLettersCnt: number
 ) => {
   try {
-    // TODO: 변수명 바꾸기
-
     const FIRST_PAGE_SIZE = totalLettersCnt % 7;
     const PAGE_SIZE = 7;
 
@@ -201,13 +208,14 @@ export const getNonReplyLettersByUserId = async (
   } catch (error) {
     return { ok: false, data: null };
   }
-  
+};
+
+/*
  * 읽지 않은 편지 존재 유무
  * @param userId number - 현재 로그인한 유저 ID
  * @returns { isNew : boolean }
  */
 export const getIsNew = async (userId: number) => {
-  console.log("dddd");
   const unreadCount = await prisma.letter.count({
     where: {
       receiverId: userId,
