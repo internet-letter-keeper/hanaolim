@@ -176,7 +176,7 @@ export const getNonReplyLettersByUserId = async (
   totalLettersCnt: number
 ) => {
   try {
-    const FIRST_PAGE_SIZE = totalLettersCnt % 7;
+    const FIRST_PAGE_SIZE = totalLettersCnt % 7 || 7;
     const PAGE_SIZE = 7;
 
     let skip = 0;
