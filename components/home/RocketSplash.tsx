@@ -27,7 +27,6 @@ export default function RocketSplash({
   return (
     <div className="h-screen -m-4 flex flex-col justify-between">
       <div className="flex justify-end m-3">
-        {/* Skip 버튼 */}
         <button
           onClick={handleSkip}
           className="px-[14px] py-[5px] rounded-[5px] h-[23px]"
@@ -37,6 +36,7 @@ export default function RocketSplash({
           </Txt>
         </button>
       </div>
+
       <div className="flex flex-col items-center gap-8">
         {unreadLetter > 0 && (
           <div className="text-center">
@@ -50,7 +50,6 @@ export default function RocketSplash({
           </div>
         )}
 
-        {/* 로켓 gif */}
         <Image
           src="/video/rocket.gif"
           alt="로켓 애니메이션"
@@ -68,7 +67,6 @@ export default function RocketSplash({
           </Txt>
         </div>
 
-        {/* 하단 편지 이미지 */}
         <Image
           src="/images/letter-dummy.svg"
           alt="편지 이미지"
