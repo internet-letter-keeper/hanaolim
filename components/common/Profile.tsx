@@ -29,8 +29,8 @@ export default function Profile() {
     isSoldier && startDate ? calculateRankByStartDate(startDate) : null;
 
   const handleCopyCode = () => {
-    if (isSoldier && user.soldier?.soldierId) {
-      navigator.clipboard.writeText(user.soldier.soldierId.toString());
+    if (isSoldier && user.soldier.code) {
+      navigator.clipboard.writeText(user.soldier.code);
       showToast("코드가 복사되었습니다!");
     }
   };
