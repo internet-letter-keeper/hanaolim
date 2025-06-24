@@ -37,7 +37,7 @@ export default function LetterModal({ letterId, onHandleModal }: Props) {
 
   //답장하는 페이지로 이동
   const handleGoReply = () => {
-    router.push(`/write/${letterId}`);
+    router.push(`/write/${letter?.senderId}/${letterId}`);
   };
 
   //편지 상세 페이지로 이동
