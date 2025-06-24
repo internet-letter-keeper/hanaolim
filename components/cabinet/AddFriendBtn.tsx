@@ -5,7 +5,7 @@ import { useSession } from "next-auth/react";
 import { useRef, useState } from "react";
 import { Input, Txt } from "@/components/atoms";
 import { useToast } from "@/contexts/toast/ToastContext";
-import { useIsSEPhone } from "@/hooks/use-mobile";
+import { useIsSEPhone } from "@/hooks/useMobile";
 import { postFriend } from "@/lib/actions/friend-actions";
 import { Modal } from "../common";
 
