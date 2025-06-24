@@ -14,15 +14,13 @@ export default function MyPage() {
   //TODO: 군인인지 아닌지에 따른 입대일 전역일 버튼 표시
 
   const { data: session } = useSession();
-  const { userName, email, isSoldier } = session?.user || {};
   const router = useRouter();
+  const { userName, email, isSoldier } = session?.user || {};
   const [showLogoutModal, setShowLogoutModal] = useState(false);
   const [showWithdrawModal, setShowWithdrawModal] = useState(false);
 
   const handleLogout = () => {
-    // TODO: 로그아웃 로직 구현
-    // 로그아웃된 후 라우터 이동
-    alert("로그아웃");
+    router.push("/api/auth/signout");
     setShowLogoutModal(false);
   };
   const handleWithdraw = () => {

@@ -43,7 +43,7 @@ export default async function CabinetHeader({
       {/* 내 관물대일 때 vs 아닐 때 분기처리 */}
       {isMyCabinet && <CopyCodeBtn />}
 
-      <SidebarHeader className="ml-4">
+      <SidebarHeader>
         {/* TODO:새로운 메세지가 왔을 경우 분기 처리 
           isNewMessage={true}  이런식으로 하면 됩니다
         */}

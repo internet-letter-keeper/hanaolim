@@ -53,3 +53,8 @@ export function calculateRankByStartDate(startDate: Date): SoldierRank {
   if (currentDate < thirdPromotionDate) return "상병";
   return "병장";
 }
+
+export const toKoreaTime = (date: Date) => {
+  const minusNine = -9 * 60 * 60 * 1000; // 9시간을 밀어줌
+  return new Date(date.getTime() - minusNine);
+};

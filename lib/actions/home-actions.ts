@@ -114,16 +114,53 @@ export const getEarnedPoint = async (userId: number): Promise<LetterInfo> => {
 };
 
 /**
- * 내가 보낸 편지 중 읽히지 않은 편지 수 조회
+ * 내가 받은 전체 편지 수 + 읽지 않은 편지 수 조회
  * @param userId number - 현재 로그인한 유저 ID
- * @returns { unreadCount: number }
+ * @returns { totalCount: number, unreadCount: number }
  */
 export const getLetterCount = async (userId: number) => {
-  const unreadCount = await prisma.letter.count({
-    where: {
-      receiverId: userId,
-      readDate: null,
+  const [totalCount, unreadCount] = await Promise.all([
+    prisma.letter.count({
+      where: {
+        receiverId: userId,
+      },
+    }),
+    prisma.letter.count({
+      where: {
+        receiverId: userId,
+        readDate: null,
+      },
+    }),
+  ]);
+
+  return { totalCount, unreadCount };
+};
+
+/**
+ * 유저 ID로 군인 정보 조회
+ * @usage soldierId props 전달 또는 군인 정보 활용이 필요한 컴포넌트
+ * @param userId number - 유저 ID
+ * @returns soldierId
+ * @throws userId에 해당하는 군 복무 정보가 없을 경우
+ */
+export const getSoldierInfoByUserId = async (userId: number) => {
+  const soldier = await prisma.soldier.findFirst({
+    where: { userId },
+    include: {
+      User: {
+        select: {
+          userName: true,
+          isSoldier: true,
+        },
+      },
     },
   });
-  return { unreadCount };
+
+  if (!soldier) {
+    throw new Error(`${userId}번 유저의 군 복무 정보가 없습니다`);
+  }
+
+  return {
+    soldierId: soldier.soldierId,
+  };
 };

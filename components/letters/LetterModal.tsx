@@ -21,12 +21,12 @@ type Props = {
 export default function LetterModal({ letterId, onHandleModal }: Props) {
   const [letter, setLetter] = useState<Letter | null>(null);
   const overlay = useRef<HTMLDivElement>(null);
-
   const router = useRouter();
 
   const { data } = useSession();
 
   const userId = data?.user.userId;
+  const soldierId = data?.user.soldier.soldierId;
 
   useEffect(() => {
     (async () => {
@@ -38,7 +38,7 @@ export default function LetterModal({ letterId, onHandleModal }: Props) {
 
   //답장하는 페이지로 이동
   const handleGoReply = () => {
-    router.push(`/write/${letterId}`);
+    router.push(`/write/${soldierId}/${letterId}`);
   };
 
   //편지 상세 페이지로 이동

@@ -9,14 +9,25 @@ import Point from "./hanaolim/Point";
 type Props = {
   letterExp: number;
   unreadLetter: number;
+  soldierId: number;
+  totalCount: number;
 };
 
-export default function Olim({ letterExp, unreadLetter }: Props) {
+export default function Olim({
+  letterExp,
+  unreadLetter,
+  soldierId,
+  totalCount,
+}: Props) {
   const router = useRouter();
+
+  const handleNavigate = () => {
+    router.push(`/cabinet/${soldierId}`);
+  };
 
   return (
     <div
-      onClick={() => router.push("/cabinet/Cabinet")}
+      onClick={handleNavigate}
       className="flex flex-col justify-between pl-[26px] py-[27px] pr-[22px] bg-white-fff rounded-[20px] shadow-[0_0_5px_rgba(0,0,0,0.15)] cursor-pointer"
     >
       <div className="flex justify-between w-full">
@@ -35,10 +46,7 @@ export default function Olim({ letterExp, unreadLetter }: Props) {
             확인해 보세요!
           </Txt>
 
-          <div
-            className="flex items-center gap-[4px] mt-[10px] mb-[23px] cursor-pointer"
-            onClick={() => router.push("/cabinet/Cabinet")}
-          >
+          <div className="flex items-center gap-[4px] mt-[10px] mb-[23px]">
             <Txt size={12} weight="cm" className="text-gray-353">
               확인하기
             </Txt>
@@ -64,7 +72,7 @@ export default function Olim({ letterExp, unreadLetter }: Props) {
 
       {/* 편지+포인트 */}
       <div className="flex flex-col gap-[12px]">
-        <Letter letterExp={letterExp} unreadLetter={unreadLetter} />
+        <Letter totalCount={totalCount} />
         <Point letterExp={letterExp} />
       </div>
     </div>

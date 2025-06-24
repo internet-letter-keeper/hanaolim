@@ -67,7 +67,7 @@ export const postSignUp = async (user: UserData) => {
  */
 export const postSoldier = async (soldier: SoldierData) => {
   try {
-    let genCode = await generateShortCode(8); // 8자리 코드 생성
+    const genCode = await generateShortCode(8); // 8자리 코드 생성
     const postSoldier = await prisma.soldier.create({
       data: {
         userId: soldier.userId,
@@ -85,7 +85,7 @@ export const postSoldier = async (soldier: SoldierData) => {
       },
     });
 
-    const postAccount = await prisma.account.create({
+    await prisma.account.create({
       data: {
         soldierId: postSoldier.soldierId,
         accountBalance: 0,
@@ -94,7 +94,7 @@ export const postSoldier = async (soldier: SoldierData) => {
       },
     });
 
-    const updateUser = await prisma.user.update({
+    await prisma.user.update({
       where: { userId: soldier.userId },
       data: { isSoldier: true },
     });
