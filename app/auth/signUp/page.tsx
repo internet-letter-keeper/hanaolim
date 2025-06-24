@@ -3,6 +3,7 @@
 import Image from "next/image";
 import { useRouter } from "next/navigation";
 import { useRef, useState } from "react";
+import { Input, PrimaryButton, Txt } from "@/components/atoms";
 import { isEmailDuplicated, postSignUp } from "@/lib/actions/auth-actions";
 import {
   checkConfirmPasswordValidation,
@@ -10,7 +11,6 @@ import {
   checkNameValidation,
   checkPasswordValidation,
 } from "@/lib/validations/validation";
-import { Input, PrimaryButton, Txt } from "@/components/atoms";
 
 export default function SignUpPage() {
   const router = useRouter();
@@ -174,6 +174,7 @@ export default function SignUpPage() {
               placeholder="비밀번호를 확인해주세요"
               maxLength={20}
               customRef={confirmPasswordRef}
+              type="password"
             />
             {confirmPasswordError && (
               <Txt size={12} align="left" className="text-red-a76 ">
