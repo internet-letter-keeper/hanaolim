@@ -176,8 +176,6 @@ export const getNonReplyLettersByUserId = async (
   totalLettersCnt: number
 ) => {
   try {
-    // TODO: 변수명 바꾸기
-
     const FIRST_PAGE_SIZE = totalLettersCnt % 7;
     const PAGE_SIZE = 7;
 
@@ -218,7 +216,6 @@ export const getNonReplyLettersByUserId = async (
  * @returns { isNew : boolean }
  */
 export const getIsNew = async (userId: number) => {
-  console.log("dddd");
   const unreadCount = await prisma.letter.count({
     where: {
       receiverId: userId,

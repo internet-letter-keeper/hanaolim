@@ -13,6 +13,7 @@ type Props = {
 };
 
 export default function Olim({ letterExp, unreadLetter, soldierId }: Props) {
+
   const router = useRouter();
 
   const handleNavigate = () => {

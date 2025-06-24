@@ -15,18 +15,17 @@ import PointPop from "./PopPoint";
 
 type Props = {
   letterId: number;
-  userId: number;
   onHandleModal: () => void;
 };
 
-export default function LetterModal({
-  letterId,
-  userId,
-  onHandleModal,
-}: Props) {
+export default function LetterModal({ letterId, onHandleModal }: Props) {
   const [letter, setLetter] = useState<Letter | null>(null);
   const overlay = useRef<HTMLDivElement>(null);
   const router = useRouter();
+
+  const { data } = useSession();
+
+  const userId = data?.user.userId;
 
   useEffect(() => {
     (async () => {
@@ -71,62 +70,60 @@ export default function LetterModal({
   }, []);
 
   return (
-    <>
+    <div
+      ref={overlay}
+      className="fixed inset-0 z-100 sm:w-sm w-full -translate-x-1/2 left-1/2 bg-modal-overlay"
+      onClick={onClickOverlay}
+    >
+      {showPoint && <PointPop />}
       <div
-        ref={overlay}
-        className="fixed inset-0 z-100 sm:w-sm w-full -translate-x-1/2 left-1/2 bg-modal-overlay"
-        onClick={onClickOverlay}
-      >
-        {showPoint && <PointPop />}
-        <div
-          className="absolute top-1/2 left-1/2 -translate-x-1/2 -translate-y-1/2
+        className="absolute top-1/2 left-1/2 -translate-x-1/2 -translate-y-1/2
                      w-11/12 sm:w-[22rem] p-6 bg-white rounded-[10px]
                     text-center flex flex-col cursor-pointer"
-          onClick={handleGoToDetail}
-        >
-          <div className="flex w-full justify-between">
-            <Txt size={18} weight="cm" className="text-green-49d">
-              TO. {letter?.receiverName}
-            </Txt>
-            <Image
-              src={"/icons/ic-x-in-circle.svg"}
-              alt={"동그란 모양의 x 버튼"}
-              width={20}
-              height={20}
-              onClick={(e) => {
-                e.stopPropagation();
-                onHandleModal();
-              }}
-            />
-          </div>
-          <Txt align="left" className="text-gray-500">
-            {letter?.createDate.toLocaleString("ko-KR", {
-              dateStyle: "medium",
-              timeStyle: "short",
-            })}
+        onClick={handleGoToDetail}
+      >
+        <div className="flex w-full justify-between">
+          <Txt size={18} weight="cm" className="text-green-49d">
+            TO. {letter?.receiverName}
           </Txt>
-          <Txt align="left" className="py-4">
-            {letter?.content}
+          <Image
+            src={"/icons/ic-x-in-circle.svg"}
+            alt={"동그란 모양의 x 버튼"}
+            width={20}
+            height={20}
+            onClick={(e) => {
+              e.stopPropagation();
+              onHandleModal();
+            }}
+          />
+        </div>
+        <Txt align="left" className="text-gray-500">
+          {letter?.createDate.toLocaleString("ko-KR", {
+            dateStyle: "medium",
+            timeStyle: "short",
+          })}
+        </Txt>
+        <Txt align="left" className="py-4">
+          {letter?.content}
+        </Txt>
+        {letter?.fileUrl && <LetterView fileUrl={letter.fileUrl} />}
+        <div className="flex w-full justify-between">
+          <Txt
+            align="left"
+            weight="bold"
+            className="text-green-49d underline"
+            onClick={(e) => {
+              e.stopPropagation();
+              handleGoReply();
+            }}
+          >
+            답장하러 가기
           </Txt>
-          {letter?.fileUrl && <LetterView fileUrl={letter.fileUrl} />}
-          <div className="flex w-full justify-between">
-            <Txt
-              align="left"
-              weight="bold"
-              className="text-green-49d underline"
-              onClick={(e) => {
-                e.stopPropagation();
-                handleGoReply();
-              }}
-            >
-              답장하러 가기
-            </Txt>
-            <Txt size={18} weight="cm" className="text-green-49d">
-              From. {letter?.senderName}
-            </Txt>
-          </div>
+          <Txt size={18} weight="cm" className="text-green-49d">
+            From. {letter?.senderName}
+          </Txt>
         </div>
       </div>
-    </>
+    </div>
   );
 }
