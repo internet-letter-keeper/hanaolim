@@ -17,6 +17,7 @@ type Props = {
   letterExp: number;
   unreadLetter: number;
   soldierId: number;
+  totalCount: number;
 };
 
 export default function HomePage({
@@ -29,6 +30,7 @@ export default function HomePage({
   letterExp,
   unreadLetter,
   soldierId,
+  totalCount,
 }: Props) {
   const [showSplash, setShowSplash] = useState(true);
 
@@ -39,7 +41,7 @@ export default function HomePage({
       {showSplash && (
         <RocketSplash
           onSkip={handleSkip}
-          letterExp={letterExp}
+          totalCount={totalCount}
           unreadLetter={unreadLetter}
         />
       )}
@@ -71,6 +73,7 @@ export default function HomePage({
             letterExp={letterExp}
             unreadLetter={unreadLetter}
             soldierId={soldierId}
+            totalCount={totalCount}
           />
           <Card accountNum={accountNum} accountBalance={accountBalance} />
           <Savings savingsBalance={savingsBalance} />

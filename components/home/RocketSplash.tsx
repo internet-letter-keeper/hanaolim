@@ -6,13 +6,13 @@ import Txt from "@/components/atoms/Text";
 
 type RocketSplashProps = {
   onSkip: () => void;
-  letterExp: number;
+  totalCount: number;
   unreadLetter: number;
 };
 
 export default function RocketSplash({
   onSkip,
-  letterExp,
+  totalCount,
   unreadLetter,
 }: RocketSplashProps) {
   const [isVisible, setIsVisible] = useState(true);
@@ -64,7 +64,7 @@ export default function RocketSplash({
             총 받은 편지&nbsp;
           </Txt>
           <Txt size={30} weight="bold" className="text-green-49d">
-            {letterExp}장
+            {totalCount}장
           </Txt>
         </div>
 
