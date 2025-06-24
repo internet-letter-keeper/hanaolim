@@ -114,18 +114,26 @@ export const getEarnedPoint = async (userId: number): Promise<LetterInfo> => {
 };
 
 /**
- * 내가 보낸 편지 중 읽히지 않은 편지 수 조회
+ * 내가 받은 전체 편지 수 + 읽지 않은 편지 수 조회
  * @param userId number - 현재 로그인한 유저 ID
- * @returns { unreadCount: number }
+ * @returns { totalCount: number, unreadCount: number }
  */
 export const getLetterCount = async (userId: number) => {
-  const unreadCount = await prisma.letter.count({
-    where: {
-      receiverId: userId,
-      readDate: null,
-    },
-  });
-  return { unreadCount };
+  const [totalCount, unreadCount] = await Promise.all([
+    prisma.letter.count({
+      where: {
+        receiverId: userId,
+      },
+    }),
+    prisma.letter.count({
+      where: {
+        receiverId: userId,
+        readDate: null,
+      },
+    }),
+  ]);
+
+  return { totalCount, unreadCount };
 };
 
 /**
