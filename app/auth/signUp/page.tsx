@@ -173,7 +173,6 @@ export default function SignUpPage() {
           error={!!confirmPasswordErrorMessage}
           errorMessage={confirmPasswordErrorMessage}
           type="password"
-          customRef={confirmPasswordRef}
           onKeyDown={handleKeyDown}
         />
       </div>
