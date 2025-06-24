@@ -127,3 +127,32 @@ export const getLetterCount = async (userId: number) => {
   });
   return { unreadCount };
 };
+
+/**
+ * 유저 ID로 군인 정보 조회
+ * @usage soldierId props 전달 또는 군인 정보 활용이 필요한 컴포넌트
+ * @param userId number - 유저 ID
+ * @returns soldierId
+ * @throws userId에 해당하는 군 복무 정보가 없을 경우
+ */
+export const getSoldierInfoByUserId = async (userId: number) => {
+  const soldier = await prisma.soldier.findFirst({
+    where: { userId },
+    include: {
+      User: {
+        select: {
+          userName: true,
+          isSoldier: true,
+        },
+      },
+    },
+  });
+
+  if (!soldier) {
+    throw new Error(`${userId}번 유저의 군 복무 정보가 없습니다`);
+  }
+
+  return {
+    soldierId: soldier.soldierId,
+  };
+};

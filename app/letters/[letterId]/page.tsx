@@ -1,33 +1,25 @@
-import { notFound } from "next/navigation";
 import { PrimaryButton } from "@/components/atoms";
 import BasicHeader from "@/components/common/BasicHeader";
 import LettersDetail from "@/components/letters/LettersDetail";
-import prisma from "@/lib/db";
+import { getLetterDetail } from "@/lib/actions/letter-actions";
+import { requireAuth } from "@/utils/auth";
 
 type Props = {
   params: Promise<{ letterId: number }>;
 };
 
 export default async function LetterDetailPage({ params }: Props) {
-  const { letterId } = await params;
+  const letterId = +(await params).letterId;
 
-  const letter = await prisma.letter.findUnique({
-    where: { letterId: +letterId },
-    include: {
-      User_Letter_senderIdToUser: true,
-      User_Letter_receiverIdToUser: true,
-    },
-  });
+  const session = await requireAuth();
+  const userId = session.user.userId;
 
-  if (!letter) return notFound();
+  const letter = await getLetterDetail({ letterId, userId });
+  //편지가 없거나 편지 데이터가 없음 (편지는 무조건 있어야 함)
+  if (!letter || !letter.data)
+    throw new Error("편지 정보를 가져오는 것에 실패했습니다");
 
-  const reply = await prisma.letter.findFirst({
-    where: { parentLetterId: letter.letterId },
-    include: {
-      User_Letter_senderIdToUser: true,
-      User_Letter_receiverIdToUser: true,
-    },
-  });
+  const reply = await getLetterDetail({ letterId, userId, isReply: true });
 
   return (
     <>
@@ -36,48 +28,26 @@ export default async function LetterDetailPage({ params }: Props) {
       {/* 원본 편지 */}
       <div className="py-4 flex justify-center">
         <div className="bg-white shadow-sm p-4 w-[90%] max-w-md">
-          <LettersDetail
-            lettersDetail={{
-              content: letter.content,
-              fileUrl: letter.fileUrl ?? "",
-              createDate: letter.createDate.toLocaleString("ko-KR", {
-                dateStyle: "medium",
-                timeStyle: "short",
-              }),
-              senderNickname: letter.nickname ?? "",
-              senderUserName: letter.User_Letter_senderIdToUser.userName,
-              receiverName: letter.User_Letter_receiverIdToUser.userName,
-            }}
-          />
+          <LettersDetail letter={letter.data} />
         </div>
       </div>
 
       {/* 답장 없을 경우 버튼 */}
       {!reply && (
         <div className="flex justify-end px-6 mt-2">
-          <a href={`/write/${letter.receiverId}/${letter.letterId}`}>
+          <a
+            href={`/write/${letter.data?.receiverId}/${letter.data?.letterId}`}
+          >
             <PrimaryButton title="답장하기" className="px-3 w-28 py-[5px]" />
           </a>
         </div>
       )}
 
-      {/* 답장 있을 경우 보여줌 */}
-      {reply && (
+      {/* 답장 데이터가 있을 경우 보여줌 */}
+      {reply.data && (
         <div className="flex justify-center mt-4">
           <div className="bg-white shadow-sm p-4 w-[90%] max-w-md">
-            <LettersDetail
-              lettersDetail={{
-                content: reply.content,
-                fileUrl: reply.fileUrl ?? "",
-                createDate: reply.createDate.toLocaleString("ko-KR", {
-                  dateStyle: "medium",
-                  timeStyle: "short",
-                }),
-                senderNickname: reply.nickname ?? "",
-                senderUserName: reply.User_Letter_senderIdToUser.userName,
-                receiverName: reply.User_Letter_receiverIdToUser.userName,
-              }}
-            />
+            <LettersDetail letter={reply.data} />
           </div>
         </div>
       )}

@@ -15,7 +15,7 @@ type Props = {
 };
 
 export default function LetterWritePage({ params }: Props) {
-  const [userName, setUserName] = useState<number>(0);
+  const [userName, setUserName] = useState<string>("");
   const [uploadedFile, setUploadedFile] = useState<uploadedFileType | null>(
     null
   );
