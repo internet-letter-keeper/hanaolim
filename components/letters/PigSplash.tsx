@@ -44,8 +44,8 @@ export default function PigSplash({ onSkip }: PigSplashProps) {
         <Image
           src="/video/coinpig.gif"
           alt="돼지저금통 애니메이션"
-          width={200}
-          height={200}
+          width={300}
+          height={300}
           className="w-2/5 object-contain"
         />
 
@@ -65,7 +65,7 @@ export default function PigSplash({ onSkip }: PigSplashProps) {
           textSize={16}
           align="center"
           weight="cm"
-          className="h-[38px] mt-[38px]"
+          className="h-[38px] w-2/3 mt-[38px]"
         />
       </div>
     </div>
