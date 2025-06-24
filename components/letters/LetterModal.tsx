@@ -5,11 +5,10 @@ import { useRouter } from "next/navigation";
 import { useSession } from "next-auth/react";
 import { MouseEventHandler, useEffect, useRef, useState } from "react";
 import { getLetterDetail } from "@/lib/actions/letter-actions";
-import { handleEarnPoint } from "@/lib/actions/point-earn-action";
 import { Letter } from "@/types/letters";
 import { Txt } from "../atoms";
 import LetterView from "./LetterView";
-import PointPop from "./PopPoint";
+import PigSplash from "./PigSplash";
 
 // 답장 페이지 또는 편지 상세 페이지로 이동하기 위해 letterId 받아옴
 // 모달 제어를 위해 콜백 함수 받아옴 (onHandle), 페이지에서 useState 이용해서 모달 제어
@@ -91,7 +90,9 @@ export default function LetterModal({ letterId, onHandleModal }: Props) {
       className="fixed inset-0 z-100 sm:w-sm w-full -translate-x-1/2 left-1/2 bg-modal-overlay"
       onClick={onClickOverlay}
     >
-      {showPoint && <PointPop point={earnedBonus} />}
+      {showPoint && (
+        <PigSplash point={earnedBonus} onSkip={() => setShowPoint(false)} />
+      )}
       <div
         className="absolute top-1/2 left-1/2 -translate-x-1/2 -translate-y-1/2
                      w-11/12 sm:w-[22rem] p-6 bg-white rounded-[10px]
