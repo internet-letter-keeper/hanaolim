@@ -3,6 +3,7 @@
 import Image from "next/image";
 import { useRouter } from "next/navigation";
 import { useRef, useState, KeyboardEvent } from "react";
+import SignUpInput from "@/components/SignUpInput";
 import { Input, PrimaryButton, Txt } from "@/components/atoms";
 import { isEmailDuplicated, postSignUp } from "@/lib/actions/auth-actions";
 import {
@@ -115,99 +116,66 @@ export default function SignUpPage() {
       {/* Input 버튼 */}
       <div className="mt-[52px] flex flex-col gap-[17px] w-full">
         {/* 이름 */}
-        <div className="flex flex-col gap-[14px]">
-          <Txt size={19} weight="cm" align="left">
-            이름
-          </Txt>
-          <div className="flex flex-col gap-[10px]">
-            <Input
-              placeholder="이름을 입력해주세요"
-              maxLength={8}
-              value={name}
-              onChange={(e) => {
-                setName(e.target.value);
-                const validation = checkNameValidation(e.target.value);
-                if (validation.valid) {
-                  setNameError(false);
-                  setNameMessage("");
-                } else {
-                  setNameError(true);
-                  setNameMessage(validation.message);
-                }
-                setSignUpError("");
-              }}
-              onFocus={() => setSignUpError("")}
-            />
-            {nameError && nameMessage && (
-              <Txt size={12} align="left" className="text-red-a76 ">
-                {nameMessage}
-              </Txt>
-            )}
-          </div>
-        </div>
-
+        <SignUpInput
+          label="이름"
+          value={name}
+          onChange={(e) => {
+            setName(e.target.value);
+            const validation = checkNameValidation(e.target.value);
+            if (validation.valid) {
+              setNameError(false);
+              setNameMessage("");
+            } else {
+              setNameError(true);
+              setNameMessage(validation.message);
+            }
+            setSignUpError("");
+          }}
+          onFocus={() => setSignUpError("")}
+          placeholder="이름을 입력해주세요"
+          maxLength={8}
+          error={nameError}
+          errorMessage={nameMessage}
+        />
         {/* 이메일 */}
-        <div className="flex flex-col gap-[14px]">
-          <Txt size={19} weight="cm" align="left">
-            이메일
-          </Txt>
-          <div className="flex flex-col gap-[10px]">
-            <Input
-              placeholder="이메일을 입력해주세요"
-              maxLength={30}
-              value={email}
-              onChange={(e) => {
-                setEmail(e.target.value);
-                setEmailError(!checkEmailValidation(e.target.value));
-                setSignUpError("");
-              }}
-              onFocus={() => setSignUpError("")}
-            />
-            {emailError && (
-              <Txt size={12} align="left" className="text-red-a76 ">
-                유효하지 않은 이메일 형식입니다.
-              </Txt>
-            )}
-          </div>
-        </div>
-
+        <SignUpInput
+          label="이메일"
+          value={email}
+          onChange={(e) => {
+            setEmail(e.target.value);
+            setEmailError(!checkEmailValidation(e.target.value));
+            setSignUpError("");
+          }}
+          onFocus={() => setSignUpError("")}
+          placeholder="이메일을 입력해주세요"
+          maxLength={30}
+          error={emailError}
+          errorMessage="유효하지 않은 이메일 형식입니다."
+        />
         {/* 비밀번호 */}
-        <div className="flex flex-col gap-[14px]">
-          <Txt size={19} weight="cm" align="left">
-            비밀번호
-          </Txt>
-          <div className="flex flex-col gap-[10px]">
-            <Input
-              placeholder="영문자,숫자,특수문자를 포함한 8~20자"
-              maxLength={20}
-              customRef={passwordRef}
-              type="password"
-              value={password}
-              onChange={(e) => setPassword(e.target.value)}
-            />
-            {passwordErrorMessage && (
-              <Txt size={12} align="left" className="text-red-a76 ">
-                {passwordErrorMessage}
-              </Txt>
-            )}
-          </div>
-          <div className="flex flex-col gap-[10px]">
-            <Input
-              placeholder="비밀번호를 확인해주세요"
-              maxLength={20}
-              customRef={confirmPasswordRef}
-              type="password"
-              value={confirmPassword}
-              onChange={(e) => setConfirmPassword(e.target.value)}
-              onKeyDown={handleKeyDown}
-            />
-            {confirmPasswordErrorMessage && (
-              <Txt size={12} align="left" className="text-red-a76 ">
-                {confirmPasswordErrorMessage}
-              </Txt>
-            )}
-          </div>
-        </div>
+        <SignUpInput
+          label="비밀번호"
+          value={password}
+          onChange={(e) => setPassword(e.target.value)}
+          placeholder="영문자,숫자,특수문자를 포함한 8~20자"
+          maxLength={20}
+          error={!!passwordErrorMessage}
+          errorMessage={passwordErrorMessage}
+          type="password"
+          customRef={passwordRef}
+        />
+        <SignUpInput
+          label="비밀번호 확인"
+          value={confirmPassword}
+          onChange={(e) => setConfirmPassword(e.target.value)}
+          placeholder="비밀번호를 확인해주세요"
+          maxLength={20}
+          error={!!confirmPasswordErrorMessage}
+          errorMessage={confirmPasswordErrorMessage}
+          type="password"
+          customRef={confirmPasswordRef}
+          onKeyDown={handleKeyDown}
+        />
       </div>
 
       {/* 회원가입 버튼 */}
