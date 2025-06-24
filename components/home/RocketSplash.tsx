@@ -1,7 +1,7 @@
 "use client";
 
 import Image from "next/image";
-import { useRef, useState } from "react";
+import { useState } from "react";
 import Txt from "@/components/atoms/Text";
 
 type RocketSplashProps = {
@@ -15,7 +15,6 @@ export default function RocketSplash({
   letterExp,
   unreadLetter,
 }: RocketSplashProps) {
-  const videoRef = useRef<HTMLVideoElement>(null);
   const [isVisible, setIsVisible] = useState(true);
 
   const handleSkip = () => {
@@ -26,7 +25,7 @@ export default function RocketSplash({
   if (!isVisible) return null;
 
   return (
-    <div className="bg-gray-5f6 overflow-hidden h-screen -m-4 flex flex-col justify-between">
+    <div className="overflow-hidden h-screen -m-4 flex flex-col justify-between">
       <div className="flex justify-end m-3">
         {/* Skip 버튼 */}
         <button
@@ -51,16 +50,14 @@ export default function RocketSplash({
           </div>
         )}
 
-        <video
-          ref={videoRef}
-          autoPlay
-          muted
-          playsInline
-          loop
-          className="w-1/2 mr-4 object-contain"
-        >
-          <source src="/Video/rocket.mp4" type="video/mp4" />
-        </video>
+        {/* 로켓 gif */}
+        <Image
+          src="/video/rocket.gif"
+          alt="로켓 애니메이션"
+          width={300}
+          height={300}
+          className="w-2/3 object-contain"
+        />
 
         <div className="text-center">
           <Txt size={30} weight="bold">
@@ -70,6 +67,7 @@ export default function RocketSplash({
             {letterExp}장
           </Txt>
         </div>
+
         {/* 하단 편지 이미지 */}
         <Image
           src="/images/letter-dummy.svg"
