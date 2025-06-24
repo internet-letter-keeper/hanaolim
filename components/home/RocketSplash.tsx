@@ -70,14 +70,14 @@ export default function RocketSplash({
             {letterExp}장
           </Txt>
         </div>
+        {/* 하단 편지 이미지 */}
+        <Image
+          src="/images/letter-dummy.svg"
+          alt="편지 이미지"
+          width={393}
+          height={262}
+        />
       </div>
-      {/* 하단 편지 이미지 */}
-      <Image
-        src="/images/letter-dummy.svg"
-        alt="편지 이미지"
-        width={393}
-        height={262}
-      />
     </div>
   );
 }

@@ -7,6 +7,7 @@ import { PrimaryButton, Txt } from "@/components/atoms";
 import { BasicHeader } from "@/components/common";
 import DatePicker from "@/components/common/DatePicker";
 import { updateSoldierDates } from "@/lib/actions/soldier-actions";
+import { toKoreaTime } from "@/utils/date";
 
 export default function MySoldierPage() {
   const router = useRouter();
@@ -48,8 +49,8 @@ export default function MySoldierPage() {
     try {
       const result = await updateSoldierDates(
         session.user.soldier.soldierId,
-        joinDate,
-        releaseDate
+        toKoreaTime(joinDate),
+        toKoreaTime(releaseDate)
       );
 
       if (result.success) {

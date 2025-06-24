@@ -13,10 +13,10 @@ import LetterModal from "../letters/LetterModal";
 
 type Props = {
   isMyCabinet: boolean;
-  soldierId: number;
+  userId: number;
 };
 
-export default function Cabinet({ isMyCabinet, soldierId }: Props) {
+export default function Cabinet({ isMyCabinet, userId }: Props) {
   const [currentPage, setCurrentPage] = useState(1);
 
   const [totalPage, setTotalPage] = useState(1);
@@ -34,13 +34,12 @@ export default function Cabinet({ isMyCabinet, soldierId }: Props) {
 
   useEffect(() => {
     (async () => {
-      const totalLettersCnt =
-        await getTotalReceivedNonReplyLettersCnt(soldierId);
+      const totalLettersCnt = await getTotalReceivedNonReplyLettersCnt(userId);
 
       setTotalPage(Math.ceil(totalLettersCnt / 7));
 
       const letters = await getNonReplyLettersByUserId(
-        soldierId,
+        userId,
         1,
         totalLettersCnt
       );
@@ -54,7 +53,7 @@ export default function Cabinet({ isMyCabinet, soldierId }: Props) {
   useEffect(() => {
     (async () => {
       const letters = await getNonReplyLettersByUserId(
-        soldierId,
+        userId,
         currentPage,
         totalPage
       );

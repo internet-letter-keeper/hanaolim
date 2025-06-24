@@ -3,6 +3,7 @@ import {
   getAccountInfo,
   getEarnedPoint,
   getLetterCount,
+  getSoldierInfoByUserId,
 } from "@/lib/actions/home-actions";
 import { requireAuth } from "@/utils/auth";
 import HomePage from "./homepage";
@@ -16,11 +17,13 @@ export default async function Page() {
     { accountNum, accountBalance, savingsBalance },
     { letterExp },
     { unreadCount },
+    { soldierId },
   ] = await Promise.all([
     getProfileInfo(userId),
     getAccountInfo(userId),
     getEarnedPoint(userId),
     getLetterCount(userId),
+    getSoldierInfoByUserId(userId),
   ]);
 
   return (
@@ -33,6 +36,7 @@ export default async function Page() {
       savingsBalance={savingsBalance}
       letterExp={letterExp}
       unreadLetter={unreadCount}
+      soldierId={soldierId}
     />
   );
 }

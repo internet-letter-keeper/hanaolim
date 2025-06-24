@@ -16,6 +16,7 @@ type Props = {
   savingsBalance: number;
   letterExp: number;
   unreadLetter: number;
+  soldierId: number;
 };
 
 export default function HomePage({
@@ -27,6 +28,7 @@ export default function HomePage({
   savingsBalance,
   letterExp,
   unreadLetter,
+  soldierId,
 }: Props) {
   const [showSplash, setShowSplash] = useState(true);
 
@@ -65,7 +67,11 @@ export default function HomePage({
             startDate={startDate}
             endDate={new Date(endDate)}
           />
-          <Olim letterExp={letterExp} unreadLetter={unreadLetter} />
+          <Olim
+            letterExp={letterExp}
+            unreadLetter={unreadLetter}
+            soldierId={soldierId}
+          />
           <Card accountNum={accountNum} accountBalance={accountBalance} />
           <Savings savingsBalance={savingsBalance} />
         </div>
