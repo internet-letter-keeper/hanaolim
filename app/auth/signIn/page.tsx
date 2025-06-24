@@ -3,7 +3,7 @@
 import Image from "next/image";
 import { useRouter } from "next/navigation";
 import { signIn } from "next-auth/react";
-import { useEffect, useRef, useState } from "react";
+import { useEffect, useRef, useState, KeyboardEvent } from "react";
 import SplashScreen from "@/components/HomeSplashScreen";
 import { PrimaryButton, Input, Txt } from "@/components/atoms";
 
@@ -72,6 +72,14 @@ export default function SignInPage() {
     }
   };
 
+  const handleKeyDown = (
+    e: KeyboardEvent<HTMLInputElement | HTMLTextAreaElement>
+  ) => {
+    if (e.key === "Enter") {
+      handleSignIn();
+    }
+  };
+
   const snsButtonAction = async (provider: string) => {
     await signIn(provider, { redirectTo: "/onboarding" });
   };
@@ -115,6 +123,7 @@ export default function SignInPage() {
             maxLength={20}
             customRef={passwordRef}
             type="password"
+            onKeyDown={handleKeyDown}
           />
         </div>
 

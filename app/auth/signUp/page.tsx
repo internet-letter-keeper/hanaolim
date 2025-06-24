@@ -2,7 +2,7 @@
 
 import Image from "next/image";
 import { useRouter } from "next/navigation";
-import { useRef, useState } from "react";
+import { useRef, useState, KeyboardEvent } from "react";
 import { Input, PrimaryButton, Txt } from "@/components/atoms";
 import { isEmailDuplicated, postSignUp } from "@/lib/actions/auth-actions";
 import {
@@ -101,6 +101,14 @@ export default function SignUpPage() {
     }
   };
 
+  const handleKeyDown = (
+    e: KeyboardEvent<HTMLInputElement | HTMLTextAreaElement>
+  ) => {
+    if (e.key === "Enter") {
+      handleSignUp();
+    }
+  };
+
   return (
     <div className="flex flex-col items-center justify-center h-full px-[20px]">
       {/* 하나 올림 로고 */}
@@ -175,6 +183,7 @@ export default function SignUpPage() {
               maxLength={20}
               customRef={confirmPasswordRef}
               type="password"
+              onKeyDown={handleKeyDown}
             />
             {confirmPasswordError && (
               <Txt size={12} align="left" className="text-red-a76 ">
