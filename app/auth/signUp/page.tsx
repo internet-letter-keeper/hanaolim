@@ -97,7 +97,7 @@ export default function SignUpPage() {
   const handleKeyDown = (
     e: KeyboardEvent<HTMLInputElement | HTMLTextAreaElement>
   ) => {
-    if (e.key === "Enter") {
+    if (e.key === "Enter" && isButtonEnabled) {
       handleSignUp();
     }
   };
