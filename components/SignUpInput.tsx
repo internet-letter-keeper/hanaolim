@@ -1,16 +1,17 @@
-import { RefObject, ChangeEvent, KeyboardEventHandler, Ref } from "react";
+import { KeyboardEventHandler, Ref, ChangeEventHandler } from "react";
 import { Input, Txt } from "@/components/atoms";
 
 type Props = {
   label: string;
   value: string;
-  onChange: (e: ChangeEvent<HTMLInputElement>) => void;
   placeholder: string;
   maxLength: number;
   error: boolean;
   errorMessage?: string;
   type?: string;
   customRef?: Ref<HTMLInputElement> | Ref<HTMLTextAreaElement>;
+  onChange?: ChangeEventHandler<HTMLInputElement | HTMLTextAreaElement>;
+
   onFocus?: () => void;
   onKeyDown?: KeyboardEventHandler<HTMLInputElement | HTMLTextAreaElement>;
 };
