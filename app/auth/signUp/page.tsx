@@ -18,8 +18,8 @@ export default function SignUpPage() {
     router.push("/auth/signIn");
   };
 
-  const nameRef = useRef<HTMLInputElement>(null);
-  const emailRef = useRef<HTMLInputElement>(null);
+  const [name, setName] = useState("");
+  const [email, setEmail] = useState("");
   const passwordRef = useRef<HTMLInputElement>(null);
   const confirmPasswordRef = useRef<HTMLInputElement>(null);
 
@@ -28,6 +28,7 @@ export default function SignUpPage() {
   const [nameMessage, setNameMessage] = useState("");
   const [password, setPassword] = useState("");
   const [confirmPassword, setConfirmPassword] = useState("");
+  const [signUpError, setSignUpError] = useState("");
 
   const passwordValidation = checkPasswordValidation(password);
   const isPasswordMatch = password === confirmPassword;
@@ -42,10 +43,19 @@ export default function SignUpPage() {
       ? "입력하신 비밀번호와 다릅니다."
       : "";
 
+  const isAllFieldsFilled = !!(name && email && password && confirmPassword);
+  //버튼 활성화
+  const isButtonEnabled =
+    isAllFieldsFilled &&
+    checkNameValidation(name).valid &&
+    checkEmailValidation(email) &&
+    passwordValidation.valid &&
+    isPasswordMatch;
+
   // 회원가입 버튼 클릭 핸들러
   const handleSignUp = async () => {
     // 이름 유효성 검사
-    const nameValidation = checkNameValidation(nameRef.current?.value || "");
+    const nameValidation = checkNameValidation(name);
     if (nameValidation.valid) {
       setNameError(false);
       setNameMessage("");
@@ -57,30 +67,29 @@ export default function SignUpPage() {
     }
 
     // 이메일 유효성 검사
-    if (checkEmailValidation(emailRef.current?.value || "")) {
+    if (checkEmailValidation(email)) {
       setEmailError(false);
     } else {
       setEmailError(true);
       return;
     }
 
+    setSignUpError("");
     // 회원가입 api 호출
-
-    const duplicated = await isEmailDuplicated(emailRef.current?.value || "");
+    const duplicated = await isEmailDuplicated(email);
     if (duplicated) {
-      alert("이미 사용 중인 이메일입니다.");
+      setSignUpError("이미 사용 중인 이메일입니다.");
       return;
     }
     const result = await postSignUp({
-      email: emailRef.current?.value || "",
-      userName: nameRef.current?.value || "",
-      password: passwordRef.current?.value || "",
+      email,
+      userName: name,
+      password: password || "",
     });
     if (result.ok) {
-      alert("회원가입 완료!");
       router.push("/auth/signIn");
     } else {
-      alert(result.error);
+      setSignUpError(result.error || "회원가입에 실패했습니다.");
       return;
     }
   };
@@ -114,9 +123,22 @@ export default function SignUpPage() {
             <Input
               placeholder="이름을 입력해주세요"
               maxLength={8}
-              customRef={nameRef}
+              value={name}
+              onChange={(e) => {
+                setName(e.target.value);
+                const validation = checkNameValidation(e.target.value);
+                if (validation.valid) {
+                  setNameError(false);
+                  setNameMessage("");
+                } else {
+                  setNameError(true);
+                  setNameMessage(validation.message);
+                }
+                setSignUpError("");
+              }}
+              onFocus={() => setSignUpError("")}
             />
-            {nameError && (
+            {nameError && nameMessage && (
               <Txt size={12} align="left" className="text-red-a76 ">
                 {nameMessage}
               </Txt>
@@ -133,7 +155,13 @@ export default function SignUpPage() {
             <Input
               placeholder="이메일을 입력해주세요"
               maxLength={30}
-              customRef={emailRef}
+              value={email}
+              onChange={(e) => {
+                setEmail(e.target.value);
+                setEmailError(!checkEmailValidation(e.target.value));
+                setSignUpError("");
+              }}
+              onFocus={() => setSignUpError("")}
             />
             {emailError && (
               <Txt size={12} align="left" className="text-red-a76 ">
@@ -183,6 +211,11 @@ export default function SignUpPage() {
       </div>
 
       {/* 회원가입 버튼 */}
+      {signUpError && (
+        <Txt size={12} align="left" className="text-red-a76 w-full mt-2">
+          {signUpError}
+        </Txt>
+      )}
       <PrimaryButton
         title="회원가입"
         rounded="sm"
@@ -191,6 +224,7 @@ export default function SignUpPage() {
         weight="cm"
         className="h-[38px] mt-[38px]"
         onClick={handleSignUp}
+        disabled={!isButtonEnabled}
       />
 
       {/* 로그인 안내 */}
