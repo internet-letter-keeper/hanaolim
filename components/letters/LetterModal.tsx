@@ -21,7 +21,6 @@ type Props = {
 export default function LetterModal({ letterId, onHandleModal }: Props) {
   const [letter, setLetter] = useState<Letter | null>(null);
   const overlay = useRef<HTMLDivElement>(null);
-
   const router = useRouter();
 
   const { data } = useSession();
