@@ -11,7 +11,7 @@ import { getSenderName, postLetterReply } from "@/lib/actions/write-actions";
 import { uploadedFileType } from "@/types/letters";
 
 type Props = {
-  params: Promise<{ soldierId: string; letterId: string }>;
+  params: Promise<{ soldierId: number; letterId: number }>;
 };
 
 export default function LetterWritePage({ params }: Props) {
@@ -28,8 +28,8 @@ export default function LetterWritePage({ params }: Props) {
     async (_pre: unknown, formData: FormData) => {
       // soldierId와 parentLetterId 추가
       const { soldierId, letterId } = await params;
-      formData.append("soldierId", soldierId);
-      formData.append("parentLetterId", letterId);
+      formData.append("soldierId", soldierId.toString());
+      formData.append("parentLetterId", letterId.toString());
 
       // 업로드된 파일이 있으면 FormData에 추가
       if (uploadedFile?.file) {

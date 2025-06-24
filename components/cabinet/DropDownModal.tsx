@@ -2,6 +2,7 @@
 
 import { useRouter } from "next/navigation";
 import { useSession } from "next-auth/react";
+import { use, useEffect, useState } from "react";
 import {
   Sidebar,
   SidebarContent,
@@ -14,9 +15,13 @@ import { PrimaryButton } from "../atoms";
 import { NewIcon } from "../common";
 import Profile from "../common/Profile";
 
+type Props = {
+  isNew: boolean;
+};
+
 const ButtonStyle = "border border-gray-353/25 py-3";
 
-export default function DropDownModal() {
+export default function DropDownModal({ isNew }: Props) {
   const { data: session } = useSession();
   const isSoldier = session?.user?.isSoldier;
   const router = useRouter();
@@ -26,6 +31,7 @@ export default function DropDownModal() {
   const goToMy = () => router.push("/my");
 
   const { toggleSidebar } = useSidebar();
+
   return (
     <div className="flex justify-center items-center">
       <Sidebar>
@@ -42,8 +48,7 @@ export default function DropDownModal() {
                       textSize={16}
                       color="gray"
                       onClick={goToLetters}
-                      // TODO:답장이 온 편지가 있냐 없냐에 따른 Icon 보일지 여부 분기 처리, isNewMessage 같은거 추후 추가
-                      icon={<NewIcon />}
+                      icon={isNew ? <NewIcon /> : undefined}
                     />
                     <PrimaryButton
                       title="내 정보"

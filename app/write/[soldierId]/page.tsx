@@ -16,9 +16,9 @@ import { getIconIdByName } from "@/utils/icon";
 export default function WritePage({
   params,
 }: {
-  params: Promise<{ soldierId: string }>;
+  params: Promise<{ soldierId: number }>;
 }) {
-  const [soldierId, setSoldierId] = useState<string>("");
+  const [soldierId, setSoldierId] = useState<number>(0);
   const [userName, setUserName] = useState<string>("");
   const [selectedIcon, setSelectedIcon] = useState<IconName>("face");
   const [uploadedFile, setUploadedFile] = useState<uploadedFileType | null>(
@@ -45,7 +45,7 @@ export default function WritePage({
   const [letter, postLetterAction, isPending] = useActionState(
     async (_pre: unknown, formData: FormData) => {
       // soldierId 추가
-      formData.append("soldierId", soldierId);
+      formData.append("soldierId", soldierId.toString());
 
       // 선택된 아이콘 ID 추가
       const iconId = getIconIdByName(selectedIcon);
