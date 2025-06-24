@@ -6,7 +6,6 @@ import { useRef, useState, KeyboardEvent } from "react";
 import { Input, PrimaryButton, Txt } from "@/components/atoms";
 import { isEmailDuplicated, postSignUp } from "@/lib/actions/auth-actions";
 import {
-  checkConfirmPasswordValidation,
   checkEmailValidation,
   checkNameValidation,
   checkPasswordValidation,
@@ -26,10 +25,22 @@ export default function SignUpPage() {
 
   const [nameError, setNameError] = useState(false);
   const [emailError, setEmailError] = useState(false);
-  const [passwordError, setPasswordError] = useState(false);
-  const [confirmPasswordError, setConfirmPasswordError] = useState(false);
   const [nameMessage, setNameMessage] = useState("");
-  const [passwordMessage, setPasswordMessage] = useState("");
+  const [password, setPassword] = useState("");
+  const [confirmPassword, setConfirmPassword] = useState("");
+
+  const passwordValidation = checkPasswordValidation(password);
+  const isPasswordMatch = password === confirmPassword;
+  const passwordErrorMessage = !password
+    ? ""
+    : !passwordValidation.valid
+      ? passwordValidation.message
+      : "";
+  const confirmPasswordErrorMessage = !confirmPassword
+    ? ""
+    : !isPasswordMatch
+      ? "입력하신 비밀번호와 다릅니다."
+      : "";
 
   // 회원가입 버튼 클릭 핸들러
   const handleSignUp = async () => {
@@ -50,33 +61,6 @@ export default function SignUpPage() {
       setEmailError(false);
     } else {
       setEmailError(true);
-      return;
-    }
-
-    // 비밀번호 유효성 검사
-    const passwordValidation = checkPasswordValidation(
-      passwordRef.current?.value || ""
-    );
-    if (passwordValidation.valid) {
-      setPasswordError(false);
-      setPasswordMessage("");
-    } else {
-      setPasswordError(false);
-      setPasswordError(true);
-      setPasswordMessage(passwordValidation["message"]);
-      return;
-    }
-
-    // 비밀번호 확인 유효성 검사
-    if (
-      checkConfirmPasswordValidation(
-        passwordRef.current?.value || "",
-        confirmPasswordRef.current?.value || ""
-      )
-    ) {
-      setConfirmPasswordError(false);
-    } else {
-      setConfirmPasswordError(true);
       return;
     }
 
@@ -170,10 +154,12 @@ export default function SignUpPage() {
               maxLength={20}
               customRef={passwordRef}
               type="password"
+              value={password}
+              onChange={(e) => setPassword(e.target.value)}
             />
-            {passwordError && (
+            {passwordErrorMessage && (
               <Txt size={12} align="left" className="text-red-a76 ">
-                {passwordMessage}
+                {passwordErrorMessage}
               </Txt>
             )}
           </div>
@@ -183,11 +169,13 @@ export default function SignUpPage() {
               maxLength={20}
               customRef={confirmPasswordRef}
               type="password"
+              value={confirmPassword}
+              onChange={(e) => setConfirmPassword(e.target.value)}
               onKeyDown={handleKeyDown}
             />
-            {confirmPasswordError && (
+            {confirmPasswordErrorMessage && (
               <Txt size={12} align="left" className="text-red-a76 ">
-                입력하신 비밀번호와 다릅니다.
+                {confirmPasswordErrorMessage}
               </Txt>
             )}
           </div>
