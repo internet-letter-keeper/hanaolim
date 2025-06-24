@@ -13,10 +13,7 @@ import { isUserExists } from "./auth-actions";
  * @returns 유효한 코드가 아닐 때 "코드를 다시 확인해주세요"
  * @returns 이미 친구일 때 "이미 친구입니다"
  */
-export const postFriend = async (
-  code: string,
-  userId: number
-): Promise<{ success: boolean; message: string }> => {
+export const postFriend = async (code: string, userId: number) => {
   try {
     // code와 매칭되는 군인이 있는지 확인
     const soldierId =
@@ -40,12 +37,16 @@ export const postFriend = async (
       return { success: false, message: "이미 친구입니다" };
     }
 
-    await prisma.follow.create({
+    const follow = await prisma.follow.create({
       data: { soldierId, userId },
-      select: { followId: true },
+      select: { followId: true, userId: true, soldierId: true },
     });
 
-    return { success: true, message: "친구가 추가되었습니다" };
+    return {
+      success: true,
+      message: "친구가 추가되었습니다",
+      follow: follow,
+    };
   } catch (error) {
     return {
       success: false,

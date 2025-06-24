@@ -3,12 +3,11 @@
 import Image from "next/image";
 import { useRouter } from "next/navigation";
 import { signIn } from "next-auth/react";
-import { useEffect, useRef, useState } from "react";
+import { useEffect, useRef, useState, KeyboardEvent } from "react";
 import SplashScreen from "@/components/HomeSplashScreen";
 import { PrimaryButton, Input, Txt } from "@/components/atoms";
 
 export default function SignInPage() {
-  const isLoginError: boolean = false; // 로그인 에러 상태 (예시로 false로 설정)
   const emailRef = useRef<HTMLInputElement>(null);
   const passwordRef = useRef<HTMLInputElement>(null);
 
@@ -18,6 +17,7 @@ export default function SignInPage() {
 
   //스플래시 화면 구현하기
   const [showSplash, setShowSplash] = useState<boolean | null>(null);
+  const [errorMessage, setErrorMessage] = useState("");
 
   useEffect(() => {
     const alreadySeen = document.cookie.includes("splashSeen=true");
@@ -55,8 +55,7 @@ export default function SignInPage() {
     const password = passwordRef.current?.value;
 
     if (!email || !password) {
-      // 이메일 또는 비밀번호가 비어있을 경우 에러 처리
-      alert("이메일과 비밀번호를 입력해주세요.");
+      setErrorMessage("이메일과 비밀번호를 입력해주세요.");
       return;
     }
     const result = await signIn("credentials", {
@@ -66,9 +65,17 @@ export default function SignInPage() {
     });
 
     if (result?.error === "CredentialsSignin") {
-      alert("이메일 또는 비밀번호가 잘못되었습니다.");
+      setErrorMessage("이메일 또는 비밀번호가 잘못되었습니다.");
     } else if (result?.ok) {
       router.push("/onboarding");
+    }
+  };
+
+  const handleKeyDown = (
+    e: KeyboardEvent<HTMLInputElement | HTMLTextAreaElement>
+  ) => {
+    if (e.key === "Enter") {
+      handleSignIn();
     }
   };
 
@@ -115,13 +122,18 @@ export default function SignInPage() {
             maxLength={20}
             customRef={passwordRef}
             type="password"
+            onKeyDown={handleKeyDown}
           />
         </div>
 
         {/* 로그인 에러 메시지 */}
-        {isLoginError && (
-          <Txt size={12} align="center" className="text-red-a76 mb-[15px]">
-            이메일 또는 비밀번호를 확인해주세요
+        {errorMessage && (
+          <Txt
+            size={12}
+            align="center"
+            className={`text-red-a76 w-full mb-[15px]`}
+          >
+            {errorMessage}
           </Txt>
         )}
 
