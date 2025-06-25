@@ -53,7 +53,7 @@ export default async function LetterDetailPage({ params }: Props) {
       </div>
 
       {/* 답장 없을 경우 버튼 */}
-      {!reply.data?.parentLetterId && (
+      {!reply && letter.data.receiverId === userId && (
         <div className="flex justify-end px-6 mt-2">
           <a href={`/write/${soldierId}/${letter.data.letterId}`}>
             <PrimaryButton title="답장하기" className="px-3 w-28 py-[5px]" />
