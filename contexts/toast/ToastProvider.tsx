@@ -2,9 +2,9 @@
 
 import Image from "next/image";
 import { useState, PropsWithChildren } from "react";
-import { ToastType } from "@/types/toast";
-import { cn } from "@/lib/utils";
 import { Txt } from "@/components/atoms";
+import { cn } from "@/lib/utils";
+import { ToastType } from "@/types/toast";
 import { ToastContext } from "./ToastContext";
 
 type Props = {
@@ -23,7 +23,7 @@ const iconSrcMap: Record<ToastType, string> = {
  */
 export function ToastProvider({
   children,
-  className = "top-1/2 left-1/2 transform -translate-x-1/2",
+  className,
 }: PropsWithChildren<Props>) {
   const [isVisible, setIsVisible] = useState(false);
   const [message, setMessage] = useState("");
@@ -58,7 +58,7 @@ export function ToastProvider({
       {isVisible && (
         <div
           className={cn(
-            "fixed z-1000 transition-all duration-150",
+            "fixed z-1000 transition-all duration-150 top-1/2 left-1/2 transform -translate-x-1/2",
             position,
             isAnimating
               ? "opacity-100 translate-y-0"
@@ -66,7 +66,7 @@ export function ToastProvider({
           )}
         >
           {/* Toast UI */}
-          <div className="flex items-center gap-[5px] min-w-[200px] bg-white shadow-[0px_0px_5px_0px_rgba(0,0,0,0.15)] px-[13px] py-[5px] rounded-[6px] flex-nowrap">
+          <div className="flex items-center gap-[5px] min-w-fit bg-white shadow-[0px_0px_5px_0px_rgba(0,0,0,0.15)] px-[13px] py-[5px] rounded-[6px] flex-nowrap">
             <Image
               src={iconSrcMap[toastType]}
               alt="check"
