@@ -54,39 +54,25 @@ export default function LettersItem({ letter, currentUserId, box }: Props) {
       </Txt>
 
       <div className="flex justify-between items-center w-full mt-2">
-        {shouldShowReplyButton && (
-          <div className="flex items-center gap-1 rounded-full border border-red-a76 px-2 py-0.5">
+        {/* 답장 버튼 영역 */}
+        {(box === "mine" && !letter.hasReply) ||
+        (box === "friend" && letter.hasReply) ? (
+          <div className="inline-flex items-center gap-1 rounded-[5px] border border-red-a76 px-2 py-0.5">
             <Image
               src="/icons/ic-isReply.svg"
-              alt="답장하기"
+              alt={box === "mine" ? "답장하기" : "답장도착"}
               width={14}
               height={15}
             />
-            <Txt size={12} className="text-red-a76">
-              답장하기
+            <Txt size={12} className="text-red-a76 whitespace-nowrap">
+              {box === "mine" ? "답장하기" : "답장도착"}
             </Txt>
           </div>
+        ) : (
+          <div /> // 공간 유지용
         )}
 
-        {!shouldShowReplyButton &&
-          box === "friend" &&
-          senderId === currentUserId &&
-          hasReply && (
-            <div className="flex items-center gap-1 rounded-full border border-red-a76 px-2 py-0.5">
-              <Image
-                src="/icons/ic-isReply.svg"
-                alt="답장도착"
-                width={14}
-                height={15}
-              />
-              <Txt size={12} className="text-red-a76">
-                답장도착
-              </Txt>
-            </div>
-          )}
-
-        {!shouldShowReplyButton && (!hasReply || box === "mine") && <div />}
-
+        {/* 오른쪽 즐겨찾기 */}
         <FavoriteToggle letter={letter} currentUserId={currentUserId} />
       </div>
     </Link>

@@ -286,6 +286,19 @@ export const getFilteredLetters = async ({
         },
       });
 
+      // 내가 쓴 답장
+      const myReplies = await prisma.letter.findMany({
+        where: {
+          senderId: userId,
+          parentLetterId: { not: null },
+        },
+        select: {
+          parentLetterId: true,
+        },
+      });
+
+      const myReplySet = new Set(myReplies.map((r) => r.parentLetterId));
+
       const filtered = rawLetters.filter((letter) => {
         const myFavorite = letter.Favorite.find((f) => f.userId === userId);
         return isFavorite ? myFavorite?.isFavorite === true : true;
@@ -298,6 +311,7 @@ export const getFilteredLetters = async ({
           favoriteId: myFavorite?.favoriteId,
           isFavorite: myFavorite?.isFavorite,
           senderName: letter.User_Letter_senderIdToUser?.userName ?? "",
+          hasReply: myReplySet.has(letter.letterId),
         };
       });
 
@@ -326,7 +340,7 @@ export const getFilteredLetters = async ({
 
       const letterIds = rawLetters.map((letter) => letter.letterId);
 
-      // 답장 존재 여부 조회
+      // 내가 받은 답장
       const replyMap = await prisma.letter.findMany({
         where: {
           parentLetterId: { in: letterIds },
@@ -354,6 +368,7 @@ export const getFilteredLetters = async ({
           favoriteId: myFavorite?.favoriteId,
           isFavorite: myFavorite?.isFavorite,
           receiverName: letter.User_Letter_receiverIdToUser?.userName ?? "",
+          hasReply: hasReplySet.has(letter.letterId),
         };
       });
 
