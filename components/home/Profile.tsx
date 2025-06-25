@@ -1,7 +1,5 @@
-"use client";
-
 import Image from "next/image";
-import { useRouter } from "next/navigation";
+import Link from "next/link";
 import Txt from "@/components/atoms/Text";
 import { Progress } from "@/components/ui/progress";
 import { untilEndDate } from "@/utils/date";
@@ -13,8 +11,6 @@ type Props = {
 };
 
 export default function ProfileBanner({ userName, startDate, endDate }: Props) {
-  const router = useRouter();
-
   const startDateObj = new Date(startDate);
   const endDateObj = new Date(endDate);
   const today = new Date();
@@ -35,13 +31,9 @@ export default function ProfileBanner({ userName, startDate, endDate }: Props) {
   // 복무 진행률 게이지 계산
   const progressPercent = Math.min(100, (passedDays / totalDays) * 100);
 
-  const handleSendClick = () => {
-    router.push("/my");
-  };
-
   return (
-    <div
-      onClick={handleSendClick}
+    <Link
+      href="/my"
       className="flex items-center gap-3 px-4 py-3 bg-gray-530 border-[1.5px] border-green-a3b rounded-[30px] w-full h-[89px] relative overflow-hidden cursor-pointer"
     >
       {/* 캐릭터 이미지 */}
@@ -99,6 +91,6 @@ export default function ProfileBanner({ userName, startDate, endDate }: Props) {
           )}
         </div>
       </div>
-    </div>
+    </Link>
   );
 }
