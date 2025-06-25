@@ -16,7 +16,7 @@ export default function MyPage() {
   const router = useRouter();
   const { userName, email, isSoldier, isSocial, soldier, follow } =
     session?.user || {};
-  console.log("isSocialisSocialisSocial", isSocial);
+
   const [showLogoutModal, setShowLogoutModal] = useState(false);
   const [showWithdrawModal, setShowWithdrawModal] = useState(false);
 

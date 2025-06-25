@@ -49,7 +49,6 @@ export default function LetterModal({ letterId, onHandleModal }: Props) {
       const result = await res.json();
 
       if (result.earn && result.bonus > 0) {
-        console.log("포인트를 적립할 수 있습니다");
         setEarnedBonus(result.bonus); // 보너스 저장
         setShowPoint(true);
       }
