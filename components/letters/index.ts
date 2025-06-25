@@ -9,5 +9,4 @@ export { default as LettersDetail } from "./LettersDetail";
 export { default as LettersItem } from "./LettersItem";
 export { default as LettersList } from "./LettersList";
 export { default as LetterView } from "./LetterView";
-export { default as PopPoint } from "./PopPoint";
 export { default as SearchLetter } from "./SearchLetter";
