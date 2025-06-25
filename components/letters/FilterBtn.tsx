@@ -36,7 +36,7 @@ export default function FilterBtn() {
   };
 
   return (
-    <div className="flex px-4 gap-x-2">
+    <div className="flex gap-x-2 pb-3">
       {filters.map(({ key, label }) => {
         const isActive = currentFilter === key;
         return (
