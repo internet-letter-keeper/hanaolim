@@ -7,7 +7,7 @@ import { MouseEventHandler, useEffect, useRef, useState } from "react";
 import { getLetterDetail } from "@/lib/actions/letter-actions";
 import { getSenderName } from "@/lib/actions/write-actions";
 import { Letter } from "@/types/letters";
-import { PrimaryButton, Txt } from "../atoms";
+import { Txt } from "../atoms";
 import LetterView from "./LetterView";
 import PigSplash from "./PigSplash";
 
@@ -19,12 +19,21 @@ type Props = {
   onHandleModal: () => void;
 };
 
+const MAX_LENGTH = 120;
+
 export default function LetterModal({ letterId, onHandleModal }: Props) {
   const [letter, setLetter] = useState<Letter | null>(null);
   const [senderName, setSenderName] = useState<string>("");
   const [senderId, setSenderId] = useState<number>(0);
   const overlay = useRef<HTMLDivElement>(null);
   const router = useRouter();
+
+  //120자 넘어가면 더보기로 처리
+  const isLong = (letter?.content.length ?? 0) > MAX_LENGTH;
+
+  const preview = isLong
+    ? letter?.content.slice(0, MAX_LENGTH)
+    : letter?.content;
 
   const { data } = useSession();
 
@@ -124,8 +133,7 @@ export default function LetterModal({ letterId, onHandleModal }: Props) {
       <div
         className="absolute top-1/2 left-1/2 -translate-x-1/2 -translate-y-1/2
                      w-11/12 sm:w-[22rem] p-6 bg-white rounded-[10px]
-                    text-center flex flex-col cursor-pointer"
-        onClick={handleGoToDetail}
+                    text-center max-h-[66vh] flex flex-col cursor-pointer"
       >
         <div className="flex w-full justify-between">
           <Txt size={18} weight="bold" className="text-green-49d">
@@ -148,8 +156,13 @@ export default function LetterModal({ letterId, onHandleModal }: Props) {
             timeStyle: "short",
           })}
         </Txt>
-        <Txt align="left" size={16} className="py-4">
-          {letter.content}
+        <Txt align="left" size={16} className="py-4" onClick={handleGoToDetail}>
+          {preview}{" "}
+          {isLong && (
+            <Txt size={16} className="text-gray-500">
+              ...더보기
+            </Txt>
+          )}
         </Txt>
         {letter.fileUrl && <LetterView fileUrl={letter.fileUrl} />}
         <div className="flex w-full justify-end">
@@ -162,7 +175,7 @@ export default function LetterModal({ letterId, onHandleModal }: Props) {
               handleGoReply();
             }}
           >
-            답장하러 가기
+            답장하기
           </Txt>
         </div>
       </div>

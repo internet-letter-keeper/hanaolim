@@ -89,7 +89,6 @@ export default function FriendManageList({ friends }: Props) {
         ))
       ) : (
         <EmptyState>
-          {" "}
           친구 목록이 비어있어요 <br /> 친구를 추가하고 편지를 주고받아요!
         </EmptyState>
       )}
