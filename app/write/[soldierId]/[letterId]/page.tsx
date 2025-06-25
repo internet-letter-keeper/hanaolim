@@ -18,6 +18,7 @@ export default function LetterWritePage() {
   );
   const [showModal, setShowModal] = useState(false);
   const [count, setCount] = useState<number>(0);
+  const [pendingFormData, setPendingFormData] = useState<FormData | null>(null);
   const router = useRouter();
   const searchParams = useSearchParams();
   const { soldierId, letterId } = useParams();
@@ -52,6 +53,19 @@ export default function LetterWritePage() {
   );
 
   const fileInputRef = useRef<HTMLInputElement>(null);
+
+  // 모달에서 전송 확인
+  const handleConfirmSubmit = () => {
+    if (pendingFormData) {
+      postLetterAction(pendingFormData);
+    }
+  };
+
+  // 모달에서 수정 선택
+  const handleCancelSubmit = () => {
+    setShowModal(false);
+    setPendingFormData(null);
+  };
 
   const onClickImage = () => {
     fileInputRef.current?.click();
@@ -195,12 +209,8 @@ export default function LetterWritePage() {
               whiteBtnText="수정"
               type="submit"
               disabled={isPending}
-              onClickGreenBtn={() => {
-                setShowModal(false);
-              }}
-              onClickWhiteBtn={() => {
-                setShowModal(false);
-              }}
+              onClickGreenBtn={handleConfirmSubmit}
+              onClickWhiteBtn={handleCancelSubmit}
             >
               한번 작성한 글은
               <br /> 수정 또는 삭제가 불가능합니다.
