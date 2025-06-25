@@ -29,9 +29,7 @@ export default function AddFriendBtn() {
   const soldierCodeRef = useRef<HTMLInputElement>(null);
 
   const isSE = useIsSEPhone();
-  const toastPosition = isSE
-    ? "top-40 left-1/2 -translate-x-1/2"
-    : "top-60 left-1/2 -translate-x-1/2";
+  const toastPosition = isSE ? "top-40" : "top-60";
 
   const addFriendHandler = async () => {
     if (soldierCodeRef.current?.value && userId) {
