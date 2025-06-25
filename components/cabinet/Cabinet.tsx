@@ -39,7 +39,9 @@ export default function Cabinet({ isMyCabinet, userId }: Props) {
     (async () => {
       const totalLettersCnt = await getTotalReceivedNonReplyLettersCnt(userId);
 
-      setTotalPage(Math.ceil(totalLettersCnt / 7));
+      const totalPagesCnt = Math.ceil(totalLettersCnt / 7);
+
+      setTotalPage(totalPagesCnt < 1 ? 1 : totalPagesCnt);
 
       const letters = await getNonReplyLettersByUserId(
         userId,
