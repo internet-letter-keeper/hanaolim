@@ -31,6 +31,36 @@ export default function WritePage() {
   if (!soldierId) {
     throw new Error("군인 아이디가 존재하지 않습니다.");
   }
+  const getPresignedPost = async (file: File) => {
+    const res = await fetch("/api/upload", {
+      method: "POST",
+      body: JSON.stringify({ fileName: file.name }),
+      headers: { "Content-Type": "application/json" },
+    });
+
+    if (!res.ok) throw new Error("Presigned URL 발급 실패");
+
+    return res.json();
+  };
+
+  const uploadToS3 = async (file: File): Promise<string> => {
+    const { url, fields, key } = await getPresignedPost(file);
+
+    const formData = new FormData();
+    Object.entries(fields).forEach(([k, v]) => formData.append(k, v));
+    formData.append("Content-Type", file.type);
+    formData.append("file", file);
+
+    const uploadRes = await fetch(url, {
+      method: "POST",
+      body: formData,
+    });
+
+    if (!uploadRes.ok) throw new Error("S3 업로드 실패");
+
+    const s3Url = `https://${process.env.NEXT_PUBLIC_AWS_BUCKET_NAME}.s3.${process.env.NEXT_PUBLIC_AWS_REGION}.amazonaws.com/${key}`;
+    return s3Url;
+  };
 
   const [letter, postLetterAction, isPending] = useActionState(
     async (_pre: unknown, formData: FormData) => {
@@ -42,8 +72,8 @@ export default function WritePage() {
       formData.append("iconId", iconId.toString());
 
       // 업로드된 파일이 있으면 FormData에 추가
-      if (uploadedFile?.file) {
-        formData.append("file", uploadedFile.file);
+      if (uploadedFile?.url) {
+        formData.append("fileUrl", uploadedFile.url); // ← 기존 file 대신 URL 넣기
       }
 
       const result = await postLetter(formData);
@@ -78,17 +108,25 @@ export default function WritePage() {
     fileInputRef.current?.click();
   };
 
-  const handleFileChange = (e: ChangeEvent<HTMLInputElement>) => {
+  const handleFileChange = async (e: ChangeEvent<HTMLInputElement>) => {
     const file = e.target.files?.[0];
-    if (file) {
-      const url = URL.createObjectURL(file);
+    if (!file) return;
+
+    try {
+      const url = await uploadToS3(file);
       const fileType = file.type.startsWith("image/") ? "image" : "video";
+      console.log("업로드 성공 url", url);
+      console.log("업로드 성공 file", file.name);
+      console.log("업로드 성공 type", fileType);
 
       setUploadedFile({
-        file,
+        file: file,
         url,
         type: fileType,
       });
+    } catch (err) {
+      console.error("업로드 실패", err);
+      alert("파일 업로드에 실패했습니다.");
     }
   };
 
