@@ -2,11 +2,11 @@
 
 import Image from "next/image";
 import { useRouter } from "next/navigation";
-import { useRef, useState } from "react";
+import { useRef, useState, KeyboardEvent } from "react";
+import SignUpInput from "@/components/SignUpInput";
 import { Input, PrimaryButton, Txt } from "@/components/atoms";
 import { isEmailDuplicated, postSignUp } from "@/lib/actions/auth-actions";
 import {
-  checkConfirmPasswordValidation,
   checkEmailValidation,
   checkNameValidation,
   checkPasswordValidation,
@@ -19,22 +19,44 @@ export default function SignUpPage() {
     router.push("/auth/signIn");
   };
 
-  const nameRef = useRef<HTMLInputElement>(null);
-  const emailRef = useRef<HTMLInputElement>(null);
+  const [name, setName] = useState("");
+  const [email, setEmail] = useState("");
   const passwordRef = useRef<HTMLInputElement>(null);
   const confirmPasswordRef = useRef<HTMLInputElement>(null);
 
   const [nameError, setNameError] = useState(false);
   const [emailError, setEmailError] = useState(false);
-  const [passwordError, setPasswordError] = useState(false);
-  const [confirmPasswordError, setConfirmPasswordError] = useState(false);
   const [nameMessage, setNameMessage] = useState("");
-  const [passwordMessage, setPasswordMessage] = useState("");
+  const [password, setPassword] = useState("");
+  const [confirmPassword, setConfirmPassword] = useState("");
+  const [signUpError, setSignUpError] = useState("");
+
+  const passwordValidation = checkPasswordValidation(password);
+  const isPasswordMatch = password === confirmPassword;
+  const passwordErrorMessage = !password
+    ? ""
+    : !passwordValidation.valid
+      ? passwordValidation.message
+      : "";
+  const confirmPasswordErrorMessage = !confirmPassword
+    ? ""
+    : !isPasswordMatch
+      ? "입력하신 비밀번호와 다릅니다."
+      : "";
+
+  const isAllFieldsFilled = !!(name && email && password && confirmPassword);
+  //버튼 활성화
+  const isButtonEnabled =
+    isAllFieldsFilled &&
+    checkNameValidation(name).valid &&
+    checkEmailValidation(email) &&
+    passwordValidation.valid &&
+    isPasswordMatch;
 
   // 회원가입 버튼 클릭 핸들러
   const handleSignUp = async () => {
     // 이름 유효성 검사
-    const nameValidation = checkNameValidation(nameRef.current?.value || "");
+    const nameValidation = checkNameValidation(name);
     if (nameValidation.valid) {
       setNameError(false);
       setNameMessage("");
@@ -46,58 +68,38 @@ export default function SignUpPage() {
     }
 
     // 이메일 유효성 검사
-    if (checkEmailValidation(emailRef.current?.value || "")) {
+    if (checkEmailValidation(email)) {
       setEmailError(false);
     } else {
       setEmailError(true);
       return;
     }
 
-    // 비밀번호 유효성 검사
-    const passwordValidation = checkPasswordValidation(
-      passwordRef.current?.value || ""
-    );
-    if (passwordValidation.valid) {
-      setPasswordError(false);
-      setPasswordMessage("");
-    } else {
-      setPasswordError(false);
-      setPasswordError(true);
-      setPasswordMessage(passwordValidation["message"]);
-      return;
-    }
-
-    // 비밀번호 확인 유효성 검사
-    if (
-      checkConfirmPasswordValidation(
-        passwordRef.current?.value || "",
-        confirmPasswordRef.current?.value || ""
-      )
-    ) {
-      setConfirmPasswordError(false);
-    } else {
-      setConfirmPasswordError(true);
-      return;
-    }
-
+    setSignUpError("");
     // 회원가입 api 호출
-
-    const duplicated = await isEmailDuplicated(emailRef.current?.value || "");
+    const duplicated = await isEmailDuplicated(email);
     if (duplicated) {
-      alert("이미 사용 중인 이메일입니다.");
+      setSignUpError("이미 사용 중인 이메일입니다.");
       return;
     }
     const result = await postSignUp({
-      email: emailRef.current?.value || "",
-      userName: nameRef.current?.value || "",
-      password: passwordRef.current?.value || "",
+      email,
+      userName: name,
+      password: password || "",
     });
     if (result.ok) {
-      alert("회원가입 완료!");
       router.push("/auth/signIn");
     } else {
-      alert(result.error);
+      setSignUpError(result.error || "회원가입에 실패했습니다.");
       return;
+    }
+  };
+
+  const handleKeyDown = (
+    e: KeyboardEvent<HTMLInputElement | HTMLTextAreaElement>
+  ) => {
+    if (e.key === "Enter" && isButtonEnabled) {
+      handleSignUp();
     }
   };
 
@@ -114,78 +116,73 @@ export default function SignUpPage() {
       {/* Input 버튼 */}
       <div className="mt-[52px] flex flex-col gap-[17px] w-full">
         {/* 이름 */}
-        <div className="flex flex-col gap-[14px]">
-          <Txt size={19} weight="cm" align="left">
-            이름
-          </Txt>
-          <div className="flex flex-col gap-[10px]">
-            <Input
-              placeholder="이름을 입력해주세요"
-              maxLength={8}
-              customRef={nameRef}
-            />
-            {nameError && (
-              <Txt size={12} align="left" className="text-red-a76 ">
-                {nameMessage}
-              </Txt>
-            )}
-          </div>
-        </div>
-
+        <SignUpInput
+          label="이름"
+          value={name}
+          onChange={(e) => {
+            setName(e.target.value);
+            const validation = checkNameValidation(e.target.value);
+            if (validation.valid) {
+              setNameError(false);
+              setNameMessage("");
+            } else {
+              setNameError(true);
+              setNameMessage(validation.message);
+            }
+            setSignUpError("");
+          }}
+          onFocus={() => setSignUpError("")}
+          placeholder="이름을 입력해주세요"
+          maxLength={8}
+          error={nameError}
+          errorMessage={nameMessage}
+        />
         {/* 이메일 */}
-        <div className="flex flex-col gap-[14px]">
-          <Txt size={19} weight="cm" align="left">
-            이메일
-          </Txt>
-          <div className="flex flex-col gap-[10px]">
-            <Input
-              placeholder="이메일을 입력해주세요"
-              maxLength={30}
-              customRef={emailRef}
-            />
-            {emailError && (
-              <Txt size={12} align="left" className="text-red-a76 ">
-                유효하지 않은 이메일 형식입니다.
-              </Txt>
-            )}
-          </div>
-        </div>
-
+        <SignUpInput
+          label="이메일"
+          value={email}
+          onChange={(e) => {
+            setEmail(e.target.value);
+            setEmailError(!checkEmailValidation(e.target.value));
+            setSignUpError("");
+          }}
+          onFocus={() => setSignUpError("")}
+          placeholder="이메일을 입력해주세요"
+          maxLength={30}
+          error={emailError}
+          errorMessage="유효하지 않은 이메일 형식입니다."
+        />
         {/* 비밀번호 */}
-        <div className="flex flex-col gap-[14px]">
-          <Txt size={19} weight="cm" align="left">
-            비밀번호
-          </Txt>
-          <div className="flex flex-col gap-[10px]">
-            <Input
-              placeholder="영문자,숫자,특수문자를 포함한 8~20자"
-              maxLength={20}
-              customRef={passwordRef}
-              type="password"
-            />
-            {passwordError && (
-              <Txt size={12} align="left" className="text-red-a76 ">
-                {passwordMessage}
-              </Txt>
-            )}
-          </div>
-          <div className="flex flex-col gap-[10px]">
-            <Input
-              placeholder="비밀번호를 확인해주세요"
-              maxLength={20}
-              customRef={confirmPasswordRef}
-              type="password"
-            />
-            {confirmPasswordError && (
-              <Txt size={12} align="left" className="text-red-a76 ">
-                입력하신 비밀번호와 다릅니다.
-              </Txt>
-            )}
-          </div>
-        </div>
+        <SignUpInput
+          label="비밀번호"
+          value={password}
+          onChange={(e) => setPassword(e.target.value)}
+          placeholder="영문자,숫자,특수문자를 포함한 8~20자"
+          maxLength={20}
+          error={!!passwordErrorMessage}
+          errorMessage={passwordErrorMessage}
+          type="password"
+          
+        />
+        <SignUpInput
+          label="비밀번호 확인"
+          value={confirmPassword}
+          onChange={(e) => setConfirmPassword(e.target.value)}
+          placeholder="비밀번호를 확인해주세요"
+          maxLength={20}
+          error={!!confirmPasswordErrorMessage}
+          errorMessage={confirmPasswordErrorMessage}
+          type="password"
+          onKeyDown={handleKeyDown}
+        />
       </div>
 
       {/* 회원가입 버튼 */}
+      {signUpError && (
+        <Txt size={12} align="left" className="text-red-a76 w-full mt-2">
+          {signUpError}
+        </Txt>
+      )}
       <PrimaryButton
         title="회원가입"
         rounded="sm"
@@ -194,6 +191,7 @@ export default function SignUpPage() {
         weight="cm"
         className="h-[38px] mt-[38px]"
         onClick={handleSignUp}
+        disabled={!isButtonEnabled}
       />
 
       {/* 로그인 안내 */}

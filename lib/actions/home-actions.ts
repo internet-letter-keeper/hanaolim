@@ -123,12 +123,14 @@ export const getLetterCount = async (userId: number) => {
     prisma.letter.count({
       where: {
         receiverId: userId,
+        parentLetterId: null,
       },
     }),
     prisma.letter.count({
       where: {
         receiverId: userId,
         readDate: null,
+        parentLetterId: null,
       },
     }),
   ]);

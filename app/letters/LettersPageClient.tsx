@@ -133,6 +133,25 @@ export default function LettersPageClient({
             />
           </button>
         </div>
+
+        <div className="py-1">
+          <div className="flex justify-center gap-2">
+            <PrimaryButton
+              title="내 관물대"
+              onClick={() => setActiveTab("send")}
+              color={activeTab === "send" ? "green" : "white"}
+              className="py-2 my-4 border border-[#D6E9E7]"
+              weight="cm"
+            />
+            <PrimaryButton
+              title="친구 관물대"
+              onClick={() => setActiveTab("receive")}
+              color={activeTab === "receive" ? "green" : "white"}
+              className="py-2 my-4 border border-[#D6E9E7]"
+              weight="cm"
+            />
+          </div>
+        </div>
       </div>
 
       <div className="flex-1 bg-white-afa h-screen -m-4 mt-4">
