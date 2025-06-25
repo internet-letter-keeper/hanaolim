@@ -8,7 +8,7 @@ import { Input, PrimaryButton, Txt } from "@/components/atoms";
 import { BasicHeader, Modal } from "@/components/common";
 import { FilePreview } from "@/components/letters";
 import { CONTENT_MAX_COUNT } from "@/constants/limitContent";
-import { getSenderName, postLetterReply } from "@/lib/actions/write-actions";
+import { postLetterReply } from "@/lib/actions/write-actions";
 import { uploadedFileType } from "@/types/letters";
 
 export default function LetterWritePage() {
@@ -18,7 +18,6 @@ export default function LetterWritePage() {
   );
   const [showModal, setShowModal] = useState(false);
   const [count, setCount] = useState<number>(0);
-  const [pendingFormData, setPendingFormData] = useState<FormData | null>(null);
   const router = useRouter();
   const searchParams = useSearchParams();
   const { soldierId, letterId } = useParams();
@@ -53,30 +52,6 @@ export default function LetterWritePage() {
   );
 
   const fileInputRef = useRef<HTMLInputElement>(null);
-
-  // Form submit 처리 (모달 띄우기)
-  const handleFormSubmit = (e: FormEvent<HTMLFormElement>) => {
-    e.preventDefault(); // 기본 form submit 방지
-
-    const formData = new FormData(e.currentTarget);
-    setPendingFormData(formData);
-    setShowModal(true);
-  };
-
-  // 모달에서 전송 확인
-  const handleConfirmSubmit = () => {
-    if (pendingFormData) {
-      postLetterAction(pendingFormData);
-      setShowModal(false);
-      setPendingFormData(null);
-    }
-  };
-
-  // 모달에서 수정 선택
-  const handleCancelSubmit = () => {
-    setShowModal(false);
-    setPendingFormData(null);
-  };
 
   const onClickImage = () => {
     fileInputRef.current?.click();
@@ -143,10 +118,7 @@ export default function LetterWritePage() {
 
         {/* form의 onSubmit으로 모달 처리 */}
 
-        <form
-          className="flex flex-col gap-3 w-full"
-          onSubmit={handleFormSubmit}
-        >
+        <form className="flex flex-col gap-3 w-full" action={postLetterAction}>
           <div className="flex flex-col w-full gap-2">
             <Input
               name="content"
@@ -206,29 +178,36 @@ export default function LetterWritePage() {
           <div className="flex justify-end mt-4">
             <PrimaryButton
               title="전송"
-              type="submit"
               rounded="sm"
               weight="medium"
               className="w-20 py-1"
               disabled={isPending}
               textSize={16}
+              onClick={() => {
+                setShowModal(true);
+              }}
             />
           </div>
+          {/* 모달 */}
+          {showModal && (
+            <Modal
+              greenBtnText="전송"
+              whiteBtnText="수정"
+              type="submit"
+              disabled={isPending}
+              onClickGreenBtn={() => {
+                setShowModal(false);
+              }}
+              onClickWhiteBtn={() => {
+                setShowModal(false);
+              }}
+            >
+              한번 작성한 글은
+              <br /> 수정 또는 삭제가 불가능합니다.
+            </Modal>
+          )}
         </form>
       </div>
-
-      {/* 모달 */}
-      {showModal && (
-        <Modal
-          greenBtnText="전송"
-          whiteBtnText="수정"
-          onClickGreenBtn={handleConfirmSubmit}
-          onClickWhiteBtn={handleCancelSubmit}
-        >
-          한번 작성한 글은
-          <br /> 수정 또는 삭제가 불가능합니다.
-        </Modal>
-      )}
     </div>
   );
 }
