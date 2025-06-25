@@ -143,7 +143,7 @@ export default function LetterModal({ letterId, onHandleModal }: Props) {
               handleGoReply();
             }}
           >
-            답장하러 가기
+            답장하기
           </Txt>
         </div>
       </div>
