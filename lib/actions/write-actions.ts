@@ -107,7 +107,6 @@ const createLetter = async (data: LetterFormData, senderId: number) => {
       letterData.parentLetterId = +data.parentLetterId;
     }
 
-    console.log("Creating letter with data:", letterData);
     await prisma.letter.create({ data: letterData });
     return { success: true };
   } catch (error) {
