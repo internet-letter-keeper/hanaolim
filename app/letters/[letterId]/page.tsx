@@ -2,6 +2,7 @@ import { PrimaryButton } from "@/components/atoms";
 import BasicHeader from "@/components/common/BasicHeader";
 import LettersDetail from "@/components/letters/LettersDetail";
 import { getLetterDetail } from "@/lib/actions/letter-actions";
+import { getSenderName } from "@/lib/actions/write-actions";
 import { requireAuth } from "@/utils/auth";
 
 type Props = {
@@ -21,6 +22,7 @@ export default async function LetterDetailPage({ params }: Props) {
     throw new Error("편지 정보를 가져오는 것에 실패했습니다");
 
   const reply = await getLetterDetail({ letterId, userId, isReply: true });
+  const name = await getSenderName(letterId);
 
   return (
     <>
@@ -36,7 +38,9 @@ export default async function LetterDetailPage({ params }: Props) {
       {/* 답장 없을 경우 버튼 */}
       {!reply.data?.parentLetterId && (
         <div className="flex justify-end px-6 mt-2">
-          <a href={`/write/${soldierId}/${letter.data.letterId}`}>
+          <a
+            href={`/write/${soldierId}/${letter.data.letterId}?name=${name.userName}&id=${name.userId}`}
+          >
             <PrimaryButton title="답장하기" className="px-3 w-28 py-[5px]" />
           </a>
         </div>
