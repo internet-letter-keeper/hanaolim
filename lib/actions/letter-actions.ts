@@ -150,25 +150,6 @@ export const patchFavorite = async (letterId: number, userId: number) => {
 };
 
 /**
- *
- * @param letterId
- * @usage 편지 상세 페이지
- * @returns 읽음 처리
- */
-export async function patchReadDate(letterId: number) {
-  try {
-    prisma.letter.update({
-      where: { letterId },
-      data: { readDate: new Date() },
-    });
-    return { ok: true };
-  } catch (err) {
-    console.error("읽음 처리 실패", err);
-    return { ok: false };
-  }
-}
-
-/**
  * 군인이 받은 원본 편지의 개수
  * @param soldierId
  * @returns 받은 원본 편지[]
@@ -277,7 +258,7 @@ export const getFilteredLetters = async ({
     if (box === "mine") {
       where.receiverId = userId;
 
-      if (isUnread === false) {
+      if (isUnread === true) {
         where.readDate = null;
       }
 
