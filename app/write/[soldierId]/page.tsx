@@ -7,6 +7,7 @@ import { ChangeEvent, FormEvent } from "react";
 import { Input, PrimaryButton, Txt } from "@/components/atoms";
 import { BasicHeader, Modal } from "@/components/common";
 import { FilePreview, IconPicker } from "@/components/letters";
+import { CONTENT_MAX_COUNT } from "@/constants/limitContent";
 import { getSoldierName } from "@/lib/actions/soldier-actions";
 import { postLetter } from "@/lib/actions/write-actions";
 import { IconName } from "@/types/common/icons";
@@ -25,6 +26,7 @@ export default function WritePage({
     null
   );
   const [showModal, setShowModal] = useState(false);
+  const [count, setCount] = useState<number>(0);
   const [pendingFormData, setPendingFormData] = useState<FormData | null>(null);
   const router = useRouter();
 
@@ -164,15 +166,22 @@ export default function WritePage({
           <Txt size={11} weight="cm" className="text-blue-9a0" align="left">
             ※ 닉네임은 관물대에서만 보여지며, 상대방에게는 실명이 전달됩니다.
           </Txt>
-          <Input
-            name="content"
-            placeholder="내용을 입력하세요."
-            tag="textarea"
-            maxLength={500}
-            required
-          />
-
-          <div className="flex flex-row justify-between w-full items-center mt-5">
+          <div className="flex flex-col w-full gap-2">
+            <Input
+              name="content"
+              placeholder="내용을 입력하세요."
+              tag="textarea"
+              maxLength={CONTENT_MAX_COUNT}
+              required
+              onChange={(e) => {
+                setCount(e.target.value.length);
+              }}
+            />
+            <Txt size={11} weight="cm" className="mr-2" align="right">
+              {count}/{CONTENT_MAX_COUNT}
+            </Txt>
+          </div>
+          <div className="flex flex-row justify-between w-full items-center">
             {!uploadedFile && (
               <div className="flex flex-row gap-1 items-center">
                 <button
