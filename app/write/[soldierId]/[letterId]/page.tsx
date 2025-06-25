@@ -3,40 +3,16 @@
 import Image from "next/image";
 import { useParams, useRouter, useSearchParams } from "next/navigation";
 import { useState, useRef, useActionState, useEffect } from "react";
-import { ChangeEvent, FormEvent } from "react";
+import { ChangeEvent } from "react";
 import { Input, PrimaryButton, Txt } from "@/components/atoms";
 import { BasicHeader, Modal } from "@/components/common";
 import { FilePreview } from "@/components/letters";
 import { CONTENT_MAX_COUNT } from "@/constants/limitContent";
 import { postLetterReply } from "@/lib/actions/write-actions";
 import { uploadedFileType } from "@/types/letters";
+import { uploadToS3 } from "@/utils/upload";
 
 const MAX_FILE_SIZE = 5 * 1024 * 1024; // 5MB
-
-const getPresignedPost = async (file: File) => {
-  const res = await fetch("/api/upload", {
-    method: "POST",
-    body: JSON.stringify({ fileName: file.name }),
-    headers: { "Content-Type": "application/json" },
-  });
-  if (!res.ok) throw new Error("Presigned URL 발급 실패");
-  return res.json();
-};
-
-const uploadToS3 = async (file: File): Promise<string> => {
-  const { url, fields, key } = await getPresignedPost(file);
-  const formData = new FormData();
-  Object.entries(fields).forEach(([k, v]) => formData.append(k, v as string));
-  formData.append("Content-Type", file.type);
-  formData.append("file", file);
-  const uploadRes = await fetch(url, {
-    method: "POST",
-    body: formData,
-  });
-  if (!uploadRes.ok) throw new Error("S3 업로드 실패");
-  const s3Url = `https://${process.env.NEXT_PUBLIC_AWS_BUCKET_NAME}.s3.${process.env.NEXT_PUBLIC_AWS_REGION}.amazonaws.com/${key}`;
-  return s3Url;
-};
 
 export default function LetterWritePage() {
   const [userName, setUserName] = useState<string>("");
