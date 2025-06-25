@@ -1,0 +1,71 @@
+import { useParams, useSearchParams } from "next/navigation";
+import { useState, useEffect } from "react";
+import { getSenderName } from "@/lib/actions/write-actions";
+import { IconName } from "@/types/common/icons";
+
+interface UseLetterFormProps {
+  isReply?: boolean;
+}
+
+export const useLetterForm = ({ isReply = false }: UseLetterFormProps = {}) => {
+  const [userName, setUserName] = useState<string>("");
+  const [nickname, setNickname] = useState<string>("");
+  const [content, setContent] = useState<string>("");
+  const [selectedIcon, setSelectedIcon] = useState<IconName>("face");
+  const [senderId, setSenderId] = useState<number>(0);
+
+  const { soldierId, letterId } = useParams();
+  const searchParams = useSearchParams();
+  const nameParam = searchParams.get("name");
+
+  if (!soldierId) {
+    throw new Error("군인 아이디가 존재하지 않습니다.");
+  }
+
+  useEffect(() => {
+    // 사용자 이름 설정
+    if (nameParam) {
+      try {
+        const decodedName = decodeURIComponent(nameParam);
+        setUserName(decodedName);
+      } catch (error) {
+        console.error(error);
+        setUserName("별돌이");
+      }
+    } else {
+      setUserName("별돌이");
+    }
+
+    // 답장인 경우 발신자 정보 가져오기
+    if (isReply && letterId) {
+      (async () => {
+        try {
+          // 부모 letterId 가지고 name, id 가져오기
+          const fetchData = await getSenderName(+letterId);
+          setSenderId(fetchData.userId);
+        } catch (error) {
+          console.error(error);
+        }
+      })();
+    }
+  }, [nameParam, isReply, letterId]);
+
+  const isFormValid =
+    content.trim() !== "" && (isReply || nickname.trim() !== "");
+
+  return {
+    formData: {
+      userName,
+      nickname,
+      content,
+      selectedIcon,
+      senderId,
+    },
+    setNickname,
+    setContent,
+    setSelectedIcon,
+    soldierId: soldierId.toString(),
+    letterId: letterId?.toString(),
+    isFormValid,
+  };
+};
