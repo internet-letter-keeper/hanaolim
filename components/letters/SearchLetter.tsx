@@ -28,7 +28,7 @@ export default function SearchLetter() {
   };
 
   return (
-    <div className="relative mt-4 mb-4">
+    <div className="relative">
       <Input
         customRef={inputRef}
         placeholder="작성자, 내용 ..."
@@ -42,7 +42,7 @@ export default function SearchLetter() {
           alt="검색"
           width={20}
           height={20}
-          className="absolute right-2 top-1/2 -translate-y-1/2"
+          className="absolute right-3 top-1/2 -translate-y-1/2"
         />
       </button>
     </div>
