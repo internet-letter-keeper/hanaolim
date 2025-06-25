@@ -2,7 +2,7 @@
 
 import { useRouter } from "next/navigation";
 import { useSession } from "next-auth/react";
-import { useRef, useState } from "react";
+import { useRef, useState, KeyboardEvent } from "react";
 import { Input, Txt } from "@/components/atoms";
 import { useToast } from "@/contexts/toast/ToastContext";
 import { useIsSEPhone } from "@/hooks/useMobile";
@@ -49,6 +49,14 @@ export default function AddFriendBtn() {
     }
   };
 
+  const handleKeyDown = (
+    e: KeyboardEvent<HTMLInputElement | HTMLTextAreaElement>
+  ) => {
+    if (e.key === "Enter") {
+      addFriendHandler();
+    }
+  };
+
   const navigateToSignIn = () => router.push("/auth/signIn");
 
   return (
@@ -67,6 +75,7 @@ export default function AddFriendBtn() {
             className="mt-[20px]"
             maxLength={8}
             customRef={soldierCodeRef}
+            onKeyDown={handleKeyDown}
           />
         </Modal>
       )}
