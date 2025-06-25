@@ -19,7 +19,12 @@ export default function NewIcon({ className, size = 10 }: Props) {
         className
       )}
     >
-      <Txt className="text-white" size={size} weight="heavy">
+      <Txt
+        className="text-white leading-none"
+        size={size}
+        weight="heavy"
+        align="center"
+      >
         N
       </Txt>
     </div>
