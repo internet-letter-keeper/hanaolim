@@ -6,7 +6,7 @@ import { useSession } from "next-auth/react";
 import { MouseEventHandler, useEffect, useRef, useState } from "react";
 import { getLetterDetail } from "@/lib/actions/letter-actions";
 import { Letter } from "@/types/letters";
-import { Txt } from "../atoms";
+import { PrimaryButton, Txt } from "../atoms";
 import LetterView from "./LetterView";
 import PigSplash from "./PigSplash";
 
@@ -78,12 +78,6 @@ export default function LetterModal({ letterId, onHandleModal }: Props) {
     return () => document.removeEventListener("keydown", onKeyDown);
   }, [onKeyDown]);
 
-  /* useEffect(() => {
-    setShowPoint(true);
-    const timeout = setTimeout(() => setShowPoint(false), 1400);
-    return () => clearTimeout(timeout);
-  }, []); */
-
   return (
     <div
       ref={overlay}
@@ -100,8 +94,8 @@ export default function LetterModal({ letterId, onHandleModal }: Props) {
         onClick={handleGoToDetail}
       >
         <div className="flex w-full justify-between">
-          <Txt size={18} weight="cm" className="text-green-49d">
-            TO. {letter?.receiverName}
+          <Txt size={18} weight="bold" className="text-green-49d">
+            {letter?.senderName}({letter?.nickname})
           </Txt>
           <Image
             src={"/icons/ic-x-in-circle.svg"}
@@ -120,11 +114,11 @@ export default function LetterModal({ letterId, onHandleModal }: Props) {
             timeStyle: "short",
           })}
         </Txt>
-        <Txt align="left" className="py-4">
+        <Txt align="left" size={16} className="py-4">
           {letter?.content}
         </Txt>
         {letter?.fileUrl && <LetterView fileUrl={letter.fileUrl} />}
-        <div className="flex w-full justify-between">
+        <div className="flex w-full justify-end">
           <Txt
             align="left"
             weight="bold"
@@ -135,9 +129,6 @@ export default function LetterModal({ letterId, onHandleModal }: Props) {
             }}
           >
             답장하러 가기
-          </Txt>
-          <Txt size={18} weight="cm" className="text-green-49d">
-            From. {letter?.senderName}
           </Txt>
         </div>
       </div>
