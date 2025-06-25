@@ -163,3 +163,17 @@ export const patchStatusMessage = async (
   soldierId: number,
   statusMessage: string
 ) => prisma.soldier.update({ where: { soldierId }, data: { statusMessage } });
+
+/**
+ * 나의 첫번쨰 팔로우 목록을 보여줌
+ * @param userId
+ * @returns 첫번째 follow
+ */
+export const getFirstFollow = async (userId: number) => {
+  const follow = await prisma.follow.findFirst({
+    where: { userId },
+    select: { followId: true, userId: true, soldierId: true },
+  });
+
+  return follow === null ? null : follow;
+};
