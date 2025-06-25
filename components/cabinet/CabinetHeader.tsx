@@ -1,5 +1,6 @@
 import Image from "next/image";
 import Link from "next/link";
+import { getIsNew } from "@/lib/actions/letter-actions";
 import { SoldierUserInfo } from "@/types/common/profile";
 import { requireAuth } from "@/utils/auth";
 import { CopyCodeBtn } from ".";
@@ -16,6 +17,7 @@ export default async function CabinetHeader({
   soldierInfo,
 }: Props) {
   const session = await requireAuth();
+  const { isNew } = await getIsNew(+session.user.userId);
 
   const isSoldier = session.user.isSoldier;
 
@@ -44,10 +46,7 @@ export default async function CabinetHeader({
       {isMyCabinet && <CopyCodeBtn />}
 
       <SidebarHeader>
-        {/* TODO:새로운 메세지가 왔을 경우 분기 처리 
-          isNewMessage={true}  이런식으로 하면 됩니다
-        */}
-        <SidebarTrigger />
+        <SidebarTrigger isNewMessage={isNew} />
       </SidebarHeader>
     </header>
   );
