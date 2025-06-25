@@ -1,4 +1,3 @@
-// app/api/upload/route.ts
 import { S3Client } from "@aws-sdk/client-s3";
 import { createPresignedPost } from "@aws-sdk/s3-presigned-post";
 
@@ -20,7 +19,7 @@ export async function POST(req: Request) {
     Key: key,
     Conditions: [["starts-with", "$Content-Type", ""]],
     Fields: { acl: "public-read" },
-    Expires: 60, // 1분
+    Expires: 300,
   });
 
   return Response.json({ ...presignedPost, key });
