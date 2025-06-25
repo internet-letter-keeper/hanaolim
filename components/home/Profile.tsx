@@ -1,6 +1,7 @@
 "use client";
 
 import Image from "next/image";
+import { useRouter } from "next/navigation";
 import Txt from "@/components/atoms/Text";
 import { Progress } from "@/components/ui/progress";
 import { untilEndDate } from "@/utils/date";
@@ -12,6 +13,8 @@ type Props = {
 };
 
 export default function ProfileBanner({ userName, startDate, endDate }: Props) {
+  const router = useRouter();
+
   const startDateObj = new Date(startDate);
   const endDateObj = new Date(endDate);
   const today = new Date();
@@ -32,8 +35,15 @@ export default function ProfileBanner({ userName, startDate, endDate }: Props) {
   // 복무 진행률 게이지 계산
   const progressPercent = Math.min(100, (passedDays / totalDays) * 100);
 
+  const handleSendClick = () => {
+    router.push("/my");
+  };
+
   return (
-    <div className="flex items-center gap-3 px-4 py-3 bg-gray-530 border-[1.5px] border-green-a3b rounded-[30px] w-full h-[89px] relative overflow-hidden">
+    <div
+      onClick={handleSendClick}
+      className="flex items-center gap-3 px-4 py-3 bg-gray-530 border-[1.5px] border-green-a3b rounded-[30px] w-full h-[89px] relative overflow-hidden cursor-pointer"
+    >
       {/* 캐릭터 이미지 */}
       <div className="flex-shrink-0 relative w-[85px] h-[85px]">
         <Image src="/images/byeoldol.svg" alt="별돌이 프로필" fill priority />
