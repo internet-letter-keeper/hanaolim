@@ -20,9 +20,10 @@ export default function NotFound() {
       </Txt>
 
       <Txt size={15} weight="medium" className="text-red-a76 mt-15">
-        요청하신 페이지를 처리 중에 오류가 발생했습니다.
+        요청하신 페이지 처리 중 오류가 발생했습니다.
         <br />
         서비스 이용에 불편을 드려 죄송합니다.
+        <br />
         <br />
         다시 시도해 주시기 바랍니다.
       </Txt>
