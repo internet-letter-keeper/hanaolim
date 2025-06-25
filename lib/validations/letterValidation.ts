@@ -13,8 +13,9 @@ export const letterValidator = z.object({
     .max(500, "내용은 500자 이하여야 합니다."),
   iconId: z.coerce.number().optional(),
   fileUrl: z.string().optional(),
-  soldierId: z.string().min(1, "군인 ID가 필요합니다."),
-  parentLetterId: z.string().optional(), // 답장인 경우
+  soldierId: z.coerce.number(),
+  parentLetterId: z.coerce.number().optional(), // 답장인 경우
+  receiverId: z.coerce.number().optional(),
 });
 
 export type LetterFormData = z.infer<typeof letterValidator>;
