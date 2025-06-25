@@ -18,7 +18,7 @@ export async function POST(req: Request) {
   const presignedPost = await createPresignedPost(s3, {
     Bucket: process.env.NEXT_PUBLIC_AWS_BUCKET_NAME!,
     Key: key,
-    Conditions: [["starts-with", "$Content-Type", "image/"]],
+    Conditions: [["starts-with", "$Content-Type", ""]],
     Fields: { acl: "public-read" },
     Expires: 60, // 1분
   });
