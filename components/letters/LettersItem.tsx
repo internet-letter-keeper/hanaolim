@@ -19,7 +19,6 @@ export default function LettersItem({ letter, currentUserId, box }: Props) {
     content,
     createDate,
     readDate,
-    isFavorite,
     hasReply,
   } = letter;
 

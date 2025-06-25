@@ -55,12 +55,11 @@ export const getLettersByUserId = async (userId: number) => {
 };
 
 /**
- * 
-// 편지 상세 조회 api
- * @param letterId 
+ * 편지 상세 조회 api
+ * @param letterId
  * @param userId
  * @usage 편지 상세 페이지
- * @returns 
+ * @returns
  */
 export const getLetterDetail = async ({
   letterId,
@@ -78,12 +77,18 @@ export const getLetterDetail = async ({
       },
     });
 
+    const hasReply = await prisma.letter.findFirst({
+      where: {
+        parentLetterId: letterId,
+      },
+    });
+
     if (!letter) {
       return { ok: false, data: null };
     }
 
     //TODO: 코드 리팩토링 필요
-    const result: Letter = {
+    const result = {
       letterId: letter.letterId,
       nickname: letter.nickname ?? "",
       content: letter.content,
@@ -99,6 +104,7 @@ export const getLetterDetail = async ({
       isFavorite: letter.Favorite.some(
         (f) => f.userId === userId && f.isFavorite
       ),
+      hasReply,
     };
     return { ok: true, data: result };
   } catch (error) {
