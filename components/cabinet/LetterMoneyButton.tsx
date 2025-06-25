@@ -1,10 +1,13 @@
 "use client";
 
+import { Plus } from "lucide-react";
 import Image from "next/image";
 import { useRouter } from "next/navigation";
 import { useSession } from "next-auth/react";
+import { useState } from "react";
 import { useToast } from "@/contexts/toast/ToastContext";
 import { getAccountNumBySoldierId } from "@/lib/actions/friend-actions";
+import { cn } from "@/lib/utils";
 import { Txt } from "../atoms";
 
 type SoldierSupportProps = {
@@ -41,6 +44,8 @@ export default function LetterMoneyButton({ soldierId }: Props) {
 
   const { showToast } = useToast();
 
+  const [isOpen, setIsOpen] = useState(false);
+
   const onCoinClick = async () => {
     // 소셜로그인이면 soldierId 해당 군인의 계좌번호 복사, 이메일 로그인이면 하나원큐로 이동
     if (data?.user.isSocial) {
@@ -55,9 +60,34 @@ export default function LetterMoneyButton({ soldierId }: Props) {
   const onLetterClick = () => router.push(`/write/${soldierId}`);
 
   return (
-    <div className="flex items-center justify-end gap-2">
-      <SoldierSupportButton type="coin" onClick={onCoinClick} />
-      <SoldierSupportButton type="letter" onClick={onLetterClick} />
+    <div className="absolute bottom-6 right-2 z-50 flex flex-col items-center gap-3">
+      {/* 열렸을 때 나오는 용돈/편지 버튼들 */}
+      <div
+        className={`transition-all duration-300 ${
+          isOpen ? "translate-y-0 opacity-100" : "translate-y-4 opacity-0"
+        }`}
+      >
+        <SoldierSupportButton type="coin" onClick={onCoinClick} />
+      </div>
+      <div
+        className={`transition-all duration-300 delay-75 ${
+          isOpen ? "translate-y-0 opacity-100" : "translate-y-4 opacity-0"
+        }`}
+      >
+        <SoldierSupportButton type="letter" onClick={onLetterClick} />
+      </div>
+
+      {/* 메인 플로팅 버튼 */}
+      <button
+        onClick={() => setIsOpen(!isOpen)}
+        className="w-14 h-14 bg-[#FFE9EF] rounded-full shadow-xl flex items-center justify-center transition-transform hover:scale-110"
+      >
+        <Plus
+          className={cn("w-6 h-6 transition-transform", {
+            "rotate-45": isOpen,
+          })}
+        />
+      </button>
     </div>
   );
 }
