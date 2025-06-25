@@ -1,6 +1,7 @@
 import Image from "next/image";
 import Link from "next/link";
 import { Txt } from "../atoms";
+import FavoriteToggle from "./FavoriteToggle";
 
 type Props = {
   letter: any;
@@ -28,7 +29,7 @@ export default function LettersItem({ letter, currentUserId, box }: Props) {
   const shouldShowReplyButton = box === "mine" && !hasReply;
 
   return (
-    <div className="flex w-full bg-white mx-auto">
+    <div className="flex w-full bg-white-afa mx-auto">
       <Link
         href={`/letters/${letterId}`}
         className="w-full block border rounded-[10px] border-[#209B98] pb-3 p-3 -mt-3"
@@ -88,16 +89,7 @@ export default function LettersItem({ letter, currentUserId, box }: Props) {
 
           {!shouldShowReplyButton && (!hasReply || box === "mine") && <div />}
 
-          <Image
-            src={
-              isFavorite
-                ? "/icons/ic-favorite-colered.svg"
-                : "/icons/ic-favorite-none.svg"
-            }
-            alt="즐겨찾기"
-            width={20}
-            height={20}
-          />
+          <FavoriteToggle letter={letter} currentUserId={currentUserId} />
         </div>
       </Link>
     </div>
