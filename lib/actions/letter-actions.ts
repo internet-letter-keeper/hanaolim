@@ -167,6 +167,7 @@ export async function patchReadDate(letterId: number) {
     return { ok: false };
   }
 }
+
 /**
  * 군인이 받은 원본 편지의 개수
  * @param soldierId
@@ -182,14 +183,14 @@ export const getTotalReceivedNonReplyLettersCnt = async (soldierId: number) =>
 
 /**
  * 답장이 아닌 원본 편지만 가져오기, 7개씩 페이지네이션
- * @param soldierId
+ * @param userId
  * @param page 페이지네이션. 가져올 페이지
  * @param totalLettersCnt 군인이 받은 편지의 총 개수
  * @usage 관물대
  * @returns 받은 원본 편지[]
  */
 export const getNonReplyLettersByUserId = async (
-  soldierId: number,
+  userId: number,
   page: number = 1,
   totalLettersCnt: number
 ) => {
@@ -209,7 +210,7 @@ export const getNonReplyLettersByUserId = async (
 
     const letters = await prisma.letter.findMany({
       where: {
-        receiverId: soldierId,
+        receiverId: userId,
         parentLetterId: null,
       },
       orderBy: {
@@ -242,4 +243,137 @@ export const getIsNew = async (userId: number) => {
   });
   const isNew = unreadCount > 0 ? true : false;
   return { isNew };
+};
+
+// 필터 작업 -> 내 관물대 / 친구 관물대 + 즐겨찾기, 안읽음, 답장옴
+type GetFilteredLettersParams = {
+  box: "mine" | "friend";
+  userId: number;
+  isFavorite?: boolean;
+  isUnread?: boolean;
+  hasReply?: boolean;
+  query?: string;
+};
+
+/**
+ *
+ * @param param0
+ * @returns
+ */
+export const getFilteredLetters = async ({
+  box,
+  userId,
+  isFavorite,
+  isUnread,
+  hasReply,
+  query,
+}: GetFilteredLettersParams) => {
+  try {
+    const where: any = {
+      parentLetterId: null,
+    };
+
+    // 받은편지함
+    if (box === "mine") {
+      where.receiverId = userId;
+
+      if (isUnread === false) {
+        where.readDate = null;
+      }
+
+      if (query) {
+        where.OR = [
+          { content: { contains: query } },
+          {
+            User_Letter_senderIdToUser: { userName: { contains: query } },
+          },
+        ];
+      }
+
+      const rawLetters = await prisma.letter.findMany({
+        where,
+        orderBy: { createDate: "desc" },
+        include: {
+          Favorite: true,
+          User_Letter_senderIdToUser: true,
+        },
+      });
+
+      const filtered = rawLetters.filter((letter) => {
+        const myFavorite = letter.Favorite.find((f) => f.userId === userId);
+        return isFavorite ? myFavorite?.isFavorite === true : true;
+      });
+
+      const result = filtered.map((letter) => {
+        const myFavorite = letter.Favorite.find((f) => f.userId === userId);
+        return {
+          ...letter,
+          favoriteId: myFavorite?.favoriteId,
+          isFavorite: myFavorite?.isFavorite,
+          senderName: letter.User_Letter_senderIdToUser?.userName ?? "",
+        };
+      });
+
+      return { ok: true, data: result };
+    } else {
+      // 보낸 편지함
+      where.senderId = userId;
+
+      if (query) {
+        where.OR = [
+          { content: { contains: query } },
+          {
+            User_Letter_receiverIdToUser: { userName: { contains: query } },
+          },
+        ];
+      }
+
+      const rawLetters = await prisma.letter.findMany({
+        where,
+        orderBy: { createDate: "desc" },
+        include: {
+          Favorite: true,
+          User_Letter_receiverIdToUser: true,
+        },
+      });
+
+      const letterIds = rawLetters.map((letter) => letter.letterId);
+
+      // 답장 존재 여부 조회
+      const replyMap = await prisma.letter.findMany({
+        where: {
+          parentLetterId: { in: letterIds },
+        },
+        select: {
+          parentLetterId: true,
+        },
+      });
+
+      const hasReplySet = new Set(replyMap.map((r) => r.parentLetterId));
+
+      const filtered = rawLetters.filter((letter) => {
+        const myFavorite = letter.Favorite.find((f) => f.userId === userId);
+        const matchFavorite = isFavorite
+          ? myFavorite?.isFavorite === true
+          : true;
+        const matchReply = hasReply ? hasReplySet.has(letter.letterId) : true;
+        return matchFavorite && matchReply;
+      });
+
+      const result = filtered.map((letter) => {
+        const myFavorite = letter.Favorite.find((f) => f.userId === userId);
+        return {
+          ...letter,
+          favoriteId: myFavorite?.favoriteId,
+          isFavorite: myFavorite?.isFavorite,
+          receiverName: letter.User_Letter_receiverIdToUser?.userName ?? "",
+        };
+      });
+
+      return { ok: true, data: result };
+    }
+  } catch (error) {
+    console.error("[getFilteredLetters]", error);
+    return { ok: false, error: "편지 필터링에 실패했습니다." };
+  }
 };

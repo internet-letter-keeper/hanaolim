@@ -1,83 +1,37 @@
-"use client";
-
 import Image from "next/image";
 import Link from "next/link";
-import { useState, useEffect } from "react";
-import { patchFavorite } from "@/lib/actions/letter-actions";
-import { Letter } from "@/types/letters";
 import { Txt } from "../atoms";
 
 type Props = {
-  letters: Letter;
-  allLetters: Letter[];
+  letter: any;
   currentUserId: number;
-  onFavoriteChange: (letterId: number, newState: boolean) => void;
+  box: "mine" | "friend";
 };
 
-export default function LettersItem({
-  letters,
-  allLetters,
-  currentUserId,
-  onFavoriteChange,
-}: Props) {
+export default function LettersItem({ letter, currentUserId, box }: Props) {
   const {
     letterId,
-    nickname,
+    senderId,
+    receiverId,
+    senderName,
+    receiverName,
     content,
     createDate,
-    isFavorite: initialFavorite,
     readDate,
-    receiverId,
-    senderId,
-    receiverName,
-    senderName,
-  } = letters;
+    isFavorite,
+    hasReply,
+  } = letter;
 
   const isRead = !!readDate;
-  const [isFavorite, setIsFavorite] = useState(initialFavorite);
+  const formattedDate = new Date(createDate).toLocaleDateString();
 
-  // 날짜 포맷
-  const [formattedDate, setFormattedDate] = useState("");
-  useEffect(() => {
-    const date = new Date(createDate);
-    const formatted = date.toLocaleString("ko-KR", {
-      dateStyle: "medium",
-      timeStyle: "short",
-    });
-    setFormattedDate(formatted);
-  }, [createDate]);
-
-  // 답장 존재 여부
-  const hasReply = allLetters.some((l) => l.parentLetterId === letterId);
-
-  // 답장하기 보여줄 조건: 내가 받은 편지 && 내가 아직 답장 안 한 편지
-  const shouldShowReplyButton =
-    receiverId === currentUserId &&
-    !allLetters.some(
-      (l) => l.parentLetterId === letterId && l.senderId === currentUserId
-    );
-
-  // 즐겨찾기 토클
-  const handleToggleFavorite = async (e: React.MouseEvent) => {
-    e.preventDefault();
-    e.stopPropagation();
-
-    const newFavorite = !isFavorite;
-    setIsFavorite(newFavorite); // 로컬 즉시 반영
-    onFavoriteChange(letterId, newFavorite); // 부모 상태도 업데이트
-
-    const res = await patchFavorite(letterId, currentUserId);
-    if (!res.ok) {
-      setIsFavorite(!newFavorite); // 실패 시 롤백
-      onFavoriteChange(letterId, !newFavorite);
-    }
-  };
+  const shouldShowReplyButton = box === "mine" && !hasReply;
 
   return (
-    <div className="flex w-full mt-4 bg-white mx-auto">
+    <div className="flex w-full bg-white mx-auto">
       <Link
         href={`/letters/${letterId}`}
-        className="w-full block border rounded-[10px] border-[#209B98] pb-3 p-3"
+        className="w-full block border rounded-[10px] border-[#209B98] pb-3 p-3 -mt-3"
       >
         <div className="flex justify-between items-start">
           <Txt
@@ -115,36 +69,35 @@ export default function LettersItem({
             </div>
           )}
 
-          {!shouldShowReplyButton && senderId === currentUserId && hasReply && (
-            <div className="flex items-center gap-1 rounded-full border border-red-a76 px-2 py-0.5">
-              <Image
-                src="/icons/ic-isReply.svg"
-                alt="답장도착"
-                width={14}
-                height={15}
-              />
-              <Txt size={12} className="text-red-a76">
-                답장도착
-              </Txt>
-            </div>
-          )}
-
           {!shouldShowReplyButton &&
-            (!hasReply || receiverId === currentUserId) && <div />}
+            box === "friend" &&
+            senderId === currentUserId &&
+            hasReply && (
+              <div className="flex items-center gap-1 rounded-full border border-red-a76 px-2 py-0.5">
+                <Image
+                  src="/icons/ic-isReply.svg"
+                  alt="답장도착"
+                  width={14}
+                  height={15}
+                />
+                <Txt size={12} className="text-red-a76">
+                  답장도착
+                </Txt>
+              </div>
+            )}
 
-          <button>
-            <Image
-              src={
-                isFavorite
-                  ? "/icons/ic-favorite-colered.svg"
-                  : "/icons/ic-favorite-none.svg"
-              }
-              alt="즐겨찾기"
-              width={20}
-              height={20}
-              onClick={handleToggleFavorite}
-            />
-          </button>
+          {!shouldShowReplyButton && (!hasReply || box === "mine") && <div />}
+
+          <Image
+            src={
+              isFavorite
+                ? "/icons/ic-favorite-colered.svg"
+                : "/icons/ic-favorite-none.svg"
+            }
+            alt="즐겨찾기"
+            width={20}
+            height={20}
+          />
         </div>
       </Link>
     </div>
