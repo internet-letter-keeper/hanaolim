@@ -19,13 +19,10 @@ export default function LettersItem({ letter, currentUserId, box }: Props) {
     content,
     createDate,
     readDate,
-    hasReply,
   } = letter;
 
   const isRead = !!readDate;
   const formattedDate = new Date(createDate).toLocaleDateString();
-
-  const shouldShowReplyButton = box === "mine" && !hasReply;
 
   return (
     <Link
@@ -69,10 +66,9 @@ export default function LettersItem({ letter, currentUserId, box }: Props) {
             </Txt>
           </div>
         ) : (
-          <div /> // 공간 유지용
+          <div />
         )}
 
-        {/* 오른쪽 즐겨찾기 */}
         <FavoriteToggle letter={letter} currentUserId={currentUserId} />
       </div>
     </Link>
