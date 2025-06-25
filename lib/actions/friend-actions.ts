@@ -177,3 +177,53 @@ export const getFirstFollow = async (userId: number) => {
 
   return follow === null ? null : follow;
 };
+
+/**
+ * 코드로 친구 추가
+ * @param code
+ * @param userId
+ * @returns success 여부
+ * @returns 유효한 코드가 아닐 때 "코드를 다시 확인해주세요"
+ * @returns 이미 친구일 때 "이미 친구입니다"
+ */
+export const postFriendbyId = async (soldierNum: number, userId: number) => {
+  try {
+    // code와 매칭되는 군인이 있는지 확인
+    const soldierId =
+      (
+        await prisma.soldier.findUnique({
+          where: { soldierId: soldierNum },
+          select: { soldierId: true },
+        })
+      )?.soldierId ?? null;
+
+    if (!soldierId) {
+      return { success: false, message: "코드를 다시 확인해주세요" };
+    }
+
+    // 이미 친구인지 확인
+    const exists = await prisma.follow.findFirst({
+      where: { soldierId, userId },
+    });
+
+    if (exists) {
+      return { success: false, message: "이미 친구입니다" };
+    }
+
+    const follow = await prisma.follow.create({
+      data: { soldierId, userId },
+      select: { followId: true, userId: true, soldierId: true },
+    });
+
+    return {
+      success: true,
+      message: "친구가 추가되었습니다",
+      follow: follow,
+    };
+  } catch (error) {
+    return {
+      success: false,
+      message: "친구 추가에 실패했습니다. 다시 시도해주세요.",
+    };
+  }
+};

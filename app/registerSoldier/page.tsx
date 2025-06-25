@@ -62,7 +62,7 @@ export default function SignInPage() {
 
       router.push("/");
     } else {
-      alert("군인등록에 실패했습니다. 다시 시도해 주세요.");
+      router.push("/auth/error?type=regist");
       return;
     }
   };
@@ -89,12 +89,6 @@ export default function SignInPage() {
       handleSubmit();
     }
   };
-
-  // // handleSubmit 함수에서 accountNumber 검사로 변경
-  // if (!accountNumber || accountNumber.length < 16) {
-  //   setErrorMessage("계좌번호를 올바르게 입력하여 주세요");
-  //   return;
-  // }
 
   return (
     <div className="flex flex-col items-center justify-center h-full px-[20px]">
