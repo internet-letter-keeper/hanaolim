@@ -1,10 +1,5 @@
 import Image from "next/image";
-import {
-  ChangeEvent,
-  DetailedHTMLProps,
-  InputHTMLAttributes,
-  RefObject,
-} from "react";
+import { ChangeEvent, RefObject } from "react";
 import { Txt } from "@/components/atoms";
 import { FilePreview } from "@/components/letters";
 import { uploadedFileType } from "@/types/letters";
