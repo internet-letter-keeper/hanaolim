@@ -7,6 +7,7 @@ const authenticatedPages = [
   "/friends",
   "/hanaBank",
   "/letters",
+  "/my",
   "/onboarding",
   "/pointHistory",
   "/registerSoldier",

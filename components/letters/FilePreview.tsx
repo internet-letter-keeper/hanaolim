@@ -18,7 +18,7 @@ export default function FilePreview({ uploadedFile, onDelete }: Props) {
   } = uploadedFile;
 
   return (
-    <div className="w-full mt-4 p-4">
+    <div className="w-full p-4">
       <div className="flex items-start gap-3">
         {type === "image" ? (
           <Image

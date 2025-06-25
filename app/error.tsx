@@ -3,7 +3,7 @@
 import Image from "next/image";
 import { Txt } from "@/components/atoms";
 
-export default function NotFound() {
+export default function NotFound({ error }: { error: Error }) {
   return (
     <div className="h-screen flex flex-col justify-center items-center text-center gap-4 px-6">
       <Image
@@ -18,7 +18,6 @@ export default function NotFound() {
       <Txt size={22} weight="bold">
         에러가 발생했습니다.
       </Txt>
-
       <Txt size={15} weight="medium" className="text-red-a76 mt-15">
         요청하신 페이지 처리 중 오류가 발생했습니다.
         <br />
@@ -26,6 +25,9 @@ export default function NotFound() {
         <br />
         <br />
         다시 시도해 주시기 바랍니다.
+        <br />
+        <br />
+        {error.message}
       </Txt>
     </div>
   );

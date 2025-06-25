@@ -154,3 +154,22 @@
 button {
   @apply cursor-pointer;
 }
+
+textarea::-webkit-scrollbar {
+  width: 6px;
+}
+
+textarea::-webkit-scrollbar-track {
+  background: transparent;
+}
+
+textarea::-webkit-scrollbar-thumb {
+  background: #aaaaaa;
+  border-radius: 3px;
+}
+
+
+textarea::-webkit-scrollbar-thumb:hover {
+  cursor:pointer
+}
+

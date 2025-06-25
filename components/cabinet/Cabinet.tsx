@@ -113,7 +113,7 @@ export default function Cabinet({ isMyCabinet, userId }: Props) {
               key={letterId}
               onClick={() => {
                 if (!isMyCabinet) {
-                  showToast("접근 권한이 없습니다", "", "error");
+                  showToast("내가 작성한 편지가 아니에요", "", "error");
                   return;
                 }
 

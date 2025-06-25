@@ -46,6 +46,7 @@ export default function LetterModal({ letterId, onHandleModal }: Props) {
       if (!userId || !soldierId) return;
 
       const letterData = await getLetterDetail({ letterId, userId });
+
       setLetter(letterData.data);
 
       const res = await fetch("/api/earn-point", {
@@ -53,9 +54,10 @@ export default function LetterModal({ letterId, onHandleModal }: Props) {
         headers: { "Content-Type": "application/json" },
         body: JSON.stringify({ letterId, soldierId }),
       });
+
       const result = await res.json();
+
       if (result.earn && result.bonus > 0) {
-        console.log("포인트를 적립할 수 있습니다");
         setEarnedBonus(result.bonus); // 보너스 저장
         setShowPoint(true);
       }
@@ -135,7 +137,7 @@ export default function LetterModal({ letterId, onHandleModal }: Props) {
           <Txt
             align="left"
             weight="bold"
-            className="text-green-49d underline"
+            className="text-green-49d rounded-[5px] border border-green-49d px-2 py-1"
             onClick={(e) => {
               e.stopPropagation();
               handleGoReply();
