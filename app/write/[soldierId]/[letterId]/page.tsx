@@ -208,6 +208,7 @@ export default function LetterWritePage() {
               greenBtnText="전송"
               whiteBtnText="수정"
               type="submit"
+              disabled={isPending}
               onClickGreenBtn={handleConfirmSubmit}
               onClickWhiteBtn={handleCancelSubmit}
             >
