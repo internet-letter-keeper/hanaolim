@@ -9,6 +9,8 @@ import { BasicHeader, Modal } from "@/components/common";
 import { FilePreview } from "@/components/letters";
 import { getSenderName, postLetterReply } from "@/lib/actions/write-actions";
 import { uploadedFileType } from "@/types/letters";
+import { CONTENT_MAX_COUNT } from "@/constants/limitContent";
+
 
 type Props = {
   params: Promise<{ soldierId: number; letterId: number }>;
@@ -20,6 +22,7 @@ export default function LetterWritePage({ params }: Props) {
     null
   );
   const [showModal, setShowModal] = useState(false);
+  const [count, setCount] = useState<number>(0);
   const [pendingFormData, setPendingFormData] = useState<FormData | null>(null);
   const router = useRouter();
 
@@ -133,17 +136,26 @@ export default function LetterWritePage({ params }: Props) {
         </div>
 
         {/* form의 onSubmit으로 모달 처리 */}
+
         <form
           className="flex flex-col gap-3 w-full"
           onSubmit={handleFormSubmit}
         >
+        <div className="flex flex-col w-full gap-2">
           <Input
             name="content"
             placeholder="내용을 입력하세요."
             tag="textarea"
-            maxLength={500}
+            maxLength={CONTENT_MAX_COUNT}
             required
+            onChange={(e) => {
+              setCount(e.target.value.length);
+            }}
           />
+          <Txt size={11} weight="cm" className="mr-2" align="right">
+              {count}/{CONTENT_MAX_COUNT}
+            </Txt>
+            </div>
 
           <div className="flex flex-row justify-between w-full items-center mt-5">
             {/* 파일이 없을 때만 업로드 버튼 표시 */}
