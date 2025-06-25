@@ -22,6 +22,8 @@ export default function Cabinet({ isMyCabinet, userId }: Props) {
 
   const [totalPage, setTotalPage] = useState(1);
 
+  const [totalLettersCnt, setTotalLettersCnt] = useState(0);
+
   const { showToast } = useToast();
 
   const toPrevCabinet = () => setCurrentPage((prev) => prev - 1);
@@ -37,14 +39,19 @@ export default function Cabinet({ isMyCabinet, userId }: Props) {
 
   useEffect(() => {
     (async () => {
-      const totalLettersCnt = await getTotalReceivedNonReplyLettersCnt(userId);
+      const totalLettersCntInit =
+        await getTotalReceivedNonReplyLettersCnt(userId);
 
-      setTotalPage(Math.ceil(totalLettersCnt / 7));
+      setTotalLettersCnt(totalLettersCntInit);
+
+      setTotalPage(
+        totalLettersCntInit <= 7 ? 1 : Math.ceil(totalLettersCntInit / 7)
+      );
 
       const letters = await getNonReplyLettersByUserId(
         userId,
         1,
-        totalLettersCnt
+        totalLettersCntInit
       );
 
       setCurrentPageLetters(letters.data);
@@ -58,8 +65,9 @@ export default function Cabinet({ isMyCabinet, userId }: Props) {
       const letters = await getNonReplyLettersByUserId(
         userId,
         currentPage,
-        totalPage
+        totalLettersCnt
       );
+
       if (letters.data) {
         setCurrentPageLetters(letters.data);
       }
@@ -113,7 +121,7 @@ export default function Cabinet({ isMyCabinet, userId }: Props) {
               key={letterId}
               onClick={() => {
                 if (!isMyCabinet) {
-                  showToast("접근 권한이 없습니다", "", "error");
+                  showToast("내가 작성한 편지가 아니에요", "", "error");
                   return;
                 }
 

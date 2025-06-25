@@ -8,7 +8,7 @@ type Props = {
 
 export default function EmptyState({ children }: Props) {
   return (
-    <div className="flex flex-col justify-center items-center">
+    <div className="flex flex-col justify-center items-center pt-32">
       <Image
         src={"/images/byeoldol-sad.svg"}
         width={150}

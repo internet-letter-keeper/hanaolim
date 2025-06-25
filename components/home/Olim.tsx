@@ -1,7 +1,5 @@
-"use client";
-
 import Image from "next/image";
-import { useRouter } from "next/navigation";
+import Link from "next/link";
 import Txt from "@/components/atoms/Text";
 import Letter from "./hanaolim/Letter";
 import Point from "./hanaolim/Point";
@@ -19,15 +17,9 @@ export default function Olim({
   soldierId,
   totalCount,
 }: Props) {
-  const router = useRouter();
-
-  const handleNavigate = () => {
-    router.push(`/cabinet/${soldierId}`);
-  };
-
   return (
-    <div
-      onClick={handleNavigate}
+    <Link
+      href={`/cabinet/${soldierId}`}
       className="flex flex-col justify-between pl-[26px] py-[27px] pr-[22px] bg-white-fff rounded-[20px] shadow-[0_0_5px_rgba(0,0,0,0.15)] cursor-pointer"
     >
       <div className="flex justify-between w-full">
@@ -75,6 +67,6 @@ export default function Olim({
         <Letter totalCount={totalCount} />
         <Point letterExp={letterExp} />
       </div>
-    </div>
+    </Link>
   );
 }

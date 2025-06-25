@@ -8,6 +8,8 @@ type Props = {
   whiteBtnText: string;
   onClickGreenBtn: () => void;
   onClickWhiteBtn: () => void;
+  type?: "submit";
+  disabled?: boolean;
 };
 
 /**
@@ -23,6 +25,8 @@ export default function Modal({
   whiteBtnText,
   onClickGreenBtn,
   onClickWhiteBtn,
+  type,
+  disabled,
   children,
 }: PropsWithChildren<Props>) {
   const overlay = useRef<HTMLDivElement>(null);
@@ -71,6 +75,8 @@ export default function Modal({
             weight="medium"
             onClick={onClickGreenBtn}
             className="h-[50px]"
+            disabled={disabled}
+            type={type}
           />
         </div>
       </div>
