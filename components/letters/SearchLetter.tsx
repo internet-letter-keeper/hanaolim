@@ -2,25 +2,24 @@
 
 import Image from "next/image";
 import { useRouter, useSearchParams } from "next/navigation";
-import { useRef, useState } from "react";
+import { KeyboardEvent, useRef } from "react";
 import { Input } from "../atoms";
 
 export default function SearchLetter() {
   const inputRef = useRef<HTMLInputElement>(null);
   const router = useRouter();
   const searchParams = useSearchParams();
-  const [timeoutId, setTimeoutId] = useState<NodeJS.Timeout | null>(null);
 
   const handleSearch = () => {
     const query = inputRef.current?.value.trim();
     if (query) {
       const box = searchParams.get("box") || "mine";
-      router.push(`/letters?box=${box}&query=${encodeURIComponent(query)}`);
+      router.replace(`/letters?box=${box}&query=${encodeURIComponent(query)}`);
     }
   };
 
   const handleKeyDown = (
-    e: React.KeyboardEvent<HTMLInputElement | HTMLTextAreaElement>
+    e: KeyboardEvent<HTMLInputElement | HTMLTextAreaElement>
   ) => {
     if (e.key === "Enter") {
       handleSearch();
