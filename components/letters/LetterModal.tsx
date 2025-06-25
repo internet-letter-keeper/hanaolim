@@ -26,7 +26,7 @@ export default function LetterModal({ letterId, onHandleModal }: Props) {
   const overlay = useRef<HTMLDivElement>(null);
   const router = useRouter();
 
-  //120자 넘어가면 더보기로 처리
+  //110자 넘어가면 더보기로 처리
   const isLong = (letter?.content.length ?? 0) > MAX_LENGTH;
 
   const preview = isLong
