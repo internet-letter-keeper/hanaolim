@@ -1,8 +1,10 @@
 "use client";
 
 import { useRouter } from "next/navigation";
+import { useSession } from "next-auth/react";
 import { startTransition, useState } from "react";
 import { useToast } from "@/contexts/toast/ToastContext";
+import { getFirstFollow } from "@/lib/actions/friend-actions";
 import { deleteFriend } from "@/lib/actions/friends-action";
 import { FriendProfile } from "@/types/common/profile";
 import EmptyState from "./EmptyList";
@@ -15,6 +17,9 @@ type Props = {
 };
 
 export default function FriendManageList({ friends }: Props) {
+  const { data: session, update } = useSession();
+  const userId = session?.user.userId;
+
   const [isModalOpened, setModalOpened] = useState<boolean>(false);
   const [selectedFollowId, setSelectedFollowId] = useState<number | null>(null);
 
@@ -33,7 +38,7 @@ export default function FriendManageList({ friends }: Props) {
   };
 
   const handleConfirmDelete = () => {
-    if (selectedFollowId === null) return;
+    if (selectedFollowId === null || userId === undefined) return;
     startTransition(async () => {
       const deleteResult = await deleteFriend(selectedFollowId);
       const basePosition =
@@ -46,6 +51,9 @@ export default function FriendManageList({ friends }: Props) {
       const toastType = deleteResult.success ? "success" : "error";
 
       showToast(toastMessage, basePosition, toastType);
+      const follow = await getFirstFollow(userId);
+      await update({ ...session?.user, follow: follow });
+      // 세션 업데이트 필요
       closeModal();
       router.refresh();
     });

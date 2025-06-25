@@ -5,6 +5,7 @@ import { useSession } from "next-auth/react";
 import { useState } from "react";
 import { Txt } from "@/components/atoms";
 import { BasicHeader, Modal } from "@/components/common";
+import { cn } from "@/lib/utils";
 
 const buttonStyle = "flex flex-row pl-4 py-3 ";
 const containerStyle =
@@ -13,7 +14,9 @@ const containerStyle =
 export default function MyPage() {
   const { data: session } = useSession();
   const router = useRouter();
-  const { userName, email, isSoldier, soldier, follow } = session?.user || {};
+  const { userName, email, isSoldier, isSocial, soldier, follow } =
+    session?.user || {};
+  console.log("isSocialisSocialisSocial", isSocial);
   const [showLogoutModal, setShowLogoutModal] = useState(false);
   const [showWithdrawModal, setShowWithdrawModal] = useState(false);
 
@@ -41,19 +44,21 @@ export default function MyPage() {
         </Txt>
       </div>
       <div className={containerStyle}>
-        <button
-          className={buttonStyle}
-          onClick={() => {
-            router.push("/my/pwd");
-          }}
-        >
-          <Txt className="text-gray-353/80" size={17}>
-            비밀번호 변경
-          </Txt>
-        </button>
+        {!isSocial && (
+          <button
+            className={buttonStyle}
+            onClick={() => {
+              router.push("/my/pwd");
+            }}
+          >
+            <Txt className="text-gray-353/80" size={17}>
+              비밀번호 변경
+            </Txt>
+          </button>
+        )}
         {isSoldier && (
           <button
-            className={buttonStyle + "border-t border-gray-aaa"}
+            className={cn(buttonStyle, !isSocial && "border-t border-gray-aaa")}
             onClick={() => {
               router.push("/my/soldier");
             }}
@@ -64,7 +69,7 @@ export default function MyPage() {
           </button>
         )}
       </div>
-      <div className={containerStyle + " mt-8"}>
+      <div className={containerStyle + " mt-4"}>
         <button
           className={buttonStyle}
           onClick={() => setShowLogoutModal(true)}

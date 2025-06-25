@@ -3,7 +3,7 @@
 import Image from "next/image";
 import { useRouter } from "next/navigation";
 import { useSession } from "next-auth/react";
-import { useState, useRef } from "react";
+import { useState, useRef,KeyboardEvent } from "react";
 import OnboardingCard from "@/components/OnboardingCard";
 import Input from "@/components/atoms/Input";
 import { Modal } from "@/components/common";
@@ -27,18 +27,21 @@ export default function OnboardingPage() {
         soldierCodeRef.current.value,
         userId
       );
-      //TODO: PR 머지된 이후 수정예정
       if (!success) {
         showToast(message, "top-60", "error");
         return;
       }
-      showToast(
-        "친구 등록 완료",
-        "top-60",
-        "success"
-      );
+      showToast("친구 등록 완료", "top-60", "success");
       await update({ ...session.user, follow: follow });
       router.push(`/cabinet/${follow?.soldierId}`);
+    }
+  };
+
+  const handleKeyDown = (
+    e: KeyboardEvent<HTMLInputElement | HTMLTextAreaElement>
+  ) => {
+    if (e.key === "Enter") {
+      addFriendHandler();
     }
   };
 
@@ -60,6 +63,7 @@ export default function OnboardingPage() {
             className="mt-[20px]"
             maxLength={8}
             customRef={soldierCodeRef}
+            onKeyDown={handleKeyDown}
           />
         </Modal>
       )}
