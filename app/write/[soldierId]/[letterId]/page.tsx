@@ -1,38 +1,40 @@
 "use client";
 
 import Image from "next/image";
-import { useRouter } from "next/navigation";
+import { useParams, useRouter, useSearchParams } from "next/navigation";
 import { useState, useRef, useActionState, useEffect } from "react";
 import { ChangeEvent, FormEvent } from "react";
 import { Input, PrimaryButton, Txt } from "@/components/atoms";
 import { BasicHeader, Modal } from "@/components/common";
 import { FilePreview } from "@/components/letters";
-import { getSenderName, postLetterReply } from "@/lib/actions/write-actions";
-import { uploadedFileType } from "@/types/letters";
 import { CONTENT_MAX_COUNT } from "@/constants/limitContent";
+import { postLetterReply } from "@/lib/actions/write-actions";
+import { uploadedFileType } from "@/types/letters";
 
-
-type Props = {
-  params: Promise<{ soldierId: number; letterId: number }>;
-};
-
-export default function LetterWritePage({ params }: Props) {
+export default function LetterWritePage() {
   const [userName, setUserName] = useState<string>("");
   const [uploadedFile, setUploadedFile] = useState<uploadedFileType | null>(
     null
   );
   const [showModal, setShowModal] = useState(false);
   const [count, setCount] = useState<number>(0);
-  const [pendingFormData, setPendingFormData] = useState<FormData | null>(null);
   const router = useRouter();
+  const searchParams = useSearchParams();
+  const { soldierId, letterId } = useParams();
+  const idParam = searchParams.get("id");
+  const nameParam = searchParams.get("name");
 
   // 편지 작성 액션 (답장용)
   const [letter, postLetterAction, isPending] = useActionState(
     async (_pre: unknown, formData: FormData) => {
       // soldierId와 parentLetterId 추가
-      const { soldierId, letterId } = await params;
-      formData.append("soldierId", soldierId.toString());
+      if (!soldierId || !letterId) {
+        throw new Error("군인 아이디 또는 편지 아이디가 존재하지 않습니다.");
+      }
+      if (!idParam) throw new Error("아이디가 존재하지 않습니다.");
+      formData.append("soldierId", soldierId.toString()); // 보내는 사람
       formData.append("parentLetterId", letterId.toString());
+      formData.append("receiverId", idParam.toString()); // 받는 사람
 
       // 업로드된 파일이 있으면 FormData에 추가
       if (uploadedFile?.file) {
@@ -50,30 +52,6 @@ export default function LetterWritePage({ params }: Props) {
   );
 
   const fileInputRef = useRef<HTMLInputElement>(null);
-
-  // Form submit 처리 (모달 띄우기)
-  const handleFormSubmit = (e: FormEvent<HTMLFormElement>) => {
-    e.preventDefault(); // 기본 form submit 방지
-
-    const formData = new FormData(e.currentTarget);
-    setPendingFormData(formData);
-    setShowModal(true);
-  };
-
-  // 모달에서 전송 확인
-  const handleConfirmSubmit = () => {
-    if (pendingFormData) {
-      postLetterAction(pendingFormData);
-      setShowModal(false);
-      setPendingFormData(null);
-    }
-  };
-
-  // 모달에서 수정 선택
-  const handleCancelSubmit = () => {
-    setShowModal(false);
-    setPendingFormData(null);
-  };
 
   const onClickImage = () => {
     fileInputRef.current?.click();
@@ -102,15 +80,18 @@ export default function LetterWritePage({ params }: Props) {
   };
 
   useEffect(() => {
-    const fetchData = async () => {
-      const { letterId } = await params;
-
-      const name = await getSenderName(+letterId);
-      setUserName(name || "별돌이");
-    };
-
-    fetchData();
-  }, [params]);
+    if (nameParam) {
+      try {
+        const decodedName = decodeURIComponent(nameParam);
+        setUserName(decodedName);
+      } catch (error) {
+        console.error("Name decoding failed:", error);
+        setUserName("별돌이");
+      }
+    } else {
+      setUserName("별돌이");
+    }
+  }, [searchParams]);
 
   return (
     <div className="flex flex-col flex-1">
@@ -137,25 +118,22 @@ export default function LetterWritePage({ params }: Props) {
 
         {/* form의 onSubmit으로 모달 처리 */}
 
-        <form
-          className="flex flex-col gap-3 w-full"
-          onSubmit={handleFormSubmit}
-        >
-        <div className="flex flex-col w-full gap-2">
-          <Input
-            name="content"
-            placeholder="내용을 입력하세요."
-            tag="textarea"
-            maxLength={CONTENT_MAX_COUNT}
-            required
-            onChange={(e) => {
-              setCount(e.target.value.length);
-            }}
-          />
-          <Txt size={11} weight="cm" className="mr-2" align="right">
+        <form className="flex flex-col gap-3 w-full" action={postLetterAction}>
+          <div className="flex flex-col w-full gap-2">
+            <Input
+              name="content"
+              placeholder="내용을 입력하세요."
+              tag="textarea"
+              maxLength={CONTENT_MAX_COUNT}
+              required
+              onChange={(e) => {
+                setCount(e.target.value.length);
+              }}
+            />
+            <Txt size={11} weight="cm" className="mr-2" align="right">
               {count}/{CONTENT_MAX_COUNT}
             </Txt>
-            </div>
+          </div>
 
           <div className="flex flex-row justify-between w-full items-center mt-5">
             {/* 파일이 없을 때만 업로드 버튼 표시 */}
@@ -200,29 +178,36 @@ export default function LetterWritePage({ params }: Props) {
           <div className="flex justify-end mt-4">
             <PrimaryButton
               title="전송"
-              type="submit"
               rounded="sm"
               weight="medium"
               className="w-20 py-1"
               disabled={isPending}
               textSize={16}
+              onClick={() => {
+                setShowModal(true);
+              }}
             />
           </div>
+          {/* 모달 */}
+          {showModal && (
+            <Modal
+              greenBtnText="전송"
+              whiteBtnText="수정"
+              type="submit"
+              disabled={isPending}
+              onClickGreenBtn={() => {
+                setShowModal(false);
+              }}
+              onClickWhiteBtn={() => {
+                setShowModal(false);
+              }}
+            >
+              한번 작성한 글은
+              <br /> 수정 또는 삭제가 불가능합니다.
+            </Modal>
+          )}
         </form>
       </div>
-
-      {/* 모달 */}
-      {showModal && (
-        <Modal
-          greenBtnText="전송"
-          whiteBtnText="수정"
-          onClickGreenBtn={handleConfirmSubmit}
-          onClickWhiteBtn={handleCancelSubmit}
-        >
-          한번 작성한 글은
-          <br /> 수정 또는 삭제가 불가능합니다.
-        </Modal>
-      )}
     </div>
   );
 }

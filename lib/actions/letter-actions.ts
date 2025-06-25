@@ -209,7 +209,9 @@ export const getNonReplyLettersByUserId = async (
 
     return {
       ok: true,
-      data: letters,
+      data: letters.sort(
+        (a, b) => a.createDate.getTime() - b.createDate.getTime()
+      ),
     };
   } catch (error) {
     return { ok: false, data: null };

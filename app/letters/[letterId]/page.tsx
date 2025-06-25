@@ -4,6 +4,7 @@ import BasicHeader from "@/components/common/BasicHeader";
 import LettersDetail from "@/components/letters/LettersDetail";
 import { getLetterDetail } from "@/lib/actions/letter-actions";
 import { handleEarnPoint } from "@/lib/actions/point-earn-action";
+import { getSenderName } from "@/lib/actions/write-actions";
 import { requireAuth } from "@/utils/auth";
 
 type Props = {

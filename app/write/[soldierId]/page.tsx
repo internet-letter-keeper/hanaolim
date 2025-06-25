@@ -1,25 +1,19 @@
 "use client";
 
 import Image from "next/image";
-import { useRouter } from "next/navigation";
+import { useParams, useRouter, useSearchParams } from "next/navigation";
 import { useState, useRef, useActionState, useEffect } from "react";
 import { ChangeEvent, FormEvent } from "react";
 import { Input, PrimaryButton, Txt } from "@/components/atoms";
 import { BasicHeader, Modal } from "@/components/common";
 import { FilePreview, IconPicker } from "@/components/letters";
 import { CONTENT_MAX_COUNT } from "@/constants/limitContent";
-import { getSoldierName } from "@/lib/actions/soldier-actions";
 import { postLetter } from "@/lib/actions/write-actions";
 import { IconName } from "@/types/common/icons";
 import { uploadedFileType } from "@/types/letters";
 import { getIconIdByName } from "@/utils/icon";
 
-export default function WritePage({
-  params,
-}: {
-  params: Promise<{ soldierId: number }>;
-}) {
-  const [soldierId, setSoldierId] = useState<number>(0);
+export default function WritePage() {
   const [userName, setUserName] = useState<string>("");
   const [selectedIcon, setSelectedIcon] = useState<IconName>("face");
   const [uploadedFile, setUploadedFile] = useState<uploadedFileType | null>(
@@ -30,20 +24,14 @@ export default function WritePage({
   const [pendingFormData, setPendingFormData] = useState<FormData | null>(null);
   const router = useRouter();
 
-  // params와 userName을 가져오는 useEffect
-  useEffect(() => {
-    const fetchData = async () => {
-      const { soldierId } = await params;
-      setSoldierId(soldierId);
+  const searchParams = useSearchParams();
+  const { soldierId } = useParams();
+  const nameParam = searchParams.get("name");
 
-      const { userName: name } = await getSoldierName(+soldierId);
-      setUserName(name || "별돌이");
-    };
+  if (!soldierId) {
+    throw new Error("군인 아이디가 존재하지 않습니다.");
+  }
 
-    fetchData();
-  }, [params]);
-
-  // 편지 작성 액션
   const [letter, postLetterAction, isPending] = useActionState(
     async (_pre: unknown, formData: FormData) => {
       // soldierId 추가
@@ -70,15 +58,6 @@ export default function WritePage({
   );
 
   const fileInputRef = useRef<HTMLInputElement>(null);
-
-  // Form submit 처리 (모달 띄우기)
-  const handleFormSubmit = (e: FormEvent<HTMLFormElement>) => {
-    e.preventDefault(); // 기본 form submit 방지
-
-    const formData = new FormData(e.currentTarget);
-    setPendingFormData(formData);
-    setShowModal(true);
-  };
 
   // 모달에서 전송 확인
   const handleConfirmSubmit = () => {
@@ -121,6 +100,20 @@ export default function WritePage({
     }
   };
 
+  useEffect(() => {
+    if (nameParam) {
+      try {
+        const decodedName = decodeURIComponent(nameParam);
+        setUserName(decodedName);
+      } catch (error) {
+        console.error("Name decoding failed:", error);
+        setUserName("별돌이");
+      }
+    } else {
+      setUserName("별돌이");
+    }
+  }, [searchParams]);
+
   return (
     <div className="flex flex-col">
       <BasicHeader />
@@ -152,10 +145,7 @@ export default function WritePage({
         </div>
 
         {/* form의 onSubmit으로 모달 처리 */}
-        <form
-          className="flex flex-col gap-3 w-full"
-          onSubmit={handleFormSubmit}
-        >
+        <form className="flex flex-col gap-3 w-full" action={postLetterAction}>
           <Input
             name="nickname"
             placeholder="닉네임"
@@ -222,29 +212,32 @@ export default function WritePage({
           <div className="flex justify-end mt-4">
             <PrimaryButton
               title="전송"
-              type="submit"
               rounded="sm"
               weight="medium"
               className="w-20 py-1"
               disabled={isPending}
               textSize={16}
+              onClick={() => {
+                setShowModal(true);
+              }}
             />
           </div>
+          {/* 모달 */}
+          {showModal && (
+            <Modal
+              greenBtnText="전송"
+              whiteBtnText="수정"
+              type="submit"
+              disabled={isPending}
+              onClickGreenBtn={handleConfirmSubmit}
+              onClickWhiteBtn={handleCancelSubmit}
+            >
+              한번 작성한 글은
+              <br /> 수정 또는 삭제가 불가능합니다.
+            </Modal>
+          )}
         </form>
       </div>
-
-      {/* 모달 */}
-      {showModal && (
-        <Modal
-          greenBtnText="전송"
-          whiteBtnText="수정"
-          onClickGreenBtn={handleConfirmSubmit}
-          onClickWhiteBtn={handleCancelSubmit}
-        >
-          한번 작성한 글은
-          <br /> 수정 또는 삭제가 불가능합니다.
-        </Modal>
-      )}
     </div>
   );
 }
