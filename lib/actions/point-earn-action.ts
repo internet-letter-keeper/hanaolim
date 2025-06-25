@@ -1,3 +1,5 @@
+"uesr server";
+
 import prisma from "../db";
 import { Letter, Prisma } from "../generated/prisma";
 
@@ -35,8 +37,10 @@ export const handleEarnPoint = async ({
   letterId,
   soldierId,
 }: PointEarnProps): Promise<HandleEarnPointResult> => {
+  console.log("트랜잭션 시작 1");
   try {
     return await prisma.$transaction(async (tx) => {
+      console.log("트랜잭션 시작 2");
       const letter = await tx.letter.findUnique({ where: { letterId } });
       if (!letter)
         throw new Error(`letterId: ${letterId} 편지가 존재하지 않습니다`);
@@ -63,12 +67,15 @@ export const handleEarnPoint = async ({
         throw new Error("포인트 적립 조건 확인 중 에러가 발생했습니다");
 
       //2-2. 포인트 적립 조건 불충족
-      console.log("포인트 조건 불충족입니다"); //디버깅용
-      if (!earnableResult.earnability)
+      if (!earnableResult.earnability) {
+        console.log("포인트 조건 불충족입니다"); //디버깅용
         return {
           success: true,
           earn: false,
         };
+      }
+
+      console.log("포인트 적립 조건 충족입니다!!");
 
       //3. 적립 액션
       const earnResult = await postEarnedPoint(soldierId, tx);
@@ -93,6 +100,7 @@ export const handleEarnPoint = async ({
       };
     });
   } catch (error) {
+    console.error("트랜잭션 과정 중 catch", error);
     return {
       success: false,
       earn: false,
@@ -112,6 +120,7 @@ const postReadDate = async (letterId: number, tx: Prisma.TransactionClient) => {
     throw new Error("letterId는 숫자여야 합니다");
   }
 
+  console.log("1.postReadDate: 읽은 날짜 업데이트 함수 실행");
   try {
     const res = await tx.letter.updateMany({
       where: {
@@ -121,6 +130,10 @@ const postReadDate = async (letterId: number, tx: Prisma.TransactionClient) => {
       data: { readDate: new Date() },
     });
 
+    //TODO: 디버깅 삭제
+    if (res.count === 0) console.log("날짜 업데이트가 안 됐습니다");
+    console.log("날짜가 업데이트됐습니다");
+
     //1. updateMany 성공적 실행, 안 읽은 편지라면 updated true 이미 읽었다면 false
     return {
       success: true,
@@ -128,6 +141,7 @@ const postReadDate = async (letterId: number, tx: Prisma.TransactionClient) => {
     };
   } catch (error) {
     //2. updateMany 실패, success와 updated 모두 false return
+    console.log("읽은 날짜 업데이트 중 에러 발생");
     return {
       success: false,
       updated: false,
@@ -155,10 +169,11 @@ const getPointEarnability = async (
   const tommorrowStart = new Date(todayStart);
   tommorrowStart.setDate(tommorrowStart.getDate() + 1);
 
+  console.log("2.getPointEarnability: 조건 검사 함수 실행");
+
   try {
     const res = await tx.letter.findMany({
       where: {
-        letterId,
         senderId,
         receiverId,
         readDate: {
@@ -167,6 +182,11 @@ const getPointEarnability = async (
         },
       },
     });
+
+    console.log(
+      "🚀 오늘 해당 군인이 해당 유저에게 받은 편지 갯수는:",
+      res.length
+    );
 
     //1.'오늘' 해당 '군인'이 '해당 유저'한테 받은 편지가 '1개'임 -> 적립 액션 시작하도록 모두 true 리턴
     if (res.length === 1) {
@@ -182,6 +202,7 @@ const getPointEarnability = async (
     };
   } catch (error) {
     //3. 테이블 조회하다 에러가 발생함
+    console.log("조건 검사 중 에러 발생");
     return {
       success: false,
       earnability: false,
@@ -199,7 +220,9 @@ const postEarnedPoint = async (
   soldierId: number,
   tx: Prisma.TransactionClient
 ) => {
+  console.log("3. postEarnedPoint: 적립 경험치, 포인트 db 반영");
   try {
+    console.log("3-1 경험치 적립 실행");
     //1. 경험치 적립 실행
     const res = await tx.soldier.update({
       where: { soldierId },
@@ -209,7 +232,7 @@ const postEarnedPoint = async (
         },
       },
     });
-
+    console.log("3-2. 경험치 10으로 나누어떨어지나");
     //2. 경험치가 10으로 나누어지는 경우 포인트 적립
     const newExp = res.letterExp;
     let bonus = 0;
@@ -226,12 +249,14 @@ const postEarnedPoint = async (
         },
       });
     }
+    console.log("3-2-1. 나누어 떨어지는지 검사 완료 ");
 
     return {
-      succes: true,
+      success: true,
       bonus,
     };
   } catch (error) {
+    console.log("포인트 적립 과정 중 에러 발생", error);
     return {
       success: false,
       bonus: 0,
