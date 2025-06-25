@@ -65,7 +65,7 @@ export default function FileUploadSection({
       </div>
 
       {error && (
-        <Txt size={12} weight="cm" className="text-red-500" align="left">
+        <Txt size={12} weight="cm" className="text-red-a76" align="left">
           {error}
         </Txt>
       )}
