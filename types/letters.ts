@@ -6,7 +6,7 @@ export type uploadedFileType = {
 
 export type Letter = {
   letterId: number;
-  nickname: string;
+  nickname: string | null;
   content: string;
   fileUrl?: string;
   iconId?: number;
