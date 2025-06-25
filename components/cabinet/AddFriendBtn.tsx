@@ -20,6 +20,8 @@ export default function AddFriendBtn() {
 
   const userId = data?.user.userId;
 
+  const mySoldierCode = data?.user.soldier.code;
+
   const [isModalOpened, setModalOpened] = useState<boolean>(false);
 
   const openModal = () => setModalOpened(true);
@@ -29,14 +31,19 @@ export default function AddFriendBtn() {
   const soldierCodeRef = useRef<HTMLInputElement>(null);
 
   const isSE = useIsSEPhone();
+
   const toastPosition = isSE ? "top-40" : "top-60";
 
   const addFriendHandler = async () => {
-    if (soldierCodeRef.current?.value && userId) {
-      const { success, message } = await postFriend(
-        soldierCodeRef.current.value,
-        userId
-      );
+    const typedCodeValue = soldierCodeRef.current?.value;
+
+    if (typedCodeValue === mySoldierCode) {
+      showToast("나의 코드예요", toastPosition, "error");
+      return;
+    }
+
+    if (typedCodeValue && userId) {
+      const { success, message } = await postFriend(typedCodeValue, userId);
 
       if (!success) {
         showToast(message, toastPosition, "error");
