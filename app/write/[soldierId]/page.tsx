@@ -13,6 +13,8 @@ import { IconName } from "@/types/common/icons";
 import { uploadedFileType } from "@/types/letters";
 import { getIconIdByName } from "@/utils/icon";
 
+const MAX_FILE_SIZE = 5 * 1024 * 1024; // 5MB
+
 export default function WritePage() {
   const [userName, setUserName] = useState<string>("");
   const [nickname, setNickname] = useState<string>("");
@@ -20,6 +22,7 @@ export default function WritePage() {
   const [uploadedFile, setUploadedFile] = useState<uploadedFileType | null>(
     null
   );
+  const [isUploading, setIsUploading] = useState<boolean>(false);
   const [showModal, setShowModal] = useState(false);
   const [count, setCount] = useState<number>(0);
   const [pendingFormData, setPendingFormData] = useState<FormData | null>(null);
@@ -74,7 +77,7 @@ export default function WritePage() {
 
       // 업로드된 파일이 있으면 FormData에 추가
       if (uploadedFile?.url) {
-        formData.append("fileUrl", uploadedFile.url); // ← 기존 file 대신 URL 넣기
+        formData.append("fileUrl", uploadedFile.url);
       }
 
       const result = await postLetter(formData);
@@ -113,6 +116,12 @@ export default function WritePage() {
     const file = e.target.files?.[0];
     if (!file) return;
 
+    if (file.size > MAX_FILE_SIZE) {
+      alert("5MB 이하의 파일만 업로드할 수 있습니다.");
+      return;
+    }
+
+    setIsUploading(true);
     try {
       const url = await uploadToS3(file);
       const fileType = file.type.startsWith("image/") ? "image" : "video";
@@ -126,6 +135,8 @@ export default function WritePage() {
       console.error("업로드 실패", err);
       alert("파일 업로드에 실패했습니다. 다시 시도해주세요.");
       router.refresh();
+    } finally {
+      setIsUploading(false);
     }
   };
 
@@ -211,7 +222,7 @@ export default function WritePage() {
             </Txt>
           </div>
           <div className="flex flex-row justify-between w-full items-center">
-            {!uploadedFile && (
+            {!uploadedFile && !isUploading && (
               <div className="flex flex-row gap-1 items-center">
                 <button
                   type="button"
@@ -231,9 +242,12 @@ export default function WritePage() {
                 </Txt>
               </div>
             )}
-
+            {isUploading && (
+              <div className="flex flex-row gap-2 items-center">
+                <span className="text-blue-9a0 text-sm">업로드 중...</span>
+              </div>
+            )}
             {uploadedFile && <div />}
-
             <input
               type="file"
               ref={fileInputRef}
@@ -254,7 +268,7 @@ export default function WritePage() {
               rounded="sm"
               weight="medium"
               className="w-20 py-1"
-              disabled={isPending || nickname.trim() === ""}
+              disabled={isPending || nickname.trim() === "" || isUploading}
               textSize={16}
               onClick={() => {
                 setShowModal(true);

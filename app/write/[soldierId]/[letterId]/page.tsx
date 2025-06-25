@@ -11,11 +11,39 @@ import { CONTENT_MAX_COUNT } from "@/constants/limitContent";
 import { postLetterReply } from "@/lib/actions/write-actions";
 import { uploadedFileType } from "@/types/letters";
 
+const MAX_FILE_SIZE = 5 * 1024 * 1024; // 5MB
+
+const getPresignedPost = async (file: File) => {
+  const res = await fetch("/api/upload", {
+    method: "POST",
+    body: JSON.stringify({ fileName: file.name }),
+    headers: { "Content-Type": "application/json" },
+  });
+  if (!res.ok) throw new Error("Presigned URL 발급 실패");
+  return res.json();
+};
+
+const uploadToS3 = async (file: File): Promise<string> => {
+  const { url, fields, key } = await getPresignedPost(file);
+  const formData = new FormData();
+  Object.entries(fields).forEach(([k, v]) => formData.append(k, v as string));
+  formData.append("Content-Type", file.type);
+  formData.append("file", file);
+  const uploadRes = await fetch(url, {
+    method: "POST",
+    body: formData,
+  });
+  if (!uploadRes.ok) throw new Error("S3 업로드 실패");
+  const s3Url = `https://${process.env.NEXT_PUBLIC_AWS_BUCKET_NAME}.s3.${process.env.NEXT_PUBLIC_AWS_REGION}.amazonaws.com/${key}`;
+  return s3Url;
+};
+
 export default function LetterWritePage() {
   const [userName, setUserName] = useState<string>("");
   const [uploadedFile, setUploadedFile] = useState<uploadedFileType | null>(
     null
   );
+  const [isUploading, setIsUploading] = useState<boolean>(false);
   const [showModal, setShowModal] = useState(false);
   const [count, setCount] = useState<number>(0);
   const [pendingFormData, setPendingFormData] = useState<FormData | null>(null);
@@ -38,8 +66,8 @@ export default function LetterWritePage() {
       formData.append("receiverId", idParam.toString()); // 받는 사람
 
       // 업로드된 파일이 있으면 FormData에 추가
-      if (uploadedFile?.file) {
-        formData.append("file", uploadedFile.file);
+      if (uploadedFile?.url) {
+        formData.append("fileUrl", uploadedFile.url);
       }
       const result = await postLetterReply(formData);
 
@@ -71,17 +99,28 @@ export default function LetterWritePage() {
     fileInputRef.current?.click();
   };
 
-  const handleFileChange = (e: ChangeEvent<HTMLInputElement>) => {
+  const handleFileChange = async (e: ChangeEvent<HTMLInputElement>) => {
     const file = e.target.files?.[0];
-    if (file) {
-      const url = URL.createObjectURL(file);
-      const fileType = file.type.startsWith("image/") ? "image" : "video";
+    if (!file) return;
 
+    if (file.size > MAX_FILE_SIZE) {
+      alert("5MB 이하의 파일만 업로드할 수 있습니다.");
+      return;
+    }
+
+    setIsUploading(true);
+    try {
+      const url = await uploadToS3(file);
+      const fileType = file.type.startsWith("image/") ? "image" : "video";
       setUploadedFile({
         file,
         url,
         type: fileType,
       });
+    } catch (err) {
+      alert("파일 업로드에 실패했습니다. 다시 시도해주세요.");
+    } finally {
+      setIsUploading(false);
     }
   };
 
@@ -150,8 +189,7 @@ export default function LetterWritePage() {
           </div>
 
           <div className="flex flex-row justify-between w-full items-center mt-5">
-            {/* 파일이 없을 때만 업로드 버튼 표시 */}
-            {!uploadedFile && (
+            {!uploadedFile && !isUploading && (
               <div className="flex flex-row gap-1 items-center">
                 <button
                   type="button"
@@ -171,10 +209,12 @@ export default function LetterWritePage() {
                 </Txt>
               </div>
             )}
-
-            {/* 파일이 있을 때는 빈 div로 공간 */}
+            {isUploading && (
+              <div className="flex flex-row gap-2 items-center">
+                <span className="text-blue-9a0 text-sm">업로드 중...</span>
+              </div>
+            )}
             {uploadedFile && <div />}
-
             <input
               type="file"
               ref={fileInputRef}
@@ -195,7 +235,7 @@ export default function LetterWritePage() {
               rounded="sm"
               weight="medium"
               className="w-20 py-1"
-              disabled={isPending}
+              disabled={isPending || isUploading}
               textSize={16}
               onClick={() => {
                 setShowModal(true);
