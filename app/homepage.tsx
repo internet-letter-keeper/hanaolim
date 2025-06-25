@@ -40,12 +40,12 @@ export default function HomePage({
   useEffect(() => {
     const splashSkipped = sessionStorage.getItem(SPLASH_SKIP_KEY) === "true";
 
-    if (totalCount > 0 && !splashSkipped) {
+    if (unreadLetter > 0 && !splashSkipped) {
       setShowSplash(true);
     }
 
     setMounted(true);
-  }, [totalCount]);
+  }, [unreadLetter, totalCount]);
 
   const handleSkipSplash = () => {
     sessionStorage.setItem(SPLASH_SKIP_KEY, "true");
