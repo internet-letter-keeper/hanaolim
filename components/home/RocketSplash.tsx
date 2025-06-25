@@ -38,17 +38,15 @@ export default function RocketSplash({
       </div>
 
       <div className="flex flex-col items-center gap-8">
-        {unreadLetter > 0 && (
-          <div className="text-center">
-            <Txt size={23} weight="bold">
-              안 읽은 편지&nbsp;
-              <Txt size={25} weight="bold" className="text-green-49d">
-                {unreadLetter}장
-              </Txt>
-              보러 갈까요~?
+        <div className="text-center">
+          <Txt size={23} weight="bold">
+            안 읽은 편지&nbsp;
+            <Txt size={25} weight="bold" className="text-green-49d">
+              {unreadLetter}장
             </Txt>
-          </div>
-        )}
+            보러 갈까요~?
+          </Txt>
+        </div>
 
         <Image
           src="/video/rocket.gif"
