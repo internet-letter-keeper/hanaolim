@@ -1,22 +1,17 @@
 "use client";
 
 import Image from "next/image";
-import { useRouter } from "next/navigation";
+import { useParams, useRouter, useSearchParams } from "next/navigation";
 import { useState, useRef, useActionState, useEffect } from "react";
 import { ChangeEvent, FormEvent } from "react";
 import { Input, PrimaryButton, Txt } from "@/components/atoms";
 import { BasicHeader, Modal } from "@/components/common";
 import { FilePreview } from "@/components/letters";
+import { CONTENT_MAX_COUNT } from "@/constants/limitContent";
 import { getSenderName, postLetterReply } from "@/lib/actions/write-actions";
 import { uploadedFileType } from "@/types/letters";
-import { CONTENT_MAX_COUNT } from "@/constants/limitContent";
 
-
-type Props = {
-  params: Promise<{ soldierId: number; letterId: number }>;
-};
-
-export default function LetterWritePage({ params }: Props) {
+export default function LetterWritePage() {
   const [userName, setUserName] = useState<string>("");
   const [uploadedFile, setUploadedFile] = useState<uploadedFileType | null>(
     null
@@ -25,14 +20,22 @@ export default function LetterWritePage({ params }: Props) {
   const [count, setCount] = useState<number>(0);
   const [pendingFormData, setPendingFormData] = useState<FormData | null>(null);
   const router = useRouter();
+  const searchParams = useSearchParams();
+  const { soldierId, letterId } = useParams();
+  const idParam = searchParams.get("id");
+  const nameParam = searchParams.get("name");
 
   // 편지 작성 액션 (답장용)
   const [letter, postLetterAction, isPending] = useActionState(
     async (_pre: unknown, formData: FormData) => {
       // soldierId와 parentLetterId 추가
-      const { soldierId, letterId } = await params;
-      formData.append("soldierId", soldierId.toString());
+      if (!soldierId || !letterId) {
+        throw new Error("군인 아이디 또는 편지 아이디가 존재하지 않습니다.");
+      }
+      if (!idParam) throw new Error("아이디가 존재하지 않습니다.");
+      formData.append("soldierId", soldierId.toString()); // 보내는 사람
       formData.append("parentLetterId", letterId.toString());
+      formData.append("receiverId", idParam.toString()); // 받는 사람
 
       // 업로드된 파일이 있으면 FormData에 추가
       if (uploadedFile?.file) {
@@ -102,15 +105,18 @@ export default function LetterWritePage({ params }: Props) {
   };
 
   useEffect(() => {
-    const fetchData = async () => {
-      const { letterId } = await params;
-
-      const name = await getSenderName(+letterId);
-      setUserName(name || "별돌이");
-    };
-
-    fetchData();
-  }, [params]);
+    if (nameParam) {
+      try {
+        const decodedName = decodeURIComponent(nameParam);
+        setUserName(decodedName);
+      } catch (error) {
+        console.error("Name decoding failed:", error);
+        setUserName("별돌이");
+      }
+    } else {
+      setUserName("별돌이");
+    }
+  }, [searchParams]);
 
   return (
     <div className="flex flex-col flex-1">
@@ -141,21 +147,21 @@ export default function LetterWritePage({ params }: Props) {
           className="flex flex-col gap-3 w-full"
           onSubmit={handleFormSubmit}
         >
-        <div className="flex flex-col w-full gap-2">
-          <Input
-            name="content"
-            placeholder="내용을 입력하세요."
-            tag="textarea"
-            maxLength={CONTENT_MAX_COUNT}
-            required
-            onChange={(e) => {
-              setCount(e.target.value.length);
-            }}
-          />
-          <Txt size={11} weight="cm" className="mr-2" align="right">
+          <div className="flex flex-col w-full gap-2">
+            <Input
+              name="content"
+              placeholder="내용을 입력하세요."
+              tag="textarea"
+              maxLength={CONTENT_MAX_COUNT}
+              required
+              onChange={(e) => {
+                setCount(e.target.value.length);
+              }}
+            />
+            <Txt size={11} weight="cm" className="mr-2" align="right">
               {count}/{CONTENT_MAX_COUNT}
             </Txt>
-            </div>
+          </div>
 
           <div className="flex flex-row justify-between w-full items-center mt-5">
             {/* 파일이 없을 때만 업로드 버튼 표시 */}

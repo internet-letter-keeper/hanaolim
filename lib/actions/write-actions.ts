@@ -63,7 +63,7 @@ const extractAndValidateLetterData = async (
  * @returns 성공했을 경우: success: true
  * @throws "편지 작성에 실패했습니다."
  */
-const createLetter = async (data: LetterFormData, senderId: number) => {
+const createLetter = async (data: LetterFormData, senderId?: number) => {
   try {
     const letterData: any = {
       content: data.content,
@@ -103,7 +103,7 @@ const createLetter = async (data: LetterFormData, senderId: number) => {
       }
 
       letterData.senderId = soldier.userId;
-      letterData.receiverId = senderId;
+      letterData.receiverId = data.receiverId;
       letterData.parentLetterId = +data.parentLetterId;
     }
 
@@ -153,11 +153,11 @@ export const postLetterReply = async (formData: FormData) => {
     throw new Error(ERROR_MESSAGES.LETTER.INVALID_INPUT_DATA);
   }
 
-  return createLetter(data, +session.user.userId!);
+  return createLetter(data);
 };
 
 /**
- * 편지의 sender Name을 반환하는 api
+ * 편지의 sender Name과 ID을 반환하는 api
  * @param letterId 편지 아이디
  * @returns 편지를 보낸 사람의 이름
  * @throw id에 해당하는 편지가 없은 경우
@@ -165,24 +165,29 @@ export const postLetterReply = async (formData: FormData) => {
  */
 export const getSenderName = async (letterId: number) => {
   try {
-    const letter = await prisma.letter.findUnique({
+    const senderId = await prisma.letter.findUnique({
       where: {
         letterId: letterId,
       },
-      include: {
-        User_Letter_senderIdToUser: {
-          select: {
-            userName: true,
-          },
-        },
+      select: {
+        senderId: true,
       },
     });
 
-    if (!letter) {
+    if (!senderId) {
       throw new Error("편지를 찾을 수 없습니다.");
     }
-
-    return letter.User_Letter_senderIdToUser.userName;
+    const senderInfo = await prisma.user.findUnique({
+      where: {
+        userId: senderId.senderId,
+      },
+      select: {
+        userId: true,
+        userName: true,
+      },
+    });
+    if (!senderInfo) throw new Error("정보를 가져오는데 실패했습니다.");
+    return senderInfo;
   } catch (error) {
     throw new Error("정보를 가져오는데 실패했습니다.");
   }

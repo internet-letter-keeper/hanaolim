@@ -35,9 +35,10 @@ function SoldierSupportButton({ type, onClick }: SoldierSupportProps) {
 
 type Props = {
   soldierId: number;
+  soldierName: string;
 };
 
-export default function LetterMoneyButton({ soldierId }: Props) {
+export default function LetterMoneyButton({ soldierId, soldierName }: Props) {
   const router = useRouter();
 
   const { data } = useSession();
@@ -57,7 +58,8 @@ export default function LetterMoneyButton({ soldierId }: Props) {
     }
   };
 
-  const onLetterClick = () => router.push(`/write/${soldierId}`);
+  const onLetterClick = () =>
+    router.push(`/write/${soldierId}?name=${soldierName}`);
 
   return (
     <div className="absolute bottom-6 right-2 z-50 flex flex-col items-center gap-3">
