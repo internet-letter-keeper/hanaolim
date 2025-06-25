@@ -5,6 +5,7 @@ import { useRouter } from "next/navigation";
 import { useSession } from "next-auth/react";
 import { MouseEventHandler, useEffect, useRef, useState } from "react";
 import { getLetterDetail } from "@/lib/actions/letter-actions";
+import { cn } from "@/lib/utils";
 import { getSenderName } from "@/lib/actions/write-actions";
 import { cn } from "@/lib/utils";
 import { Letter } from "@/types/letters";

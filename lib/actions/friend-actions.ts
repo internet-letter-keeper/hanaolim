@@ -89,6 +89,7 @@ export const getFriendsList = async (
         },
       },
     },
+    orderBy: { followId: "desc" },
   });
 
   // 계급 계산 결과 캐싱
