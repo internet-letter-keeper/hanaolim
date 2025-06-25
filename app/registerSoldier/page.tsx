@@ -53,11 +53,13 @@ export default function SignInPage() {
       setErrorMessage(""); // 에러 초기화
       setJoinDate(null);
       setReleaseDate(null);
+
       await update({
         ...session.user,
         soldier: result.data,
+        isSoldier: true,
       }); // 세션 업데이트
-      alert("군인등록 완료!");
+
       router.push("/");
     } else {
       alert("군인등록에 실패했습니다. 다시 시도해 주세요.");

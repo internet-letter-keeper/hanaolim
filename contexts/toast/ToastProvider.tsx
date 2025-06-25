@@ -2,9 +2,9 @@
 
 import Image from "next/image";
 import { useState, PropsWithChildren } from "react";
-import { ToastType } from "@/types/toast";
-import { cn } from "@/lib/utils";
 import { Txt } from "@/components/atoms";
+import { cn } from "@/lib/utils";
+import { ToastType } from "@/types/toast";
 import { ToastContext } from "./ToastContext";
 
 type Props = {
@@ -66,7 +66,7 @@ export function ToastProvider({
           )}
         >
           {/* Toast UI */}
-          <div className="flex items-center gap-[5px] min-w-[200px] bg-white shadow-[0px_0px_5px_0px_rgba(0,0,0,0.15)] px-[13px] py-[5px] rounded-[6px] flex-nowrap">
+          <div className="flex items-center gap-[5px] min-w-fit bg-white shadow-[0px_0px_5px_0px_rgba(0,0,0,0.15)] px-[13px] py-[5px] rounded-[6px] flex-nowrap">
             <Image
               src={iconSrcMap[toastType]}
               alt="check"

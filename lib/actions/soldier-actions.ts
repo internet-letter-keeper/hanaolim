@@ -88,9 +88,8 @@ export const updateSoldierDates = async (
   startDate: Date,
   endDate: Date
 ) => {
-  console.log("dhsdofsdfsdf", startDate, endDate);
   try {
-    const res = await prisma.soldier.update({
+    await prisma.soldier.update({
       where: {
         soldierId: soldierId,
       },
@@ -103,6 +102,7 @@ export const updateSoldierDates = async (
       success: true,
     };
   } catch (error) {
+    console.error("입대일/전역일 변경에 실패했습니다.", error);
     throw new Error("입대일/전역일 변경에 실패했습니다.");
   }
 };

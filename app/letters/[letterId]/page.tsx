@@ -13,6 +13,7 @@ export default async function LetterDetailPage({ params }: Props) {
 
   const session = await requireAuth();
   const userId = session.user.userId;
+  const soldierId = session.user.soldier.soldierId;
 
   const letter = await getLetterDetail({ letterId, userId });
   //편지가 없거나 편지 데이터가 없음 (편지는 무조건 있어야 함)
@@ -33,11 +34,9 @@ export default async function LetterDetailPage({ params }: Props) {
       </div>
 
       {/* 답장 없을 경우 버튼 */}
-      {!reply && (
+      {!reply.data?.parentLetterId && (
         <div className="flex justify-end px-6 mt-2">
-          <a
-            href={`/write/${letter.data?.receiverId}/${letter.data?.letterId}`}
-          >
+          <a href={`/write/${soldierId}/${letter.data.letterId}`}>
             <PrimaryButton title="답장하기" className="px-3 w-28 py-[5px]" />
           </a>
         </div>

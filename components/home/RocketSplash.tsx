@@ -1,21 +1,20 @@
 "use client";
 
 import Image from "next/image";
-import { useRef, useState } from "react";
+import { useState } from "react";
 import Txt from "@/components/atoms/Text";
 
 type RocketSplashProps = {
   onSkip: () => void;
-  letterExp: number;
+  totalCount: number;
   unreadLetter: number;
 };
 
 export default function RocketSplash({
   onSkip,
-  letterExp,
+  totalCount,
   unreadLetter,
 }: RocketSplashProps) {
-  const videoRef = useRef<HTMLVideoElement>(null);
   const [isVisible, setIsVisible] = useState(true);
 
   const handleSkip = () => {
@@ -26,9 +25,8 @@ export default function RocketSplash({
   if (!isVisible) return null;
 
   return (
-    <div className="bg-gray-5f6 overflow-hidden h-screen -m-4 flex flex-col justify-between">
+    <div className="h-screen -m-4 flex flex-col justify-between">
       <div className="flex justify-end m-3">
-        {/* Skip 버튼 */}
         <button
           onClick={handleSkip}
           className="px-[14px] py-[5px] rounded-[5px] h-[23px]"
@@ -38,6 +36,7 @@ export default function RocketSplash({
           </Txt>
         </button>
       </div>
+
       <div className="flex flex-col items-center gap-8">
         {unreadLetter > 0 && (
           <div className="text-center">
@@ -51,31 +50,29 @@ export default function RocketSplash({
           </div>
         )}
 
-        <video
-          ref={videoRef}
-          autoPlay
-          muted
-          playsInline
-          loop
-          className="w-1/2 mr-4 object-contain"
-        >
-          <source src="/Video/rocket.mp4" type="video/mp4" />
-        </video>
+        <Image
+          src="/video/rocket.gif"
+          alt="로켓 애니메이션"
+          width={300}
+          height={300}
+          className="w-2/3 object-contain"
+        />
 
         <div className="text-center">
           <Txt size={30} weight="bold">
             총 받은 편지&nbsp;
           </Txt>
           <Txt size={30} weight="bold" className="text-green-49d">
-            {letterExp}장
+            {totalCount}장
           </Txt>
         </div>
-        {/* 하단 편지 이미지 */}
+
         <Image
           src="/images/letter-dummy.svg"
           alt="편지 이미지"
           width={393}
           height={262}
+          className="w-full"
         />
       </div>
     </div>

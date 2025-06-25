@@ -51,15 +51,3 @@ export const checkPasswordValidation = (password: string | "") => {
     message: "",
   };
 };
-
-// 비밀번호 확인 검증
-export const checkConfirmPasswordValidation = (
-  password: string | "",
-  confirmPassword: string | ""
-) => {
-  if (password !== confirmPassword) {
-    return false;
-  } else {
-    return true;
-  }
-};

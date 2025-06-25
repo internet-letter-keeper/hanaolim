@@ -10,10 +10,15 @@ type Props = {
   letterExp: number;
   unreadLetter: number;
   soldierId: number;
+  totalCount: number;
 };
 
-export default function Olim({ letterExp, unreadLetter, soldierId }: Props) {
-
+export default function Olim({
+  letterExp,
+  unreadLetter,
+  soldierId,
+  totalCount,
+}: Props) {
   const router = useRouter();
 
   const handleNavigate = () => {
@@ -67,7 +72,7 @@ export default function Olim({ letterExp, unreadLetter, soldierId }: Props) {
 
       {/* 편지+포인트 */}
       <div className="flex flex-col gap-[12px]">
-        <Letter letterExp={letterExp} unreadLetter={unreadLetter} />
+        <Letter totalCount={totalCount} />
         <Point letterExp={letterExp} />
       </div>
     </div>

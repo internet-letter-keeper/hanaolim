@@ -108,14 +108,14 @@ export default function LettersPageClient({
               title="내 관물대"
               onClick={() => setActiveTab("send")}
               color={activeTab === "send" ? "green" : "white"}
-              className="py-2 my-4 border-b border-[#D6E9E7]"
+              className="py-2 my-4 border border-[#D6E9E7]"
               weight="cm"
             />
             <PrimaryButton
               title="친구 관물대"
               onClick={() => setActiveTab("receive")}
               color={activeTab === "receive" ? "green" : "white"}
-              className="py-2 my-4 border-b border-[#D6E9E7]"
+              className="py-2 my-4 border border-[#D6E9E7]"
               weight="cm"
             />
           </div>
