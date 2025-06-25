@@ -5,7 +5,6 @@ import { useRouter } from "next/navigation";
 import { useSession } from "next-auth/react";
 import { MouseEventHandler, useEffect, useRef, useState } from "react";
 import { getLetterDetail } from "@/lib/actions/letter-actions";
-import { cn } from "@/lib/utils";
 import { getSenderName } from "@/lib/actions/write-actions";
 import { cn } from "@/lib/utils";
 import { Letter } from "@/types/letters";
@@ -31,7 +30,6 @@ export default function LetterModal({ letterId, onHandleModal }: Props) {
   const router = useRouter();
 
   //110자 넘어가면 더보기로 처리
-
   const isLong = (letter?.content.length ?? 0) > MAX_LENGTH;
 
   const preview = isLong
@@ -109,21 +107,6 @@ export default function LetterModal({ letterId, onHandleModal }: Props) {
     if (e.target === overlay.current) onHandleModal();
   };
 
-  // 로딩 상태 처리
-  if (!letter || !senderName) {
-    return (
-      <div
-        ref={overlay}
-        className="fixed inset-0 z-100 sm:w-sm w-full -translate-x-1/2 left-1/2 bg-modal-overlay"
-        onClick={onClickOverlay}
-      >
-        <div className="absolute top-1/2 left-1/2 -translate-x-1/2 -translate-y-1/2 w-11/12 sm:w-[22rem] p-6 bg-white rounded-[10px] text-center">
-          <Txt>편지를 불러오는 중...</Txt>
-        </div>
-      </div>
-    );
-  }
-
   return (
     <div
       ref={overlay}
@@ -137,59 +120,68 @@ export default function LetterModal({ letterId, onHandleModal }: Props) {
         className={cn(
           "absolute top-1/2 left-1/2 -translate-x-1/2 -translate-y-1/2",
           "w-11/12 sm:w-[22rem] p-6 bg-white rounded-[10px]",
-          "flex flex-col transition-all duration-500 ease-in-out",
+          "flex flex-col transition-all duration-[500ms] ease-in-out",
           letter ? "max-h-[80vh] opacity-100" : "max-h-[150px] opacity-0"
         )}
       >
-        <div className="flex w-full justify-between">
-          <Txt size={18} weight="bold" className="text-green-49d">
-            {letter.senderName}({letter.nickname})
-          </Txt>
-          <Image
-            className="cursor-pointer"
-            src={"/icons/ic-x-in-circle.svg"}
-            alt={"동그란 모양의 x 버튼"}
-            width={20}
-            height={20}
-            onClick={(e) => {
-              e.stopPropagation();
-              onHandleModal();
-            }}
-          />
-        </div>
-        <Txt align="left" className="text-gray-500">
-          {letter.createDate.toLocaleString("ko-KR", {
-            dateStyle: "medium",
-            timeStyle: "short",
-          })}
-        </Txt>
-        <Txt
-          align="left"
-          size={16}
-          className="py-4 cursor-pointer"
-          onClick={handleGoToDetail}
-        >
-          {preview}{" "}
-          {isLong && (
-            <Txt size={16} className="text-gray-500">
-              ...더보기
+        {letter ? (
+          <>
+            <div className="flex w-full justify-between">
+              <Txt size={18} weight="bold" className="text-green-49d">
+                {letter.senderName}({letter.nickname})
+              </Txt>
+              <Image
+                className="cursor-pointer"
+                src={"/icons/ic-x-in-circle.svg"}
+                alt={"동그란 모양의 x 버튼"}
+                width={20}
+                height={20}
+                onClick={(e) => {
+                  e.stopPropagation();
+                  onHandleModal();
+                }}
+              />
+            </div>
+            <Txt align="left" className="text-gray-500">
+              {letter.createDate.toLocaleString("ko-KR", {
+                dateStyle: "medium",
+                timeStyle: "short",
+              })}
             </Txt>
-          )}
-        </Txt>
-        {letter.fileUrl && <LetterView fileUrl={letter.fileUrl} />}
-        <div className="flex w-full justify-end">
-          <Txt
-            align="left"
-            weight="bold"
-            className="text-green-49d rounded-[5px] border border-green-49d px-2 py-1"
-            onClick={(e) => {
-              e.stopPropagation();
-              handleGoReply();
-            }}
-          >
-            답장하기
+            <Txt
+              align="left"
+              size={16}
+              className="py-4 cursor-pointer"
+              onClick={handleGoToDetail}
+            >
+              {preview}
+              {isLong && (
+                <Txt size={16} className="text-gray-500">
+                  ...더보기
+                </Txt>
+              )}
+            </Txt>
+            {letter.fileUrl && <LetterView fileUrl={letter.fileUrl} />}
+            <div className="flex w-full justify-end">
+              <Txt
+                align="left"
+                weight="bold"
+                className="text-green-49d rounded-[5px] border border-green-49d px-2 py-1"
+                onClick={(e) => {
+                  e.stopPropagation();
+                  handleGoReply();
+                }}
+              >
+                답장하기
+              </Txt>
+            </div>
+          </>
+        ) : (
+          //TODO: 로딩이 좀 있는 것 같아서 넣어놨음 나중에 제거하든지 함
+          <Txt className="text-center text-gray-400 text-sm">
+            편지를 불러오는 중...
           </Txt>
-        </div>
+        )}
       </div>
     </div>
   );
