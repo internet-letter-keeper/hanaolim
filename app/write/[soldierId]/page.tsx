@@ -15,6 +15,7 @@ import { getIconIdByName } from "@/utils/icon";
 
 export default function WritePage() {
   const [userName, setUserName] = useState<string>("");
+  const [nickname, setNickname] = useState<string>("");
   const [selectedIcon, setSelectedIcon] = useState<IconName>("face");
   const [uploadedFile, setUploadedFile] = useState<uploadedFileType | null>(
     null
@@ -47,7 +48,7 @@ export default function WritePage() {
     const { url, fields, key } = await getPresignedPost(file);
 
     const formData = new FormData();
-    Object.entries(fields).forEach(([k, v]) => formData.append(k, v));
+    Object.entries(fields).forEach(([k, v]) => formData.append(k, v as string));
     formData.append("Content-Type", file.type);
     formData.append("file", file);
 
@@ -115,9 +116,6 @@ export default function WritePage() {
     try {
       const url = await uploadToS3(file);
       const fileType = file.type.startsWith("image/") ? "image" : "video";
-      console.log("업로드 성공 url", url);
-      console.log("업로드 성공 file", file.name);
-      console.log("업로드 성공 type", fileType);
 
       setUploadedFile({
         file: file,
@@ -126,7 +124,8 @@ export default function WritePage() {
       });
     } catch (err) {
       console.error("업로드 실패", err);
-      alert("파일 업로드에 실패했습니다.");
+      alert("파일 업로드에 실패했습니다. 다시 시도해주세요.");
+      router.refresh();
     }
   };
 
@@ -190,6 +189,8 @@ export default function WritePage() {
             className="w-1/3 text-gray-939 placeholder:text-blue-9a0 text-[15px] pl-[18px]"
             maxLength={7}
             required
+            value={nickname}
+            onChange={(e) => setNickname(e.target.value)}
           />
           <Txt size={11} weight="cm" className="text-blue-9a0" align="left">
             ※ 닉네임은 관물대에서만 보여지며, 상대방에게는 실명이 전달됩니다.
@@ -253,7 +254,7 @@ export default function WritePage() {
               rounded="sm"
               weight="medium"
               className="w-20 py-1"
-              disabled={isPending}
+              disabled={isPending || nickname.trim() === ""}
               textSize={16}
               onClick={() => {
                 setShowModal(true);
