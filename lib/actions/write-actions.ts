@@ -20,8 +20,8 @@ const extractAndValidateLetterData = async (
 ): Promise<LetterFormData> => {
   const formEntries = Object.fromEntries(formData.entries());
 
-  // fileUrl이 없으면 업로드 실패로 간주
-  if (!formEntries.fileUrl || typeof formEntries.fileUrl !== "string") {
+  // fileUrl이 있어야만 할 필요는 없음
+  if (formEntries.fileUrl && typeof formEntries.fileUrl !== "string") {
     throw new Error(ERROR_MESSAGES.LETTER.INVALID_INPUT_DATA);
   }
 

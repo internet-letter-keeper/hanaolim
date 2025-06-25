@@ -9,6 +9,7 @@ import { BasicHeader, Modal } from "@/components/common";
 import { FilePreview } from "@/components/letters";
 import { CONTENT_MAX_COUNT } from "@/constants/limitContent";
 import { postLetterReply } from "@/lib/actions/write-actions";
+import { getSenderName } from "@/lib/actions/write-actions";
 import { uploadedFileType } from "@/types/letters";
 import { uploadToS3 } from "@/utils/upload";
 
@@ -22,11 +23,11 @@ export default function LetterWritePage() {
   const [isUploading, setIsUploading] = useState<boolean>(false);
   const [showModal, setShowModal] = useState(false);
   const [count, setCount] = useState<number>(0);
+  const [senderId, setSenderId] = useState<number>(0);
   const [pendingFormData, setPendingFormData] = useState<FormData | null>(null);
   const router = useRouter();
   const searchParams = useSearchParams();
   const { soldierId, letterId } = useParams();
-  const idParam = searchParams.get("id");
   const nameParam = searchParams.get("name");
 
   // 편지 작성 액션 (답장용)
@@ -36,10 +37,10 @@ export default function LetterWritePage() {
       if (!soldierId || !letterId) {
         throw new Error("군인 아이디 또는 편지 아이디가 존재하지 않습니다.");
       }
-      if (!idParam) throw new Error("아이디가 존재하지 않습니다.");
+      if (!senderId) throw new Error("아이디가 존재하지 않습니다.");
       formData.append("soldierId", soldierId.toString()); // 보내는 사람
       formData.append("parentLetterId", letterId.toString());
-      formData.append("receiverId", idParam.toString()); // 받는 사람
+      formData.append("receiverId", senderId.toString()); // 받는 사람
 
       // 업로드된 파일이 있으면 FormData에 추가
       if (uploadedFile?.url) {
@@ -120,6 +121,12 @@ export default function LetterWritePage() {
     } else {
       setUserName("별돌이");
     }
+    (async () => {
+      if (letterId !== undefined) {
+        const fetchData = await getSenderName(+letterId);
+        setSenderId(fetchData.userId);
+      }
+    })();
   }, [searchParams]);
 
   return (
