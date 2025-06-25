@@ -1,7 +1,7 @@
 "use client";
 
-import clsx from "clsx";
 import { useSearchParams, useRouter, usePathname } from "next/navigation";
+import { cn } from "@/lib/utils";
 import { Txt } from "../atoms";
 
 export default function FilterBtn() {
@@ -32,7 +32,7 @@ export default function FilterBtn() {
       params.set("filter", key);
     }
 
-    router.push(`${pathname}?${params.toString()}`);
+    router.replace(`${pathname}?${params.toString()}`);
   };
 
   return (
@@ -43,7 +43,7 @@ export default function FilterBtn() {
           <button
             key={key}
             onClick={() => handleClick(key)}
-            className={clsx(
+            className={cn(
               "flex items-center gap-1 rounded-full border px-2 py-0.5 text-[12px]",
               isActive
                 ? "bg-green-49d border-green-49d"
