@@ -5,6 +5,7 @@ import { useRouter } from "next/navigation";
 import { useSession } from "next-auth/react";
 import { MouseEventHandler, useEffect, useRef, useState } from "react";
 import { getLetterDetail } from "@/lib/actions/letter-actions";
+import { cn } from "@/lib/utils";
 import { getSenderName } from "@/lib/actions/write-actions";
 import { Letter } from "@/types/letters";
 import { Txt } from "../atoms";
@@ -19,7 +20,7 @@ type Props = {
   onHandleModal: () => void;
 };
 
-const MAX_LENGTH = 120;
+const MAX_LENGTH = 110;
 
 export default function LetterModal({ letterId, onHandleModal }: Props) {
   const [letter, setLetter] = useState<Letter | null>(null);
@@ -28,7 +29,8 @@ export default function LetterModal({ letterId, onHandleModal }: Props) {
   const overlay = useRef<HTMLDivElement>(null);
   const router = useRouter();
 
-  //120자 넘어가면 더보기로 처리
+  //110자 넘어가면 더보기로 처리
+
   const isLong = (letter?.content.length ?? 0) > MAX_LENGTH;
 
   const preview = isLong
@@ -131,15 +133,19 @@ export default function LetterModal({ letterId, onHandleModal }: Props) {
         <PigSplash point={earnedBonus} onSkip={() => setShowPoint(false)} />
       )}
       <div
-        className="absolute top-1/2 left-1/2 -translate-x-1/2 -translate-y-1/2
-                     w-11/12 sm:w-[22rem] p-6 bg-white rounded-[10px]
-                    text-center max-h-[66vh] flex flex-col cursor-pointer"
+        className={cn(
+          "absolute top-1/2 left-1/2 -translate-x-1/2 -translate-y-1/2",
+          "w-11/12 sm:w-[22rem] p-6 bg-white rounded-[10px]",
+          "flex flex-col transition-all duration-500 ease-in-out",
+          letter ? "max-h-[80vh] opacity-100" : "max-h-[150px] opacity-0"
+        )}
       >
         <div className="flex w-full justify-between">
           <Txt size={18} weight="bold" className="text-green-49d">
             {letter.senderName}({letter.nickname})
           </Txt>
           <Image
+            className="cursor-pointer"
             src={"/icons/ic-x-in-circle.svg"}
             alt={"동그란 모양의 x 버튼"}
             width={20}
@@ -156,7 +162,12 @@ export default function LetterModal({ letterId, onHandleModal }: Props) {
             timeStyle: "short",
           })}
         </Txt>
-        <Txt align="left" size={16} className="py-4" onClick={handleGoToDetail}>
+        <Txt
+          align="left"
+          size={16}
+          className="py-4 cursor-pointer"
+          onClick={handleGoToDetail}
+        >
           {preview}{" "}
           {isLong && (
             <Txt size={16} className="text-gray-500">
