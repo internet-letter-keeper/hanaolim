@@ -21,7 +21,9 @@ export default async function CabinetPage({ params }: Props) {
   const { soldierId } = await params;
 
   const soldierInfo = await getUserBySoldierId(+soldierId);
+
   if (!session.user.userId) return;
+
   const { isNew } = await getIsNew(+session.user.userId);
 
   const isMyCabinet = session.user.soldier
@@ -33,7 +35,7 @@ export default async function CabinetPage({ params }: Props) {
 
   return (
     <SidebarProvider defaultOpen={false} className="flex-col">
-      <div className="flex flex-col gap-4">
+      <div className="flex flex-col gap-4 relative">
         <CabinetHeader isMyCabinet={isMyCabinet} soldierInfo={soldierInfo} />
         <FriendsList soldierId={+soldierId} />
         <StatusMessage isMyCabinet={isMyCabinet} soldierInfo={soldierInfo} />

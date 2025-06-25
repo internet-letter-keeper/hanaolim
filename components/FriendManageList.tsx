@@ -1,10 +1,13 @@
 "use client";
 
-import { useToast } from "@/contexts/toast/ToastContext";
 import { useRouter } from "next/navigation";
+import { useSession } from "next-auth/react";
 import { startTransition, useState } from "react";
-import { FriendProfile } from "@/types/common/profile";
+import { useToast } from "@/contexts/toast/ToastContext";
+import { getFirstFollow } from "@/lib/actions/friend-actions";
 import { deleteFriend } from "@/lib/actions/friends-action";
+import { FriendProfile } from "@/types/common/profile";
+import EmptyState from "./EmptyList";
 import { Txt } from "./atoms";
 import { Modal } from "./common";
 import FriendProfileCircle from "./common/FriendProfileCircle";
@@ -14,6 +17,9 @@ type Props = {
 };
 
 export default function FriendManageList({ friends }: Props) {
+  const { data: session, update } = useSession();
+  const userId = session?.user.userId;
+
   const [isModalOpened, setModalOpened] = useState<boolean>(false);
   const [selectedFollowId, setSelectedFollowId] = useState<number | null>(null);
 
@@ -32,7 +38,7 @@ export default function FriendManageList({ friends }: Props) {
   };
 
   const handleConfirmDelete = () => {
-    if (selectedFollowId === null) return;
+    if (selectedFollowId === null || userId === undefined) return;
     startTransition(async () => {
       const deleteResult = await deleteFriend(selectedFollowId);
       const basePosition =
@@ -45,6 +51,9 @@ export default function FriendManageList({ friends }: Props) {
       const toastType = deleteResult.success ? "success" : "error";
 
       showToast(toastMessage, basePosition, toastType);
+      const follow = await getFirstFollow(userId);
+      await update({ ...session?.user, follow: follow });
+      // 세션 업데이트 필요
       closeModal();
       router.refresh();
     });
@@ -62,20 +71,27 @@ export default function FriendManageList({ friends }: Props) {
           친구 목록에서 삭제하시겠습니까?
         </Modal>
       )}
-      {friends.map((item) => (
-        <div key={item.followId}>
-          <div className="flex flex-row items-center justify-between pt-[12px] pb-[20px] px-7">
-            <FriendProfileCircle isRowLayout profile={item} />
-            <button
-              className="border-[1px] border-gray-353 px-[17px] rounded-[5px] mt-[8px]"
-              onClick={() => openModal(item.followId)}
-            >
-              <Txt weight="medium">삭제</Txt>
-            </button>
+      {/* 친구 목록  */}
+      {friends.length > 0 ? (
+        friends.map((item) => (
+          <div key={item.followId}>
+            <div className="flex flex-row items-center justify-between pt-[12px] pb-[20px] px-7">
+              <FriendProfileCircle isRowLayout profile={item} />
+              <button
+                className="border-[1px] border-gray-353 px-[17px] rounded-[5px] mt-[8px]"
+                onClick={() => openModal(item.followId)}
+              >
+                <Txt weight="medium">삭제</Txt>
+              </button>
+            </div>
+            <div className="h-[1px] bg-gray-ada mx-7" />
           </div>
-          <div className="h-[1px] bg-gray-ada mx-7" />
-        </div>
-      ))}
+        ))
+      ) : (
+        <EmptyState>
+          친구 목록이 비어있어요 <br /> 친구를 추가하고 편지를 주고받아요!
+        </EmptyState>
+      )}
     </div>
   );
 }

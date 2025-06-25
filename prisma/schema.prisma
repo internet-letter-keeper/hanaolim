@@ -109,3 +109,8 @@ model User {
   Letter_Letter_senderIdToUser   Letter[]   @relation("Letter_senderIdToUser")
   Soldier                        Soldier[]
 }
+
+model StopWord {
+  id    Int    @id @default(autoincrement())
+  value String @unique(map: "value") @db.VarChar(255)
+}

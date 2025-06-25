@@ -22,6 +22,7 @@ export default function LettersPageClient({
   const [filter, setFilter] = useState<FilterType>("all");
   const [searchText, setSearchText] = useState("");
   const [searching, setSearching] = useState(false);
+  const [favorites, setFavorites] = useState(initialLetters);
 
   const letters = useMemo(() => initialLetters, [initialLetters]);
 
@@ -79,17 +80,48 @@ export default function LettersPageClient({
     setSearching(true);
   };
 
+  const handleFavoriteChange = (letterId: number, isFavorite: boolean) => {
+    setFavorites((prev) =>
+      prev.map((l) => (l.letterId === letterId ? { ...l, isFavorite } : l))
+    );
+  };
+
   return (
     <div className="flex flex-col min-h-screen w-full">
-      <div className="max-w-screen-sm mb-4">
+      <div className="max-w-screen-sm gap-4">
         <BasicHeader title="편지 보관함" />
-        <div className="relative mt-4">
+
+        <div>
+          <div className="flex justify-center gap-2 mt-2">
+            <PrimaryButton
+              title="내 관물대"
+              onClick={() => setActiveTab("send")}
+              color={activeTab === "send" ? "green" : "white"}
+              className="py-3 border-b border-[#D6E9E7]"
+              weight="cm"
+            />
+            <PrimaryButton
+              title="친구 관물대"
+              onClick={() => setActiveTab("receive")}
+              color={activeTab === "receive" ? "green" : "white"}
+              className="py-3 border-b border-[#D6E9E7]"
+              weight="cm"
+            />
+          </div>
+        </div>
+
+        <div className="relative mt-4 mb-4">
           <Input
             placeholder="작성자, 내용 ..."
             usage="modal"
             className="rounded-[10px] pr-10"
             value={searchText}
             onChange={(e) => setSearchText(e.target.value)}
+            onKeyDown={(e) => {
+              if (e.key === "Enter") {
+                handleSearch();
+              }
+            }}
           />
           <button onClick={handleSearch}>
             <Image
@@ -122,7 +154,7 @@ export default function LettersPageClient({
         </div>
       </div>
 
-      <div className="flex-1 bg-white-afa h-screen -m-4">
+      <div className="flex-1 bg-white-afa h-screen -m-4 mt-4">
         <div className="flex justify-between items-center px-4 mb-2">
           <Txt weight="cm" size={13}>
             총 {filteredLetters.length}개
@@ -163,6 +195,7 @@ export default function LettersPageClient({
               letters={letter}
               allLetters={letters}
               currentUserId={currentUserId}
+              onFavoriteChange={handleFavoriteChange}
             />
           ))}
         </div>

@@ -2,7 +2,7 @@
 
 import { useRouter } from "next/navigation";
 import { useSession } from "next-auth/react";
-import { useRef, useState } from "react";
+import { useRef, useState, KeyboardEvent } from "react";
 import { Input, Txt } from "@/components/atoms";
 import { useToast } from "@/contexts/toast/ToastContext";
 import { useIsSEPhone } from "@/hooks/useMobile";
@@ -29,9 +29,7 @@ export default function AddFriendBtn() {
   const soldierCodeRef = useRef<HTMLInputElement>(null);
 
   const isSE = useIsSEPhone();
-  const toastPosition = isSE
-    ? "top-40 left-1/2 -translate-x-1/2"
-    : "top-60 left-1/2 -translate-x-1/2";
+  const toastPosition = isSE ? "top-40" : "top-60";
 
   const addFriendHandler = async () => {
     if (soldierCodeRef.current?.value && userId) {
@@ -48,6 +46,14 @@ export default function AddFriendBtn() {
       closeModal();
       showToast(message, toastPosition);
       router.refresh();
+    }
+  };
+
+  const handleKeyDown = (
+    e: KeyboardEvent<HTMLInputElement | HTMLTextAreaElement>
+  ) => {
+    if (e.key === "Enter") {
+      addFriendHandler();
     }
   };
 
@@ -69,6 +75,7 @@ export default function AddFriendBtn() {
             className="mt-[20px]"
             maxLength={8}
             customRef={soldierCodeRef}
+            onKeyDown={handleKeyDown}
           />
         </Modal>
       )}

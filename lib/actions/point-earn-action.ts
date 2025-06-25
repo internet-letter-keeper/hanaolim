@@ -1,3 +1,5 @@
+"uesr server";
+
 import prisma from "../db";
 import { Letter, Prisma } from "../generated/prisma";
 
@@ -49,7 +51,6 @@ export const handleEarnPoint = async ({
         throw new Error("편지 읽은 날짜 업데이트가 실패했습니다");
       //1-2. 이미 읽었던 편지인 경우
       if (!readResult.updated) {
-        console.log("이미 읽은 편지입니다"); //디버깅용
         return {
           success: true,
           earn: false,
@@ -63,12 +64,12 @@ export const handleEarnPoint = async ({
         throw new Error("포인트 적립 조건 확인 중 에러가 발생했습니다");
 
       //2-2. 포인트 적립 조건 불충족
-      console.log("포인트 조건 불충족입니다"); //디버깅용
-      if (!earnableResult.earnability)
+      if (!earnableResult.earnability) {
         return {
           success: true,
           earn: false,
         };
+      }
 
       //3. 적립 액션
       const earnResult = await postEarnedPoint(soldierId, tx);
@@ -93,6 +94,7 @@ export const handleEarnPoint = async ({
       };
     });
   } catch (error) {
+    console.error("트랜잭션 과정 중 catch", error);
     return {
       success: false,
       earn: false,
@@ -158,7 +160,6 @@ const getPointEarnability = async (
   try {
     const res = await tx.letter.findMany({
       where: {
-        letterId,
         senderId,
         receiverId,
         readDate: {
@@ -209,7 +210,6 @@ const postEarnedPoint = async (
         },
       },
     });
-
     //2. 경험치가 10으로 나누어지는 경우 포인트 적립
     const newExp = res.letterExp;
     let bonus = 0;
@@ -228,7 +228,7 @@ const postEarnedPoint = async (
     }
 
     return {
-      succes: true,
+      success: true,
       bonus,
     };
   } catch (error) {

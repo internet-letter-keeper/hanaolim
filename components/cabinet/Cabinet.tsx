@@ -3,6 +3,7 @@
 import Image from "next/image";
 import { useEffect, useState } from "react";
 import { Txt } from "@/components/atoms";
+import { useToast } from "@/contexts/toast/ToastContext";
 import {
   getNonReplyLettersByUserId,
   getTotalReceivedNonReplyLettersCnt,
@@ -20,6 +21,8 @@ export default function Cabinet({ isMyCabinet, userId }: Props) {
   const [currentPage, setCurrentPage] = useState(1);
 
   const [totalPage, setTotalPage] = useState(1);
+
+  const { showToast } = useToast();
 
   const toPrevCabinet = () => setCurrentPage((prev) => prev - 1);
 
@@ -108,8 +111,12 @@ export default function Cabinet({ isMyCabinet, userId }: Props) {
           return (
             <button
               key={letterId}
-              disabled={!isMyCabinet}
               onClick={() => {
+                if (!isMyCabinet) {
+                  showToast("내가 작성한 편지가 아니에요", "", "error");
+                  return;
+                }
+
                 setOpenedLetterId(letterId);
                 setModalOpened(true);
               }}
