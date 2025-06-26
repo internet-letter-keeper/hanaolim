@@ -10,6 +10,7 @@ type Props = {
   showBackButton?: boolean;
   backUrl?: string;
   className?: string;
+  replaceUrl?: string;
 };
 
 export default function BasicHeader({
@@ -17,10 +18,14 @@ export default function BasicHeader({
   showBackButton = true,
   backUrl,
   className,
+  replaceUrl,
 }: Props) {
   const router = useRouter();
 
   const handleBack = () => {
+    if(replaceUrl){
+      router.replace(replaceUrl);
+    }
     if (backUrl) {
       router.push(backUrl);
       return;
