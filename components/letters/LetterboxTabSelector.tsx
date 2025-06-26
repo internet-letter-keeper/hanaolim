@@ -6,7 +6,7 @@ type Props = {
   box: "mine" | "friend";
 };
 
-export default async function LetterboxTabSelector({ box }: Props) {
+export default function LetterboxTabSelector({ box }: Props) {
   return (
     <div className="flex justify-between gap-5">
       <Link
