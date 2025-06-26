@@ -29,7 +29,7 @@ export default async function LetterDetailPage({ params }: Props) {
 
   return (
     <>
-      <BasicHeader backUrl="/letters" />
+      <BasicHeader backUrl="/letters" backreplace />
 
       {/* 원본 편지 */}
       <div className="py-4 flex justify-center">

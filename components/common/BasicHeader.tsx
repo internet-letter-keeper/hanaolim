@@ -18,16 +18,22 @@ export default function BasicHeader({
   showBackButton = true,
   backUrl,
   className,
+  backreplace,
 }: Props) {
   const router = useRouter();
 
   const handleBack = () => {
     if (backUrl) {
-      router.push(backUrl);
+      {
+        if (!!backreplace) {
+          router.replace(backUrl);
+        } else {
+          router.push(backUrl);
+        }
+      }
       return;
     }
     router.back();
-    router.refresh();
   };
 
   return (
