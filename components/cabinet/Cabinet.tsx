@@ -41,6 +41,22 @@ export default function Cabinet({ isMyCabinet, userId, loginId }: Props) {
 
   const [isOpenedLetterId, setOpenedLetterId] = useState(0);
 
+  const [optimisticallyReadIds, setOptimisticallyReadIds] = useState<number[]>(
+    []
+  );
+
+  const onLetterClick = (letterId: number) => {
+    if (!isMyCabinet) {
+      showToast("내가 작성한 편지가 아니에요", "", "error");
+      return;
+    }
+
+    setOpenedLetterId(letterId);
+    setModalOpened(true);
+
+    // 읽자마자 'New' 아이콘 숨김 처리
+    setOptimisticallyReadIds((prev) => [...prev, letterId]);
+  };
   const searchParams = useSearchParams();
   const addFollow = searchParams.get("add");
 
@@ -62,12 +78,11 @@ export default function Cabinet({ isMyCabinet, userId, loginId }: Props) {
       );
 
       setCurrentPageLetters(letters.data);
-      // TODO: 데이터 없을 때 예외처리
-      // else
+
       if (addFollow === "true") await postFriendbyId(userId, loginId);
       router.refresh();
     })();
-  }, []);
+  }, [addFollow, loginId, userId]);
 
   useEffect(() => {
     (async () => {
@@ -80,10 +95,8 @@ export default function Cabinet({ isMyCabinet, userId, loginId }: Props) {
       if (letters.data) {
         setCurrentPageLetters(letters.data);
       }
-      // TODO: 데이터 없을 때 예외처리
-      // else
     })();
-  }, [currentPage]);
+  }, [currentPage, totalLettersCnt, userId]);
 
   return (
     <div className="flex flex-col items-center relative px-10">
@@ -125,24 +138,17 @@ export default function Cabinet({ isMyCabinet, userId, loginId }: Props) {
 
           const { src, alt } = getIconInfoByIconId(iconId);
 
+          const isRead = !!readDate || optimisticallyReadIds.includes(letterId);
+
           return (
             <button
               key={letterId}
-              onClick={() => {
-                if (!isMyCabinet) {
-                  showToast("내가 작성한 편지가 아니에요", "", "error");
-                  return;
-                }
-
-                setOpenedLetterId(letterId);
-                setModalOpened(true);
-              }}
+              onClick={() => onLetterClick(letterId)}
               className={iconPosition}
             >
-              {!readDate && (
+              {!isRead && (
                 <NewIcon className="absolute top-0 right-0.5 w-[25%] h-[30%]" />
               )}
-
               <Image src={src} alt={alt} fill />
               <Txt
                 weight="medium"

@@ -64,7 +64,7 @@ export default function WritePage() {
         router.push(`/cabinet/${soldierId}`);
       }
       if (!success) {
-        showToast(message, "error");
+        showToast(message, "", "error");
       }
     });
   };

@@ -1,6 +1,6 @@
 "use client";
 
-import { useRef, useEffect, MouseEventHandler, PropsWithChildren } from "react";
+import { useRef, MouseEventHandler, PropsWithChildren } from "react";
 import { PrimaryButton, Txt } from "../atoms";
 
 type Props = {
@@ -35,16 +35,6 @@ export default function Modal({
   const onClickOverlay: MouseEventHandler = (e) => {
     if (e.target === overlay.current) onClickWhiteBtn();
   };
-
-  // esc버튼 클릭 시 모달 닫기
-  const onKeyDown = (e: KeyboardEvent) => {
-    if (e.key === "Escape") onClickWhiteBtn();
-  };
-
-  useEffect(() => {
-    document.addEventListener("keydown", onKeyDown);
-    return () => document.removeEventListener("keydown", onKeyDown);
-  }, [onKeyDown]);
 
   return (
     <div

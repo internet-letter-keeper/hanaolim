@@ -46,7 +46,9 @@ export default function DatePicker({ onChange, value }: DatePickerProps) {
   endDay.setDate(endDay.getDate() + (6 - lastDay.getDay()));
 
   const dates: Date[] = [];
-  let day = new Date(startDay);
+
+  const day = new Date(startDay);
+
   while (day <= endDay) {
     dates.push(new Date(day));
     day.setDate(day.getDate() + 1);

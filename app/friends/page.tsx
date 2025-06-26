@@ -7,7 +7,7 @@ import { requireAuth } from "@/utils/auth";
 export default async function FriendsPage() {
   const session = await requireAuth();
 
-  const userId = session?.user?.userId!;
+  const userId = session?.user?.userId;
 
   const { success, message, data } = await getFriendsList(userId);
 
