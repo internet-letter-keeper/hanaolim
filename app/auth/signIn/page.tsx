@@ -43,19 +43,6 @@ export default function SignInPage() {
       setShowSplash(false);
     }
   }, []);
-
-  useEffect(() => {
-    if (snslogin) {
-      if (callbackUrl && callbackUrl !== "/") {
-        setIsLoading(false);
-        router.push(`${callbackUrl}?add=true`);
-      } else {
-        setIsLoading(false);
-        router.push("/onboarding");
-      }
-    }
-  }, [snslogin]);
-
   //splash 렌더 (브라우저 종료 시 쿠키 사라짐)
   let splashContent = null;
 
@@ -130,15 +117,11 @@ export default function SignInPage() {
 
   const snsButtonAction = async (provider: string) => {
     setIsLoading(true);
-    const result = await signIn(provider, {
-      redirect: false,
+    await signIn(provider, {
+      redirectTo:
+        callbackUrl === "/" ? "/onboarding" : `${callbackUrl}?add=true`,
     });
-    if (result.ok) {
-      setSnsLogin(true);
-    } else {
-      setIsLoading(false);
-      router.push("/auth/error?type=signin");
-    }
+    setIsLoading(false);
   };
 
   return (
