@@ -1,19 +1,21 @@
 "use server";
 
+import { ERROR_MESSAGES, SUCCESS_MESSAGES } from "@/constants/errorMessages";
 import prisma from "@/lib/db";
+import { requireAuth } from "@/utils/auth";
 
 /**
  * 입대일과 전역일 업데이트
  * @param soldierId
  * @param startDate
  * @param endDate
- * @throws 변경에 실패했을 때
  */
 export const updateSoldierDates = async (
   soldierId: number,
   startDate: Date,
   endDate: Date
 ) => {
+  requireAuth();
   try {
     await prisma.soldier.update({
       where: {
@@ -26,9 +28,12 @@ export const updateSoldierDates = async (
     });
     return {
       success: true,
+      message: SUCCESS_MESSAGES.SOLDIER.DATE_UPDATE_SUCCESS,
     };
   } catch (error) {
-    console.error("입대일/전역일 변경에 실패했습니다.", error);
-    throw new Error("입대일/전역일 변경에 실패했습니다.");
+    return {
+      success: false,
+      message: ERROR_MESSAGES.SOLDIER.DATE_UPDATE_FAILED,
+    };
   }
 };
