@@ -14,12 +14,12 @@ export default function RootLayout({
 }: Readonly<{ children: ReactNode }>) {
   return (
     <html lang="en">
-      <body className="flex items-center justify-center h-screen overflow-hidden antialiased">
+      <body>
         <SessionProvider>
           <ToastProvider>
-          <div className="h-full w-full sm:max-w-sm p-4 bg-white-afa shadow-[0_0_10px_rgba(0,0,0,0.3)] overflow-y-auto [&::-webkit-scrollbar]:hidden">
-            {children}
-          </div>
+            <div className="h-full w-full sm:max-w-sm p-4 bg-white-afa shadow-[0_0_10px_rgba(0,0,0,0.3)] overflow-y-auto [&::-webkit-scrollbar]:hidden">
+              {children}
+            </div>
           </ToastProvider>
         </SessionProvider>
       </body>
