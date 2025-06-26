@@ -29,7 +29,7 @@ const isUserPage = (pathname: string) =>
 
 // 일반 유저, 팔로우유무에 따른 페이지
 const needsFollow = (pathname: string) =>
-  pathname.startsWith("/cabinet") ||
+  // pathname.startsWith("/cabinet") ||
   pathname === "/friends" ||
   pathname.startsWith("/letters") ||
   pathname.startsWith("/write") ||
