@@ -9,12 +9,14 @@ import {
   LetterForm,
 } from "@/components/write";
 import { ERROR_MESSAGES } from "@/constants/message";
+import { useToast } from "@/contexts/toast/ToastContext";
 import { useFileUpload } from "@/hooks/useFileUpload";
 import { useLetterForm } from "@/hooks/useLetterForm";
 import { postLetterReply } from "@/lib/actions/write-actions";
 
 export default function LetterWritePage() {
   const router = useRouter();
+  const { showToast } = useToast();
   const [isPending, startTransition] = useTransition();
 
   const { formData, setContent, soldierId, letterId, isFormValid } =
@@ -43,7 +45,7 @@ export default function LetterWritePage() {
         throw new Error(ERROR_MESSAGES.LETTER.MISSING_REQUIRED_IDS);
       }
       if (!formData.senderId) {
-        throw new Error(ERROR_MESSAGES.LETTER.MISSING_SENDER_ID);
+        throw new Error(ERROR_MESSAGES.LETTER.MISSING_REQUIRED_IDS);
       }
 
       const formDataToSubmit = new FormData();
@@ -56,9 +58,12 @@ export default function LetterWritePage() {
         formDataToSubmit.append("fileUrl", uploadedFile.url);
       }
 
-      const result = await postLetterReply(formDataToSubmit);
-      if (result?.success) {
+      const { success, message } = await postLetterReply(formDataToSubmit);
+      if (success) {
         router.push(`/cabinet/${soldierId}`);
+      }
+      if (!success) {
+        showToast(message, "error");
       }
     });
   };

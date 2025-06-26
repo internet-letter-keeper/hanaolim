@@ -81,10 +81,9 @@ const createLetter = async (data: LetterFormData, senderId?: number) => {
 
     await prisma.letter.create({ data: letterData });
 
-    return { success: true };
+    return { success: true, message: SUCCESS_MESSAGES.COMMON.SUCCESS };
   } catch (error) {
-    console.error("Letter creation error:", error);
-    throw new Error(ERROR_MESSAGES.LETTER.POST_FAILED);
+    return { success: false, message: ERROR_MESSAGES.LETTER.POST_FAILED };
   }
 };
 
@@ -114,7 +113,7 @@ export const postLetter = async (formData: FormData) => {
  * @throw 입력이 잘못되었을 경우
  */
 export const postLetterReply = async (formData: FormData) => {
-  const session = await requireAuth();
+  await requireAuth();
   const data = await extractAndValidateLetterData(formData);
 
   if (!data.parentLetterId) {
