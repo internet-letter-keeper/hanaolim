@@ -1,4 +1,4 @@
-"uesr server";
+"use server";
 
 import { ERROR_MESSAGES, SUCCESS_MESSAGES } from "@/constants/message";
 import prisma from "../db";
