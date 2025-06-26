@@ -11,6 +11,7 @@ export default function LetterboxTabSelector({ box }: Props) {
     <div className="flex justify-between gap-5">
       <Link
         href="/letters?box=mine"
+        replace
         className={cn(
           "flex justify-center w-full bg-green-49d py-3 rounded-[10px] border border-[#D6E9E7]",
           {
@@ -31,6 +32,7 @@ export default function LetterboxTabSelector({ box }: Props) {
 
       <Link
         href="/letters?box=friend"
+        replace
         className={cn(
           "flex justify-center w-full bg-green-49d py-3 rounded-[10px] border border-[#D6E9E7]",
           {
