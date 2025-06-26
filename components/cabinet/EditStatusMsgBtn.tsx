@@ -34,7 +34,7 @@ export default function EditStatusMsgBtn({ soldierId, statusMessage }: Props) {
         statusMessageRef.current.value
       );
       if (!success) {
-        showToast(message, "error");
+        showToast(message, "", "error");
       }
     }
 

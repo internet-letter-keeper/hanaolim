@@ -1,5 +1,4 @@
 import { ERROR_MESSAGES, SUCCESS_MESSAGES } from "@/constants/message";
-import { PointItemType } from "@/types/point";
 import { requireAuth } from "@/utils/auth";
 import prisma from "../db";
 
@@ -42,7 +41,11 @@ export const getPointHistory = async (soldierId: number) => {
       data: pointList,
     };
   } catch (error) {
-    return { success: false, message: ERROR_MESSAGES.POINT.FETCH_FAILED };
+    return {
+      success: false,
+      message: ERROR_MESSAGES.POINT.FETCH_FAILED,
+      error,
+    };
   }
 };
 
@@ -73,6 +76,10 @@ export const getPointSum = async (soldierId: number) => {
       data: result,
     };
   } catch (error) {
-    return { success: false, message: ERROR_MESSAGES.POINT.FETCH_FAILED };
+    return {
+      success: false,
+      message: ERROR_MESSAGES.POINT.FETCH_FAILED,
+      error,
+    };
   }
 };

@@ -1,6 +1,7 @@
 "use server";
 
 import bcrypt from "bcryptjs";
+import { ERROR_MESSAGES } from "@/constants/message";
 import { SoldierData, UserData } from "@/types/common/auth";
 import { requireAuth } from "@/utils/auth";
 import prisma from "../db";
@@ -161,7 +162,7 @@ export const generateShortCode = async (length = 8) => {
 export const verifyCurrentPassword = async (
   userId: number,
   currentPassword: string
-): Promise<{ success: boolean; isValid: boolean }> => {
+) => {
   requireAuth();
   try {
     const user = await prisma.user.findUnique({
@@ -180,7 +181,11 @@ export const verifyCurrentPassword = async (
 
     return { success: true, isValid: isPasswordValid };
   } catch (error) {
-    throw new Error("현재 비밀번호 확인에 실패했습니다.");
+    return {
+      success: false,
+      message: ERROR_MESSAGES.AUTH.WRONG_PASSWORD,
+      error,
+    };
   }
 };
 
@@ -203,6 +208,10 @@ export const changePassword = async (userId: number, newPassword: string) => {
 
     return { success: true };
   } catch (error) {
-    throw new Error("비밀번호 변경에 실패했습니다.");
+    return {
+      success: false,
+      message: ERROR_MESSAGES.AUTH.CHANGE_PASSWORD_FAILED,
+      error,
+    };
   }
 };
