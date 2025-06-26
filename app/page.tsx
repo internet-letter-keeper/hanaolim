@@ -1,6 +1,4 @@
 import {
-  getProfileInfo,
-  getAccountInfo,
   getEarnedPoint,
   getLetterCount,
   getSoldierInfoByUserId,
@@ -13,14 +11,10 @@ export default async function Page() {
   const userId = session.user.userId;
 
   const [
-    { userName, startDate, endDate },
-    { accountNum, accountBalance, savingsBalance },
     { letterExp },
     { unreadCount, totalCount },
     { soldierId },
   ] = await Promise.all([
-    getProfileInfo(userId),
-    getAccountInfo(userId),
     getEarnedPoint(userId),
     getLetterCount(userId),
     getSoldierInfoByUserId(userId),
@@ -28,12 +22,6 @@ export default async function Page() {
 
   return (
     <HomePage
-      userName={userName}
-      startDate={startDate}
-      endDate={endDate}
-      accountNum={accountNum}
-      accountBalance={accountBalance}
-      savingsBalance={savingsBalance}
       letterExp={letterExp}
       unreadLetter={unreadCount}
       totalCount={totalCount}
