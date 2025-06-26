@@ -1,4 +1,7 @@
 export const SUCCESS_MESSAGES = {
+  COMMON: {
+    SUCCESS: "요청이 성공적으로 처리되었습니다.",
+  },
   AUTH: {
     LOGIN_SUCCESS: "로그인되었습니다.",
   },

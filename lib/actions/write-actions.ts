@@ -1,6 +1,6 @@
 "use server";
 
-import { ERROR_MESSAGES } from "@/constants/message";
+import { ERROR_MESSAGES, SUCCESS_MESSAGES } from "@/constants/message";
 import { requireAuth } from "@/utils/auth";
 import prisma from "../db";
 import {
@@ -20,12 +20,12 @@ const extractAndValidateLetterData = async (formData: FormData) => {
 
   // fileUrl이 있어야만 할 필요는 없음
   if (formEntries.fileUrl && typeof formEntries.fileUrl !== "string") {
-    throw new Error(ERROR_MESSAGES.LETTER.INVALID_INPUT_DATA);
+    throw new Error(ERROR_MESSAGES.LETTER.INVALID_INPUT);
   }
 
   const validator = letterValidator.safeParse(formEntries);
   if (!validator.success) {
-    throw new Error(ERROR_MESSAGES.LETTER.INVALID_INPUT_DATA);
+    throw new Error(ERROR_MESSAGES.LETTER.INVALID_INPUT);
   }
 
   return validator.data;
@@ -53,7 +53,7 @@ const createLetter = async (data: LetterFormData, senderId?: number) => {
         select: { userId: true },
       });
       if (!soldier) {
-        throw new Error(ERROR_MESSAGES.DATA.NOT_FOUND_SOLDIER);
+        throw new Error(ERROR_MESSAGES.SOLDIER.NOT_FOUND);
       }
 
       letterData.nickname = data.nickname;
@@ -71,7 +71,7 @@ const createLetter = async (data: LetterFormData, senderId?: number) => {
         select: { userId: true },
       });
       if (!soldier) {
-        throw new Error(ERROR_MESSAGES.DATA.NOT_FOUND_SOLDIER);
+        throw new Error(ERROR_MESSAGES.SOLDIER.NOT_FOUND);
       }
 
       letterData.senderId = soldier.userId;
@@ -84,7 +84,7 @@ const createLetter = async (data: LetterFormData, senderId?: number) => {
     return { success: true };
   } catch (error) {
     console.error("Letter creation error:", error);
-    throw new Error(ERROR_MESSAGES.LETTER.LETTER_POST_FAILED);
+    throw new Error(ERROR_MESSAGES.LETTER.POST_FAILED);
   }
 };
 
@@ -100,7 +100,7 @@ export const postLetter = async (formData: FormData) => {
   const data = await extractAndValidateLetterData(formData);
 
   if (!data.soldierId) {
-    throw new Error(ERROR_MESSAGES.LETTER.INVALID_INPUT_DATA);
+    throw new Error(ERROR_MESSAGES.LETTER.INVALID_INPUT);
   }
 
   return createLetter(data, +session.user.userId!);
@@ -118,7 +118,7 @@ export const postLetterReply = async (formData: FormData) => {
   const data = await extractAndValidateLetterData(formData);
 
   if (!data.parentLetterId) {
-    throw new Error(ERROR_MESSAGES.LETTER.INVALID_INPUT_DATA);
+    throw new Error(ERROR_MESSAGES.LETTER.INVALID_INPUT);
   }
 
   return createLetter(data);
@@ -129,7 +129,8 @@ export const postLetterReply = async (formData: FormData) => {
  * @param letterId 편지 아이디
  * @returns 보낸 사람 정보
  */
-export const getSenderName = async (letterId: number) => {
+export const getSenderNameId = async (letterId: number) => {
+  requireAuth();
   try {
     const senderId = await prisma.letter.findUnique({
       where: { letterId },
@@ -137,7 +138,7 @@ export const getSenderName = async (letterId: number) => {
     });
 
     if (!senderId) {
-      throw new Error(ERROR_MESSAGES.LETTER.NOT_FOUND_LETTER);
+      throw new Error(ERROR_MESSAGES.LETTER.MISSING_REQUIRED_IDS);
     }
 
     const senderInfo = await prisma.user.findUnique({
@@ -150,8 +151,15 @@ export const getSenderName = async (letterId: number) => {
 
     if (!senderInfo) throw new Error(ERROR_MESSAGES.DATA.FETCH_FAILED);
 
-    return senderInfo;
+    return {
+      success: true,
+      message: SUCCESS_MESSAGES.COMMON.SUCCESS,
+      data: senderInfo,
+    };
   } catch (error) {
-    throw new Error(ERROR_MESSAGES.DATA.FETCH_FAILED);
+    return {
+      success: false,
+      message: ERROR_MESSAGES.DATA.FETCH_FAILED,
+    };
   }
 };
