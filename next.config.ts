@@ -7,6 +7,9 @@ const nextConfig: NextConfig = {
       bodySizeLimit: "30mb",
     },
   },
+  images: {
+    domains: ["hanaolim-bucket.s3.ap-northeast-2.amazonaws.com"],
+  },
 };
 
 export default nextConfig;
