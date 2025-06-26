@@ -77,11 +77,10 @@ export default function Cabinet({ isMyCabinet, userId, loginId }: Props) {
       );
 
       setCurrentPageLetters(letters.data);
-      // TODO: 데이터 없을 때 예외처리
-      // else
+
       if (addFollow === "true") await postFriendbyId(userId, loginId);
     })();
-  }, []);
+  }, [addFollow, loginId, userId]);
 
   useEffect(() => {
     (async () => {
@@ -94,10 +93,8 @@ export default function Cabinet({ isMyCabinet, userId, loginId }: Props) {
       if (letters.data) {
         setCurrentPageLetters(letters.data);
       }
-      // TODO: 데이터 없을 때 예외처리
-      // else
     })();
-  }, [currentPage]);
+  }, [currentPage, totalLettersCnt, userId]);
 
   return (
     <div className="flex flex-col items-center relative px-10">

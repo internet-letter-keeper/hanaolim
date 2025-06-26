@@ -52,10 +52,10 @@ export default async function LettersPage({ searchParams }: Props) {
         <FilterBtn />
       </div>
       <div className="flex flex-col gap-3 pb-8">
-        {data?.length === 0 ? (
+        {!data?.length ? (
           <Txt className="text-gray-400">조건에 맞는 편지가 없습니다</Txt>
         ) : (
-          data?.map((letter: any) => (
+          data.map((letter) => (
             <LettersItem
               key={letter.letterId}
               box={box}
@@ -64,7 +64,7 @@ export default async function LettersPage({ searchParams }: Props) {
             />
           ))
         )}
-      </div>{" "}
+      </div>
     </div>
   );
 }

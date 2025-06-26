@@ -83,7 +83,11 @@ const createLetter = async (data: LetterFormData, senderId?: number) => {
 
     return { success: true, message: SUCCESS_MESSAGES.COMMON.SUCCESS };
   } catch (error) {
-    return { success: false, message: ERROR_MESSAGES.LETTER.POST_FAILED };
+    return {
+      success: false,
+      message: ERROR_MESSAGES.LETTER.POST_FAILED,
+      error,
+    };
   }
 };
 
@@ -159,6 +163,7 @@ export const getSenderNameId = async (letterId: number) => {
     return {
       success: false,
       message: ERROR_MESSAGES.DATA.FETCH_FAILED,
+      error,
     };
   }
 };

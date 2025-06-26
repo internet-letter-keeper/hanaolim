@@ -20,6 +20,8 @@ export const SUCCESS_MESSAGES = {
 export const ERROR_MESSAGES = {
   AUTH: {
     LOGIN_REQUIRED: "로그인이 필요합니다.",
+    WRONG_PASSWORD: "현재 비밀번호 확인에 실패했습니다.",
+    CHANGE_PASSWORD_FAILED: "비밀번호 변경에 실패했습니다.",
   },
   DATA: {
     NOT_FOUND: "요청한 데이터를 찾을 수 없습니다.",
