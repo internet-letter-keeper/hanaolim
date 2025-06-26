@@ -1,5 +1,6 @@
 import { ERROR_MESSAGES, SUCCESS_MESSAGES } from "@/constants/message";
 import { PointItemType } from "@/types/point";
+import { requireAuth } from "@/utils/auth";
 import prisma from "../db";
 
 /**
@@ -9,6 +10,7 @@ import prisma from "../db";
  * @throws soldierId가 숫자가 아닐 때
  */
 export const getPointHistory = async (soldierId: number) => {
+  requireAuth();
   try {
     //queryRawUnsafe로 인한 SQL 인젝션 방지
     if (!Number.isInteger(soldierId)) {
@@ -53,16 +55,24 @@ export const getPointHistory = async (soldierId: number) => {
  * @throws soldierId가 숫자가 아닐 때
  */
 export const getPointSum = async (soldierId: number) => {
-  if (!Number.isInteger(soldierId)) {
-    throw new Error("soldierId must be a number");
+  requireAuth();
+  try {
+    if (!Number.isInteger(soldierId)) {
+      throw new Error(ERROR_MESSAGES.SOLDIER.NOT_FOUND);
+    }
+    const pointSum = await prisma.point.aggregate({
+      where: { soldierId },
+      _sum: { point: true },
+    });
+
+    //합계가 null이면 0으로 처리함
+    const result = pointSum._sum.point ?? 0;
+    return {
+      success: true,
+      message: SUCCESS_MESSAGES.COMMON.SUCCESS,
+      data: result,
+    };
+  } catch (error) {
+    return { success: false, message: ERROR_MESSAGES.POINT.FETCH_FAILED };
   }
-  const pointSum = await prisma.point.aggregate({
-    where: { soldierId },
-    _sum: { point: true },
-  });
-
-  //합계가 null이면 0으로 처리함
-  const result = pointSum._sum.point ?? 0;
-
-  return result;
 };

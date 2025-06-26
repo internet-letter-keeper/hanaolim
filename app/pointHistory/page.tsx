@@ -3,7 +3,6 @@ import EmptyState from "@/components/EmptyList";
 import PointItem from "@/components/PointItem";
 import { Txt } from "@/components/atoms";
 import { BasicHeader } from "@/components/common";
-import { useToast } from "@/contexts/toast/ToastContext";
 import {
   getPointHistory,
   getPointSum,
@@ -12,10 +11,17 @@ import { auth } from "@/lib/auth";
 
 export default async function PointHistoryPage() {
   const session = await auth();
-  const { showToast } = useToast();
 
   const soldierId = session?.user.soldier.soldierId!;
-  const pointSum = await getPointSum(soldierId);
+  const {
+    success: pointSumSuccess,
+    message: pointSumsMessage,
+    data: pointSum,
+  } = await getPointSum(soldierId);
+  if (!pointSumSuccess) {
+    throw new Error(pointSumsMessage);
+  }
+
   const {
     success,
     message,
@@ -23,7 +29,7 @@ export default async function PointHistoryPage() {
   } = await getPointHistory(soldierId);
   const safePointList = pointList || [];
   if (!success || !pointList) {
-    showToast(message, "error");
+    throw new Error(message);
   }
 
   return (
@@ -31,7 +37,7 @@ export default async function PointHistoryPage() {
       <BasicHeader title="포인트 내역 조회" />
       <Txt size={25} weight="bold" align="center" className="py-14">
         {/* 포인트 잔액 */}
-        {pointSum.toLocaleString()} 원
+        {pointSum?.toLocaleString()} 원
       </Txt>
       <div className="flex-1 flex flex-col bg-white-fff -m-4 pb-8">
         {/* 구분선 - 포인트 입금 내역 */}
