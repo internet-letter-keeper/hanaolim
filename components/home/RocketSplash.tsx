@@ -38,33 +38,34 @@ export default function RocketSplash({
       </div>
 
       <div className="flex flex-col items-center gap-8">
-        <div className="text-center">
-          <Txt size={23} weight="bold">
-            안 읽은 편지&nbsp;
-            <Txt size={25} weight="bold" className="text-green-49d">
-              {unreadLetter}장
+        <div className="flex flex-col items-center p-10">
+          <div className="text-center">
+            <Txt size={23} weight="bold">
+              안 읽은 편지&nbsp;
+              <Txt size={25} weight="bold" className="text-green-49d">
+                {unreadLetter}장
+              </Txt>
+              보러 갈까요~?
             </Txt>
-            보러 갈까요~?
-          </Txt>
+          </div>
+
+          <Image
+            src="/video/rocket.gif"
+            alt="로켓 애니메이션"
+            width={300}
+            height={300}
+            className="w-2/3 object-contain"
+          />
+
+          <div className="text-center">
+            <Txt size={30} weight="bold">
+              총 받은 편지&nbsp;
+            </Txt>
+            <Txt size={30} weight="bold" className="text-green-49d">
+              {totalCount}장
+            </Txt>
+          </div>
         </div>
-
-        <Image
-          src="/video/rocket.gif"
-          alt="로켓 애니메이션"
-          width={300}
-          height={300}
-          className="w-2/3 object-contain"
-        />
-
-        <div className="text-center">
-          <Txt size={30} weight="bold">
-            총 받은 편지&nbsp;
-          </Txt>
-          <Txt size={30} weight="bold" className="text-green-49d">
-            {totalCount}장
-          </Txt>
-        </div>
-
         <Image
           src="/images/letter-dummy.svg"
           alt="편지 이미지"

@@ -2,15 +2,15 @@ import Image from "next/image";
 import Link from "next/link";
 import Txt from "@/components/atoms/Text";
 import { Progress } from "@/components/ui/progress";
+import { getProfileInfo } from "@/lib/actions/home-actions";
+import { requireAuth } from "@/utils/auth";
 import { untilEndDate } from "@/utils/date";
 
-type Props = {
-  userName: string;
-  startDate: string;
-  endDate: Date;
-};
+export default async function Profile() {
+  const session = await requireAuth();
+  const userId = session.user.userId;
+  const { userName, startDate, endDate } = await getProfileInfo(userId);
 
-export default function ProfileBanner({ userName, startDate, endDate }: Props) {
   const startDateObj = new Date(startDate);
   const endDateObj = new Date(endDate);
   const today = new Date();
