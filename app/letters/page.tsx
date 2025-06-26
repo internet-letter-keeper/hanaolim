@@ -6,7 +6,6 @@ import {
   LettersItem,
   SearchLetter,
 } from "@/components/letters";
-import { Scroller } from "@/components/letters/Scroller";
 import { getFilteredLetters } from "@/lib/actions/letter-actions";
 import { requireAuth } from "@/utils/auth";
 
@@ -43,7 +42,6 @@ export default async function LettersPage({ searchParams }: Props) {
 
   return (
     <div className="flex flex-col gap-4">
-      <Scroller />
       <BasicHeader title="편지 보관함" />
       {isSoldierStauts && <LetterboxTabSelector box={box} />}
       <SearchLetter />
