@@ -1,7 +1,7 @@
 "use client";
 
 import Image from "next/image";
-import { useSearchParams } from "next/navigation";
+import { useRouter, useSearchParams } from "next/navigation";
 import { useEffect, useState } from "react";
 import { Txt } from "@/components/atoms";
 import { useToast } from "@/contexts/toast/ToastContext";
@@ -28,6 +28,7 @@ export default function Cabinet({ isMyCabinet, userId, loginId }: Props) {
   const [totalLettersCnt, setTotalLettersCnt] = useState(0);
 
   const { showToast } = useToast();
+  const router = useRouter();
 
   const toPrevCabinet = () => setCurrentPage((prev) => prev - 1);
 
@@ -79,6 +80,7 @@ export default function Cabinet({ isMyCabinet, userId, loginId }: Props) {
       setCurrentPageLetters(letters.data);
 
       if (addFollow === "true") await postFriendbyId(userId, loginId);
+      router.refresh();
     })();
   }, [addFollow, loginId, userId]);
 

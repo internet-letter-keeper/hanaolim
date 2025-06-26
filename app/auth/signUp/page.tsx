@@ -2,12 +2,11 @@
 
 import Image from "next/image";
 import { useRouter, useSearchParams } from "next/navigation";
-import { signIn } from "next-auth/react";
 import { useState, KeyboardEvent } from "react";
 import SignUpInput from "@/components/SignUpInput";
 import { PrimaryButton, Txt } from "@/components/atoms";
+import { signUpHook } from "@/hooks/useSign";
 import { isEmailDuplicated, postSignUp } from "@/lib/actions/auth-actions";
-import { postFriendbyId } from "@/lib/actions/friend-actions";
 import {
   checkEmailValidation,
   checkNameValidation,
@@ -18,16 +17,6 @@ export default function SignUpPage() {
   const router = useRouter();
   const searchParams = useSearchParams();
   const callbackUrl = searchParams.get("callbackUrl") || "/";
-
-  const goToSignIn = () => {
-    if (callbackUrl && callbackUrl !== "/") {
-      router.push(
-        `/auth/signIn?callbackUrl=${encodeURIComponent(callbackUrl)}`
-      );
-    } else {
-      router.push("/auth/signIn");
-    }
-  };
 
   const [name, setName] = useState("");
   const [nameError, setNameError] = useState(false);
@@ -66,6 +55,7 @@ export default function SignUpPage() {
   // 회원가입 버튼 클릭 핸들러
   const handleSignUp = async () => {
     setIsLoading(true);
+
     const duplicated = await isEmailDuplicated(email);
     if (duplicated) {
       setEmailError(true);
@@ -73,40 +63,18 @@ export default function SignUpPage() {
       setIsLoading(false);
       return;
     }
-    const result = await postSignUp({
+    const result = await signUpHook({
       email,
-      userName: name,
-      password: password || "",
+      name,
+      password,
+      callbackUrl,
     });
-    if (callbackUrl && callbackUrl !== "/") {
-      await postFriendbyId(
-        Number(callbackUrl.split("/").pop()),
-        Number(result.data?.userId)
-      );
-    }
-    if (result.ok) {
-      // 회원가입 성공
-      const signInResult = await signIn("credentials", {
-        email,
-        password,
-        redirect: false,
-      });
-      if (signInResult?.ok) {
-        // 로그인 성공
-        if (callbackUrl && callbackUrl !== "/") {
-          setIsLoading(false);
-          router.push(callbackUrl);
-        } else {
-          setIsLoading(false);
-          router.push("/onboarding");
-        }
-      } else {
-        router.push("/auth/error?type=signin");
-      }
+    if (result?.success) {
+      setIsLoading(false);
+      router.push(result.redirectUrl || "/onboarding");
     } else {
       setIsLoading(false);
       router.push("/auth/error?type=signup");
-      return;
     }
   };
 
@@ -115,6 +83,16 @@ export default function SignUpPage() {
   ) => {
     if (e.key === "Enter" && isButtonEnabled) {
       handleSignUp();
+    }
+  };
+
+  const goToSignIn = () => {
+    if (callbackUrl && callbackUrl !== "/") {
+      router.push(
+        `/auth/signIn?callbackUrl=${encodeURIComponent(callbackUrl)}`
+      );
+    } else {
+      router.push("/auth/signIn");
     }
   };
 
