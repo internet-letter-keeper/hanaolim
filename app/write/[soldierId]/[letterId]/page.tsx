@@ -8,7 +8,7 @@ import {
   LetterPageLayout,
   LetterForm,
 } from "@/components/write";
-import { ERROR_MESSAGES } from "@/constants/errorMessages";
+import { ERROR_MESSAGES } from "@/constants/message";
 import { useFileUpload } from "@/hooks/useFileUpload";
 import { useLetterForm } from "@/hooks/useLetterForm";
 import { postLetterReply } from "@/lib/actions/write-actions";

@@ -1,6 +1,6 @@
 "use server";
 
-import { ERROR_MESSAGES, SUCCESS_MESSAGES } from "@/constants/errorMessages";
+import { ERROR_MESSAGES, SUCCESS_MESSAGES } from "@/constants/message";
 import prisma from "@/lib/db";
 import { requireAuth } from "@/utils/auth";
 

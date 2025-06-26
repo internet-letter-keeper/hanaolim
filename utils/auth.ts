@@ -1,4 +1,4 @@
-import { ERROR_MESSAGES } from "@/constants/errorMessages";
+import { ERROR_MESSAGES } from "@/constants/message";
 import { auth } from "@/lib/auth";
 
 /**

@@ -1,6 +1,6 @@
 "use server";
 
-import { ERROR_MESSAGES } from "@/constants/errorMessages";
+import { ERROR_MESSAGES } from "@/constants/message";
 import { requireAuth } from "@/utils/auth";
 import prisma from "../db";
 import {
