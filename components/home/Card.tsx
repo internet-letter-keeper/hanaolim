@@ -1,13 +1,14 @@
 import Image from "next/image";
 import Link from "next/link";
+import { getAccountInfo } from "@/lib/actions/home-actions";
+import { requireAuth } from "@/utils/auth";
 import { PrimaryButton, Txt } from "../atoms";
 
-type Props = {
-  accountNum: string;
-  accountBalance: number;
-};
+export default async function Card() {
+  const session = await requireAuth();
+  const userId = session.user.userId;
+  const { accountNum, accountBalance } = await getAccountInfo(userId);
 
-export default function Card({ accountNum, accountBalance }: Props) {
   return (
     <Link
       href="/hanaBank"
