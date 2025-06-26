@@ -1,6 +1,7 @@
 "use client";
 
 import { useSearchParams, useRouter, usePathname } from "next/navigation";
+import { useSession } from "next-auth/react";
 import { cn } from "@/lib/utils";
 import { Txt } from "../atoms";
 
@@ -9,7 +10,12 @@ export default function FilterBtn() {
   const router = useRouter();
   const pathname = usePathname();
 
-  const box = (searchParams.get("box") as "mine" | "friend") ?? "mine";
+  const { data } = useSession();
+
+  const isSoldierStatus = data?.user?.isSoldier;
+
+  const soldierBox = isSoldierStatus ? "mine" : "friend";
+  const box = (searchParams.get("box") as "mine" | "friend") ?? soldierBox;
   const currentFilter = searchParams.get("filter");
 
   const filters =

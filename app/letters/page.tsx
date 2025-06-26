@@ -15,12 +15,15 @@ type Props = {
 
 export default async function LettersPage({ searchParams }: Props) {
   const params = await searchParams;
-  const box = (params.box as "mine" | "friend") ?? "mine";
-  const query = (params.query as string) ?? "";
-  const filter = params.filter;
-
   const session = await requireAuth();
   const currentUserId = session?.user?.userId!;
+
+  const isSoldierStauts = session?.user?.isSoldier;
+
+  const soldierBox = isSoldierStauts ? "mine" : "friend";
+  const box = (params.box as "mine" | "friend") ?? soldierBox;
+  const query = (params.query as string) ?? "";
+  const filter = params.filter;
 
   const filteredLetters = await getFilteredLetters({
     box,
@@ -40,7 +43,7 @@ export default async function LettersPage({ searchParams }: Props) {
   return (
     <div className="flex flex-col gap-4">
       <BasicHeader title="편지 보관함" />
-      <LetterboxTabSelector box={box} />
+      {isSoldierStauts && <LetterboxTabSelector box={box} />}
       <SearchLetter />
       <div className="flex flex-col gap-2">
         <Txt weight="cm" align="left" size={13} className="px-1">
