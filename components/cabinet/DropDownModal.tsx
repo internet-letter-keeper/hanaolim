@@ -2,7 +2,6 @@
 
 import { useRouter } from "next/navigation";
 import { useSession } from "next-auth/react";
-import { use, useEffect, useState } from "react";
 import {
   Sidebar,
   SidebarContent,

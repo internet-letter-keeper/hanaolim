@@ -3,16 +3,18 @@
 import Image from "next/image";
 import { useState, type MouseEvent } from "react";
 import { patchFavorite } from "@/lib/actions/letter-actions";
-import { Letter } from "@/types/letters";
 
 type Props = {
-  letter: Letter;
+  letterId: number;
+  isFavorite: boolean | null | undefined;
   currentUserId: number;
 };
 
-export default function FavoriteToggle({ letter, currentUserId }: Props) {
-  const { letterId, isFavorite: initialFavorite } = letter;
-
+export default function FavoriteToggle({
+  letterId,
+  isFavorite: initialFavorite,
+  currentUserId,
+}: Props) {
   const [isFavorite, setIsFavorite] = useState(initialFavorite);
 
   // 즐겨찾기 토글

@@ -54,6 +54,7 @@ export const postFriend = async (code: string, userId: number) => {
     return {
       success: false,
       message: "친구 추가에 실패했습니다. 다시 시도해주세요.",
+      error,
     };
   }
 };
@@ -134,6 +135,7 @@ export const getFriendsList = async (userId: number) => {
     return {
       success: false,
       message: ERROR_MESSAGES.DATA.FETCH_FAILED,
+      error,
     };
   }
 };
@@ -192,6 +194,7 @@ export const getUserBySoldierId = async (soldierId: number) => {
     return {
       success: false,
       message: ERROR_MESSAGES.DATA.FETCH_FAILED,
+      error,
     };
   }
 };
@@ -214,7 +217,11 @@ export const patchStatusMessage = async (
     });
     return { success: true, message: SUCCESS_MESSAGES.COMMON.SUCCESS };
   } catch (error) {
-    return { success: false, message: ERROR_MESSAGES.COMMON.UPDATE_FAILED };
+    return {
+      success: false,
+      message: ERROR_MESSAGES.COMMON.UPDATE_FAILED,
+      error,
+    };
   }
 };
 
@@ -280,6 +287,7 @@ export const postFriendbyId = async (soldierNum: number, userId: number) => {
     return {
       success: false,
       message: ERROR_MESSAGES.FRIENDS.ADD_FAILED,
+      error,
     };
   }
 };
@@ -302,6 +310,7 @@ export const deleteFriend = async (followId: number) => {
     return {
       success: false,
       message: ERROR_MESSAGES.FRIENDS.DELETE_FAILED,
+      error,
     };
   }
 };

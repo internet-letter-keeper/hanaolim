@@ -34,6 +34,7 @@ export const updateSoldierDates = async (
     return {
       success: false,
       message: ERROR_MESSAGES.SOLDIER.DATE_UPDATE_FAILED,
+      error,
     };
   }
 };

@@ -73,7 +73,7 @@ export default function LetterModal({ letterId, onHandleModal }: Props) {
           setLetter(letterData.data);
         }
         if (!success) {
-          showToast(message, "error");
+          showToast(message, "", "error");
         }
 
         // 포인트 적립 처리
@@ -90,10 +90,14 @@ export default function LetterModal({ letterId, onHandleModal }: Props) {
           setShowPoint(true);
         }
       } catch (error) {
-        throw new Error("편지 데이터 로딩 실패");
+        return {
+          success: false,
+          message: ERROR_MESSAGES.LETTER.NOT_FOUND,
+          error,
+        };
       }
     })();
-  }, [letterId, userId, soldierId]);
+  }, [letterId, userId, soldierId, showToast]);
 
   //답장하는 페이지로 이동
   const handleGoReply = () => {

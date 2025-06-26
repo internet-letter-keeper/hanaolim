@@ -135,6 +135,7 @@ const postReadDate = async (letterId: number, tx: Prisma.TransactionClient) => {
     return {
       success: false,
       updated: false,
+      error,
     };
   }
 };
@@ -149,7 +150,7 @@ const postReadDate = async (letterId: number, tx: Prisma.TransactionClient) => {
  */
 const getPointEarnability = async (
   tx: Prisma.TransactionClient,
-  { letterId, senderId, receiverId }: Letter
+  { senderId, receiverId }: Letter
 ) => {
   //오늘 날짜의 시작 EX)2025-06-21 00시 00분 00초
   const todayStart = new Date();
@@ -188,6 +189,7 @@ const getPointEarnability = async (
     return {
       success: false,
       earnability: false,
+      error,
     };
   }
 };
@@ -237,6 +239,7 @@ const postEarnedPoint = async (
     return {
       success: false,
       bonus: 0,
+      error,
     };
   }
 };

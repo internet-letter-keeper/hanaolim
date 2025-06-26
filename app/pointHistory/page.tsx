@@ -12,12 +12,16 @@ import { auth } from "@/lib/auth";
 export default async function PointHistoryPage() {
   const session = await auth();
 
-  const soldierId = session?.user.soldier.soldierId!;
+  const soldierId = session?.user.soldier.soldierId;
+
+  if (!soldierId) return null;
+
   const {
     success: pointSumSuccess,
     message: pointSumsMessage,
     data: pointSum,
   } = await getPointSum(soldierId);
+
   if (!pointSumSuccess) {
     throw new Error(pointSumsMessage);
   }
@@ -27,7 +31,9 @@ export default async function PointHistoryPage() {
     message,
     data: pointList,
   } = await getPointHistory(soldierId);
+
   const safePointList = pointList || [];
+
   if (!success || !pointList) {
     throw new Error(message);
   }
