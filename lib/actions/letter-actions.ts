@@ -341,3 +341,36 @@ export const getFilteredLetters = async ({
 export const revalidateLetters = async () => {
   revalidatePath("/letters");
 };
+
+/**
+ * 일반 회원이 편지를 읽었을 경우 읽음 처리
+ * @param letterId
+ * @param userId
+ * @usage 편지 상세 조회 페이지
+ * @returns
+ */
+export const userPostReadDate = async (letterId: number, userId: number) => {
+  try {
+    const res = await prisma.letter.updateMany({
+      where: {
+        letterId: letterId,
+        receiverId: userId,
+        readDate: null,
+      },
+      data: {
+        readDate: new Date(),
+      },
+    });
+
+    return {
+      success: true,
+      updated: res.count > 0,
+    };
+  } catch (error) {
+    console.error("Failed to update readDate:", error);
+    return {
+      success: false,
+      updated: false,
+    };
+  }
+};
