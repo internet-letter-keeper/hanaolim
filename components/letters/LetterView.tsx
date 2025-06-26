@@ -7,7 +7,7 @@ type Props = {
 
 export default function LetterView({ fileUrl }: Props) {
   return (
-    <div className="w-full bg-gray-200 flex items-center justify-center rounded-md mb-6">
+    <div className="w-full bg-gray-200 flex items-center justify-center rounded-md mb-6 overflow-auto">
       <div className="w-[80%] max-h-[30vh]">
         {isVideoFile(fileUrl) ? (
           <video
