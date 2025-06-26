@@ -12,6 +12,7 @@ import { postFriendbyId } from "@/lib/actions/friend-actions";
 
 export default function SignInPage() {
   const [isLoading, setIsLoading] = useState(false);
+  const [snslogin, setSnsLogin] = useState(false);
   const searchParams = useSearchParams();
   const callbackUrl = searchParams.get("callbackUrl") || "/";
   const emailRef = useRef<HTMLInputElement>(null);
@@ -42,6 +43,18 @@ export default function SignInPage() {
       setShowSplash(false);
     }
   }, []);
+
+  useEffect(() => {
+    if (snslogin) {
+      if (callbackUrl && callbackUrl !== "/") {
+        setIsLoading(false);
+        router.push(`${callbackUrl}?add=true`);
+      } else {
+        setIsLoading(false);
+        router.push("/onboarding");
+      }
+    }
+  }, [snslogin]);
 
   //splash 렌더 (브라우저 종료 시 쿠키 사라짐)
   let splashContent = null;
@@ -121,13 +134,7 @@ export default function SignInPage() {
       redirect: false,
     });
     if (result.ok) {
-      if (callbackUrl && callbackUrl !== "/") {
-        setIsLoading(false);
-        router.push(`${callbackUrl}?add=true`);
-      } else {
-        setIsLoading(false);
-        router.push("/onboarding");
-      }
+      setSnsLogin(true);
     } else {
       setIsLoading(false);
       router.push("/auth/error?type=signin");
