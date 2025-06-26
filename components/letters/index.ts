@@ -5,6 +5,6 @@ export { default as IconPicker } from "./IconPicker";
 export { default as LetterboxTabSelector } from "./LetterboxTabSelector";
 export { default as LetterModal } from "./LetterModal";
 export { default as LettersDetail } from "./LettersDetail";
-export { default as LettersItem } from "./LettersItem";
+export { default as LettersList } from "./LettersList";
 export { default as LetterView } from "./LetterView";
 export { default as SearchLetter } from "./SearchLetter";
