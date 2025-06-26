@@ -67,6 +67,6 @@ export default async function Olim() {
         <Letter totalCount={totalCount} />
         <Point letterExp={letterExp} />
       </div>
-    </Link>
+    </div>
   );
 }
