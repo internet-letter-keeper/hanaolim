@@ -6,6 +6,7 @@ import {
   LettersItem,
   SearchLetter,
 } from "@/components/letters";
+import { Scroller } from "@/components/letters/Scroller";
 import { getFilteredLetters } from "@/lib/actions/letter-actions";
 import { requireAuth } from "@/utils/auth";
 
@@ -21,6 +22,7 @@ export default async function LettersPage({ searchParams }: Props) {
 
   const session = await requireAuth();
   const currentUserId = session?.user?.userId!;
+  const isLoginSoldier = session?.user?.isSocial;
 
   const filteredLetters = await getFilteredLetters({
     box,
@@ -39,8 +41,9 @@ export default async function LettersPage({ searchParams }: Props) {
 
   return (
     <div className="flex flex-col gap-4">
+      <Scroller />
       <BasicHeader title="편지 보관함" />
-      <LetterboxTabSelector box={box} />
+      {isLoginSoldier && <LetterboxTabSelector box={box} />}
       <SearchLetter />
       <div className="flex flex-col gap-2">
         <Txt weight="cm" align="left" size={13} className="px-1">

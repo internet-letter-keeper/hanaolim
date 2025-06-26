@@ -1,12 +1,21 @@
 import Link from "next/link";
+import { redirect } from "next/navigation";
 import { cn } from "@/lib/utils";
+import { requireAuth } from "@/utils/auth";
 import { Txt } from "../atoms";
 
 type Props = {
   box: "mine" | "friend";
 };
 
-export default function LetterboxTabSelector({ box }: Props) {
+export default async function LetterboxTabSelector({ box }: Props) {
+  const session = await requireAuth();
+  const isLoginSoldier = session?.user?.isSoldier;
+
+  if (!isLoginSoldier && (box !== "friend" || !box)) {
+    redirect("/letters?box=friend");
+  }
+
   return (
     <div className="flex justify-between gap-5">
       <Link
