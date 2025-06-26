@@ -56,9 +56,16 @@ export default async function PointHistoryPage() {
             </EmptyState>
             <Link
               href={`/cabinet/${soldierId}`}
-              className="bg-green-49d text-white-fff p-2 rounded-[8px] text-[14px]"
+              className="bg-green-49d p-3 rounded-[8px] inline-flex items-center justify-center"
             >
-              편지 읽으러 가기
+              <Txt
+                className="text-white leading-none"
+                size={14}
+                align="center"
+                weight="cm"
+              >
+                편지 읽으러 가기
+              </Txt>
             </Link>
           </div>
         )}
