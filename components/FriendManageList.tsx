@@ -39,20 +39,15 @@ export default function FriendManageList({ friends }: Props) {
   const handleConfirmDelete = () => {
     if (selectedFollowId === null || userId === undefined) return;
     startTransition(async () => {
-      const deleteResult = await deleteFriend(selectedFollowId);
+      const { success, message } = await deleteFriend(selectedFollowId);
       const basePosition =
         "top-[20%] left-1/2 transform -translate-x-1/2 -translate-y-1/2";
 
-      const toastMessage = deleteResult.success
-        ? "성공적으로 삭제되었습니다"
-        : "삭제 도중 문제가 생겼습니다 다시 시도해 주세요";
+      const toastType = success ? "success" : "error";
 
-      const toastType = deleteResult.success ? "success" : "error";
-
-      showToast(toastMessage, basePosition, toastType);
+      showToast(message, basePosition, toastType);
       const follow = await getFirstFollow(userId);
       await update({ ...session?.user, follow: follow });
-      // 세션 업데이트 필요
       closeModal();
       router.refresh();
     });

@@ -1,3 +1,5 @@
+import { INVALID } from "zod";
+
 export const SUCCESS_MESSAGES = {
   COMMON: {
     SUCCESS: "요청이 성공적으로 처리되었습니다.",
@@ -11,6 +13,10 @@ export const SUCCESS_MESSAGES = {
   LETTER: {
     POST_SUCCESS: "편지가 성공적으로 작성되었습니다.",
   },
+  FRIENDS: {
+    ADD_SUCCESS: "친구가 추가되었습니다.",
+    DELETE_SUCCESS: "성공적으로 삭제되었습니다.",
+  },
 } as const;
 
 export const ERROR_MESSAGES = {
@@ -20,10 +26,15 @@ export const ERROR_MESSAGES = {
   DATA: {
     NOT_FOUND: "요청한 데이터를 찾을 수 없습니다.",
     FETCH_FAILED: "정보를 가져오는데 실패했습니다.",
+    USER_ID_NUMBER: "유저 ID는 숫자여야 합니다.",
+  },
+  COMMON: {
+    UPDATE_FAILED: "정보 업데이트에 실패했습니다.",
   },
   SOLDIER: {
     NOT_FOUND: "해당하는 군인을 찾을 수 없습니다.",
     DATE_UPDATE_FAILED: "입대일/전역일 변경에 실패했습니다.",
+    INVALID_ACCOUNT: "계좌번호를 불러오지 못했습니다. 다시 시도해주세요.",
   },
   LETTER: {
     INVALID_INPUT: "입력이 잘못되었습니다.",
@@ -36,5 +47,11 @@ export const ERROR_MESSAGES = {
   POINT: {
     FETCH_FAILED: "포인트 내역을 가져오는 데 실패했습니다.",
     CHECK_FAILED: "포인트 적립 조건 확인 중 에러가 발생했습니다.",
+  },
+  FRIENDS: {
+    INVALID_CODE: "코드를 다시 확인해주세요",
+    ALREADY_FRIEND: "이미 친구입니다.",
+    ADD_FAILED: "친구 추가에 실패했습니다. 다시 시도해주세요.",
+    DELETE_FAILED: "삭제 도중 문제가 생겼습니다 다시 시도해 주세요",
   },
 } as const;
