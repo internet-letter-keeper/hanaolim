@@ -1,5 +1,6 @@
 "use server";
 
+import { revalidatePath } from "next/cache";
 import prisma from "@/lib/db";
 
 type LetterDetailProp = {
@@ -335,4 +336,8 @@ export const getFilteredLetters = async ({
     console.error("[getFilteredLetters]", error);
     return { ok: false, error: "편지 필터링에 실패했습니다." };
   }
+};
+
+export const revalidateLetters = async () => {
+  revalidatePath("/letters");
 };
