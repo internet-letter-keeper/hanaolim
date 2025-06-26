@@ -30,8 +30,11 @@ export const ERROR_MESSAGES = {
     POST_FAILED: "편지 작성에 실패했습니다.",
     NOT_FOUND: "편지를 찾을 수 없습니다.",
     MISSING_REQUIRED_IDS: "필수 아이디가 누락되었습니다.",
+    UPDATE_READ_DATE_FAILED: "편지 읽은 날짜 업데이트에 실패했습니다.",
+    ID_IS_NUMBER: "편지 ID는 숫자여야 합니다.",
   },
   POINT: {
     FETCH_FAILED: "포인트 내역을 가져오는 데 실패했습니다.",
+    CHECK_FAILED: "포인트 적립 조건 확인 중 에러가 발생했습니다.",
   },
 } as const;
