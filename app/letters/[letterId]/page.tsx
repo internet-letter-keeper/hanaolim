@@ -5,7 +5,7 @@ import BasicHeader from "@/components/common/BasicHeader";
 import LettersDetail from "@/components/letters/LettersDetail";
 import {
   getLetterDetail,
-  userPostReadDate,
+  patchUserReadDate,
 } from "@/lib/actions/letter-actions";
 import { handleEarnPoint } from "@/lib/actions/point-earn-action";
 import { requireAuth } from "@/utils/auth";
@@ -29,7 +29,7 @@ export default async function LetterDetailPage({ params }: Props) {
 
   if (!letter.data.readDate) {
     if (!!soldierId) await handleEarnPoint({ letterId, soldierId });
-    else await userPostReadDate(letterId, userId);
+    else await patchUserReadDate(letterId, userId);
   }
   return (
     <>

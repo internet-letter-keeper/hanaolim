@@ -349,11 +349,11 @@ export const revalidateLetters = async () => {
  * @usage 편지 상세 조회 페이지
  * @returns
  */
-export const userPostReadDate = async (letterId: number, userId: number) => {
+export const patchUserReadDate = async (letterId: number, userId: number) => {
   try {
     const res = await prisma.letter.updateMany({
       where: {
-        letterId: letterId,
+        letterId,
         receiverId: userId,
         readDate: null,
       },
@@ -367,10 +367,10 @@ export const userPostReadDate = async (letterId: number, userId: number) => {
       updated: res.count > 0,
     };
   } catch (error) {
-    console.error("Failed to update readDate:", error);
     return {
       success: false,
       updated: false,
+      error,
     };
   }
 };
