@@ -269,6 +269,7 @@ export const getFilteredLetters = async ({
           favoriteId: myFavorite?.favoriteId,
           isFavorite: myFavorite?.isFavorite,
           senderName: letter.User_Letter_senderIdToUser?.userName ?? "",
+          receiverName: "",
           hasReply: myReplySet.has(letter.letterId),
         };
       });
@@ -326,6 +327,7 @@ export const getFilteredLetters = async ({
           favoriteId: myFavorite?.favoriteId,
           isFavorite: myFavorite?.isFavorite,
           receiverName: letter.User_Letter_receiverIdToUser?.userName ?? "",
+          senderName: "",
           hasReply: hasReplySet.has(letter.letterId),
         };
       });

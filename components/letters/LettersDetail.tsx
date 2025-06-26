@@ -10,8 +10,15 @@ type Props = {
 };
 
 export default function LettersDetail({ letter }: Props) {
-  const { fileUrl, nickname, senderName, receiverName, content, createDate } =
-    letter;
+  const {
+    fileUrl,
+    nickname,
+    senderName,
+    receiverName,
+    content,
+    createDate,
+    hasReply,
+  } = letter;
 
   return (
     <div>
