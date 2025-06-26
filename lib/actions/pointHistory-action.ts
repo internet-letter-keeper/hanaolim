@@ -1,4 +1,6 @@
+import { ERROR_MESSAGES, SUCCESS_MESSAGES } from "@/constants/message";
 import { PointItemType } from "@/types/point";
+import { requireAuth } from "@/utils/auth";
 import prisma from "../db";
 
 /**
@@ -7,23 +9,23 @@ import prisma from "../db";
  * @returns soldierId의 포인트 내역
  * @throws soldierId가 숫자가 아닐 때
  */
-export const getPointHistory = async (
-  soldierId: number
-): Promise<PointItemType[]> => {
-  //queryRawUnsafe로 인한 SQL 인젝션 방지
-  if (!Number.isInteger(soldierId)) {
-    throw new Error("soldierId must be a number");
-  }
-  //1. 포인트 리스트 조회하면서 누적합 구하기 (최신순)
-  const pointList = await prisma.$queryRawUnsafe<
-    {
-      pointId: number;
-      point: number;
-      createDate: Date;
-      soldierId: number;
-      balance: number;
-    }[]
-  >(`
+export const getPointHistory = async (soldierId: number) => {
+  requireAuth();
+  try {
+    //queryRawUnsafe로 인한 SQL 인젝션 방지
+    if (!Number.isInteger(soldierId)) {
+      throw new Error(ERROR_MESSAGES.SOLDIER.NOT_FOUND);
+    }
+    //1. 포인트 리스트 조회하면서 누적합 구하기 (최신순)
+    const pointList = await prisma.$queryRawUnsafe<
+      {
+        pointId: number;
+        point: number;
+        createDate: Date;
+        soldierId: number;
+        balance: number;
+      }[]
+    >(`
   SELECT
     pointId,
     point,
@@ -34,8 +36,14 @@ export const getPointHistory = async (
   WHERE soldierId = ${soldierId}
   ORDER BY createDate DESC
 `);
-
-  return pointList;
+    return {
+      success: true,
+      message: SUCCESS_MESSAGES.COMMON.SUCCESS,
+      data: pointList,
+    };
+  } catch (error) {
+    return { success: false, message: ERROR_MESSAGES.POINT.FETCH_FAILED };
+  }
 };
 
 //TODO: 무한스크롤 안 할 시 그냥 위에서 누적합한 거로 쓰기
@@ -47,16 +55,24 @@ export const getPointHistory = async (
  * @throws soldierId가 숫자가 아닐 때
  */
 export const getPointSum = async (soldierId: number) => {
-  if (!Number.isInteger(soldierId)) {
-    throw new Error("soldierId must be a number");
+  requireAuth();
+  try {
+    if (!Number.isInteger(soldierId)) {
+      throw new Error(ERROR_MESSAGES.SOLDIER.NOT_FOUND);
+    }
+    const pointSum = await prisma.point.aggregate({
+      where: { soldierId },
+      _sum: { point: true },
+    });
+
+    //합계가 null이면 0으로 처리함
+    const result = pointSum._sum.point ?? 0;
+    return {
+      success: true,
+      message: SUCCESS_MESSAGES.COMMON.SUCCESS,
+      data: result,
+    };
+  } catch (error) {
+    return { success: false, message: ERROR_MESSAGES.POINT.FETCH_FAILED };
   }
-  const pointSum = await prisma.point.aggregate({
-    where: { soldierId },
-    _sum: { point: true },
-  });
-
-  //합계가 null이면 0으로 처리함
-  const result = pointSum._sum.point ?? 0;
-
-  return result;
 };

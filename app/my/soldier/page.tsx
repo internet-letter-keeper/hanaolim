@@ -47,13 +47,14 @@ export default function MySoldierPage() {
     setErrorMessage("");
 
     try {
-      const result = await updateSoldierDates(
+      const res = await updateSoldierDates(
         session.user.soldier.soldierId,
         toKoreaTime(joinDate),
         toKoreaTime(releaseDate)
       );
 
-      if (result.success) {
+      //성공했을 경우
+      if (res.success) {
         await update({
           ...session.user,
           soldier: {
@@ -65,10 +66,8 @@ export default function MySoldierPage() {
         setErrorMessage("");
         router.push("/my");
       } else {
-        setErrorMessage("입대일/전역일 변경에 실패했습니다.");
+        setErrorMessage(res.message);
       }
-    } catch (error) {
-      setErrorMessage("입대일/전역일 변경 중 오류가 발생했습니다.");
     } finally {
       setIsLoading(false);
     }

@@ -12,7 +12,6 @@ type Props = {
 export default function LettersItem({ letter, currentUserId, box }: Props) {
   const {
     letterId,
-    senderId,
     receiverId,
     senderName,
     receiverName,

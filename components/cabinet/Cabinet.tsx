@@ -1,9 +1,11 @@
 "use client";
 
 import Image from "next/image";
+import { useSearchParams } from "next/navigation";
 import { useEffect, useState } from "react";
 import { Txt } from "@/components/atoms";
 import { useToast } from "@/contexts/toast/ToastContext";
+import { postFriendbyId } from "@/lib/actions/friend-actions";
 import {
   getNonReplyLettersByUserId,
   getTotalReceivedNonReplyLettersCnt,
@@ -15,9 +17,10 @@ import LetterModal from "../letters/LetterModal";
 type Props = {
   isMyCabinet: boolean;
   userId: number;
+  loginId: number;
 };
 
-export default function Cabinet({ isMyCabinet, userId }: Props) {
+export default function Cabinet({ isMyCabinet, userId, loginId }: Props) {
   const [currentPage, setCurrentPage] = useState(1);
 
   const [totalPage, setTotalPage] = useState(1);
@@ -53,6 +56,8 @@ export default function Cabinet({ isMyCabinet, userId }: Props) {
     // 읽자마자 'New' 아이콘 숨김 처리
     setOptimisticallyReadIds((prev) => [...prev, letterId]);
   };
+  const searchParams = useSearchParams();
+  const addFollow = searchParams.get("add");
 
   useEffect(() => {
     (async () => {
@@ -74,6 +79,7 @@ export default function Cabinet({ isMyCabinet, userId }: Props) {
       setCurrentPageLetters(letters.data);
       // TODO: 데이터 없을 때 예외처리
       // else
+      if (addFollow === "true") await postFriendbyId(userId, loginId);
     })();
   }, []);
 

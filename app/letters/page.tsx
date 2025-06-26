@@ -10,13 +10,14 @@ import { getFilteredLetters } from "@/lib/actions/letter-actions";
 import { requireAuth } from "@/utils/auth";
 
 type Props = {
-  searchParams: { [key: string]: string | string[] | undefined };
+  searchParams: Promise<{ [key: string]: string | string[] | undefined }>;
 };
 
 export default async function LettersPage({ searchParams }: Props) {
-  const box = (searchParams.box as "mine" | "friend") ?? "mine";
-  const query = (searchParams.query as string) ?? "";
-  const filter = searchParams.filter;
+  const params = await searchParams;
+  const box = (params.box as "mine" | "friend") ?? "mine";
+  const query = (params.query as string) ?? "";
+  const filter = params.filter;
 
   const session = await requireAuth();
   const currentUserId = session?.user?.userId!;
