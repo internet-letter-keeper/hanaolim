@@ -2,7 +2,7 @@ import type { Meta, StoryObj } from "@storybook/nextjs-vite";
 import Text from "./Text";
 
 const meta: Meta<typeof Text> = {
-  title: "Components/Atoms/Txt",
+  title: "Components/Atoms/Text",
   component: Text,
   tags: ["autodocs"],
 };
