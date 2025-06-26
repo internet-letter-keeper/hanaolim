@@ -41,11 +41,6 @@ const extractAndValidateLetterData = async (formData: FormData) => {
  */
 const createLetter = async (data: LetterFormData, senderId?: number) => {
   try {
-    const letterData: any = {
-      content: data.content,
-      fileUrl: data.fileUrl,
-    };
-
     // 일반 편지인 경우 : 군인이 receiver
     if (data.soldierId && !data.parentLetterId) {
       const soldier = await prisma.soldier.findUnique({
@@ -56,12 +51,17 @@ const createLetter = async (data: LetterFormData, senderId?: number) => {
         throw new Error(ERROR_MESSAGES.SOLDIER.NOT_FOUND);
       }
 
-      letterData.nickname = data.nickname;
-      if (data.iconId) {
-        letterData.iconId = data.iconId;
-      }
-      letterData.senderId = senderId;
-      letterData.receiverId = soldier.userId;
+      const letterData = {
+        content: data.content,
+        ...(data.fileUrl && { fileUrl: data.fileUrl }),
+        ...(data.nickname && { nickname: data.nickname }),
+        ...(data.iconId && { iconId: data.iconId }),
+        senderId: senderId!,
+        receiverId: soldier.userId,
+      };
+
+      await prisma.letter.create({ data: letterData });
+      return { success: true, message: SUCCESS_MESSAGES.COMMON.SUCCESS };
     }
 
     // 답장인 경우 : 군인이 sender
@@ -74,14 +74,19 @@ const createLetter = async (data: LetterFormData, senderId?: number) => {
         throw new Error(ERROR_MESSAGES.SOLDIER.NOT_FOUND);
       }
 
-      letterData.senderId = soldier.userId;
-      letterData.receiverId = data.receiverId;
-      letterData.parentLetterId = +data.parentLetterId;
+      const letterData = {
+        content: data.content,
+        ...(data.fileUrl && { fileUrl: data.fileUrl }),
+        senderId: soldier.userId,
+        receiverId: data.receiverId!,
+        parentLetterId: +data.parentLetterId,
+      };
+
+      await prisma.letter.create({ data: letterData });
+      return { success: true, message: SUCCESS_MESSAGES.COMMON.SUCCESS };
     }
 
-    await prisma.letter.create({ data: letterData });
-
-    return { success: true, message: SUCCESS_MESSAGES.COMMON.SUCCESS };
+    throw new Error(ERROR_MESSAGES.LETTER.POST_FAILED);
   } catch (error) {
     return {
       success: false,
