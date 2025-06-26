@@ -42,3 +42,6 @@ next-env.d.ts
 
 /mysql/
 /lib/generated/prisma
+
+*storybook.log
+storybook-static

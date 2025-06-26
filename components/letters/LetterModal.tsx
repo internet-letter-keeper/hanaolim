@@ -4,8 +4,10 @@ import Image from "next/image";
 import { useRouter } from "next/navigation";
 import { useSession } from "next-auth/react";
 import { MouseEventHandler, useEffect, useRef, useState } from "react";
+import { ERROR_MESSAGES } from "@/constants/message";
+import { useToast } from "@/contexts/toast/ToastContext";
 import { getLetterDetail } from "@/lib/actions/letter-actions";
-import { getSenderName } from "@/lib/actions/write-actions";
+import { getSenderNameId } from "@/lib/actions/write-actions";
 import { cn } from "@/lib/utils";
 import { Letter } from "@/types/letters";
 import { Txt } from "../atoms";
@@ -27,6 +29,7 @@ export default function LetterModal({ letterId, onHandleModal }: Props) {
   const [senderName, setSenderName] = useState<string>("");
   const overlay = useRef<HTMLDivElement>(null);
   const router = useRouter();
+  const { showToast } = useToast();
 
   //110자 넘어가면 더보기로 처리
   const isLong = (letter?.content.length ?? 0) > MAX_LENGTH;
@@ -55,14 +58,22 @@ export default function LetterModal({ letterId, onHandleModal }: Props) {
         const letterData = await getLetterDetail({ letterId, userId });
 
         // 발신자 이름 가져오기
-        const senderData = await getSenderName(letterId);
+        const {
+          success,
+          message,
+          data: senderData,
+        } = await getSenderNameId(letterId);
+        if (success) {
+          if (!senderData || !senderData.userName) {
+            throw new Error(ERROR_MESSAGES.DATA.NOT_FOUND);
+          }
 
-        if (!senderData || !senderData.userName) {
-          throw new Error("유저 이름이 존재하지 않습니다.");
+          setSenderName(senderData.userName);
+          setLetter(letterData.data);
         }
-
-        setSenderName(senderData.userName);
-        setLetter(letterData.data);
+        if (!success) {
+          showToast(message, "error");
+        }
 
         // 포인트 적립 처리
         const res = await fetch("/api/earn-point", {
@@ -90,9 +101,7 @@ export default function LetterModal({ letterId, onHandleModal }: Props) {
     }
 
     const encodedName = encodeURIComponent(senderName);
-    router.push(
-      `/write/${soldierId}/${letterId}?name=${encodedName}`
-    );
+    router.push(`/write/${soldierId}/${letterId}?name=${encodedName}`);
   };
 
   //편지 상세 페이지로 이동
