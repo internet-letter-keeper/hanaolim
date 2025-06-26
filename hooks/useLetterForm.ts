@@ -47,7 +47,7 @@ export const useLetterForm = ({ isReply = false }: UseLetterFormProps = {}) => {
           setSenderId(data.userId);
         }
         if (!success || !data) {
-          showToast(message, "error");
+          showToast(message, "", "error");
         }
       })();
     }

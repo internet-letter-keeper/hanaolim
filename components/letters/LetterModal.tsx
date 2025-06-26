@@ -72,7 +72,7 @@ export default function LetterModal({ letterId, onHandleModal }: Props) {
           setLetter(letterData.data);
         }
         if (!success) {
-          showToast(message, "error");
+          showToast(message, "", "error");
         }
 
         // 포인트 적립 처리

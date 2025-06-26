@@ -57,7 +57,7 @@ export default function LetterMoneyButton({ soldierId, soldierName }: Props) {
         showToast("계좌번호가 복사되었습니다");
       }
       if (!success) {
-        showToast(message!, "error");
+        showToast(message!, "", "error");
       }
     } else {
       router.push("/hanaBank");

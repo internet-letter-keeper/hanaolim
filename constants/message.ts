@@ -1,5 +1,3 @@
-import { INVALID } from "zod";
-
 export const SUCCESS_MESSAGES = {
   COMMON: {
     SUCCESS: "요청이 성공적으로 처리되었습니다.",
