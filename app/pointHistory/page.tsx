@@ -3,19 +3,28 @@ import EmptyState from "@/components/EmptyList";
 import PointItem from "@/components/PointItem";
 import { Txt } from "@/components/atoms";
 import { BasicHeader } from "@/components/common";
+import { useToast } from "@/contexts/toast/ToastContext";
 import {
   getPointHistory,
   getPointSum,
 } from "@/lib/actions/pointHistory-action";
-import { PointItemType } from "@/types/point";
-import { requireAuth } from "@/utils/auth";
+import { auth } from "@/lib/auth";
 
 export default async function PointHistoryPage() {
-  const session = await requireAuth();
+  const session = await auth();
+  const { showToast } = useToast();
 
   const soldierId = session?.user.soldier.soldierId!;
   const pointSum = await getPointSum(soldierId);
-  const pointList: PointItemType[] = await getPointHistory(soldierId);
+  const {
+    success,
+    message,
+    data: pointList,
+  } = await getPointHistory(soldierId);
+  const safePointList = pointList || [];
+  if (!success || !pointList) {
+    showToast(message, "error");
+  }
 
   return (
     <div className="flex flex-col min-h-screen">
@@ -26,10 +35,10 @@ export default async function PointHistoryPage() {
       </Txt>
       <div className="flex-1 flex flex-col bg-white-fff -m-4 pb-8">
         {/* 구분선 - 포인트 입금 내역 */}
-        {pointList.length > 0 ? (
+        {safePointList.length > 0 ? (
           <>
             <div className="h-[1px] bg-gray-530 mb-4 mt-7 mx-7" />
-            {pointList.map((item) => (
+            {safePointList.map((item) => (
               <PointItem key={`${item.pointId}`} item={item} />
             ))}
           </>

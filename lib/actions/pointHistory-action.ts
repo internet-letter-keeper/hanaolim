@@ -1,3 +1,4 @@
+import { ERROR_MESSAGES, SUCCESS_MESSAGES } from "@/constants/message";
 import { PointItemType } from "@/types/point";
 import prisma from "../db";
 
@@ -7,23 +8,22 @@ import prisma from "../db";
  * @returns soldierId의 포인트 내역
  * @throws soldierId가 숫자가 아닐 때
  */
-export const getPointHistory = async (
-  soldierId: number
-): Promise<PointItemType[]> => {
-  //queryRawUnsafe로 인한 SQL 인젝션 방지
-  if (!Number.isInteger(soldierId)) {
-    throw new Error("soldierId must be a number");
-  }
-  //1. 포인트 리스트 조회하면서 누적합 구하기 (최신순)
-  const pointList = await prisma.$queryRawUnsafe<
-    {
-      pointId: number;
-      point: number;
-      createDate: Date;
-      soldierId: number;
-      balance: number;
-    }[]
-  >(`
+export const getPointHistory = async (soldierId: number) => {
+  try {
+    //queryRawUnsafe로 인한 SQL 인젝션 방지
+    if (!Number.isInteger(soldierId)) {
+      throw new Error(ERROR_MESSAGES.SOLDIER.NOT_FOUND);
+    }
+    //1. 포인트 리스트 조회하면서 누적합 구하기 (최신순)
+    const pointList = await prisma.$queryRawUnsafe<
+      {
+        pointId: number;
+        point: number;
+        createDate: Date;
+        soldierId: number;
+        balance: number;
+      }[]
+    >(`
   SELECT
     pointId,
     point,
@@ -34,8 +34,14 @@ export const getPointHistory = async (
   WHERE soldierId = ${soldierId}
   ORDER BY createDate DESC
 `);
-
-  return pointList;
+    return {
+      success: true,
+      message: SUCCESS_MESSAGES.COMMON.SUCCESS,
+      data: pointList,
+    };
+  } catch (error) {
+    return { success: false, message: ERROR_MESSAGES.POINT.FETCH_FAILED };
+  }
 };
 
 //TODO: 무한스크롤 안 할 시 그냥 위에서 누적합한 거로 쓰기

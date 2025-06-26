@@ -31,4 +31,7 @@ export const ERROR_MESSAGES = {
     NOT_FOUND: "편지를 찾을 수 없습니다.",
     MISSING_REQUIRED_IDS: "필수 아이디가 누락되었습니다.",
   },
+  POINT: {
+    FETCH_FAILED: "포인트 내역을 가져오는 데 실패했습니다.",
+  },
 } as const;
