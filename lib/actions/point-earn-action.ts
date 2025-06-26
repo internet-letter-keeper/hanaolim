@@ -1,4 +1,4 @@
-"uesr server";
+"use server";
 
 import prisma from "../db";
 import { Letter, Prisma } from "../generated/prisma";
