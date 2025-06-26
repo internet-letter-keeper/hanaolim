@@ -1,10 +1,10 @@
 import Image from "next/image";
 import Link from "next/link";
+import { Txt } from "@/components/atoms";
 import BasicHeader from "@/components/common/BasicHeader";
 import LettersDetail from "@/components/letters/LettersDetail";
 import { getLetterDetail } from "@/lib/actions/letter-actions";
 import { handleEarnPoint } from "@/lib/actions/point-earn-action";
-import { getSenderName } from "@/lib/actions/write-actions";
 import { requireAuth } from "@/utils/auth";
 
 type Props = {
@@ -21,7 +21,6 @@ export default async function LetterDetailPage({ params }: Props) {
   const letter = await getLetterDetail({ letterId, userId });
   const reply = await getLetterDetail({ letterId, userId, isReply: true });
 
-  //편지가 없거나 편지 데이터가 없음 (편지는 무조건 있어야 함)
   if (!letter || !letter.data)
     throw new Error("편지 정보를 가져오는 것에 실패했습니다");
 
@@ -30,7 +29,7 @@ export default async function LetterDetailPage({ params }: Props) {
 
   return (
     <>
-      <BasicHeader />
+      <BasicHeader backUrl="/letters?box=mine" backreplace={true} />
 
       {/* 원본 편지 */}
       <div className="py-4 flex justify-center">
@@ -58,9 +57,11 @@ export default async function LetterDetailPage({ params }: Props) {
         <div className="flex justify-end px-6 mt-2">
           <Link
             href={`/write/${soldierId}/${letter.data.letterId}`}
-            className="flex justify-center bg-green-49d py-1 rounded-[5px] border border-[#D6E9E7] text-white"
+            className="flex justify-center bg-green-49d px-3 py-1 rounded-[5px] border border-[#D6E9E7] text-white"
           >
-            답장하기
+            <Txt size={12} className="text-white">
+              답장하기
+            </Txt>
           </Link>
         </div>
       )}
