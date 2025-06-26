@@ -78,10 +78,12 @@ export default function FriendManageList({ friends }: Props) {
             <div className="flex flex-row items-center justify-between pt-[12px] pb-[20px] px-7">
               <FriendProfileCircle isRowLayout profile={item} />
               <button
-                className="border-[1px] border-gray-353 px-[17px] rounded-[5px] mt-[8px]"
+                className="flex border-[1px] border-gray-353 px-2 py-1 rounded-[5px] mt-[8px]"
                 onClick={() => openModal(item.followId)}
               >
-                <Txt weight="medium">삭제</Txt>
+                <Txt weight="medium" className="leading-none">
+                  삭제
+                </Txt>
               </button>
             </div>
             <div className="h-[1px] bg-gray-ada mx-7" />
