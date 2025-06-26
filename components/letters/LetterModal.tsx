@@ -25,7 +25,6 @@ const MAX_LENGTH = 110;
 export default function LetterModal({ letterId, onHandleModal }: Props) {
   const [letter, setLetter] = useState<Letter | null>(null);
   const [senderName, setSenderName] = useState<string>("");
-  const [senderId, setSenderId] = useState<number>(0);
   const overlay = useRef<HTMLDivElement>(null);
   const router = useRouter();
 
@@ -63,7 +62,6 @@ export default function LetterModal({ letterId, onHandleModal }: Props) {
         }
 
         setSenderName(senderData.userName);
-        setSenderId(senderData.userId);
         setLetter(letterData.data);
 
         // 포인트 적립 처리
@@ -93,7 +91,7 @@ export default function LetterModal({ letterId, onHandleModal }: Props) {
 
     const encodedName = encodeURIComponent(senderName);
     router.push(
-      `/write/${soldierId}/${letterId}?name=${encodedName}&id=${senderId}`
+      `/write/${soldierId}/${letterId}?name=${encodedName}`
     );
   };
 

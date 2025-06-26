@@ -168,8 +168,10 @@ textarea::-webkit-scrollbar-thumb {
   border-radius: 3px;
 }
 
-
 textarea::-webkit-scrollbar-thumb:hover {
-  cursor:pointer
+  cursor: pointer;
 }
 
+body {
+  @apply flex items-center justify-center h-screen overflow-hidden antialiased;
+}
