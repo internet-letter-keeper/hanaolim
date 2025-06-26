@@ -2,9 +2,10 @@
 
 import { useRouter } from "next/navigation";
 import { useSession } from "next-auth/react";
-import { useRef, useState } from "react";
+import { useRef, useState, KeyboardEvent } from "react";
 import { Input, Txt } from "@/components/atoms";
 import { useToast } from "@/contexts/toast/ToastContext";
+import { useIsSEPhone } from "@/hooks/useMobile";
 import { postFriend } from "@/lib/actions/friend-actions";
 import { Modal } from "../common";
 
@@ -19,6 +20,8 @@ export default function AddFriendBtn() {
 
   const userId = data?.user.userId;
 
+  const mySoldierCode = data?.user.soldier.code;
+
   const [isModalOpened, setModalOpened] = useState<boolean>(false);
 
   const openModal = () => setModalOpened(true);
@@ -27,21 +30,37 @@ export default function AddFriendBtn() {
 
   const soldierCodeRef = useRef<HTMLInputElement>(null);
 
+  const isSE = useIsSEPhone();
+
+  const toastPosition = isSE ? "top-40" : "top-60";
+
   const addFriendHandler = async () => {
-    if (soldierCodeRef.current?.value && userId) {
-      const { success, message } = await postFriend(
-        soldierCodeRef.current.value,
-        userId
-      );
+    const typedCodeValue = soldierCodeRef.current?.value;
+
+    if (typedCodeValue === mySoldierCode) {
+      showToast("나의 코드예요", toastPosition, "error");
+      return;
+    }
+
+    if (typedCodeValue && userId) {
+      const { success, message } = await postFriend(typedCodeValue, userId);
 
       if (!success) {
-        showToast(message, "inset-20 top-30", "error");
+        showToast(message, toastPosition, "error");
         return;
       }
 
       closeModal();
-      showToast(message, "inset-20 top-1/2");
+      showToast(message, toastPosition);
       router.refresh();
+    }
+  };
+
+  const handleKeyDown = (
+    e: KeyboardEvent<HTMLInputElement | HTMLTextAreaElement>
+  ) => {
+    if (e.key === "Enter") {
+      addFriendHandler();
     }
   };
 
@@ -63,6 +82,7 @@ export default function AddFriendBtn() {
             className="mt-[20px]"
             maxLength={8}
             customRef={soldierCodeRef}
+            onKeyDown={handleKeyDown}
           />
         </Modal>
       )}

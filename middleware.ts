@@ -7,6 +7,7 @@ const authenticatedPages = [
   "/friends",
   "/hanaBank",
   "/letters",
+  "/my",
   "/onboarding",
   "/pointHistory",
   "/registerSoldier",
@@ -39,6 +40,7 @@ export async function middleware(req: NextRequest) {
   const didLogin = !!session?.user;
   const isSoldier = !!session?.user?.isSoldier;
   const follow = session?.user?.follow;
+  const isSocial = session?.user?.isSocial;
   const { pathname } = req.nextUrl;
 
   // 인증 필요 페이지
@@ -79,6 +81,11 @@ export async function middleware(req: NextRequest) {
   // 팔로우 필수 페이지
   if (needsFollow(pathname) && didLogin && !isSoldier && !follow) {
     return NextResponse.redirect(new URL("/onboarding", req.url));
+  }
+
+  //소셜 로그인일 경우 비밀번호 변경 페이지 접근 불가
+  if (pathname === "/my/pwd" && isSocial) {
+    return NextResponse.redirect(new URL("/my", req.url));
   }
 
   return NextResponse.next();

@@ -5,17 +5,18 @@ import { useSession } from "next-auth/react";
 import { useState } from "react";
 import { Txt } from "@/components/atoms";
 import { BasicHeader, Modal } from "@/components/common";
+import { cn } from "@/lib/utils";
 
 const buttonStyle = "flex flex-row pl-4 py-3 ";
 const containerStyle =
   "flex flex-col bg-white  shadow-[0px_0px_5px_0px_rgba(0,0,0,0.15)] rounded-[10px] mx-5";
 
 export default function MyPage() {
-  //TODO: 군인인지 아닌지에 따른 입대일 전역일 버튼 표시
-
   const { data: session } = useSession();
   const router = useRouter();
-  const { userName, email, isSoldier } = session?.user || {};
+  const { userName, email, isSoldier, isSocial, soldier, follow } =
+    session?.user || {};
+
   const [showLogoutModal, setShowLogoutModal] = useState(false);
   const [showWithdrawModal, setShowWithdrawModal] = useState(false);
 
@@ -29,10 +30,11 @@ export default function MyPage() {
     alert("회원 탈퇴");
     setShowWithdrawModal(false);
   };
+  const backUrl = `cabinet/${isSoldier ? soldier?.soldierId : follow?.soldierId}`;
 
   return (
     <div>
-      <BasicHeader title="내 정보" />
+      <BasicHeader title="내 정보" backUrl={backUrl} />
       <div className="flex flex-col items-start border-b border-gray-aaa pb-5 pl-4 mt-9 mb-9">
         <Txt className="text-gray-353" size={22} weight="cm">
           {userName}
@@ -42,19 +44,21 @@ export default function MyPage() {
         </Txt>
       </div>
       <div className={containerStyle}>
-        <button
-          className={buttonStyle}
-          onClick={() => {
-            router.push("/my/pwd");
-          }}
-        >
-          <Txt className="text-gray-353/80" size={17}>
-            비밀번호 변경
-          </Txt>
-        </button>
+        {!isSocial && (
+          <button
+            className={buttonStyle}
+            onClick={() => {
+              router.push("/my/pwd");
+            }}
+          >
+            <Txt className="text-gray-353/80" size={17}>
+              비밀번호 변경
+            </Txt>
+          </button>
+        )}
         {isSoldier && (
           <button
-            className={buttonStyle + "border-t border-gray-aaa"}
+            className={cn(buttonStyle, !isSocial && "border-t border-gray-aaa")}
             onClick={() => {
               router.push("/my/soldier");
             }}
@@ -65,7 +69,7 @@ export default function MyPage() {
           </button>
         )}
       </div>
-      <div className={containerStyle + " mt-8"}>
+      <div className={containerStyle + " mt-4"}>
         <button
           className={buttonStyle}
           onClick={() => setShowLogoutModal(true)}

@@ -3,8 +3,10 @@
 import Image from "next/image";
 import { useRouter } from "next/navigation";
 import { useRef, useState } from "react";
-import { Input } from "@/components/atoms";
+import { Input, Txt } from "@/components/atoms";
 import { Modal } from "@/components/common";
+import { STATUS_MAX_COUNT } from "@/constants/limitContent";
+import { useToast } from "@/contexts/toast/ToastContext";
 import { patchStatusMessage } from "@/lib/actions/friend-actions";
 
 type Props = {
@@ -14,6 +16,8 @@ type Props = {
 
 export default function EditStatusMsgBtn({ soldierId, statusMessage }: Props) {
   const [isModalOpened, setModalOpened] = useState<boolean>(false);
+  const [count, setCount] = useState<number>(0);
+  const { showToast } = useToast();
 
   const openModal = () => setModalOpened(true);
 
@@ -24,8 +28,15 @@ export default function EditStatusMsgBtn({ soldierId, statusMessage }: Props) {
   const statusMessageRef = useRef<HTMLInputElement>(null);
 
   const saveHandler = async () => {
-    if (statusMessageRef.current?.value)
-      await patchStatusMessage(soldierId, statusMessageRef.current.value);
+    if (statusMessageRef.current?.value) {
+      const { success, message } = await patchStatusMessage(
+        soldierId,
+        statusMessageRef.current.value
+      );
+      if (!success) {
+        showToast(message, "error");
+      }
+    }
 
     closeModal();
     router.refresh();
@@ -49,14 +60,21 @@ export default function EditStatusMsgBtn({ soldierId, statusMessage }: Props) {
             />
             상태 메시지를 <br /> 입력하세요
           </div>
-
-          <Input
-            customRef={statusMessageRef}
-            usage="modal"
-            placeholder="상태 메시지"
-            defaultValue={statusMessage ?? ""}
-            maxLength={20}
-          />
+          <div className="flex flex-col w-full gap-2">
+            <Input
+              customRef={statusMessageRef}
+              usage="modal"
+              placeholder="상태 메시지"
+              defaultValue={statusMessage ?? ""}
+              maxLength={STATUS_MAX_COUNT}
+              onChange={(e) => {
+                setCount(e.target.value.length);
+              }}
+            />
+            <Txt size={11} weight="cm" className="mr-2 -mb-2" align="right">
+              {count}/{STATUS_MAX_COUNT}
+            </Txt>
+          </div>
         </Modal>
       )}
 

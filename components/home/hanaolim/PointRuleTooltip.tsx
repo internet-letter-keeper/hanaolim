@@ -1,5 +1,3 @@
-"use client";
-
 import Txt from "@/components/atoms/Text";
 
 export default function PointRuleTooltip() {

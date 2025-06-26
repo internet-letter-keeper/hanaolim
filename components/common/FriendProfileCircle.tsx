@@ -1,14 +1,14 @@
-import { dDayConCatString } from "@/utils/date";
 import Image from "next/image";
 import Link from "next/link";
+import Txt from "@/components/atoms/Text";
+import { cn } from "@/lib/utils";
 import {
   FriendProfile,
   SoldierProfile,
   SoldierRank,
   SoldierRankToNum,
 } from "@/types/common/profile";
-import { cn } from "@/lib/utils";
-import Txt from "@/components/atoms/Text";
+import { dDayConCatString } from "@/utils/date";
 
 export const RankNumMap: Record<SoldierRank, SoldierRankToNum> = {
   이병: 1,
@@ -37,6 +37,7 @@ export default function FriendProfileCircle({
   return (
     <Link
       href={`/cabinet/${soldierId}`}
+      replace
       className={cn("whitespace-nowrap flex items-center flex-col", {
         "flex-row gap-[10px]": isRowLayout,
       })}

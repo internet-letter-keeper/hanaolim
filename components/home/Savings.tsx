@@ -1,23 +1,17 @@
-"use client";
-
 import Image from "next/image";
-import { useRouter } from "next/navigation";
+import Link from "next/link";
 import Txt from "@/components/atoms/Text";
+import { requireAuth } from "@/utils/auth";
+import { getAccountInfo } from "@/lib/actions/home-actions";
 
-type Props = {
-  savingsBalance: number;
-};
-
-export default function Savings({ savingsBalance }: Props) {
-  const router = useRouter();
-
-  const handleSendClick = () => {
-    router.push("/hanaBank");
-  };
+export default async function Savings() {
+  const session = await requireAuth();
+  const userId = session.user.userId;
+  const { savingsBalance } = await getAccountInfo(userId);
 
   return (
-    <div
-      onClick={handleSendClick}
+    <Link
+      href="/hanaBank"
       className="flex flex-col justify-between px-[23px] py-[19px] bg-white-fff rounded-[20px] w-full h-[153px] shadow-[0_0_5px_rgba(0,0,0,0.15)] cursor-pointer"
     >
       {/* 적금 제목, 금액, 이미지 */}
@@ -75,6 +69,6 @@ export default function Savings({ savingsBalance }: Props) {
           </div>
         </div>
       </div>
-    </div>
+    </Link>
   );
 }

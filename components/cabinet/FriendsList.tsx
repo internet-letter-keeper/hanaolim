@@ -22,7 +22,12 @@ export default async function FriendsList({ soldierId }: Props) {
       }
     : null;
 
-  const friendsList = await getFriendsList(session.user.userId);
+  const { success, message, data } = await getFriendsList(session.user.userId);
+
+  if (!success) {
+    throw new Error(message);
+  }
+  const friendsList = data!;
 
   return (
     <div className="overflow-x-auto -mx-4 px-4 [&::-webkit-scrollbar]:hidden">

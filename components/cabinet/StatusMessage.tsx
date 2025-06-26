@@ -21,13 +21,8 @@ export default function StatusMessage({ isMyCabinet, soldierInfo }: Props) {
         height={30}
       />
 
-      <Txt
-        className={cn("w-full text-gray-353 truncate", {
-          "text-gray-aaa": !statusMessage,
-        })}
-        align="left"
-      >
-        {statusMessage ?? "상태메세지를 입력해주세요."}
+      <Txt className="w-full text-gray-353 truncate" align="left">
+        {statusMessage}
       </Txt>
 
       {isMyCabinet && (

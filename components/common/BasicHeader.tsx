@@ -2,23 +2,37 @@
 
 import Image from "next/image";
 import { useRouter } from "next/navigation";
+import { revalidateLetters } from "@/lib/actions/letter-actions";
 import { cn } from "@/lib/utils";
 import { Txt } from "../atoms";
 
 type Props = {
   title?: string;
   showBackButton?: boolean;
+  backUrl?: string;
   className?: string;
+  revalidateLetter?: boolean;
 };
 
 export default function BasicHeader({
   title,
   showBackButton = true,
+  backUrl,
   className,
+  revalidateLetter,
 }: Props) {
   const router = useRouter();
 
-  const handleBack = () => router.back();
+  const handleBack = async () => {
+    if (backUrl) {
+      router.push(backUrl);
+      return;
+    }
+    if (revalidateLetter) {
+      await revalidateLetters();
+    }
+    router.back();
+  };
 
   return (
     <header className={cn("flex items-center px-2 h-[40px]", className)}>

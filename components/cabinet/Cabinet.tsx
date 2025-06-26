@@ -1,8 +1,11 @@
 "use client";
 
 import Image from "next/image";
+import { useSearchParams } from "next/navigation";
 import { useEffect, useState } from "react";
 import { Txt } from "@/components/atoms";
+import { useToast } from "@/contexts/toast/ToastContext";
+import { postFriendbyId } from "@/lib/actions/friend-actions";
 import {
   getNonReplyLettersByUserId,
   getTotalReceivedNonReplyLettersCnt,
@@ -14,12 +17,17 @@ import LetterModal from "../letters/LetterModal";
 type Props = {
   isMyCabinet: boolean;
   userId: number;
+  loginId: number;
 };
 
-export default function Cabinet({ isMyCabinet, userId }: Props) {
+export default function Cabinet({ isMyCabinet, userId, loginId }: Props) {
   const [currentPage, setCurrentPage] = useState(1);
 
   const [totalPage, setTotalPage] = useState(1);
+
+  const [totalLettersCnt, setTotalLettersCnt] = useState(0);
+
+  const { showToast } = useToast();
 
   const toPrevCabinet = () => setCurrentPage((prev) => prev - 1);
 
@@ -32,21 +40,30 @@ export default function Cabinet({ isMyCabinet, userId }: Props) {
 
   const [isOpenedLetterId, setOpenedLetterId] = useState(0);
 
+  const searchParams = useSearchParams();
+  const addFollow = searchParams.get("add");
+
   useEffect(() => {
     (async () => {
-      const totalLettersCnt = await getTotalReceivedNonReplyLettersCnt(userId);
+      const totalLettersCntInit =
+        await getTotalReceivedNonReplyLettersCnt(userId);
 
-      setTotalPage(Math.ceil(totalLettersCnt / 7));
+      setTotalLettersCnt(totalLettersCntInit);
+
+      setTotalPage(
+        totalLettersCntInit <= 7 ? 1 : Math.ceil(totalLettersCntInit / 7)
+      );
 
       const letters = await getNonReplyLettersByUserId(
         userId,
         1,
-        totalLettersCnt
+        totalLettersCntInit
       );
 
       setCurrentPageLetters(letters.data);
       // TODO: 데이터 없을 때 예외처리
       // else
+      if (addFollow === "true") await postFriendbyId(userId, loginId);
     })();
   }, []);
 
@@ -55,8 +72,9 @@ export default function Cabinet({ isMyCabinet, userId }: Props) {
       const letters = await getNonReplyLettersByUserId(
         userId,
         currentPage,
-        totalPage
+        totalLettersCnt
       );
+
       if (letters.data) {
         setCurrentPageLetters(letters.data);
       }
@@ -108,8 +126,12 @@ export default function Cabinet({ isMyCabinet, userId }: Props) {
           return (
             <button
               key={letterId}
-              disabled={!isMyCabinet}
               onClick={() => {
+                if (!isMyCabinet) {
+                  showToast("내가 작성한 편지가 아니에요", "", "error");
+                  return;
+                }
+
                 setOpenedLetterId(letterId);
                 setModalOpened(true);
               }}

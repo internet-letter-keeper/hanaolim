@@ -2,22 +2,37 @@
 
 import Image from "next/image";
 import { useRouter } from "next/navigation";
+import { useSearchParams } from "next/navigation";
 import { signIn } from "next-auth/react";
-import { useEffect, useRef, useState } from "react";
+import { useEffect, useRef, useState, KeyboardEvent } from "react";
 import SplashScreen from "@/components/HomeSplashScreen";
 import { PrimaryButton, Input, Txt } from "@/components/atoms";
+import { getUserByEmail } from "@/lib/actions/auth-actions";
+import { postFriendbyId } from "@/lib/actions/friend-actions";
 
 export default function SignInPage() {
-  const isLoginError: boolean = false; // 로그인 에러 상태 (예시로 false로 설정)
+  const [isLoading, setIsLoading] = useState(false);
+  const [snslogin, setSnsLogin] = useState(false);
+  const searchParams = useSearchParams();
+  const callbackUrl = searchParams.get("callbackUrl") || "/";
   const emailRef = useRef<HTMLInputElement>(null);
   const passwordRef = useRef<HTMLInputElement>(null);
 
   const router = useRouter();
 
-  const goToSignUp = () => router.push("/auth/signUp");
+  const goToSignUp = () => {
+    if (callbackUrl && callbackUrl !== "/") {
+      router.push(
+        `/auth/signUp?callbackUrl=${encodeURIComponent(callbackUrl)}`
+      );
+    } else {
+      router.push("/auth/signUp");
+    }
+  };
 
   //스플래시 화면 구현하기
   const [showSplash, setShowSplash] = useState<boolean | null>(null);
+  const [errorMessage, setErrorMessage] = useState("");
 
   useEffect(() => {
     const alreadySeen = document.cookie.includes("splashSeen=true");
@@ -28,6 +43,18 @@ export default function SignInPage() {
       setShowSplash(false);
     }
   }, []);
+
+  useEffect(() => {
+    if (snslogin) {
+      if (callbackUrl && callbackUrl !== "/") {
+        setIsLoading(false);
+        router.push(`${callbackUrl}?add=true`);
+      } else {
+        setIsLoading(false);
+        router.push("/onboarding");
+      }
+    }
+  }, [snslogin]);
 
   //splash 렌더 (브라우저 종료 시 쿠키 사라짐)
   let splashContent = null;
@@ -55,25 +82,63 @@ export default function SignInPage() {
     const password = passwordRef.current?.value;
 
     if (!email || !password) {
-      // 이메일 또는 비밀번호가 비어있을 경우 에러 처리
-      alert("이메일과 비밀번호를 입력해주세요.");
+      setErrorMessage("이메일과 비밀번호를 입력해주세요.");
       return;
     }
+
+    setIsLoading(true);
+
     const result = await signIn("credentials", {
       email,
       password,
       redirect: false,
     });
 
+    // 로그인 정보 오류
     if (result?.error === "CredentialsSignin") {
-      alert("이메일 또는 비밀번호가 잘못되었습니다.");
+      setErrorMessage("이메일 또는 비밀번호가 잘못되었습니다.");
+      setIsLoading(false);
+      return;
+      // 로그인 성공
     } else if (result?.ok) {
-      router.push("/onboarding");
+      if (callbackUrl && callbackUrl !== "/") {
+        const user = await getUserByEmail(email);
+        await postFriendbyId(
+          Number(callbackUrl.split("/").pop()),
+          Number(user?.userId)
+        );
+        setIsLoading(false);
+        router.push(callbackUrl);
+      } else {
+        setIsLoading(false);
+        router.push("/onboarding");
+      }
+      // 로그인 에러
+    } else {
+      setIsLoading(false);
+      router.push("/auth/error?type=signin");
+    }
+  };
+
+  const handleKeyDown = (
+    e: KeyboardEvent<HTMLInputElement | HTMLTextAreaElement>
+  ) => {
+    if (e.key === "Enter") {
+      handleSignIn();
     }
   };
 
   const snsButtonAction = async (provider: string) => {
-    await signIn(provider, { redirectTo: "/onboarding" });
+    setIsLoading(true);
+    const result = await signIn(provider, {
+      redirect: false,
+    });
+    if (result.ok) {
+      setSnsLogin(true);
+    } else {
+      setIsLoading(false);
+      router.push("/auth/error?type=signin");
+    }
   };
 
   return (
@@ -115,24 +180,30 @@ export default function SignInPage() {
             maxLength={20}
             customRef={passwordRef}
             type="password"
+            onKeyDown={handleKeyDown}
           />
         </div>
 
         {/* 로그인 에러 메시지 */}
-        {isLoginError && (
-          <Txt size={12} align="center" className="text-red-a76 mb-[15px]">
-            이메일 또는 비밀번호를 확인해주세요
+        {errorMessage && (
+          <Txt
+            size={12}
+            align="center"
+            className={`text-red-a76 w-full mb-[15px]`}
+          >
+            {errorMessage}
           </Txt>
         )}
 
         {/* 로그인 버튼 */}
         <PrimaryButton
-          title="로그인"
+          title={isLoading ? "로그인 중..." : "로그인"}
           rounded="sm"
           textSize={16}
           align="center"
           weight="cm"
           className="h-[38px] "
+          disabled={isLoading}
           onClick={handleSignIn}
         />
 
@@ -169,6 +240,7 @@ export default function SignInPage() {
         <button
           onClick={() => snsButtonAction("naver")}
           className="cursor-pointer"
+          disabled={isLoading}
         >
           <Image
             className="w-full h-full"
@@ -182,6 +254,7 @@ export default function SignInPage() {
         <button
           onClick={() => snsButtonAction("kakao")}
           className="cursor-pointer"
+          disabled={isLoading}
         >
           <Image
             className="w-full h-full"
@@ -194,7 +267,8 @@ export default function SignInPage() {
 
         <button
           onClick={() => snsButtonAction("google")}
-          className="w-[45px] h-[45px] bg-white rounded-full flex items-center justify-center cursor-pointer"
+          className="w-[38px] h-[38px] bg-white rounded-full flex items-center justify-center cursor-pointer"
+          disabled={isLoading}
         >
           <Image
             className="w-[28px] h-[28px]"

@@ -1,24 +1,17 @@
-"use client";
-
 import Image from "next/image";
-import { useRouter } from "next/navigation";
+import Link from "next/link";
+import { getAccountInfo } from "@/lib/actions/home-actions";
+import { requireAuth } from "@/utils/auth";
 import { PrimaryButton, Txt } from "../atoms";
 
-type Props = {
-  accountNum: string;
-  accountBalance: number;
-};
-
-export default function Card({ accountNum, accountBalance }: Props) {
-  const router = useRouter();
-
-  const handleSendClick = () => {
-    router.push("/hanaBank");
-  };
+export default async function Card() {
+  const session = await requireAuth();
+  const userId = session.user.userId;
+  const { accountNum, accountBalance } = await getAccountInfo(userId);
 
   return (
-    <div
-      onClick={handleSendClick}
+    <Link
+      href="/hanaBank"
       className="flex items-center justify-between w-full px-[23px] py-[19px] bg-green-5f2 border-[1px] border-green-9e7 rounded-[20px] h-[150px] overflow-hidden cursor-pointer"
     >
       {/* 카드 정보 */}
@@ -57,6 +50,6 @@ export default function Card({ accountNum, accountBalance }: Props) {
           priority
         />
       </div>
-    </div>
+    </Link>
   );
 }
