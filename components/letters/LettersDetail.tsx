@@ -2,6 +2,7 @@
 
 import Image from "next/image";
 import { Txt } from "@/components/atoms";
+import { isVideoFile } from "@/constants/fileType";
 import { Letter } from "@/types/letters";
 
 type Props = {
@@ -43,10 +44,7 @@ export default function LettersDetail({ letter }: Props) {
       {/* 첨부파일 */}
       {fileUrl && (
         <div className="w-full bg-gray-200 flex items-center justify-center rounded-md mb-4">
-          {fileUrl.endsWith(".mp4") ||
-          fileUrl.endsWith(".webm") ||
-          fileUrl.endsWith(".WEBM") ||
-          fileUrl.endsWith(".MP4") ? (
+          {isVideoFile(fileUrl) ? (
             <video
               src={fileUrl}
               width={100}

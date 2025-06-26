@@ -2,7 +2,7 @@
 
 import Image from "next/image";
 import { useRouter } from "next/navigation";
-import { MouseEventHandler, useRef, useState } from "react";
+import { useRef, useState } from "react";
 import Txt from "@/components/atoms/Text";
 import { PrimaryButton } from "../atoms";
 
@@ -36,6 +36,16 @@ export default function PigSplash({ onSkip, point }: PigSplashProps) {
       className="h-screen relative bg-[#333333]/90 z-[200] "
       onClick={handleSplash}
     >
+      {/*모달 종료 버튼 */}
+      <div className="absolute top-3 right-3">
+        <Txt
+          weight="medium"
+          size={18}
+          className="text-white p-4 cursor-pointer"
+        >
+          Skip
+        </Txt>
+      </div>
       {/* 중앙 콘텐츠 */}
       <div className="h-full flex flex-col justify-center items-center gap-8">
         <Image
