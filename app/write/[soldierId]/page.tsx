@@ -9,6 +9,7 @@ import {
   LetterForm,
   FileUploadSection,
 } from "@/components/write";
+import { useToast } from "@/contexts/toast/ToastContext";
 import { useFileUpload } from "@/hooks/useFileUpload";
 import { useLetterForm } from "@/hooks/useLetterForm";
 import { postLetter } from "@/lib/actions/write-actions";
@@ -16,6 +17,7 @@ import { getIconIdByName } from "@/utils/icon";
 
 export default function WritePage() {
   const router = useRouter();
+  const { showToast } = useToast();
   const [isPending, startTransition] = useTransition();
   const {
     formData,
@@ -57,9 +59,12 @@ export default function WritePage() {
         formDataToSubmit.append("fileUrl", uploadedFile.url);
       }
 
-      const result = await postLetter(formDataToSubmit);
-      if (result?.success) {
+      const { success, message } = await postLetter(formDataToSubmit);
+      if (success) {
         router.push(`/cabinet/${soldierId}`);
+      }
+      if (!success) {
+        showToast(message, "error");
       }
     });
   };

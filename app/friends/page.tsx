@@ -9,8 +9,12 @@ export default async function FriendsPage() {
 
   const userId = session?.user?.userId!;
 
-  const friends = await getFriendsList(userId);
+  const { success, message, data } = await getFriendsList(userId);
 
+  if (!success) {
+    throw new Error(message);
+  }
+  const friends = data!;
   return (
     <div className="flex flex-col min-h-full">
       <BasicHeader title="친구 관리" />

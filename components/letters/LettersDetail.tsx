@@ -24,7 +24,6 @@ export default function LettersDetail({ letter }: Props) {
 
       <div className="flex">
         <Txt size={12} weight="cm" className="text-blue-9a0">
-          {/* TODO: 나중에 형식 바꾸기 */}
           {createDate.toLocaleString()}
         </Txt>
       </div>
@@ -35,7 +34,7 @@ export default function LettersDetail({ letter }: Props) {
           size={15}
           weight="cm"
           align="left"
-          className="leading-relaxed whitespace-pre-line"
+          className="break-words whitespace-pre-wrap"
         >
           {content}
         </Txt>

@@ -1,57 +1,12 @@
 "use server";
 
+import { revalidatePath } from "next/cache";
 import prisma from "@/lib/db";
-import { Letter } from "@/types/letters";
 
 type LetterDetailProp = {
   letterId: number;
   userId: number;
-  isReply?: boolean; // 생략 시 false
-};
-
-/**
- * 편지 목록 불러오기 api
- * @param userId
- * @usage 편지 보관함
- * @returns userId에 해당하는 편지들 목록
- */
-export const getLettersByUserId = async (userId: number) => {
-  try {
-    const lettersList = await prisma.letter.findMany({
-      where: {
-        OR: [{ senderId: userId }, { receiverId: userId }],
-      },
-      include: {
-        Favorite: true,
-        User_Letter_receiverIdToUser: true,
-        User_Letter_senderIdToUser: true,
-      },
-      orderBy: {
-        createDate: "desc",
-      },
-    });
-    //TODO: 코드 리팩토링 필요
-    const letters: Letter[] = lettersList.map((l) => ({
-      letterId: l.letterId,
-      nickname: l.nickname ?? "",
-      content: l.content,
-      fileUrl: l.fileUrl ?? undefined,
-      iconId: l.iconId ?? undefined,
-      createDate: l.createDate,
-      readDate: l.readDate,
-      parentLetterId: l.parentLetterId ?? null,
-      receiverId: l.receiverId,
-      senderId: l.senderId,
-      receiverName: l.User_Letter_receiverIdToUser?.userName,
-      senderName: l.User_Letter_senderIdToUser?.userName,
-      isFavorite: l.Favorite.some((f) => f.userId === userId && f.isFavorite),
-    }));
-
-    return { ok: true, data: letters };
-  } catch (error) {
-    console.error("편지 불러오기 에러:", error);
-    return { ok: false, data: null };
-  }
+  isReply?: boolean;
 };
 
 /**
@@ -245,8 +200,9 @@ type GetFilteredLettersParams = {
 };
 
 /**
- *
+ * 필터와 검색 결과에 따른 편지 목록 불러오기
  * @param param0
+ * @usage 편지 목록 페이지
  * @returns
  */
 export const getFilteredLetters = async ({
@@ -380,4 +336,8 @@ export const getFilteredLetters = async ({
     console.error("[getFilteredLetters]", error);
     return { ok: false, error: "편지 필터링에 실패했습니다." };
   }
+};
+
+export const revalidateLetters = async () => {
+  revalidatePath("/letters");
 };

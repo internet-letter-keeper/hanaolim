@@ -20,7 +20,12 @@ export default async function CabinetPage({ params }: Props) {
 
   const { soldierId } = await params;
 
-  const soldierInfo = await getUserBySoldierId(+soldierId);
+  const { success, message, data } = await getUserBySoldierId(+soldierId);
+
+  if (!success) {
+    throw new Error(message);
+  }
+  const soldierInfo = data!;
 
   if (!session.user.userId) return;
 
@@ -29,9 +34,6 @@ export default async function CabinetPage({ params }: Props) {
   const isMyCabinet = session.user.soldier
     ? session.user.soldier.soldierId === soldierInfo?.soldierId
     : false;
-
-  if (!soldierInfo)
-    throw new Error("해당 군인의 정보를 찾을 수 없습니다. 다시 시도해주세요.");
 
   return (
     <SidebarProvider defaultOpen={false} className="flex-col">

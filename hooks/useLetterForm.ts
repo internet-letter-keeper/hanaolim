@@ -1,6 +1,7 @@
 import { useParams, useSearchParams } from "next/navigation";
 import { useState, useEffect } from "react";
-import { getSenderName } from "@/lib/actions/write-actions";
+import { useToast } from "@/contexts/toast/ToastContext";
+import { getSenderNameId } from "@/lib/actions/write-actions";
 import { IconName } from "@/types/common/icons";
 
 interface UseLetterFormProps {
@@ -13,6 +14,7 @@ export const useLetterForm = ({ isReply = false }: UseLetterFormProps = {}) => {
   const [content, setContent] = useState<string>("");
   const [selectedIcon, setSelectedIcon] = useState<IconName>("face");
   const [senderId, setSenderId] = useState<number>(0);
+  const { showToast } = useToast();
 
   const { soldierId, letterId } = useParams();
   const searchParams = useSearchParams();
@@ -39,12 +41,13 @@ export const useLetterForm = ({ isReply = false }: UseLetterFormProps = {}) => {
     // 답장인 경우 발신자 정보 가져오기
     if (isReply && letterId) {
       (async () => {
-        try {
-          // 부모 letterId 가지고 name, id 가져오기
-          const fetchData = await getSenderName(+letterId);
-          setSenderId(fetchData.userId);
-        } catch (error) {
-          console.error(error);
+        // 부모 letterId 가지고 name, id 가져오기
+        const { success, message, data } = await getSenderNameId(+letterId);
+        if (success && data) {
+          setSenderId(data.userId);
+        }
+        if (!success || !data) {
+          showToast(message, "error");
         }
       })();
     }
