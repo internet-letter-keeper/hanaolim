@@ -18,4 +18,5 @@ export type Letter = {
   receiverName: string;
   senderName: string;
   isFavorite: boolean;
+  hasReply?: boolean;
 };

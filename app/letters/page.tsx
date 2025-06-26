@@ -3,9 +3,9 @@ import { BasicHeader } from "@/components/common";
 import {
   FilterBtn,
   LetterboxTabSelector,
-  LettersItem,
   SearchLetter,
 } from "@/components/letters";
+import LettersList from "@/components/letters/LettersList";
 import { getFilteredLetters } from "@/lib/actions/letter-actions";
 import { requireAuth } from "@/utils/auth";
 
@@ -51,20 +51,11 @@ export default async function LettersPage({ searchParams }: Props) {
         </Txt>
         <FilterBtn />
       </div>
-      <div className="flex flex-col gap-3 pb-8">
-        {!data?.length ? (
-          <Txt className="text-gray-400">조건에 맞는 편지가 없습니다</Txt>
-        ) : (
-          data.map((letter) => (
-            <LettersItem
-              key={letter.letterId}
-              box={box}
-              letter={letter}
-              currentUserId={currentUserId}
-            />
-          ))
-        )}
-      </div>
+      <LettersList
+        letters={filteredLetters.data}
+        box={box}
+        currentUserId={currentUserId}
+      />
     </div>
   );
 }
