@@ -37,6 +37,23 @@ export default function Cabinet({ isMyCabinet, userId }: Props) {
 
   const [isOpenedLetterId, setOpenedLetterId] = useState(0);
 
+  const [optimisticallyReadIds, setOptimisticallyReadIds] = useState<number[]>(
+    []
+  );
+
+  const onLetterClick = (letterId: number) => {
+    if (!isMyCabinet) {
+      showToast("내가 작성한 편지가 아니에요", "", "error");
+      return;
+    }
+
+    setOpenedLetterId(letterId);
+    setModalOpened(true);
+
+    // 읽자마자 'New' 아이콘 숨김 처리
+    setOptimisticallyReadIds((prev) => [...prev, letterId]);
+  };
+
   useEffect(() => {
     (async () => {
       const totalLettersCntInit =
@@ -116,24 +133,17 @@ export default function Cabinet({ isMyCabinet, userId }: Props) {
 
           const { src, alt } = getIconInfoByIconId(iconId);
 
+          const isRead = !!readDate || optimisticallyReadIds.includes(letterId);
+
           return (
             <button
               key={letterId}
-              onClick={() => {
-                if (!isMyCabinet) {
-                  showToast("내가 작성한 편지가 아니에요", "", "error");
-                  return;
-                }
-
-                setOpenedLetterId(letterId);
-                setModalOpened(true);
-              }}
+              onClick={() => onLetterClick(letterId)}
               className={iconPosition}
             >
-              {!readDate && (
+              {!isRead && (
                 <NewIcon className="absolute top-0 right-0.5 w-[25%] h-[30%]" />
               )}
-
               <Image src={src} alt={alt} fill />
               <Txt
                 weight="medium"
