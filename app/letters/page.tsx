@@ -16,7 +16,7 @@ type Props = {
 export default async function LettersPage({ searchParams }: Props) {
   const params = await searchParams;
   const session = await requireAuth();
-  const currentUserId = session?.user?.userId!;
+  const currentUserId = session?.user?.userId;
 
   const isSoldierStauts = session?.user?.isSoldier;
 

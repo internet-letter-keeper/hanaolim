@@ -63,7 +63,7 @@ export const getLetterDetail = async ({
     };
     return { ok: true, data: result };
   } catch (error) {
-    return { ok: false, data: null };
+    return { ok: false, data: null, error };
   }
 };
 
@@ -169,7 +169,7 @@ export const getNonReplyLettersByUserId = async (
       ),
     };
   } catch (error) {
-    return { ok: false, data: null };
+    return { ok: false, data: null, error };
   }
 };
 
