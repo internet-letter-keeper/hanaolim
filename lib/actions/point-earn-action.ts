@@ -1,5 +1,6 @@
 "uesr server";
 
+import { ERROR_MESSAGES, SUCCESS_MESSAGES } from "@/constants/message";
 import prisma from "../db";
 import { Letter, Prisma } from "../generated/prisma";
 
@@ -48,7 +49,7 @@ export const handleEarnPoint = async ({
 
       //1-1. 업데이트 중 예기치 못한 오류 발생
       if (!readResult.success)
-        throw new Error("편지 읽은 날짜 업데이트가 실패했습니다");
+        throw new Error(ERROR_MESSAGES.LETTER.UPDATE_READ_DATE_FAILED);
       //1-2. 이미 읽었던 편지인 경우
       if (!readResult.updated) {
         return {
@@ -76,7 +77,7 @@ export const handleEarnPoint = async ({
 
       //3-1. 포인트 적립 중 예기치 못한 에러 발생
       if (!earnResult.success)
-        throw new Error("포인트 적립을 실패했습니다 다시 시도해 주세요");
+        throw new Error(ERROR_MESSAGES.POINT.CHECK_FAILED);
 
       //3-2. 경험치가 덜 차서 포인트 적립 불가
       if (earnResult.bonus === 0) {
@@ -89,6 +90,7 @@ export const handleEarnPoint = async ({
       //3-3. 경험치 다 차서 적립까지 성공 후, success true와 적립된 포인트 반환하기
       return {
         success: true,
+        message: SUCCESS_MESSAGES.COMMON.SUCCESS,
         earn: true,
         bonus: earnResult.bonus,
       };
@@ -111,7 +113,7 @@ export const handleEarnPoint = async ({
  */
 const postReadDate = async (letterId: number, tx: Prisma.TransactionClient) => {
   if (typeof letterId !== "number" || Number.isNaN(letterId)) {
-    throw new Error("letterId는 숫자여야 합니다");
+    throw new Error(ERROR_MESSAGES.LETTER.ID_IS_NUMBER);
   }
 
   try {

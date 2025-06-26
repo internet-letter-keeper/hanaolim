@@ -50,9 +50,15 @@ export default function LetterMoneyButton({ soldierId, soldierName }: Props) {
   const onCoinClick = async () => {
     // 소셜로그인이면 soldierId 해당 군인의 계좌번호 복사, 이메일 로그인이면 하나원큐로 이동
     if (data?.user.isSocial) {
-      const accountNum = await getAccountNumBySoldierId(soldierId);
-      navigator.clipboard.writeText(accountNum);
-      showToast("계좌번호가 복사되었습니다");
+      const { success, message, accountNum } =
+        await getAccountNumBySoldierId(soldierId);
+      if (success) {
+        navigator.clipboard.writeText(accountNum!);
+        showToast("계좌번호가 복사되었습니다");
+      }
+      if (!success) {
+        showToast(message!, "error");
+      }
     } else {
       router.push("/hanaBank");
     }
