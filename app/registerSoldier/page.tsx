@@ -17,13 +17,13 @@ export default function SignInPage() {
   const [releaseDate, setReleaseDate] = useState<Date | null>(null);
   const [errorMessage, setErrorMessage] = useState("");
   const [accountNumber, setAccountNumber] = useState("");
+  const [isLoading, setIsLoading] = useState(false);
 
   const handleSubmit = async () => {
     if (!joinDate) {
       setErrorMessage("입대일을 선택하여 주세요");
       return;
     }
-
     if (!releaseDate) {
       setErrorMessage("전역일을 선택하여 주세요");
       return;
@@ -32,17 +32,16 @@ export default function SignInPage() {
       setErrorMessage("전역일은 입대일 이후여야 합니다.");
       return;
     }
-
     if (!accountNumber || accountNumber.length < 16) {
       setErrorMessage("계좌번호를 올바르게 입력하여 주세요");
       return;
     }
-
     // 유효성 통과 후 처리
     if (session?.user.userId === undefined) {
       setErrorMessage("유효한 사용자 정보가 없습니다.");
       return;
     }
+    setIsLoading(true);
     const result = await postSoldier({
       userId: session?.user.userId,
       startDate: toKoreaTime(joinDate),
@@ -60,8 +59,10 @@ export default function SignInPage() {
         isSoldier: true,
       }); // 세션 업데이트
 
-      router.push("/");
+      setIsLoading(false);
+      router.back();
     } else {
+      setIsLoading(false);
       router.push("/auth/error?type=regist");
       return;
     }
@@ -85,7 +86,7 @@ export default function SignInPage() {
   const handleKeyDown = (
     e: KeyboardEvent<HTMLInputElement | HTMLTextAreaElement>
   ) => {
-    if (e.key === "Enter") {
+    if (e.key === "Enter" && !isLoading) {
       handleSubmit();
     }
   };
@@ -150,6 +151,7 @@ export default function SignInPage() {
           weight="cm"
           className="h-[38px]"
           onClick={handleSubmit}
+          disabled={isLoading}
         />
       </div>
       <button onClick={() => router.back()} className="mt-[20px]">

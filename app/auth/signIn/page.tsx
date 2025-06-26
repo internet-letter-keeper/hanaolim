@@ -7,28 +7,16 @@ import { signIn } from "next-auth/react";
 import { useEffect, useRef, useState, KeyboardEvent } from "react";
 import SplashScreen from "@/components/HomeSplashScreen";
 import { PrimaryButton, Input, Txt } from "@/components/atoms";
-import { getUserByEmail } from "@/lib/actions/auth-actions";
-import { postFriendbyId } from "@/lib/actions/friend-actions";
+import { signInHook } from "@/hooks/useSign";
 
 export default function SignInPage() {
   const [isLoading, setIsLoading] = useState(false);
-  const [snslogin, setSnsLogin] = useState(false);
   const searchParams = useSearchParams();
   const callbackUrl = searchParams.get("callbackUrl") || "/";
   const emailRef = useRef<HTMLInputElement>(null);
   const passwordRef = useRef<HTMLInputElement>(null);
 
   const router = useRouter();
-
-  const goToSignUp = () => {
-    if (callbackUrl && callbackUrl !== "/") {
-      router.push(
-        `/auth/signUp?callbackUrl=${encodeURIComponent(callbackUrl)}`
-      );
-    } else {
-      router.push("/auth/signUp");
-    }
-  };
 
   //스플래시 화면 구현하기
   const [showSplash, setShowSplash] = useState<boolean | null>(null);
@@ -43,6 +31,7 @@ export default function SignInPage() {
       setShowSplash(false);
     }
   }, []);
+
   //splash 렌더 (브라우저 종료 시 쿠키 사라짐)
   let splashContent = null;
 
@@ -74,37 +63,29 @@ export default function SignInPage() {
     }
 
     setIsLoading(true);
-
-    const result = await signIn("credentials", {
+    const result = await signInHook({
       email,
       password,
-      redirect: false,
+      callbackUrl,
     });
-
-    // 로그인 정보 오류
-    if (result?.error === "CredentialsSignin") {
-      setErrorMessage("이메일 또는 비밀번호가 잘못되었습니다.");
+    if (result?.success) {
       setIsLoading(false);
-      return;
-      // 로그인 성공
-    } else if (result?.ok) {
-      if (callbackUrl && callbackUrl !== "/") {
-        const user = await getUserByEmail(email);
-        await postFriendbyId(
-          Number(callbackUrl.split("/").pop()),
-          Number(user?.userId)
-        );
-        setIsLoading(false);
-        router.push(callbackUrl);
-      } else {
-        setIsLoading(false);
-        router.push("/onboarding");
-      }
-      // 로그인 에러
+      router.push(result.redirectUrl || "/onboarding");
     } else {
       setIsLoading(false);
       router.push("/auth/error?type=signin");
     }
+  };
+
+  // 소셜 로그인 버튼 클릭 핸들러
+  const snsButtonAction = async (provider: string) => {
+    await signIn(provider, {
+      callbackUrl:
+        callbackUrl && callbackUrl !== "/"
+          ? `${callbackUrl}?add=true`
+          : "/onboarding",
+      redirect: true,
+    });
   };
 
   const handleKeyDown = (
@@ -115,13 +96,14 @@ export default function SignInPage() {
     }
   };
 
-  const snsButtonAction = async (provider: string) => {
-    setIsLoading(true);
-    await signIn(provider, {
-      redirectTo:
-        callbackUrl === "/" ? "/onboarding" : `${callbackUrl}?add=true`,
-    });
-    setIsLoading(false);
+  const goToSignUp = () => {
+    if (callbackUrl && callbackUrl !== "/") {
+      router.push(
+        `/auth/signUp?callbackUrl=${encodeURIComponent(callbackUrl)}`
+      );
+    } else {
+      router.push("/auth/signUp");
+    }
   };
 
   return (
