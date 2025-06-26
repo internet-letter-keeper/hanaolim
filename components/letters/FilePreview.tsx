@@ -1,7 +1,7 @@
 import { X } from "lucide-react";
 import Image from "next/image";
-import { uploadedFileType } from "@/types/letters";
 import { Txt } from "@/components/atoms";
+import { uploadedFileType } from "@/types/letters";
 
 type Props = {
   uploadedFile: uploadedFileType;
@@ -42,7 +42,7 @@ export default function FilePreview({ uploadedFile, onDelete }: Props) {
         <div className="flex-1">
           <div className="flex justify-between items-start">
             <div className="flex flex-col items-start mt-2 gap-1">
-              <div className="max-w-[200px]">
+              <div className="max-w-[150px]">
                 <Txt size={14} weight="cm" className="truncate block">
                   {name}
                 </Txt>

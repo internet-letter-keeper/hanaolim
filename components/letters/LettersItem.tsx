@@ -51,6 +51,7 @@ export default function LettersItem({ letter, currentUserId, box }: Props) {
       </Txt>
 
       <div className="flex justify-between items-center w-full mt-2">
+
         {/* 답장 버튼 영역 */}
         {(box === "mine" && !letter.hasReply) ||
         (box === "friend" && letter.hasReply) ? (
@@ -68,7 +69,6 @@ export default function LettersItem({ letter, currentUserId, box }: Props) {
         ) : (
           <div />
         )}
-
         <FavoriteToggle letter={letter} currentUserId={currentUserId} />
       </div>
     </Link>
