@@ -2,6 +2,7 @@
 
 import Image from "next/image";
 import { Txt } from "@/components/atoms";
+import { isVideoFile } from "@/constants/fileType";
 import { Letter } from "@/types/letters";
 
 type Props = {
@@ -16,7 +17,7 @@ export default function LettersDetail({ letter }: Props) {
     <div>
       {/* 받는 사람 */}
       <div className="flex justify-between items-center mb-1">
-        <Txt size={16} weight="cm" className="text-green-49d">
+        <Txt size={18} weight="cm" className="text-green-49d">
           To. {receiverName}
         </Txt>
       </div>
@@ -43,10 +44,7 @@ export default function LettersDetail({ letter }: Props) {
       {/* 첨부파일 */}
       {fileUrl && (
         <div className="w-full bg-gray-200 flex items-center justify-center rounded-md mb-4">
-          {fileUrl.endsWith(".mp4") ||
-          fileUrl.endsWith(".webm") ||
-          fileUrl.endsWith(".WEBM") ||
-          fileUrl.endsWith(".MP4") ? (
+          {isVideoFile(fileUrl) ? (
             <video
               src={fileUrl}
               width={100}
@@ -69,7 +67,7 @@ export default function LettersDetail({ letter }: Props) {
       {/* 보내는 사람 */}
       {/* 보내는 사람 닉네임 없을 경우(군인) : 답장 */}
       <div className="flex justify-end">
-        <Txt size={16} weight="cm" className="text-green-49d">
+        <Txt size={18} weight="cm" className="text-green-49d">
           From. {senderName}
           {nickname ? ` (${nickname})` : ""}
         </Txt>

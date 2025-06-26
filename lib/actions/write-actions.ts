@@ -1,8 +1,5 @@
 "use server";
 
-import { existsSync, mkdirSync } from "fs";
-import { writeFile } from "fs/promises";
-import path from "path";
 import { ERROR_MESSAGES } from "@/constants/errorMessages";
 import { requireAuth } from "@/utils/auth";
 import prisma from "../db";
@@ -12,39 +9,18 @@ import {
 } from "../validations/letterValidation";
 
 /**
- * 파일 업로드 처리 함수
- * @usage 편지쓰기
- * @param file 업로드할 파일
- * @returns string public에 업로드 된 파일 명 반환
- */
-const uploadFile = async (file: File | null): Promise<string | undefined> => {
-  if (!file || !file.size) return undefined;
-
-  const fileName = `${Date.now()}_${file.name}`;
-  const uploadDir = path.join(process.cwd(), "public/letters");
-  if (!existsSync(uploadDir)) mkdirSync(uploadDir, { recursive: true });
-  const filePath = path.join(uploadDir, fileName);
-  const buffer = Buffer.from(await file.arrayBuffer());
-  await writeFile(filePath, buffer);
-  return `/letters/${fileName}`;
-};
-
-/**
  * FormData에서 편지 데이터 추출 및 검증
  * @usage 편지쓰기
  * @param formData
- * @returns  검증된 데이터 반환
+ * @returns 검증된 데이터 반환
  * @throw 입력된 정보가 잘못됐을 경우
  */
-const extractAndValidateLetterData = async (
-  formData: FormData
-): Promise<LetterFormData> => {
-  const file = formData.get("file") as File;
-  const fileUrl = await uploadFile(file);
-
+const extractAndValidateLetterData = async (formData: FormData) => {
   const formEntries = Object.fromEntries(formData.entries());
-  if (fileUrl) {
-    formEntries.fileUrl = fileUrl;
+
+  // fileUrl이 있어야만 할 필요는 없음
+  if (formEntries.fileUrl && typeof formEntries.fileUrl !== "string") {
+    throw new Error(ERROR_MESSAGES.LETTER.INVALID_INPUT_DATA);
   }
 
   const validator = letterValidator.safeParse(formEntries);
@@ -63,7 +39,7 @@ const extractAndValidateLetterData = async (
  * @returns 성공했을 경우: success: true
  * @throws "편지 작성에 실패했습니다."
  */
-const createLetter = async (data: LetterFormData, senderId: number) => {
+const createLetter = async (data: LetterFormData, senderId?: number) => {
   try {
     const letterData: any = {
       content: data.content,
@@ -72,19 +48,17 @@ const createLetter = async (data: LetterFormData, senderId: number) => {
 
     // 일반 편지인 경우 : 군인이 receiver
     if (data.soldierId && !data.parentLetterId) {
-      // soldierId로부터 userId를 찾아야 함
       const soldier = await prisma.soldier.findUnique({
         where: { soldierId: +data.soldierId },
         select: { userId: true },
       });
-
       if (!soldier) {
-        throw new Error("해당하는 군인을 찾을 수 없습니다.");
+        throw new Error(ERROR_MESSAGES.DATA.NOT_FOUND_SOLDIER);
       }
 
       letterData.nickname = data.nickname;
       if (data.iconId) {
-        letterData.iconId = Number(data.iconId);
+        letterData.iconId = data.iconId;
       }
       letterData.senderId = senderId;
       letterData.receiverId = soldier.userId;
@@ -92,22 +66,21 @@ const createLetter = async (data: LetterFormData, senderId: number) => {
 
     // 답장인 경우 : 군인이 sender
     if (data.parentLetterId) {
-      // soldierId로부터 userId를 찾아야 함
       const soldier = await prisma.soldier.findUnique({
-        where: { soldierId: +data.soldierId },
+        where: { soldierId: data.soldierId },
         select: { userId: true },
       });
-
       if (!soldier) {
-        throw new Error("해당하는 군인을 찾을 수 없습니다.");
+        throw new Error(ERROR_MESSAGES.DATA.NOT_FOUND_SOLDIER);
       }
 
       letterData.senderId = soldier.userId;
-      letterData.receiverId = senderId;
+      letterData.receiverId = data.receiverId;
       letterData.parentLetterId = +data.parentLetterId;
     }
 
     await prisma.letter.create({ data: letterData });
+
     return { success: true };
   } catch (error) {
     console.error("Letter creation error:", error);
@@ -124,10 +97,8 @@ const createLetter = async (data: LetterFormData, senderId: number) => {
  */
 export const postLetter = async (formData: FormData) => {
   const session = await requireAuth();
-
   const data = await extractAndValidateLetterData(formData);
 
-  // 일반 편지인 경우 필수 필드 검증
   if (!data.soldierId) {
     throw new Error(ERROR_MESSAGES.LETTER.INVALID_INPUT_DATA);
   }
@@ -138,52 +109,49 @@ export const postLetter = async (formData: FormData) => {
 /**
  * 군인이 편지에 대한 답장 생성
  * @usage 편지쓰기
- * @param formData 편지 데이터
+ * @param formData
  * @returns createLetter 함수
  * @throw 입력이 잘못되었을 경우
  */
 export const postLetterReply = async (formData: FormData) => {
   const session = await requireAuth();
-
   const data = await extractAndValidateLetterData(formData);
 
-  // 답장인 경우 필수 필드 검증
-  //TODO: 검증 로직 추가
   if (!data.parentLetterId) {
     throw new Error(ERROR_MESSAGES.LETTER.INVALID_INPUT_DATA);
   }
 
-  return createLetter(data, +session.user.userId!);
+  return createLetter(data);
 };
 
 /**
- * 편지의 sender Name을 반환하는 api
+ * 편지의 sender Name과 ID을 반환하는 api
  * @param letterId 편지 아이디
- * @returns 편지를 보낸 사람의 이름
- * @throw id에 해당하는 편지가 없은 경우
- * @throw 정보를 가져오는데 실패했을 경우
+ * @returns 보낸 사람 정보
  */
 export const getSenderName = async (letterId: number) => {
   try {
-    const letter = await prisma.letter.findUnique({
-      where: {
-        letterId: letterId,
-      },
-      include: {
-        User_Letter_senderIdToUser: {
-          select: {
-            userName: true,
-          },
-        },
+    const senderId = await prisma.letter.findUnique({
+      where: { letterId },
+      select: { senderId: true },
+    });
+
+    if (!senderId) {
+      throw new Error(ERROR_MESSAGES.LETTER.NOT_FOUND_LETTER);
+    }
+
+    const senderInfo = await prisma.user.findUnique({
+      where: { userId: senderId.senderId },
+      select: {
+        userId: true,
+        userName: true,
       },
     });
 
-    if (!letter) {
-      throw new Error("편지를 찾을 수 없습니다.");
-    }
+    if (!senderInfo) throw new Error(ERROR_MESSAGES.DATA.FETCH_FAILED);
 
-    return letter.User_Letter_senderIdToUser.userName;
+    return senderInfo;
   } catch (error) {
-    throw new Error("정보를 가져오는데 실패했습니다.");
+    throw new Error(ERROR_MESSAGES.DATA.FETCH_FAILED);
   }
 };

@@ -1,4 +1,5 @@
 import Image from "next/image";
+import { isVideoFile } from "@/constants/fileType";
 
 type Props = {
   fileUrl: string;
@@ -8,7 +9,7 @@ export default function LetterView({ fileUrl }: Props) {
   return (
     <div className="w-full bg-gray-200 flex items-center justify-center rounded-md mb-6">
       <div className="w-[80%] max-h-[30vh]">
-        {fileUrl.endsWith(".mp4") || fileUrl.endsWith(".webm") ? (
+        {isVideoFile(fileUrl) ? (
           <video
             src={fileUrl}
             width={100}

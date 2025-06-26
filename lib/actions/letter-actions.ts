@@ -55,12 +55,11 @@ export const getLettersByUserId = async (userId: number) => {
 };
 
 /**
- * 
-// 편지 상세 조회 api
- * @param letterId 
+ * 편지 상세 조회 api
+ * @param letterId
  * @param userId
  * @usage 편지 상세 페이지
- * @returns 
+ * @returns
  */
 export const getLetterDetail = async ({
   letterId,
@@ -78,12 +77,18 @@ export const getLetterDetail = async ({
       },
     });
 
+    const hasReply = await prisma.letter.findFirst({
+      where: {
+        parentLetterId: letterId,
+      },
+    });
+
     if (!letter) {
       return { ok: false, data: null };
     }
 
     //TODO: 코드 리팩토링 필요
-    const result: Letter = {
+    const result = {
       letterId: letter.letterId,
       nickname: letter.nickname ?? "",
       content: letter.content,
@@ -99,6 +104,7 @@ export const getLetterDetail = async ({
       isFavorite: letter.Favorite.some(
         (f) => f.userId === userId && f.isFavorite
       ),
+      hasReply,
     };
     return { ok: true, data: result };
   } catch (error) {
@@ -148,25 +154,6 @@ export const patchFavorite = async (letterId: number, userId: number) => {
     return { ok: false, isFavorite: null };
   }
 };
-
-/**
- *
- * @param letterId
- * @usage 편지 상세 페이지
- * @returns 읽음 처리
- */
-export async function patchReadDate(letterId: number) {
-  try {
-    prisma.letter.update({
-      where: { letterId },
-      data: { readDate: new Date() },
-    });
-    return { ok: true };
-  } catch (err) {
-    console.error("읽음 처리 실패", err);
-    return { ok: false };
-  }
-}
 
 /**
  * 군인이 받은 원본 편지의 개수
@@ -222,7 +209,9 @@ export const getNonReplyLettersByUserId = async (
 
     return {
       ok: true,
-      data: letters,
+      data: letters.sort(
+        (a, b) => a.createDate.getTime() - b.createDate.getTime()
+      ),
     };
   } catch (error) {
     return { ok: false, data: null };
@@ -277,7 +266,7 @@ export const getFilteredLetters = async ({
     if (box === "mine") {
       where.receiverId = userId;
 
-      if (isUnread === false) {
+      if (isUnread === true) {
         where.readDate = null;
       }
 
@@ -299,6 +288,19 @@ export const getFilteredLetters = async ({
         },
       });
 
+      // 내가 쓴 답장
+      const myReplies = await prisma.letter.findMany({
+        where: {
+          senderId: userId,
+          parentLetterId: { not: null },
+        },
+        select: {
+          parentLetterId: true,
+        },
+      });
+
+      const myReplySet = new Set(myReplies.map((r) => r.parentLetterId));
+
       const filtered = rawLetters.filter((letter) => {
         const myFavorite = letter.Favorite.find((f) => f.userId === userId);
         return isFavorite ? myFavorite?.isFavorite === true : true;
@@ -311,6 +313,7 @@ export const getFilteredLetters = async ({
           favoriteId: myFavorite?.favoriteId,
           isFavorite: myFavorite?.isFavorite,
           senderName: letter.User_Letter_senderIdToUser?.userName ?? "",
+          hasReply: myReplySet.has(letter.letterId),
         };
       });
 
@@ -339,7 +342,7 @@ export const getFilteredLetters = async ({
 
       const letterIds = rawLetters.map((letter) => letter.letterId);
 
-      // 답장 존재 여부 조회
+      // 내가 받은 답장
       const replyMap = await prisma.letter.findMany({
         where: {
           parentLetterId: { in: letterIds },
@@ -367,6 +370,7 @@ export const getFilteredLetters = async ({
           favoriteId: myFavorite?.favoriteId,
           isFavorite: myFavorite?.isFavorite,
           receiverName: letter.User_Letter_receiverIdToUser?.userName ?? "",
+          hasReply: hasReplySet.has(letter.letterId),
         };
       });
 

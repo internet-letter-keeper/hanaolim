@@ -2,18 +2,31 @@
 
 import Image from "next/image";
 import { useRouter } from "next/navigation";
+import { useSearchParams } from "next/navigation";
 import { signIn } from "next-auth/react";
 import { useEffect, useRef, useState, KeyboardEvent } from "react";
 import SplashScreen from "@/components/HomeSplashScreen";
 import { PrimaryButton, Input, Txt } from "@/components/atoms";
 
 export default function SignInPage() {
+  const [isLoading, setIsLoading] = useState(false);
+  const searchParams = useSearchParams();
+  const callbackUrl = searchParams.get("callbackUrl") || "/";
+  const isButtonEnabled = !isLoading;
   const emailRef = useRef<HTMLInputElement>(null);
   const passwordRef = useRef<HTMLInputElement>(null);
 
   const router = useRouter();
 
-  const goToSignUp = () => router.push("/auth/signUp");
+  const goToSignUp = () => {
+    if (callbackUrl && callbackUrl !== "/") {
+      router.push(
+        `/auth/signUp?callbackUrl=${encodeURIComponent(callbackUrl)}`
+      );
+    } else {
+      router.push("/auth/signUp");
+    }
+  };
 
   //스플래시 화면 구현하기
   const [showSplash, setShowSplash] = useState<boolean | null>(null);
@@ -58,16 +71,27 @@ export default function SignInPage() {
       setErrorMessage("이메일과 비밀번호를 입력해주세요.");
       return;
     }
+
+    setIsLoading(true);
+
     const result = await signIn("credentials", {
       email,
       password,
+      callbackUrl,
       redirect: false,
     });
 
     if (result?.error === "CredentialsSignin") {
       setErrorMessage("이메일 또는 비밀번호가 잘못되었습니다.");
+      setIsLoading(false);
     } else if (result?.ok) {
-      router.push("/onboarding");
+      if (result.url) {
+        setIsLoading(false);
+        router.push(result.url);
+      } else {
+        setIsLoading(false);
+        router.push("/onboarding");
+      }
     }
   };
 
@@ -139,12 +163,13 @@ export default function SignInPage() {
 
         {/* 로그인 버튼 */}
         <PrimaryButton
-          title="로그인"
+          title={isLoading ? "로그인 중..." : "로그인"}
           rounded="sm"
           textSize={16}
           align="center"
           weight="cm"
           className="h-[38px] "
+          disabled={!isButtonEnabled}
           onClick={handleSignIn}
         />
 
@@ -206,7 +231,7 @@ export default function SignInPage() {
 
         <button
           onClick={() => snsButtonAction("google")}
-          className="w-[45px] h-[45px] bg-white rounded-full flex items-center justify-center cursor-pointer"
+          className="w-[38px] h-[38px] bg-white rounded-full flex items-center justify-center cursor-pointer"
         >
           <Image
             className="w-[28px] h-[28px]"

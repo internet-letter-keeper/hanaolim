@@ -1,6 +1,7 @@
 import Image from "next/image";
 import Link from "next/link";
 import { Txt } from "../atoms";
+import FavoriteToggle from "./FavoriteToggle";
 
 type Props = {
   letter: any;
@@ -18,88 +19,58 @@ export default function LettersItem({ letter, currentUserId, box }: Props) {
     content,
     createDate,
     readDate,
-    isFavorite,
-    hasReply,
   } = letter;
 
   const isRead = !!readDate;
   const formattedDate = new Date(createDate).toLocaleDateString();
 
-  const shouldShowReplyButton = box === "mine" && !hasReply;
-
   return (
-    <div className="flex w-full bg-white mx-auto">
-      <Link
-        href={`/letters/${letterId}`}
-        className="w-full block border rounded-[10px] border-[#209B98] pb-3 p-3 -mt-3"
-      >
-        <div className="flex justify-between items-start">
-          <Txt
-            size={20}
-            weight="cm"
-            className={isRead ? "text-[#AAAAAA]" : "text-gray-353"}
-          >
-            {currentUserId === receiverId ? senderName : receiverName}
-          </Txt>
-          <span className="text-[12px] text-blue-9a0 whitespace-nowrap">
-            {formattedDate}
-          </span>
-        </div>
-
+    <Link
+      href={`/letters/${letterId}`}
+      className="w-full bg-white border rounded-[10px] border-[#209B98] p-3"
+    >
+      <div className="flex justify-between items-start">
         <Txt
-          size={15}
-          align="left"
-          className="text-blue-9a0 mt-1 line-clamp-2 break-words"
+          size={20}
+          weight="cm"
+          className={isRead ? "text-[#AAAAAA]" : "text-gray-353"}
         >
-          {content}
+          {currentUserId === receiverId ? senderName : receiverName}
         </Txt>
+        <Txt size={12} className="text-blue-9a0">
+          {formattedDate}
+        </Txt>
+      </div>
 
-        <div className="flex justify-between items-center w-full mt-2">
-          {shouldShowReplyButton && (
-            <div className="flex items-center gap-1 rounded-full border border-red-a76 px-2 py-0.5">
-              <Image
-                src="/icons/ic-isReply.svg"
-                alt="답장하기"
-                width={14}
-                height={15}
-              />
-              <Txt size={12} className="text-red-a76">
-                답장하기
-              </Txt>
-            </div>
-          )}
+      <Txt
+        size={15}
+        align="left"
+        className="text-blue-9a0 mt-1 line-clamp-2 break-words"
+      >
+        {content}
+      </Txt>
 
-          {!shouldShowReplyButton &&
-            box === "friend" &&
-            senderId === currentUserId &&
-            hasReply && (
-              <div className="flex items-center gap-1 rounded-full border border-red-a76 px-2 py-0.5">
-                <Image
-                  src="/icons/ic-isReply.svg"
-                  alt="답장도착"
-                  width={14}
-                  height={15}
-                />
-                <Txt size={12} className="text-red-a76">
-                  답장도착
-                </Txt>
-              </div>
-            )}
+      <div className="flex justify-between items-center w-full mt-2">
 
-          {!shouldShowReplyButton && (!hasReply || box === "mine") && <div />}
-
-          <Image
-            src={
-              isFavorite
-                ? "/icons/ic-favorite-colered.svg"
-                : "/icons/ic-favorite-none.svg"
-            }
-            alt="즐겨찾기"
-            width={20}
-            height={20}
-          />
-        </div>
-      </Link>
-    </div>
+        {/* 답장 버튼 영역 */}
+        {(box === "mine" && !letter.hasReply) ||
+        (box === "friend" && letter.hasReply) ? (
+          <div className="inline-flex items-center gap-1 rounded-[5px] border border-red-a76 px-2 py-0.5">
+            <Image
+              src="/icons/ic-isReply.svg"
+              alt={box === "mine" ? "답장하기" : "답장도착"}
+              width={14}
+              height={15}
+            />
+            <Txt size={12} className="text-red-a76 whitespace-nowrap">
+              {box === "mine" ? "답장하기" : "답장도착"}
+            </Txt>
+          </div>
+        ) : (
+          <div />
+        )}
+        <FavoriteToggle letter={letter} currentUserId={currentUserId} />
+      </div>
+    </Link>
   );
 }
