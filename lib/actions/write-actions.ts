@@ -15,9 +15,7 @@ import {
  * @returns 검증된 데이터 반환
  * @throw 입력된 정보가 잘못됐을 경우
  */
-const extractAndValidateLetterData = async (
-  formData: FormData
-): Promise<LetterFormData> => {
+const extractAndValidateLetterData = async (formData: FormData) => {
   const formEntries = Object.fromEntries(formData.entries());
 
   // fileUrl이 있어야만 할 필요는 없음
@@ -55,12 +53,12 @@ const createLetter = async (data: LetterFormData, senderId?: number) => {
         select: { userId: true },
       });
       if (!soldier) {
-        throw new Error("해당하는 군인을 찾을 수 없습니다.");
+        throw new Error(ERROR_MESSAGES.DATA.NOT_FOUND_SOLDIER);
       }
 
       letterData.nickname = data.nickname;
       if (data.iconId) {
-        letterData.iconId = Number(data.iconId);
+        letterData.iconId = data.iconId;
       }
       letterData.senderId = senderId;
       letterData.receiverId = soldier.userId;
@@ -69,11 +67,11 @@ const createLetter = async (data: LetterFormData, senderId?: number) => {
     // 답장인 경우 : 군인이 sender
     if (data.parentLetterId) {
       const soldier = await prisma.soldier.findUnique({
-        where: { soldierId: +data.soldierId },
+        where: { soldierId: data.soldierId },
         select: { userId: true },
       });
       if (!soldier) {
-        throw new Error("해당하는 군인을 찾을 수 없습니다.");
+        throw new Error(ERROR_MESSAGES.DATA.NOT_FOUND_SOLDIER);
       }
 
       letterData.senderId = soldier.userId;
@@ -139,7 +137,7 @@ export const getSenderName = async (letterId: number) => {
     });
 
     if (!senderId) {
-      throw new Error("편지를 찾을 수 없습니다.");
+      throw new Error(ERROR_MESSAGES.LETTER.NOT_FOUND_LETTER);
     }
 
     const senderInfo = await prisma.user.findUnique({
@@ -150,10 +148,10 @@ export const getSenderName = async (letterId: number) => {
       },
     });
 
-    if (!senderInfo) throw new Error("정보를 가져오는데 실패했습니다.");
+    if (!senderInfo) throw new Error(ERROR_MESSAGES.DATA.FETCH_FAILED);
 
     return senderInfo;
   } catch (error) {
-    throw new Error("정보를 가져오는데 실패했습니다.");
+    throw new Error(ERROR_MESSAGES.DATA.FETCH_FAILED);
   }
 };

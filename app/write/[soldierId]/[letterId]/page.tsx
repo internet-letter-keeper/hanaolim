@@ -8,6 +8,7 @@ import {
   LetterPageLayout,
   LetterForm,
 } from "@/components/write";
+import { ERROR_MESSAGES } from "@/constants/errorMessages";
 import { useFileUpload } from "@/hooks/useFileUpload";
 import { useLetterForm } from "@/hooks/useLetterForm";
 import { postLetterReply } from "@/lib/actions/write-actions";
@@ -39,10 +40,10 @@ export default function LetterWritePage() {
   const handleSubmit = () => {
     startTransition(async () => {
       if (!soldierId || !letterId) {
-        throw new Error("군인 아이디 또는 편지 아이디가 존재하지 않습니다.");
+        throw new Error(ERROR_MESSAGES.LETTER.MISSING_REQUIRED_IDS);
       }
       if (!formData.senderId) {
-        throw new Error("아이디가 존재하지 않습니다.");
+        throw new Error(ERROR_MESSAGES.LETTER.MISSING_SENDER_ID);
       }
 
       const formDataToSubmit = new FormData();
