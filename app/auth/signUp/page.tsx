@@ -85,23 +85,23 @@ export default function SignUpPage() {
       );
     }
     if (result.ok) {
+      // 회원가입 성공
       const signInResult = await signIn("credentials", {
         email,
         password,
-        callbackUrl,
         redirect: false,
       });
       if (signInResult?.ok) {
-        // 로그인 성공 후 리다이렉트
-        if (signInResult.url) {
+        // 로그인 성공
+        if (callbackUrl && callbackUrl !== "/") {
           setIsLoading(false);
-          router.push(signInResult.url);
+          router.push(callbackUrl);
         } else {
           setIsLoading(false);
           router.push("/onboarding");
         }
       } else {
-        router.push("/auth/error");
+        router.push("/auth/error?type=signin");
       }
     } else {
       setIsLoading(false);

@@ -39,7 +39,11 @@ export default async function CabinetPage({ params }: Props) {
         <CabinetHeader isMyCabinet={isMyCabinet} soldierInfo={soldierInfo} />
         <FriendsList soldierId={+soldierId} />
         <StatusMessage isMyCabinet={isMyCabinet} soldierInfo={soldierInfo} />
-        <Cabinet isMyCabinet={isMyCabinet} userId={+soldierInfo.userId} />
+        <Cabinet
+          isMyCabinet={isMyCabinet}
+          userId={+soldierInfo.userId}
+          loginId={+session.user.userId}
+        />
         {!isMyCabinet && (
           <LetterMoneyButton
             soldierId={+soldierId}
