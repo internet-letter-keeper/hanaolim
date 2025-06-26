@@ -3,7 +3,10 @@ import Link from "next/link";
 import { Txt } from "@/components/atoms";
 import BasicHeader from "@/components/common/BasicHeader";
 import LettersDetail from "@/components/letters/LettersDetail";
-import { getLetterDetail } from "@/lib/actions/letter-actions";
+import {
+  getLetterDetail,
+  patchUserReadDate,
+} from "@/lib/actions/letter-actions";
 import { handleEarnPoint } from "@/lib/actions/point-earn-action";
 import { requireAuth } from "@/utils/auth";
 
@@ -16,7 +19,7 @@ export default async function LetterDetailPage({ params }: Props) {
 
   const session = await requireAuth();
   const userId = session.user.userId;
-  const soldierId = session.user.soldier.soldierId;
+  const soldierId = session?.user?.soldier?.soldierId;
 
   const letter = await getLetterDetail({ letterId, userId });
   const reply = await getLetterDetail({ letterId, userId, isReply: true });
@@ -24,9 +27,10 @@ export default async function LetterDetailPage({ params }: Props) {
   if (!letter || !letter.data)
     throw new Error("편지 정보를 가져오는 것에 실패했습니다");
 
-  if (!letter.data.readDate && soldierId)
-    await handleEarnPoint({ letterId, soldierId });
-
+  if (!letter.data.readDate) {
+    if (!!soldierId) await handleEarnPoint({ letterId, soldierId });
+    else await patchUserReadDate(letterId, userId);
+  }
   return (
     <>
       <BasicHeader revalidateLetter />
