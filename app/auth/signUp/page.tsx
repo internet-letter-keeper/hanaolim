@@ -6,7 +6,7 @@ import { useState, KeyboardEvent } from "react";
 import SignUpInput from "@/components/SignUpInput";
 import { PrimaryButton, Txt } from "@/components/atoms";
 import { signUpHook } from "@/hooks/useSign";
-import { isEmailDuplicated, postSignUp } from "@/lib/actions/auth-actions";
+import { isEmailDuplicated } from "@/lib/actions/auth-actions";
 import {
   checkEmailValidation,
   checkNameValidation,
