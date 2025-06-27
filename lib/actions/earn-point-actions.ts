@@ -9,8 +9,7 @@ type PointEarnProps = {
   soldierId: number;
 };
 
-//트랜잭션의 return type 세 가지로 정의함
-//1.정상 실행 후 보너스 지급, 2. 정상 실행 but 보너스 지급 불가, 3. 비정상 실행으로 트랜잭션 종료
+//success: 정상 실행 여부, earn: 포인트 지급 여부, bonus: 얻은 포인트, message: 처리 결과 메시지
 type HandleEarnPointResult = {
   success: boolean;
   earn: boolean;
