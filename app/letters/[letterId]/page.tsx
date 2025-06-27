@@ -1,104 +1,98 @@
-import Image from "next/image";
+"use client";
+
 import Link from "next/link";
+import { useParams } from "next/navigation";
+import { useSession } from "next-auth/react";
+import { useEffect, useState } from "react";
 import { Txt } from "@/components/atoms";
-import BasicHeader from "@/components/common/BasicHeader";
-import LettersDetail from "@/components/letters/LettersDetail";
+import { BasicHeader } from "@/components/common";
+import { LettersDetail, PigSplash } from "@/components/letters";
 import { ERROR_MESSAGES } from "@/constants/message";
 import {
   getLetterDetail,
   patchUserReadDate,
 } from "@/lib/actions/letter-actions";
 import { handleEarnPoint } from "@/lib/actions/point-earn-action";
-import { getSenderNameId } from "@/lib/actions/write-actions";
-import { requireAuth } from "@/utils/auth";
-import { formatLetterData } from "@/utils/letter";
 
-type Props = {
-  params: Promise<{ letterId: number }>;
-};
+export default function LetterDetailPage() {
+  const { letterId: rawLetterId } = useParams();
 
-export default async function LetterDetailPage({ params }: Props) {
-  const letterId = +(await params).letterId;
-
-  const session = await requireAuth();
-  const userId = session.user.userId;
-  const soldierId = session?.user?.soldier?.soldierId;
-
-  const letter = await getLetterDetail({ letterId, userId });
-  const reply = await getLetterDetail({ letterId, userId, isReply: true });
-  const {
-    success,
-    message,
-    data: senderData,
-  } = await getSenderNameId(letterId);
-
-  if (success) {
-    if (!senderData || !senderData.userName) {
-      throw new Error(ERROR_MESSAGES.DATA.NOT_FOUND);
-    }
-  }
-  if (!success) {
-    throw new Error(message || ERROR_MESSAGES.DATA.FETCH_FAILED);
-  }
-  if (!letter || !letter.data)
-    throw new Error("편지 정보를 가져오는 것에 실패했습니다");
-
-  if (!letter.data.readDate) {
-    if (!!soldierId) await handleEarnPoint({ letterId, soldierId });
-    else await patchUserReadDate(letterId, userId);
-  }
-  if (!senderData!.userName) {
-    throw new Error(ERROR_MESSAGES.DATA.NOT_FOUND);
+  if (!rawLetterId) {
+    throw new Error(ERROR_MESSAGES.LETTER.NOT_FOUND);
   }
 
-  const encodedName = encodeURIComponent(senderData!.userName);
+  const letterId = Number(rawLetterId);
+
+  const [letter, setLetter] =
+    useState<Awaited<ReturnType<typeof getLetterDetail>>["data"]>();
+  const [reply, setReply] =
+    useState<Awaited<ReturnType<typeof getLetterDetail>>["data"]>();
+
+  const { data } = useSession();
+
+  const userId = data?.user.userId;
+  const soldierId = data?.user.soldier.soldierId;
+
+  const [showPoint, setShowPoint] = useState(false);
+  const [earnedBonus, setEarnedBonus] = useState(0);
+
+  useEffect(() => {
+    (async () => {
+      if (!userId) return;
+
+      // 편지 데이터 가져오기
+      const { data } = await getLetterDetail({ letterId, userId });
+      const { data: replyData } = await getLetterDetail({
+        letterId,
+        userId,
+        isReply: true,
+      });
+
+      setLetter(data);
+      setReply(replyData);
+
+      if (soldierId) {
+        // 포인트 적립 처리
+
+        //TODO: result 리턴값 통일 후 구조분해할당까지
+        const result = await handleEarnPoint({ letterId, soldierId });
+
+        if (result.earn && result.bonus > 0) {
+          setEarnedBonus(result.bonus);
+          setShowPoint(true);
+        }
+      } else {
+        await patchUserReadDate(letterId, userId);
+      }
+    })();
+  }, [letterId, userId, soldierId]);
 
   return (
-    <>
-      <BasicHeader revalidateLetter />
+    <div className="flex flex-col items-center gap-4">
+      <BasicHeader revalidateLetter className="w-full" />
 
-      {/* 원본 편지 */}
-      <div className="py-4 flex justify-center">
-        <div className="bg-white shadow-sm p-4 w-[90%] max-w-md">
-          <div className="flex justify-center gap-4 mb-3">
-            <Image
-              src="/images/byeoldol-face.svg"
-              alt="별돌이 얼굴"
-              width={50}
-              height={50}
-            />
-            <Image
-              src="/images/letter.svg"
-              alt="별돌이 얼굴"
-              width={50}
-              height={50}
-            />
-          </div>
-          <LettersDetail letter={formatLetterData(letter.data)} />
-        </div>
-      </div>
+      {showPoint && (
+        <PigSplash point={earnedBonus} onSkip={() => setShowPoint(false)} />
+      )}
 
-      {/* 답장 없을 경우 버튼 */}
-      {!letter.data.hasReply && letter.data.receiverId === userId && (
-        <div className="flex justify-end px-6 mt-2">
+      <div className="px-4 w-full flex flex-col items-end gap-4">
+        {/* 원본 편지 */}
+        {letter && <LettersDetail letter={letter} />}
+
+        {/* 답장 없을 경우 버튼 */}
+        {letter && !letter.hasReply && letter.receiverId === userId && (
           <Link
-            href={`/write/${soldierId}/${letter.data.letterId}?name=${encodedName}`}
-            className="flex justify-center bg-green-49d px-3 py-1 rounded-[5px] border border-[#D6E9E7] text-white"
+            href={`/write/${soldierId}/${letter.letterId}`}
+            className="inline-flex bg-green-49d px-3 py-1 rounded-[5px] border border-[#D6E9E7]"
           >
             <Txt size={12} className="text-white">
               답장하기
             </Txt>
           </Link>
-        </div>
-      )}
+        )}
 
-      {reply.data && (
-        <div className="flex justify-center mt-4">
-          <div className="bg-white shadow-sm p-4 w-[90%] max-w-md">
-            <LettersDetail letter={formatLetterData(reply.data)} />
-          </div>
-        </div>
-      )}
-    </>
+        {letter?.hasReply && reply && <LettersDetail letter={reply} />}
+      </div>
+    </div>
   );
 }
