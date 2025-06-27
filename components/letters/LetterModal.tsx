@@ -121,13 +121,13 @@ export default function LetterModal({ letterId, onHandleModal }: Props) {
         ref={scrollRef}
         className={cn(
           "absolute top-1/2 left-1/2 -translate-x-1/2 -translate-y-1/2",
-          "w-11/12 sm:w-[22rem] p-6 bg-white rounded-[10px]",
+          "w-11/12 sm:w-[22rem] p-6 bg-white-fff rounded-[10px]",
           "flex flex-col transition-all duration-[500ms] ease-in-out overflow-auto scrollbar-hide",
-          letter ? "max-h-[70vh] opacity-100" : "max-h-[150px] opacity-0"
+          letter ? "max-h-[66vh] opacity-100" : "max-h-[150px] opacity-0"
         )}
       >
         {!isBottom && (
-          <div className="absolute bottom-0 left-0 w-full h-6 bg-gradient-to-t from-white to-transparent pointer-events-none z-10" />
+          <div className="absolute bottom-0 left-0 w-full h-12 bg-gradient-to-t from-white-fff to-transparent pointer-events-none z-10" />
         )}
 
         {letter && (
