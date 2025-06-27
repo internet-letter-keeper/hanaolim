@@ -11,9 +11,8 @@ import { getLetterDetail } from "@/lib/actions/letter-actions";
 import { getSenderNameId } from "@/lib/actions/write-actions";
 import { cn } from "@/lib/utils";
 import { formatLetterData } from "@/utils/letter";
+import { LetterView, PigSplash } from ".";
 import { Txt } from "../atoms";
-import LetterView from "./LetterView";
-import PigSplash from "./PigSplash";
 
 // 답장 페이지 또는 편지 상세 페이지로 이동하기 위해 letterId 받아옴
 // 모달 제어를 위해 콜백 함수 받아옴 (onHandle), 페이지에서 useState 이용해서 모달 제어
