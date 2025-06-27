@@ -175,3 +175,12 @@ textarea::-webkit-scrollbar-thumb:hover {
 body {
   @apply flex items-center justify-center h-screen overflow-hidden antialiased;
 }
+
+@layer utilities {
+  .scrollbar-hide {
+    &::-webkit-scrollbar {
+      display: none;
+    }
+    scrollbar-width: none;
+  }
+}
