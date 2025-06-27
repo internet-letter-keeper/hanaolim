@@ -9,7 +9,6 @@ import { useToast } from "@/contexts/toast/ToastContext";
 import { getLetterDetail } from "@/lib/actions/letter-actions";
 import { getSenderNameId } from "@/lib/actions/write-actions";
 import { cn } from "@/lib/utils";
-import { Letter } from "@/types/letters";
 import { formatLetterData } from "@/utils/letter";
 import { Txt } from "../atoms";
 import LetterView from "./LetterView";
@@ -26,7 +25,8 @@ type Props = {
 const MAX_LENGTH = 110;
 
 export default function LetterModal({ letterId, onHandleModal }: Props) {
-  const [letter, setLetter] = useState<Letter | null>(null);
+  const [letter, setLetter] =
+    useState<Awaited<ReturnType<typeof getLetterDetail>>["data"]>();
   const [senderName, setSenderName] = useState<string>("");
   const overlay = useRef<HTMLDivElement>(null);
 
@@ -34,10 +34,10 @@ export default function LetterModal({ letterId, onHandleModal }: Props) {
   const { showToast } = useToast();
 
   //110자 넘어가면 더보기로 처리
-  const isLong = (letter?.content.length ?? 0) > MAX_LENGTH;
+  const isLong = (letter?.content?.length ?? 0) > MAX_LENGTH;
 
   const preview = isLong
-    ? letter?.content.slice(0, MAX_LENGTH)
+    ? letter?.content?.slice(0, MAX_LENGTH)
     : letter?.content;
 
   const { data } = useSession();
@@ -156,7 +156,7 @@ export default function LetterModal({ letterId, onHandleModal }: Props) {
               />
             </div>
             <Txt align="left" className="text-gray-500">
-              {letter.createDate.toLocaleString("ko-KR", {
+              {letter.createDate?.toLocaleString("ko-KR", {
                 dateStyle: "medium",
                 timeStyle: "short",
               })}
