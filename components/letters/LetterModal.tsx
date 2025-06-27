@@ -9,6 +9,7 @@ import { useToast } from "@/contexts/toast/ToastContext";
 import { getLetterDetail } from "@/lib/actions/letter-actions";
 import { getSenderNameId } from "@/lib/actions/write-actions";
 import { cn } from "@/lib/utils";
+import { formatLetterData } from "@/utils/letter";
 import { Txt } from "../atoms";
 import LetterView from "./LetterView";
 import PigSplash from "./PigSplash";
@@ -69,7 +70,7 @@ export default function LetterModal({ letterId, onHandleModal }: Props) {
           }
 
           setSenderName(senderData.userName);
-          setLetter(letterData.data);
+          setLetter(letterData.data ? formatLetterData(letterData.data) : null);
         }
         if (!success) {
           showToast(message, "", "error");

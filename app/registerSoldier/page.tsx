@@ -57,10 +57,11 @@ export default function SignInPage() {
         ...session.user,
         soldier: result.data,
         isSoldier: true,
+        follow: result.data,
       }); // 세션 업데이트
 
       setIsLoading(false);
-      router.back();
+      router.push("/");
     } else {
       setIsLoading(false);
       router.push("/auth/error?type=regist");
