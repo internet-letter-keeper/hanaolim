@@ -6,6 +6,7 @@ import { useSession } from "next-auth/react";
 import { MouseEventHandler, useEffect, useRef, useState } from "react";
 import { ERROR_MESSAGES } from "@/constants/message";
 import { useToast } from "@/contexts/toast/ToastContext";
+import { handleEarnPoint } from "@/lib/actions/earn-point-actions";
 import { getLetterDetail } from "@/lib/actions/letter-actions";
 import { getSenderNameId } from "@/lib/actions/write-actions";
 import { cn } from "@/lib/utils";
@@ -51,7 +52,7 @@ export default function LetterModal({ letterId, onHandleModal }: Props) {
   useEffect(() => {
     (async () => {
       if (!userId || !soldierId) {
-        return;
+        throw new Error(ERROR_MESSAGES.SOLDIER.NOT_FOUND);
       }
 
       try {
@@ -77,16 +78,10 @@ export default function LetterModal({ letterId, onHandleModal }: Props) {
         }
 
         // 포인트 적립 처리
-        const res = await fetch("/api/earn-point", {
-          method: "POST",
-          headers: { "Content-Type": "application/json" },
-          body: JSON.stringify({ letterId, soldierId }),
-        });
+        const { earn, bonus } = await handleEarnPoint({ letterId, soldierId });
 
-        const result = await res.json();
-
-        if (result.earn && result.bonus > 0) {
-          setEarnedBonus(result.bonus);
+        if (earn && bonus > 0) {
+          setEarnedBonus(bonus);
           setShowPoint(true);
         }
       } catch (error) {
@@ -136,7 +131,7 @@ export default function LetterModal({ letterId, onHandleModal }: Props) {
           letter ? "max-h-[80vh] opacity-100" : "max-h-[150px] opacity-0"
         )}
       >
-        {letter ? (
+        {letter && (
           <>
             <div className="flex w-full justify-between">
               <Txt size={18} weight="bold" className="text-green-49d">
@@ -188,11 +183,6 @@ export default function LetterModal({ letterId, onHandleModal }: Props) {
               </Txt>
             </div>
           </>
-        ) : (
-          //TODO: 로딩이 좀 있는 것 같아서 넣어놨음 나중에 제거하든지 함
-          <Txt className="text-center text-gray-400 text-sm">
-            편지를 불러오는 중...
-          </Txt>
         )}
       </div>
     </div>
