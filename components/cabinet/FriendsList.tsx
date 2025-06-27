@@ -1,7 +1,7 @@
 import { AddFriendBtn } from "@/components/cabinet";
 import { FriendProfileCircle } from "@/components/common";
 import { getFriendsList } from "@/lib/actions/friend-actions";
-import { requireAuth } from "@/utils/auth";
+import { auth } from "@/lib/auth";
 import { calculateRankByStartDate } from "@/utils/date";
 
 type Props = {
@@ -9,7 +9,7 @@ type Props = {
 };
 
 export default async function FriendsList({ soldierId }: Props) {
-  const session = await requireAuth();
+  const session = await auth();
 
   const myProfile = session?.user.isSoldier
     ? {
@@ -22,18 +22,29 @@ export default async function FriendsList({ soldierId }: Props) {
       }
     : null;
 
-  const { success, message, data } = await getFriendsList(session.user.userId);
+  // if (!session) return null;
 
-  if (!success) {
-    throw new Error(message);
-  }
-  const friendsList = data!;
+  // TODO: 미로그인일 때 쿼리 안 날리게
+
+  // let friendsList = [];
+
+  const { success, message, data } = session?.user?.userId
+    ? await getFriendsList(+session.user.userId)
+    : {};
+
+  // const { success, message, data } = await getFriendsList(+session.user.userId);
+
+  // if (!success) {
+  //   throw new Error(message);
+  // }
+
+  // const friendsList = data!;
 
   return (
     <div className="overflow-x-auto -mx-4 px-4 [&::-webkit-scrollbar]:hidden">
       <div className="flex w-max gap-[20px] items-center">
         {/* 친구 추가 버튼 */}
-        <AddFriendBtn />
+        <AddFriendBtn soldierId={soldierId} />
 
         {/* 군인이면 내 프로필도 띄우기 */}
         {myProfile && (
@@ -44,7 +55,7 @@ export default async function FriendsList({ soldierId }: Props) {
         )}
 
         {/* 친구 목록 */}
-        {friendsList.map((friend) => (
+        {data?.map((friend) => (
           <FriendProfileCircle
             profile={friend}
             key={friend.soldierId}

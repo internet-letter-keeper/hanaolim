@@ -29,17 +29,19 @@ async function loginFunc(email: string, password?: string) {
 export async function signInHook(signInData: SignInProps) {
   try {
     const { email, password, callbackUrl } = signInData;
+    if (callbackUrl && callbackUrl !== "/") {
+      if (email) {
+        const user = await getUserByEmail(email);
+        await postFriendbyId(
+          Number(callbackUrl.split("/").pop()),
+          Number(user?.userId)
+        );
+      }
+    }
     const result = await loginFunc(email, password);
     if (result.ok) {
       // 로그인 성공
       if (callbackUrl && callbackUrl !== "/") {
-        if (email) {
-          const user = await getUserByEmail(email);
-          await postFriendbyId(
-            Number(callbackUrl.split("/").pop()),
-            Number(user?.userId)
-          );
-        }
         return { success: true, redirectUrl: callbackUrl };
       } else {
         return { success: true, redirectUrl: "/onboarding" };

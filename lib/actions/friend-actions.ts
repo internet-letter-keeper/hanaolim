@@ -16,7 +16,6 @@ import { isUserExists } from "./auth-actions";
  * @returns 이미 친구일 때 "이미 친구입니다"
  */
 export const postFriend = async (code: string, userId: number) => {
-  await requireAuth();
   try {
     // code와 매칭되는 군인이 있는지 확인
     const soldierId =
@@ -69,7 +68,6 @@ export const postFriend = async (code: string, userId: number) => {
  */
 
 export const getFriendsList = async (userId: number) => {
-  await requireAuth();
   try {
     // userId가 숫자 형식인지 확인
     if (typeof userId !== "number" || Number.isNaN(userId)) {
@@ -147,7 +145,6 @@ export const getFriendsList = async (userId: number) => {
  * @throws soldierId에 해당하는 계좌번호를 찾을 수 없을 때
  */
 export const getAccountNumBySoldierId = async (soldierId: number) => {
-  await requireAuth();
   const res = await prisma.soldier.findUnique({
     where: { soldierId },
     select: { Account: { select: { accountNum: true } } },
@@ -165,7 +162,6 @@ export const getAccountNumBySoldierId = async (soldierId: number) => {
  * @returns Soldier 테이블과 User테이블의 userName, isSoldier, isSocial
  */
 export const getUserBySoldierId = async (soldierId: number) => {
-  await requireAuth();
   try {
     const soldierInfo = await prisma.soldier.findUnique({
       where: { soldierId },
@@ -231,7 +227,6 @@ export const patchStatusMessage = async (
  * @returns 첫번째 follow
  */
 export const getFirstFollow = async (userId: number) => {
-  await requireAuth();
   const follow = await prisma.follow.findFirst({
     where: { userId },
     select: { followId: true, userId: true, soldierId: true },
@@ -249,7 +244,6 @@ export const getFirstFollow = async (userId: number) => {
  * @returns 이미 친구일 때 "이미 친구입니다"
  */
 export const postFriendbyId = async (soldierNum: number, userId: number) => {
-  await requireAuth();
   try {
     // code와 매칭되는 군인이 있는지 확인
     const soldierId =

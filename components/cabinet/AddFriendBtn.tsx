@@ -9,7 +9,11 @@ import { useIsSEPhone } from "@/hooks/useMobile";
 import { postFriend } from "@/lib/actions/friend-actions";
 import { Modal } from "../common";
 
-export default function AddFriendBtn() {
+type Props = {
+  soldierId: number;
+};
+
+export default function AddFriendBtn({ soldierId }: Props) {
   const router = useRouter();
 
   const { showToast } = useToast();
@@ -64,7 +68,7 @@ export default function AddFriendBtn() {
     }
   };
 
-  const navigateToSignIn = () => router.push("/auth/signIn");
+  const navigateToSignIn = () => router.push(`/friends/${soldierId}`);
 
   return (
     <>
