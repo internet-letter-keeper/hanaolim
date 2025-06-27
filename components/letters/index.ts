@@ -7,4 +7,5 @@ export { default as LetterModal } from "./LetterModal";
 export { default as LettersDetail } from "./LettersDetail";
 export { default as LettersItem } from "./LettersItem";
 export { default as LetterView } from "./LetterView";
+export { default as PigSplash } from "./PigSplash";
 export { default as SearchLetter } from "./SearchLetter";

@@ -31,7 +31,7 @@ export const getLetterDetail = async ({
       },
     });
 
-    const hasReply = await prisma.letter.findFirst({
+    const hasReplyLetter = await prisma.letter.findFirst({
       where: {
         parentLetterId: letterId,
       },
@@ -44,7 +44,7 @@ export const getLetterDetail = async ({
       isFavorite: letter?.Favorite.some(
         (f) => f.userId === userId && f.isFavorite
       ),
-      hasReply: !!hasReply,
+      hasReply: !!hasReplyLetter,
     };
     return { ok: true, data: result };
   } catch (error) {

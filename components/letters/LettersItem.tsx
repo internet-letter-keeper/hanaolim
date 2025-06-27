@@ -1,15 +1,18 @@
 import Image from "next/image";
 import Link from "next/link";
+import { getLetterDetail } from "@/lib/actions/letter-actions";
 import { Txt } from "../atoms";
 import FavoriteToggle from "./FavoriteToggle";
 
 type Props = {
-  letter: any;
+  letter: Awaited<ReturnType<typeof getLetterDetail>>["data"];
   currentUserId: number;
   box: "mine" | "friend";
 };
 
 export default function LettersItem({ letter, currentUserId, box }: Props) {
+  if (!letter) return null;
+
   const {
     letterId,
     receiverId,
@@ -18,10 +21,11 @@ export default function LettersItem({ letter, currentUserId, box }: Props) {
     content,
     createDate,
     readDate,
+    isFavorite,
   } = letter;
 
   const isRead = !!readDate;
-  const formattedDate = new Date(createDate).toLocaleDateString();
+  const formattedDate = createDate?.toLocaleString();
 
   return (
     <Link
@@ -50,7 +54,6 @@ export default function LettersItem({ letter, currentUserId, box }: Props) {
       </Txt>
 
       <div className="flex justify-between items-center w-full mt-2">
-
         {/* 답장 버튼 영역 */}
         {(box === "mine" && !letter.hasReply) ||
         (box === "friend" && letter.hasReply) ? (
@@ -68,7 +71,13 @@ export default function LettersItem({ letter, currentUserId, box }: Props) {
         ) : (
           <div />
         )}
-        <FavoriteToggle letter={letter} currentUserId={currentUserId} />
+        {letterId && (
+          <FavoriteToggle
+            letterId={letterId}
+            isFavorite={isFavorite}
+            currentUserId={currentUserId}
+          />
+        )}
       </div>
     </Link>
   );
