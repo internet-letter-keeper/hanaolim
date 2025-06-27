@@ -3,9 +3,9 @@ import { BasicHeader } from "@/components/common";
 import {
   FilterBtn,
   LetterboxTabSelector,
+  LettersList,
   SearchLetter,
 } from "@/components/letters";
-import LettersList from "@/components/letters/LettersList";
 import { getFilteredLetters } from "@/lib/actions/letter-actions";
 import { requireAuth } from "@/utils/auth";
 
