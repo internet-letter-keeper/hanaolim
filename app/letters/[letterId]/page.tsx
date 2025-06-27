@@ -21,16 +21,24 @@ export default async function LetterDetailPage({ params }: Props) {
   const userId = session.user.userId;
   const soldierId = session?.user?.soldier?.soldierId;
 
-  const letter = await getLetterDetail({ letterId, userId });
-  const reply = await getLetterDetail({ letterId, userId, isReply: true });
+  const { data } = await getLetterDetail({ letterId, userId });
+  const { data: replyData } = await getLetterDetail({
+    letterId,
+    userId,
+    isReply: true,
+  });
 
-  if (!letter || !letter.data)
+  if (!data || !replyData)
     throw new Error("편지 정보를 가져오는 것에 실패했습니다");
 
-  if (!letter.data.readDate) {
-    if (!!soldierId) await handleEarnPoint({ letterId, soldierId });
-    else await patchUserReadDate(letterId, userId);
+  if (!data.readDate) {
+    if (!!soldierId) {
+      await handleEarnPoint({ letterId, soldierId });
+    } else {
+      await patchUserReadDate(letterId, userId);
+    }
   }
+
   return (
     <>
       <BasicHeader revalidateLetter />
@@ -52,15 +60,15 @@ export default async function LetterDetailPage({ params }: Props) {
               height={50}
             />
           </div>
-          <LettersDetail letter={letter.data} />
+          <LettersDetail letter={data} />
         </div>
       </div>
 
       {/* 답장 없을 경우 버튼 */}
-      {!letter.data.hasReply && letter.data.receiverId === userId && (
+      {!data.hasReply && data.receiverId === userId && (
         <div className="flex justify-end px-6 mt-2">
           <Link
-            href={`/write/${soldierId}/${letter.data.letterId}`}
+            href={`/write/${soldierId}/${data.letterId}`}
             className="flex justify-center bg-green-49d px-3 py-1 rounded-[5px] border border-[#D6E9E7] text-white"
           >
             <Txt size={12} className="text-white">
@@ -70,10 +78,10 @@ export default async function LetterDetailPage({ params }: Props) {
         </div>
       )}
 
-      {reply.data && (
+      {replyData?.parentLetterId && (
         <div className="flex justify-center mt-4">
           <div className="bg-white shadow-sm p-4 w-[90%] max-w-md">
-            <LettersDetail letter={reply.data} />
+            <LettersDetail letter={replyData} />
           </div>
         </div>
       )}

@@ -1,24 +1,17 @@
-"use client";
-
 import Image from "next/image";
 import { Txt } from "@/components/atoms";
 import { isVideoFile } from "@/constants/fileType";
-import { Letter } from "@/types/letters";
+import { getLetterDetail } from "@/lib/actions/letter-actions";
 
 type Props = {
-  letter: Letter;
+  letter: Awaited<ReturnType<typeof getLetterDetail>>["data"];
 };
 
 export default function LettersDetail({ letter }: Props) {
-  const {
-    fileUrl,
-    nickname,
-    senderName,
-    receiverName,
-    content,
-    createDate,
-    hasReply,
-  } = letter;
+  if (!letter) return null;
+
+  const { fileUrl, nickname, senderName, receiverName, content, createDate } =
+    letter;
 
   return (
     <div>
@@ -31,7 +24,7 @@ export default function LettersDetail({ letter }: Props) {
 
       <div className="flex">
         <Txt size={12} weight="cm" className="text-blue-9a0">
-          {createDate.toLocaleString()}
+          {createDate?.toLocaleString()}
         </Txt>
       </div>
 

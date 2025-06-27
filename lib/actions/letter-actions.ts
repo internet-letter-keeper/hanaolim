@@ -21,10 +21,9 @@ export const getLetterDetail = async ({
   userId,
   isReply,
 }: LetterDetailProp) => {
-  const where = isReply ? { parentLetterId: letterId } : { letterId };
   try {
     const letter = await prisma.letter.findFirst({
-      where,
+      where: isReply ? { parentLetterId: letterId } : { letterId },
       include: {
         Favorite: true,
         User_Letter_receiverIdToUser: { select: { userName: true } },
@@ -38,28 +37,14 @@ export const getLetterDetail = async ({
       },
     });
 
-    if (!letter) {
-      return { ok: false, data: null };
-    }
-
-    //TODO: 코드 리팩토링 필요
     const result = {
-      letterId: letter.letterId,
-      nickname: letter.nickname ?? "",
-      content: letter.content,
-      fileUrl: letter.fileUrl ?? undefined,
-      iconId: letter.iconId ?? undefined,
-      createDate: letter.createDate,
-      readDate: letter.readDate,
-      parentLetterId: letter.parentLetterId ?? null,
-      receiverId: letter.receiverId,
-      senderId: letter.senderId,
-      receiverName: letter.User_Letter_receiverIdToUser?.userName,
-      senderName: letter.User_Letter_senderIdToUser?.userName,
-      isFavorite: letter.Favorite.some(
+      ...letter,
+      receiverName: letter?.User_Letter_receiverIdToUser?.userName,
+      senderName: letter?.User_Letter_senderIdToUser?.userName,
+      isFavorite: letter?.Favorite.some(
         (f) => f.userId === userId && f.isFavorite
       ),
-      hasReply,
+      hasReply: !!hasReply,
     };
     return { ok: true, data: result };
   } catch (error) {
