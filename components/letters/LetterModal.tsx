@@ -137,17 +137,14 @@ export default function LetterModal({ letterId, onHandleModal }: Props) {
               <Txt size={18} weight="bold" className="text-green-49d">
                 {letter.senderName}({letter.nickname})
               </Txt>
-              <Image
-                className="cursor-pointer"
-                src={"/icons/ic-x-in-circle.svg"}
-                alt={"동그란 모양의 x 버튼"}
-                width={20}
-                height={20}
-                onClick={(e) => {
-                  e.stopPropagation();
-                  onHandleModal();
-                }}
-              />
+              <button onClick={onHandleModal}>
+                <Image
+                  src="/icons/ic-x-in-circle.svg"
+                  alt="닫기 버튼"
+                  width={20}
+                  height={20}
+                />
+              </button>
             </div>
             <Txt align="left" className="text-gray-500">
               {letter.createDate?.toLocaleString("ko-KR", {
@@ -165,17 +162,15 @@ export default function LetterModal({ letterId, onHandleModal }: Props) {
             </Txt>
             {letter.fileUrl && <LetterView fileUrl={letter.fileUrl} />}
             <div className="flex w-full justify-end">
-              <Txt
-                align="left"
-                weight="bold"
-                className="text-green-49d rounded-[5px] border border-green-49d px-2 py-1"
-                onClick={(e) => {
-                  e.stopPropagation();
-                  handleGoReply();
-                }}
-              >
-                답장하기
-              </Txt>
+              <button onClick={handleGoReply}>
+                <Txt
+                  align="left"
+                  weight="bold"
+                  className="text-green-49d rounded-[5px] border border-green-49d px-2 py-1"
+                >
+                  답장하기
+                </Txt>
+              </button>
             </div>
           </>
         )}
