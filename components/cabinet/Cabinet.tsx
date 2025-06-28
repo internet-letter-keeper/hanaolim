@@ -135,9 +135,9 @@ export default function Cabinet({ isMyCabinet, userId, soldierId }: Props) {
       <Image
         src="/images/cabinet.svg"
         alt="관물대 이미지"
-        layout="responsive"
-        width={10}
-        height={10}
+        width={1000}
+        height={1000}
+        priority
       />
 
       {currentPageLetters?.map(

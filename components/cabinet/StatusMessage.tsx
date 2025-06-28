@@ -18,6 +18,7 @@ export default function StatusMessage({ isMyCabinet, soldierInfo }: Props) {
         alt="무전기 이미지"
         width={30}
         height={30}
+        priority
       />
 
       <Txt className="w-full text-gray-353 truncate" align="left">
