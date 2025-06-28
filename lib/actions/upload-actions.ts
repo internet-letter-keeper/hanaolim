@@ -3,7 +3,7 @@
 import { S3Client } from "@aws-sdk/client-s3";
 import { createPresignedPost } from "@aws-sdk/s3-presigned-post";
 
-export async function getPresignedPost(fileName: string) {
+export const getPresignedPost = async (fileName: string) => {
   const s3 = new S3Client({
     region: process.env.NEXT_PUBLIC_AWS_REGION!,
     credentials: {
@@ -23,4 +23,4 @@ export async function getPresignedPost(fileName: string) {
   });
 
   return { ...presignedPost, key };
-}
+};
