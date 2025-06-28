@@ -40,11 +40,10 @@ export const getPointHistory = async (soldierId: number) => {
       message: SUCCESS_MESSAGES.COMMON.SUCCESS,
       data: pointList,
     };
-  } catch (error) {
+  } catch {
     return {
       success: false,
       message: ERROR_MESSAGES.POINT.FETCH_FAILED,
-      error,
     };
   }
 };
@@ -75,11 +74,10 @@ export const getPointSum = async (soldierId: number) => {
       message: SUCCESS_MESSAGES.COMMON.SUCCESS,
       data: result,
     };
-  } catch (error) {
+  } catch {
     return {
       success: false,
       message: ERROR_MESSAGES.POINT.FETCH_FAILED,
-      error,
     };
   }
 };

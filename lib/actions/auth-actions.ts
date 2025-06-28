@@ -50,8 +50,7 @@ export const postSignUp = async (user: UserData) => {
     });
 
     return { ok: true, data: newUser };
-  } catch (error) {
-    console.error("회원가입 실패:", error);
+  } catch {
     return { ok: false, error: "회원가입에 실패했습니다." };
   }
 };
@@ -101,8 +100,7 @@ export const postSoldier = async (soldier: SoldierData) => {
     });
 
     return { ok: true, data: postSoldier };
-  } catch (error) {
-    console.error("군인 등록 실패:", error);
+  } catch {
     return { ok: false, error: "군인등록에 실패했습니다." };
   }
 };
@@ -180,11 +178,10 @@ export const verifyCurrentPassword = async (
     );
 
     return { success: true, isValid: isPasswordValid };
-  } catch (error) {
+  } catch {
     return {
       success: false,
       message: ERROR_MESSAGES.AUTH.WRONG_PASSWORD,
-      error,
     };
   }
 };
@@ -207,11 +204,10 @@ export const changePassword = async (userId: number, newPassword: string) => {
     });
 
     return { success: true };
-  } catch (error) {
+  } catch {
     return {
       success: false,
       message: ERROR_MESSAGES.AUTH.CHANGE_PASSWORD_FAILED,
-      error,
     };
   }
 };
