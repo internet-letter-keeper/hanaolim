@@ -29,6 +29,7 @@ export default function LetterModal({ letterId, onHandleModal }: Props) {
     useState<Awaited<ReturnType<typeof getLetterDetail>>["data"]>();
   const [senderName, setSenderName] = useState<string>("");
   const overlay = useRef<HTMLDivElement>(null);
+
   const router = useRouter();
   const { showToast } = useToast();
 

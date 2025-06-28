@@ -3,7 +3,6 @@ import { auth } from "./lib/auth";
 
 // 로그인 필요 페이지
 const authenticatedPages = [
-  "/cabinet",
   "/friends",
   "/hanaBank",
   "/letters",
@@ -16,6 +15,10 @@ const authenticatedPages = [
 
 // 군인접근 불가능한 페이지
 const isSoldierRestrictedPage = ["/registerSoldier", "/onboarding"];
+
+const redirectPages = ["/friends", "/write"];
+const isRedirectPage = (pathname: string) =>
+  redirectPages.some((page) => pathname.startsWith(page));
 
 // const isNotLoginPages = ["auth/siginIn", "auth/signUp"];
 
@@ -45,6 +48,15 @@ export async function middleware(req: NextRequest) {
 
   // 인증 필요 페이지
   if (isAuthenticatedPage(pathname) && !didLogin) {
+    if (isRedirectPage(pathname)) {
+      return NextResponse.redirect(
+        new URL(
+          `/auth/signIn?callbackUrl=${encodeURIComponent(`http://localhost:3000/cabinet/${pathname.split("/").pop()}`)}`,
+          req.url
+        )
+      );
+    }
+
     return NextResponse.redirect(new URL(`/auth/signIn`, req.url));
   }
 
