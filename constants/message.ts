@@ -46,7 +46,6 @@ export const ERROR_MESSAGES = {
   },
   POINT: {
     FETCH_FAILED: "포인트 내역을 가져오는 데 실패했습니다.",
-    CHECK_FAILED: "포인트 적립 조건 확인 중 에러가 발생했습니다.",
   },
   FRIENDS: {
     INVALID_CODE: "코드를 다시 확인해주세요",

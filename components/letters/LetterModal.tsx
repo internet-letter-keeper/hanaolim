@@ -71,17 +71,17 @@ export default function LetterModal({ letterId, onHandleModal }: Props) {
         }
 
         // 포인트 적립 처리
-        const { earn, bonus } = await handleEarnPoint({ letterId, soldierId });
+        const { earn, bonus = 0 } = await handleEarnPoint({
+          letterId,
+          soldierId,
+        });
 
         if (earn && bonus > 0) {
           setEarnedBonus(bonus);
           setShowPoint(true);
         }
       } catch {
-        return {
-          success: false,
-          message: ERROR_MESSAGES.LETTER.NOT_FOUND,
-        };
+        showToast(ERROR_MESSAGES.LETTER.NOT_FOUND, "", "error");
       }
     })();
   }, [letterId, userId, soldierId, showToast]);
@@ -122,7 +122,7 @@ export default function LetterModal({ letterId, onHandleModal }: Props) {
         ref={scrollRef}
         className={cn(
           "absolute top-1/2 left-1/2 -translate-x-1/2 -translate-y-1/2",
-          "w-11/12 sm:w-[22rem] p-6 bg-white-fff rounded-[10px]",
+          "w-11/12 sm:w-22 p-6 bg-white-fff rounded-[10px]",
           "flex flex-col transition-all duration-[500ms] ease-in-out overflow-auto scrollbar-hide",
           letter ? "max-h-[66vh] opacity-100" : "max-h-[150px] opacity-0"
         )}
