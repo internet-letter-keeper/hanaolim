@@ -95,7 +95,7 @@ export const handleEarnPoint = async ({
       }
     );
     return result;
-  } catch (error) {
+  } catch {
     return {
       success: false,
       earn: false,
@@ -130,12 +130,11 @@ const postReadDate = async (letterId: number, tx: Prisma.TransactionClient) => {
       success: true,
       updated: res.count > 0,
     };
-  } catch (error) {
+  } catch {
     //2. updateMany 실패, success와 updated 모두 false return
     return {
       success: false,
       updated: false,
-      error,
     };
   }
 };
@@ -184,12 +183,11 @@ const getPointEarnability = async (
       success: true,
       earnability: false,
     };
-  } catch (error) {
+  } catch {
     //3. 테이블 조회하다 에러가 발생함
     return {
       success: false,
       earnability: false,
-      error,
     };
   }
 };
@@ -235,11 +233,10 @@ const postEarnedPoint = async (
       success: true,
       bonus,
     };
-  } catch (error) {
+  } catch {
     return {
       success: false,
       bonus: 0,
-      error,
     };
   }
 };

@@ -49,8 +49,7 @@ export async function signInHook(signInData: SignInProps) {
     } else {
       return { success: false, error: "signIn" };
     }
-  } catch (error) {
-    console.error("로그인 에러:", error);
+  } catch {
     return { success: false, error: "signIn" };
   }
 }
@@ -75,8 +74,7 @@ export async function signUpHook(signUpData: SignUpProps) {
     } else {
       return { success: false, error: "signUp" };
     }
-  } catch (error) {
-    console.error("회원가입 에러:", error);
+  } catch {
     return { success: false, error: "signUp" };
   }
 }

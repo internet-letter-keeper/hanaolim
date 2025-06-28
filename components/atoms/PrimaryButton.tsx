@@ -6,7 +6,7 @@ import Txt, { alignMap, fontMap } from "./Text";
 type Props = {
   title: string;
   className?: string;
-  onClick?: () => void;
+  onClick?: React.MouseEventHandler<HTMLButtonElement>;
   type?: "button" | "submit" | "reset";
   color?: keyof typeof Color;
   disabled?: boolean;
