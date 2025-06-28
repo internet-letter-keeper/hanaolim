@@ -1,8 +1,8 @@
 "use client";
 
-import { ONBOARDING_MODE } from "@/constants/onboardingMode";
 import Image from "next/image";
 import { useRouter } from "next/navigation";
+import { ONBOARDING_MODE } from "@/constants/onboardingMode";
 import { cn } from "@/lib/utils";
 import { Txt } from "./atoms";
 

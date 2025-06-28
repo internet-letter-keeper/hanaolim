@@ -9,7 +9,7 @@ type Props = {
 };
 
 export default function StatusMessage({ isMyCabinet, soldierInfo }: Props) {
-  const { statusMessage, soldierId } = soldierInfo;
+  const { statusMessage } = soldierInfo;
 
   return (
     <div className="flex mx-2 px-3 py-1 gap-1 items-center bg-[#f14a7615] border border-[#f14a7620] rounded-[15px]">
@@ -24,9 +24,7 @@ export default function StatusMessage({ isMyCabinet, soldierInfo }: Props) {
         {statusMessage}
       </Txt>
 
-      {isMyCabinet && (
-        <EditStatusMsgBtn soldierId={soldierId} statusMessage={statusMessage} />
-      )}
+      {isMyCabinet && <EditStatusMsgBtn soldierInfo={soldierInfo} />}
     </div>
   );
 }

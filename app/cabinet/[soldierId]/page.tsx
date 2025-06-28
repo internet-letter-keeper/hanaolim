@@ -9,15 +9,13 @@ import {
 import { SidebarProvider } from "@/components/ui/sidebar";
 import { getUserBySoldierId } from "@/lib/actions/friend-actions";
 import { getIsNew } from "@/lib/actions/letter-actions";
-import { requireAuth } from "@/utils/auth";
+import { auth } from "@/lib/auth";
 
 type Props = {
   params: Promise<{ soldierId: number }>;
 };
 
 export default async function CabinetPage({ params }: Props) {
-  const session = await requireAuth();
-
   const { soldierId } = await params;
 
   const { success, message, data } = await getUserBySoldierId(+soldierId);
@@ -25,13 +23,16 @@ export default async function CabinetPage({ params }: Props) {
   if (!success) {
     throw new Error(message);
   }
+
   const soldierInfo = data!;
 
-  if (!session.user.userId) return;
+  const session = await auth();
 
-  const { isNew } = await getIsNew(+session.user.userId);
+  const isLoggedIn = session?.user;
 
-  const isMyCabinet = session.user.soldier
+  const { isNew } = isLoggedIn ? await getIsNew(+session.user.userId) : {};
+
+  const isMyCabinet = session?.user.soldier
     ? session.user.soldier.soldierId === soldierInfo?.soldierId
     : false;
 
@@ -44,7 +45,7 @@ export default async function CabinetPage({ params }: Props) {
         <Cabinet
           isMyCabinet={isMyCabinet}
           userId={+soldierInfo.userId}
-          loginId={+session.user.userId}
+          soldierId={+soldierId}
         />
         {!isMyCabinet && (
           <LetterMoneyButton

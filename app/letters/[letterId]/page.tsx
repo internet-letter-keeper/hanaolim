@@ -8,11 +8,11 @@ import { Txt } from "@/components/atoms";
 import { BasicHeader } from "@/components/common";
 import { LettersDetail, PigSplash } from "@/components/letters";
 import { ERROR_MESSAGES } from "@/constants/message";
+import { handleEarnPoint } from "@/lib/actions/earn-point-actions";
 import {
   getLetterDetail,
   patchUserReadDate,
 } from "@/lib/actions/letter-actions";
-import { handleEarnPoint } from "@/lib/actions/point-earn-action";
 
 export default function LetterDetailPage() {
   const { letterId: rawLetterId } = useParams();

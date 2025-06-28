@@ -6,13 +6,14 @@ import { useSession } from "next-auth/react";
 import { MouseEventHandler, useEffect, useRef, useState } from "react";
 import { ERROR_MESSAGES } from "@/constants/message";
 import { useToast } from "@/contexts/toast/ToastContext";
+import { useScrollEdges } from "@/hooks/useScrollEdge";
+import { handleEarnPoint } from "@/lib/actions/earn-point-actions";
 import { getLetterDetail } from "@/lib/actions/letter-actions";
 import { getSenderNameId } from "@/lib/actions/write-actions";
 import { cn } from "@/lib/utils";
 import { formatLetterData } from "@/utils/letter";
+import { LetterView, PigSplash } from ".";
 import { Txt } from "../atoms";
-import LetterView from "./LetterView";
-import PigSplash from "./PigSplash";
 
 // 답장 페이지 또는 편지 상세 페이지로 이동하기 위해 letterId 받아옴
 // 모달 제어를 위해 콜백 함수 받아옴 (onHandle), 페이지에서 useState 이용해서 모달 제어
@@ -22,22 +23,14 @@ type Props = {
   onHandleModal: () => void;
 };
 
-const MAX_LENGTH = 110;
-
 export default function LetterModal({ letterId, onHandleModal }: Props) {
   const [letter, setLetter] =
     useState<Awaited<ReturnType<typeof getLetterDetail>>["data"]>();
   const [senderName, setSenderName] = useState<string>("");
   const overlay = useRef<HTMLDivElement>(null);
+
   const router = useRouter();
   const { showToast } = useToast();
-
-  //110자 넘어가면 더보기로 처리
-  const isLong = (letter?.content?.length ?? 0) > MAX_LENGTH;
-
-  const preview = isLong
-    ? letter?.content?.slice(0, MAX_LENGTH)
-    : letter?.content;
 
   const { data } = useSession();
 
@@ -51,7 +44,7 @@ export default function LetterModal({ letterId, onHandleModal }: Props) {
   useEffect(() => {
     (async () => {
       if (!userId || !soldierId) {
-        return;
+        throw new Error(ERROR_MESSAGES.SOLDIER.NOT_FOUND);
       }
 
       try {
@@ -64,6 +57,7 @@ export default function LetterModal({ letterId, onHandleModal }: Props) {
           message,
           data: senderData,
         } = await getSenderNameId(letterId);
+
         if (success) {
           if (!senderData || !senderData.userName) {
             throw new Error(ERROR_MESSAGES.DATA.NOT_FOUND);
@@ -77,23 +71,16 @@ export default function LetterModal({ letterId, onHandleModal }: Props) {
         }
 
         // 포인트 적립 처리
-        const res = await fetch("/api/earn-point", {
-          method: "POST",
-          headers: { "Content-Type": "application/json" },
-          body: JSON.stringify({ letterId, soldierId }),
-        });
+        const { earn, bonus } = await handleEarnPoint({ letterId, soldierId });
 
-        const result = await res.json();
-
-        if (result.earn && result.bonus > 0) {
-          setEarnedBonus(result.bonus);
+        if (earn && bonus > 0) {
+          setEarnedBonus(bonus);
           setShowPoint(true);
         }
-      } catch (error) {
+      } catch {
         return {
           success: false,
           message: ERROR_MESSAGES.LETTER.NOT_FOUND,
-          error,
         };
       }
     })();
@@ -119,6 +106,9 @@ export default function LetterModal({ letterId, onHandleModal }: Props) {
     if (e.target === overlay.current) onHandleModal();
   };
 
+  //스크롤 감지 페이드 처리
+  const { ref: scrollRef, isBottom } = useScrollEdges();
+
   return (
     <div
       ref={overlay}
@@ -129,14 +119,19 @@ export default function LetterModal({ letterId, onHandleModal }: Props) {
         <PigSplash point={earnedBonus} onSkip={() => setShowPoint(false)} />
       )}
       <div
+        ref={scrollRef}
         className={cn(
           "absolute top-1/2 left-1/2 -translate-x-1/2 -translate-y-1/2",
-          "w-11/12 sm:w-[22rem] p-6 bg-white rounded-[10px]",
-          "flex flex-col transition-all duration-[500ms] ease-in-out",
-          letter ? "max-h-[80vh] opacity-100" : "max-h-[150px] opacity-0"
+          "w-11/12 sm:w-[22rem] p-6 bg-white-fff rounded-[10px]",
+          "flex flex-col transition-all duration-[500ms] ease-in-out overflow-auto scrollbar-hide",
+          letter ? "max-h-[66vh] opacity-100" : "max-h-[150px] opacity-0"
         )}
       >
-        {letter ? (
+        {!isBottom && (
+          <div className="absolute bottom-0 left-0 w-full h-12 bg-gradient-to-t from-white-fff to-transparent pointer-events-none z-10" />
+        )}
+
+        {letter && (
           <>
             <div className="flex w-full justify-between">
               <Txt size={18} weight="bold" className="text-green-49d">
@@ -166,12 +161,7 @@ export default function LetterModal({ letterId, onHandleModal }: Props) {
               className="py-4 cursor-pointer"
               onClick={handleGoToDetail}
             >
-              {preview}
-              {isLong && (
-                <Txt size={16} className="text-gray-500">
-                  ...더보기
-                </Txt>
-              )}
+              {letter.content}
             </Txt>
             {letter.fileUrl && <LetterView fileUrl={letter.fileUrl} />}
             <div className="flex w-full justify-end">
@@ -188,11 +178,6 @@ export default function LetterModal({ letterId, onHandleModal }: Props) {
               </Txt>
             </div>
           </>
-        ) : (
-          //TODO: 로딩이 좀 있는 것 같아서 넣어놨음 나중에 제거하든지 함
-          <Txt className="text-center text-gray-400 text-sm">
-            편지를 불러오는 중...
-          </Txt>
         )}
       </div>
     </div>

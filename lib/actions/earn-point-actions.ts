@@ -9,24 +9,13 @@ type PointEarnProps = {
   soldierId: number;
 };
 
-//트랜잭션의 return type 세 가지로 정의함
-//1.정상 실행 후 보너스 지급, 2. 정상 실행 but 보너스 지급 불가, 3. 비정상 실행으로 트랜잭션 종료
-type HandleEarnPointResult =
-  | {
-      success: true;
-      earn: true;
-      bonus: number;
-    }
-  | {
-      success: true;
-      earn: false;
-    }
-  | {
-      success: false;
-      earn: false;
-      message: string;
-    };
-
+//success: 정상 실행 여부, earn: 포인트 지급 여부, bonus: 얻은 포인트, message: 처리 결과 메시지
+type HandleEarnPointResult = {
+  success: boolean;
+  earn: boolean;
+  bonus: number;
+  message: string;
+};
 /**
  * 포인트 적립을 다루는 트랜잭션
  * @param letterId
@@ -56,20 +45,25 @@ export const handleEarnPoint = async ({
           return {
             success: true,
             earn: false,
+            bonus: 0,
+            message: SUCCESS_MESSAGES.COMMON.SUCCESS,
           };
         }
 
         //2. 적립 가능 여부 확인
         const earnableResult = await getPointEarnability(tx, letter);
+
         //2-1. 포인트 적립 조건 확인 중 예기치 못한 에러 발생
         if (!earnableResult.success)
-          throw new Error("포인트 적립 조건 확인 중 에러가 발생했습니다");
+          throw new Error(ERROR_MESSAGES.POINT.CHECK_FAILED);
 
         //2-2. 포인트 적립 조건 불충족
         if (!earnableResult.earnability) {
           return {
             success: true,
             earn: false,
+            bonus: 0,
+            message: SUCCESS_MESSAGES.COMMON.SUCCESS,
           };
         }
 
@@ -85,25 +79,27 @@ export const handleEarnPoint = async ({
           return {
             success: true,
             earn: false,
+            bonus: 0,
+            message: SUCCESS_MESSAGES.COMMON.SUCCESS,
           };
         }
 
         //3-3. 경험치 다 차서 적립까지 성공 후, success true와 적립된 포인트 반환하기
         return {
           success: true,
-          message: SUCCESS_MESSAGES.COMMON.SUCCESS,
           earn: true,
           bonus: earnResult.bonus,
+          message: SUCCESS_MESSAGES.COMMON.SUCCESS,
         };
       }
     );
     return result;
-  } catch (error) {
-    console.error("트랜잭션 과정 중 catch", error);
+  } catch {
     return {
       success: false,
       earn: false,
-      message: (error as Error).message,
+      bonus: 0,
+      message: ERROR_MESSAGES.POINT.CHECK_FAILED,
     };
   }
 };
@@ -133,12 +129,11 @@ const postReadDate = async (letterId: number, tx: Prisma.TransactionClient) => {
       success: true,
       updated: res.count > 0,
     };
-  } catch (error) {
+  } catch {
     //2. updateMany 실패, success와 updated 모두 false return
     return {
       success: false,
       updated: false,
-      error,
     };
   }
 };
@@ -187,12 +182,11 @@ const getPointEarnability = async (
       success: true,
       earnability: false,
     };
-  } catch (error) {
+  } catch {
     //3. 테이블 조회하다 에러가 발생함
     return {
       success: false,
       earnability: false,
-      error,
     };
   }
 };
@@ -238,11 +232,10 @@ const postEarnedPoint = async (
       success: true,
       bonus,
     };
-  } catch (error) {
+  } catch {
     return {
       success: false,
       bonus: 0,
-      error,
     };
   }
 };

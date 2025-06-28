@@ -30,8 +30,7 @@ export const useLetterForm = ({ isReply = false }: UseLetterFormProps = {}) => {
       try {
         const decodedName = decodeURIComponent(nameParam);
         setUserName(decodedName);
-      } catch (error) {
-        console.error(error);
+      } catch {
         setUserName("별돌이");
       }
     } else {

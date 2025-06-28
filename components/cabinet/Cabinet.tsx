@@ -2,6 +2,7 @@
 
 import Image from "next/image";
 import { useRouter, useSearchParams } from "next/navigation";
+import { useSession } from "next-auth/react";
 import { useEffect, useState } from "react";
 import { Txt } from "@/components/atoms";
 import { useToast } from "@/contexts/toast/ToastContext";
@@ -17,10 +18,14 @@ import LetterModal from "../letters/LetterModal";
 type Props = {
   isMyCabinet: boolean;
   userId: number;
-  loginId: number;
+  soldierId: number;
 };
 
-export default function Cabinet({ isMyCabinet, userId, loginId }: Props) {
+export default function Cabinet({ isMyCabinet, userId, soldierId }: Props) {
+  const { data, update } = useSession();
+
+  const loginUserId = data?.user.userId;
+
   const [currentPage, setCurrentPage] = useState(1);
 
   const [totalPage, setTotalPage] = useState(1);
@@ -57,6 +62,7 @@ export default function Cabinet({ isMyCabinet, userId, loginId }: Props) {
     // 읽자마자 'New' 아이콘 숨김 처리
     setOptimisticallyReadIds((prev) => [...prev, letterId]);
   };
+
   const searchParams = useSearchParams();
   const addFollow = searchParams.get("add");
 
@@ -79,10 +85,14 @@ export default function Cabinet({ isMyCabinet, userId, loginId }: Props) {
 
       setCurrentPageLetters(letters.data);
 
-      if (addFollow === "true") await postFriendbyId(userId, loginId);
+      if (addFollow === "true" && loginUserId && !data.user.follow) {
+        const { follow } = await postFriendbyId(soldierId, loginUserId);
+        await update({ ...data?.user, follow });
+      }
+
       router.refresh();
     })();
-  }, [addFollow, loginId, userId]);
+  }, [addFollow, loginUserId, userId]);
 
   useEffect(() => {
     (async () => {
