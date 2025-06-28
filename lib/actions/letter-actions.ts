@@ -2,6 +2,7 @@
 
 import { revalidatePath } from "next/cache";
 import prisma from "@/lib/db";
+import { Prisma } from "../generated/prisma";
 
 type LetterDetailProp = {
   letterId: number;
@@ -174,7 +175,7 @@ export const getIsNew = async (userId: number) => {
 };
 
 // 필터 작업 -> 내 관물대 / 친구 관물대 + 즐겨찾기, 안읽음, 답장옴
-type GetFilteredLettersParams = {
+type FilteredLettersParams = {
   box: "mine" | "friend";
   userId: number;
   isFavorite?: boolean;
@@ -196,9 +197,9 @@ export const getFilteredLetters = async ({
   isUnread,
   hasReply,
   query,
-}: GetFilteredLettersParams) => {
+}: FilteredLettersParams) => {
   try {
-    const where: any = {
+    const where: Prisma.LetterWhereInput = {
       parentLetterId: null,
     };
 
