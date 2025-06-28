@@ -1,15 +1,7 @@
-export const getPresignedPost = async (file: File) => {
-  const res = await fetch("/api/upload", {
-    method: "POST",
-    body: JSON.stringify({ fileName: file.name }),
-    headers: { "Content-Type": "application/json" },
-  });
-  if (!res.ok) throw new Error("Presigned URL 발급 실패");
-  return res.json();
-};
+import { getPresignedPost } from "@/lib/actions/upload-actions";
 
 export const uploadToS3 = async (file: File): Promise<string> => {
-  const { url, fields, key } = await getPresignedPost(file);
+  const { url, fields, key } = await getPresignedPost(file.name);
   const formData = new FormData();
   Object.entries(fields).forEach(([k, v]) => formData.append(k, v as string));
   formData.append("Content-Type", file.type);
