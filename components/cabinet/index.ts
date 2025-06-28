@@ -1,4 +1,5 @@
 export { default as AddFriendBtn } from "./AddFriendBtn";
+export { default as CabinetPagenation } from "./CabinetPagenation";
 export { default as Cabinet } from "./Cabinet";
 export { default as CabinetHeader } from "./CabinetHeader";
 export { default as CopyCodeBtn } from "./CopyCodeBtn";
