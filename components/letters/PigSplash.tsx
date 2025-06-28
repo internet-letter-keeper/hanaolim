@@ -2,9 +2,8 @@
 
 import Image from "next/image";
 import { useRouter } from "next/navigation";
-import { useRef, useState } from "react";
-import Txt from "@/components/atoms/Text";
-import { PrimaryButton } from "../atoms";
+import { type MouseEvent } from "react";
+import { PrimaryButton, Txt } from "../atoms";
 
 type PigSplashProps = {
   onSkip: () => void;
@@ -12,40 +11,25 @@ type PigSplashProps = {
 };
 
 export default function PigSplash({ onSkip, point }: PigSplashProps) {
-  const [isVisible, setIsVisible] = useState(true);
-
-  const overlay = useRef<HTMLDivElement>(null);
-
   const router = useRouter();
 
-  const handleSplash = () => {
-    setIsVisible(false);
-    onSkip();
-  };
-
-  // 버튼 제외 버튼 클릭 시 스플래시 닫기
-  const handleGoToHistory = () => {
+  const handleGoToHistory = (e: MouseEvent) => {
+    e.stopPropagation();
     router.push("/pointHistory");
   };
 
-  if (!isVisible) return null;
-
   return (
     <div
-      ref={overlay}
-      className="h-screen relative bg-[#333333]/90 z-[200] "
-      onClick={handleSplash}
+      className="fixed inset-0 z-[1000] -translate-x-1/2 left-1/2 w-full sm:w-sm bg-[#333333]/90"
+      onClick={onSkip}
     >
       {/*모달 종료 버튼 */}
-      <div className="absolute top-3 right-3">
-        <Txt
-          weight="medium"
-          size={18}
-          className="text-white p-4 cursor-pointer"
-        >
+      <button className="absolute top-6 right-3">
+        <Txt weight="medium" size={18} className="text-white p-4">
           Skip
         </Txt>
-      </div>
+      </button>
+
       {/* 중앙 콘텐츠 */}
       <div className="h-full flex flex-col justify-center items-center gap-8">
         <Image
@@ -64,17 +48,16 @@ export default function PigSplash({ onSkip, point }: PigSplashProps) {
             적립되었습니다!
           </Txt>
         </div>
-        <div onClick={(e) => e.stopPropagation()}>
-          <PrimaryButton
-            title="포인트 적립 내역 보기"
-            onClick={handleGoToHistory}
-            rounded="sm"
-            textSize={16}
-            align="center"
-            weight="cm"
-            className="p-3"
-          />
-        </div>
+
+        <PrimaryButton
+          title="포인트 적립 내역 보기"
+          onClick={handleGoToHistory}
+          rounded="sm"
+          textSize={16}
+          align="center"
+          weight="cm"
+          className="p-3 w-fit"
+        />
       </div>
     </div>
   );
