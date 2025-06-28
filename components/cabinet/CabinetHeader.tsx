@@ -18,7 +18,7 @@ export default async function CabinetHeader({
 }: Props) {
   const session = await auth();
 
-  const isLoggedIn = session?.user;
+  const isLoggedIn = !!session?.user;
 
   const { isNew } = isLoggedIn ? await getIsNew(+session.user.userId) : {};
 
@@ -54,7 +54,7 @@ export default async function CabinetHeader({
         </SidebarHeader>
       ) : (
         <Link
-          href="/auth/signIn"
+          href={`/write/${soldierInfo.soldierId}`}
           className="border border-green-49d py-1 px-4 inline-flex rounded-[5px]"
         >
           <Txt weight="cm" className="text-green-49d">
