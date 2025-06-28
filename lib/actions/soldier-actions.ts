@@ -30,11 +30,10 @@ export const updateSoldierDates = async (
       success: true,
       message: SUCCESS_MESSAGES.SOLDIER.DATE_UPDATE_SUCCESS,
     };
-  } catch (error) {
+  } catch {
     return {
       success: false,
       message: ERROR_MESSAGES.SOLDIER.DATE_UPDATE_FAILED,
-      error,
     };
   }
 };

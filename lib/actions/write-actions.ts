@@ -87,11 +87,10 @@ const createLetter = async (data: LetterFormData, senderId?: number) => {
     }
 
     throw new Error(ERROR_MESSAGES.LETTER.POST_FAILED);
-  } catch (error) {
+  } catch {
     return {
       success: false,
       message: ERROR_MESSAGES.LETTER.POST_FAILED,
-      error,
     };
   }
 };
@@ -164,11 +163,10 @@ export const getSenderNameId = async (letterId: number) => {
       message: SUCCESS_MESSAGES.COMMON.SUCCESS,
       data: senderInfo,
     };
-  } catch (error) {
+  } catch {
     return {
       success: false,
       message: ERROR_MESSAGES.DATA.FETCH_FAILED,
-      error,
     };
   }
 };

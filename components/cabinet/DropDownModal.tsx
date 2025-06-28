@@ -15,7 +15,7 @@ import { NewIcon } from "../common";
 import Profile from "../common/Profile";
 
 type Props = {
-  isNew: boolean;
+  isNew: boolean | undefined;
 };
 
 const ButtonStyle = "border border-gray-353/25 py-3";

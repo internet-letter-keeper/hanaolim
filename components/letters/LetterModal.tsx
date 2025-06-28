@@ -28,6 +28,7 @@ export default function LetterModal({ letterId, onHandleModal }: Props) {
     useState<Awaited<ReturnType<typeof getLetterDetail>>["data"]>();
   const [senderName, setSenderName] = useState<string>("");
   const overlay = useRef<HTMLDivElement>(null);
+
   const router = useRouter();
   const { showToast } = useToast();
 
@@ -56,6 +57,7 @@ export default function LetterModal({ letterId, onHandleModal }: Props) {
           message,
           data: senderData,
         } = await getSenderNameId(letterId);
+
         if (success) {
           if (!senderData || !senderData.userName) {
             throw new Error(ERROR_MESSAGES.DATA.NOT_FOUND);
@@ -75,11 +77,10 @@ export default function LetterModal({ letterId, onHandleModal }: Props) {
           setEarnedBonus(bonus);
           setShowPoint(true);
         }
-      } catch (error) {
+      } catch {
         return {
           success: false,
           message: ERROR_MESSAGES.LETTER.NOT_FOUND,
-          error,
         };
       }
     })();
