@@ -5,7 +5,7 @@ import { useRouter } from "next/navigation";
 import { useSession } from "next-auth/react";
 import { ChangeEvent, KeyboardEvent, useState } from "react";
 import { PrimaryButton, Input, Txt } from "@/components/atoms";
-import DatePicker from "@/components/common/DatePicker";
+import { DatePicker } from "@/components/common";
 import { postSoldier } from "@/lib/actions/auth-actions";
 import { toKoreaTime } from "@/utils/date";
 
