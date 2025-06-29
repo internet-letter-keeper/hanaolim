@@ -1,11 +1,11 @@
 import Image from "next/image";
 import Link from "next/link";
-import { getLetterDetail } from "@/lib/actions/letter-actions";
+import { getFilteredLetters } from "@/lib/actions/letter-actions";
 import { Txt } from "../atoms";
 import FavoriteToggle from "./FavoriteToggle";
 
 type Props = {
-  letter: Awaited<ReturnType<typeof getLetterDetail>>["data"];
+  letter: Awaited<ReturnType<typeof getFilteredLetters>>["data"][number];
   currentUserId: number;
   box: "mine" | "friend";
 };
@@ -22,6 +22,7 @@ export default function LettersItem({ letter, currentUserId, box }: Props) {
     createDate,
     readDate,
     isFavorite,
+    hasReply,
   } = letter;
 
   const isRead = !!readDate;
@@ -36,7 +37,7 @@ export default function LettersItem({ letter, currentUserId, box }: Props) {
         <Txt
           size={20}
           weight="cm"
-          className={isRead ? "text-[#AAAAAA]" : "text-gray-353"}
+          className={isRead ? "text-gray-aaa" : "text-gray-353"}
         >
           {currentUserId === receiverId ? senderName : receiverName}
         </Txt>
@@ -55,8 +56,7 @@ export default function LettersItem({ letter, currentUserId, box }: Props) {
 
       <div className="flex justify-between items-center w-full mt-2">
         {/* 답장 버튼 영역 */}
-        {(box === "mine" && !letter.hasReply) ||
-        (box === "friend" && letter.hasReply) ? (
+        {(box === "mine" && hasReply) || (box === "friend" && hasReply) ? (
           <div className="inline-flex items-center gap-1 rounded-[5px] border border-red-a76 px-2 py-0.5">
             <Image
               src="/icons/ic-isReply.svg"
@@ -71,13 +71,11 @@ export default function LettersItem({ letter, currentUserId, box }: Props) {
         ) : (
           <div />
         )}
-        {letterId && (
-          <FavoriteToggle
-            letterId={letterId}
-            isFavorite={isFavorite}
-            currentUserId={currentUserId}
-          />
-        )}
+        <FavoriteToggle
+          letterId={letterId}
+          isFavorite={isFavorite}
+          currentUserId={currentUserId}
+        />
       </div>
     </Link>
   );

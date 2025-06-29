@@ -1,11 +1,7 @@
 import Image from "next/image";
 import Link from "next/link";
 import Txt from "@/components/atoms/Text";
-import {
-  getEarnedPoint,
-  getLetterCount,
-  getSoldierInfoByUserId,
-} from "@/lib/actions/home-actions";
+import { getEarnedPoint, getLetterCount } from "@/lib/actions/home-actions";
 import { requireAuth } from "@/utils/auth";
 import Letter from "./hanaolim/Letter";
 import Point from "./hanaolim/Point";
@@ -13,10 +9,10 @@ import Point from "./hanaolim/Point";
 export default async function Olim() {
   const session = await requireAuth();
   const userId = session.user.userId;
+  const soldierId = session.user.soldier.soldierId;
 
-  const { letterExp } = await getEarnedPoint(userId);
   const { totalCount, unreadCount } = await getLetterCount(userId);
-  const { soldierId } = await getSoldierInfoByUserId(userId);
+  const { letterExp } = await getEarnedPoint(userId);
 
   return (
     <div className="flex flex-col justify-between pl-[26px] py-[27px] pr-[22px] bg-white-fff rounded-[20px] shadow-[0_0_5px_rgba(0,0,0,0.15)]">

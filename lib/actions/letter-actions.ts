@@ -37,13 +37,6 @@ export const getLetterDetail = async ({
       },
     });
 
-    const hasReplyLetter = await prisma.letter.findFirst({
-      where: {
-        parentLetterId: letterId,
-        OR: [{ senderId: userId }, { receiverId: userId }],
-      },
-    });
-
     const result = {
       ...letter,
       receiverName: letter?.User_Letter_receiverIdToUser.userName,
@@ -51,7 +44,6 @@ export const getLetterDetail = async ({
       isFavorite: letter?.Favorite.some(
         (f) => f.userId === userId && f.isFavorite
       ),
-      hasReply: !!hasReplyLetter,
     };
 
     return { ok: true, data: result };
@@ -61,8 +53,7 @@ export const getLetterDetail = async ({
 };
 
 /**
- *
-// 즐겨찾기 추가 삭제 api
+ * 즐겨찾기 추가 삭제 api
  * @param letterId
  * @param userId
  * @usage 편지 보관함
@@ -328,7 +319,7 @@ export const getFilteredLetters = async ({
       return { ok: true, data: result };
     }
   } catch {
-    return { ok: false, error: "편지 필터링에 실패했습니다." };
+    return { ok: false, error: "편지 필터링에 실패했습니다.", data: [] };
   }
 };
 

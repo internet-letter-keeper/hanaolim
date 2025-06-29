@@ -79,7 +79,11 @@ export default function LetterModal({ letterId, onHandleModal }: Props) {
           setShowPoint(true);
         }
       } catch {
-        showToast(ERROR_MESSAGES.LETTER.NOT_FOUND, "", "error");
+        showToast(
+          ERROR_MESSAGES.LETTER.NOT_FOUND_OR_ACCESS_DENIED,
+          "",
+          "error"
+        );
       }
     })();
   }, [letterId, userId, soldierId, showToast]);

@@ -55,9 +55,8 @@ export const postSignUp = async (user: UserData) => {
   }
 };
 
-// 군인으로 등록하기
 /**
- *
+ * 군인으로 등록하기
  * @param soldier 군인 정보
  * @param soldier.userId 유저 ID
  * @param soldier.startDate 군인 시작일
@@ -106,19 +105,11 @@ export const postSoldier = async (soldier: SoldierData) => {
 };
 
 /**
- * DB에 있는 유저인지 확인
- * @param userId
- * @returns userId의 유저 정보
- */
-export const isUserExists = async (userId: number) =>
-  prisma.user.findUnique({ where: { userId } });
-
-/**
  * 이메일 중복 확인 함수
  * @param email 확인할 이메일 주소
  * @returns 이메일이 중복되었는지 여부
  */
-export const isEmailDuplicated = async (email: string): Promise<boolean> => {
+export const isEmailDuplicated = async (email: string) => {
   const existingUser = await prisma.user.findUnique({
     where: { email },
   });
@@ -143,7 +134,7 @@ export const generateShortCode = async (length = 8) => {
   });
 
   if (alreadyExists) {
-    await generateShortCode(length); // 재귀 호출로 중복 코드 생성
+    await generateShortCode(length); // 재귀 호출로 중복되지 않는 코드 생성
   } else {
     return result; // 중복되지 않는 코드 반환
   }
