@@ -7,7 +7,7 @@ import { patchFavorite } from "@/lib/actions/letter-actions";
 type Props = {
   letterId: number;
   currentUserId: number;
-  isFavorite?: boolean;
+  isFavorite?: boolean | null;
 };
 
 export default function FavoriteToggle({

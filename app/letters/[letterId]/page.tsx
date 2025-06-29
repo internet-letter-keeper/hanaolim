@@ -18,6 +18,7 @@ import {
 
 export default function LetterDetailPage() {
   const { letterId: rawLetterId } = useParams();
+  const { data: session } = useSession();
 
   if (!rawLetterId) {
     throw new Error(ERROR_MESSAGES.LETTER.NOT_FOUND);
@@ -34,14 +35,12 @@ export default function LetterDetailPage() {
   const [reply, setReply] =
     useState<Awaited<ReturnType<typeof getLetterDetail>>["data"]>();
 
-  const { data } = useSession();
+  // if (!session) {
+  //   throw new Error(ERROR_MESSAGES.LETTER.NOT_FOUND);
+  // }
 
-  if (!data) {
-    throw new Error(ERROR_MESSAGES.LETTER.NOT_FOUND);
-  }
-
-  const userId = data?.user.userId;
-  const soldierId = data?.user.soldier.soldierId;
+  const userId = session?.user.userId;
+  const soldierId = session?.user.soldier.soldierId;
 
   const [showPoint, setShowPoint] = useState(false);
   const [earnedBonus, setEarnedBonus] = useState(0);
@@ -61,6 +60,10 @@ export default function LetterDetailPage() {
         });
 
         if (!data || !data.senderId || !data.receiverId) throw new Error();
+
+        if (userId !== data?.receiverId && userId !== data?.senderId) {
+          throw new Error(ERROR_MESSAGES.LETTER.NOT_FOUND);
+        }
 
         setLetter(data);
         setReply(replyData);
