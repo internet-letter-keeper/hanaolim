@@ -319,7 +319,7 @@ export const getFilteredLetters = async ({
       return { ok: true, data: result };
     }
   } catch {
-    return { ok: false, error: "편지 필터링에 실패했습니다." };
+    return { ok: false, error: "편지 필터링에 실패했습니다.", data: [] };
   }
 };
 
