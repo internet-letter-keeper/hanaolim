@@ -1,3 +1,4 @@
+import { headers } from "next/headers";
 import Image from "next/image";
 import Link from "next/link";
 import { getIsNew } from "@/lib/actions/letter-actions";
@@ -25,6 +26,11 @@ export default async function CabinetHeader({
   const isSoldier = session?.user.isSoldier;
 
   const soldierName = isMyCabinet ? "나" : soldierInfo?.User.userName + "님";
+
+  const headersList = await headers();
+  const host = headersList.get("host");
+  const protocol = headersList.get("x-forwarded-proto") || "http";
+  const fullUrl = `${protocol}://${host}`;
 
   return (
     <header className={"flex items-center px-2 h-[40px]"}>
@@ -54,7 +60,7 @@ export default async function CabinetHeader({
         </SidebarHeader>
       ) : (
         <Link
-          href={`/write/${soldierInfo.soldierId}`}
+          href={`/auth/signIn?callbackUrl=${encodeURIComponent(fullUrl + "/cabinet/" + soldierInfo.soldierId)}`}
           className="border border-green-49d py-1 px-4 inline-flex rounded-[5px]"
         >
           <Txt weight="cm" className="text-green-49d">

@@ -68,7 +68,10 @@ export default function AddFriendBtn({ soldierId }: Props) {
     }
   };
 
-  const navigateToSignIn = () => router.push(`/friends/${soldierId}`);
+  const navigateToSignIn = () =>
+    router.push(
+      `/auth/signIn?callbackUrl=${encodeURIComponent(window.location.origin + window.location.pathname)}`
+    );
 
   return (
     <>
