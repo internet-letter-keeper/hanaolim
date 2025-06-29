@@ -86,7 +86,7 @@ export default function LetterDetailPage() {
         showToast(ERROR_MESSAGES.LETTER.NOT_FOUND, "", "error");
       }
     })();
-  }, [letterId, userId, soldierId]);
+  }, [letterId, userId, soldierId, showToast]);
 
   return (
     <div className="flex flex-col items-center gap-4">
