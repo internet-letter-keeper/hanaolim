@@ -6,28 +6,28 @@ import { patchFavorite } from "@/lib/actions/letter-actions";
 
 type Props = {
   letterId: number;
-  isFavorite: boolean | null | undefined;
   currentUserId: number;
+  isFavorite?: boolean;
 };
 
 export default function FavoriteToggle({
   letterId,
-  isFavorite: favorite,
+  isFavorite: isFavoriteState,
   currentUserId,
 }: Props) {
   const [isFavorite, toggleFavorite] = useOptimistic(
-    favorite ?? false,
+    isFavoriteState ?? false,
     (state) => !state
   );
 
   const handleToggleFavorite = async (e: MouseEvent) => {
     e.preventDefault();
-    toggleFavorite(favorite);
+    toggleFavorite(isFavoriteState);
 
-    const res = await patchFavorite(letterId, currentUserId);
+    const { ok } = await patchFavorite(letterId, currentUserId);
 
-    if (!res.ok) {
-      toggleFavorite(favorite);
+    if (!ok) {
+      toggleFavorite(isFavoriteState);
     }
   };
 
