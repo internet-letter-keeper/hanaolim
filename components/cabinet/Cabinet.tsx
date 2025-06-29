@@ -38,8 +38,8 @@ export default function Cabinet({ soldierId, letters }: Props) {
       return;
     }
 
-    const isAfterStartDate =
-      new Date(data?.user.soldier.startDate!) > new Date();
+    const startDate = data?.user.soldier.startDate;
+    const isAfterStartDate = startDate && new Date(startDate) > new Date();
 
     if (isMyCabinet && isAfterStartDate) {
       showToast("입대일 이후에 열어볼 수 있어요", "", "warning");
