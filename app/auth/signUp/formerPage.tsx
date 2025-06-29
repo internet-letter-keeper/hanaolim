@@ -2,46 +2,71 @@
 
 import Image from "next/image";
 import { useRouter, useSearchParams } from "next/navigation";
-import { useState, KeyboardEvent, useMemo, ChangeEvent } from "react";
+import { useState, KeyboardEvent } from "react";
 import SignUpInput from "@/components/SignUpInput";
 import { PrimaryButton, Txt } from "@/components/atoms";
 import { signUpHook } from "@/hooks/useAuth";
-import useValidation from "@/hooks/useValidation";
 import { isEmailDuplicated } from "@/lib/actions/auth-actions";
+import {
+  checkEmailValidation,
+  checkNameValidation,
+  checkPasswordValidation,
+} from "@/lib/validations/validation";
 
 export default function SignUpPage() {
   const router = useRouter();
   const searchParams = useSearchParams();
   const callbackUrl = searchParams.get("callbackUrl") || "/";
 
+  const [name, setName] = useState("");
+  const [nameError, setNameError] = useState(false);
+  const [nameMessage, setNameMessage] = useState("");
+  const [email, setEmail] = useState("");
+  const [emailError, setEmailError] = useState(false);
+  const [emailMessage, setEmailMessage] = useState("");
+  const [password, setPassword] = useState("");
+  const [confirmPassword, setConfirmPassword] = useState("");
+
   const [isLoading, setIsLoading] = useState(false);
 
-  const { form, errors, handleChange } = useValidation();
+  const passwordValidation = checkPasswordValidation(password);
+  const isPasswordMatch = password === confirmPassword;
+  const passwordErrorMessage = !password
+    ? ""
+    : !passwordValidation.valid
+      ? passwordValidation.message
+      : "";
+  const confirmPasswordErrorMessage = !confirmPassword
+    ? ""
+    : !isPasswordMatch
+      ? "입력하신 비밀번호와 다릅니다."
+      : "";
 
-  const isAllFieldsFilled = Object.values(form).every(Boolean);
+  const isAllFieldsFilled = !!(name && email && password && confirmPassword);
   //버튼 활성화
   const isButtonEnabled =
     isAllFieldsFilled &&
-    !errors.name &&
-    !errors.email &&
-    !errors.password &&
-    !errors.confirmPassword &&
+    checkNameValidation(name).valid &&
+    checkEmailValidation(email) &&
+    passwordValidation.valid &&
+    isPasswordMatch &&
     !isLoading;
 
   // 회원가입 버튼 클릭 핸들러
   const handleSignUp = async () => {
     setIsLoading(true);
 
-    const duplicated = await isEmailDuplicated(form.email);
+    const duplicated = await isEmailDuplicated(email);
     if (duplicated) {
-      handleChange("email", form.email, true);
+      setEmailError(true);
+      setEmailMessage("이미 사용 중인 이메일입니다.");
       setIsLoading(false);
       return;
     }
     const result = await signUpHook({
-      name: form.name,
-      email: form.email,
-      password: form.password,
+      email,
+      name,
+      password,
       callbackUrl,
     });
     if (result?.success) {
@@ -86,42 +111,56 @@ export default function SignUpPage() {
         {/* 이름 */}
         <SignUpInput
           label="이름"
-          value={form.name}
-          onChange={(e) => handleChange("name", e.target.value)}
+          value={name}
+          onChange={(e) => {
+            setName(e.target.value);
+            const validation = checkNameValidation(e.target.value);
+            if (validation.valid) {
+              setNameError(false);
+              setNameMessage("");
+            } else {
+              setNameError(true);
+              setNameMessage(validation.message);
+            }
+          }}
           placeholder="이름을 입력해주세요"
           maxLength={8}
-          error={!!errors.name}
-          errorMessage={errors.name}
+          error={nameError}
+          errorMessage={nameMessage}
         />
         {/* 이메일 */}
         <SignUpInput
           label="이메일"
-          value={form.email}
-          onChange={(e) => handleChange("email", e.target.value)}
+          value={email}
+          onChange={(e) => {
+            setEmail(e.target.value);
+            setEmailError(!checkEmailValidation(e.target.value));
+            setEmailMessage("이메일 형식이 올바르지 않습니다.");
+          }}
           placeholder="이메일을 입력해주세요"
           maxLength={30}
-          error={!!errors.email}
-          errorMessage={errors.email}
+          error={emailError}
+          errorMessage={emailMessage}
         />
         {/* 비밀번호 */}
         <SignUpInput
           label="비밀번호"
-          value={form.password}
-          onChange={(e) => handleChange("password", e.target.value)}
+          value={password}
+          onChange={(e) => setPassword(e.target.value)}
           placeholder="영문자,숫자,특수문자를 포함한 8~20자"
           maxLength={20}
-          error={!!errors.password}
-          errorMessage={errors.password}
+          error={!!passwordErrorMessage}
+          errorMessage={passwordErrorMessage}
           type="password"
         />
         <SignUpInput
           label="비밀번호 확인"
-          value={form.confirmPassword}
-          onChange={(e) => handleChange("confirmPassword", e.target.value)}
+          value={confirmPassword}
+          onChange={(e) => setConfirmPassword(e.target.value)}
           placeholder="비밀번호를 확인해주세요"
           maxLength={20}
-          error={!!errors.confirmPassword}
-          errorMessage={errors.confirmPassword}
+          error={!!confirmPasswordErrorMessage}
+          errorMessage={confirmPasswordErrorMessage}
           type="password"
           onKeyDown={handleKeyDown}
         />
