@@ -15,7 +15,7 @@ export default function EmptyState({ children }: Props) {
         width={150}
         height={150}
       />
-      <Txt weight="medium" size={18} className="text-gray-aaa">
+      <Txt weight="medium" size={16} className="text-gray-aaa">
         {children}
       </Txt>
     </div>
