@@ -13,10 +13,13 @@ type PointEarnProps = {
 
 /**
  * 포인트 적립을 다루는 트랜잭션
+ * point가 1이상일 경우(얻은 포인트가 있음), pointPop 애니메이션 발생
  * @param letterId
  * @param soldierId
+ * @param senderId
+ * @param receiverId
+ * @returns point
  * @throws letterId를 가진 편지가 DB에 존재하지 않을 때
- * point가 1이상일 경우(얻은 포인트가 있음), pointPop 애니메이션 발생
  */
 export const handleEarnPoint = async ({
   letterId,
@@ -27,53 +30,33 @@ export const handleEarnPoint = async ({
   try {
     const result = await prisma.$transaction(async (tx) => {
       //1. 편지 읽은 날짜 업데이트
-      const readResult = await postReadDate(letterId, tx);
+      const { updated } = await postReadDate(letterId, tx);
 
-      //1-1. 이미 읽었던 편지인 경우
-      if (!readResult.updated) {
-        return {
-          point: 0,
-        };
-      }
+      //1-1. 이미 읽은 편지인 경우
+      if (!updated) return { point: 0 };
 
-      //2. 적립 가능 여부 확인
-      const earnableResult = await getPointEarnability(
+      //2. 포인트 적립 가능 여부 확인
+      const { earnability } = await getPointEarnability(
         senderId,
         receiverId,
         tx
       );
 
-      const { earnability } = earnableResult;
-
       //2-1. 포인트 적립 조건 불충족
-      if (!earnability) {
-        return {
-          point: 0,
-        };
-      }
+      if (!earnability) return { point: 0 };
 
       //3. 적립 액션
-      const earnResult = await postEarnedPoint(soldierId, tx);
-
-      const { point } = earnResult;
+      const { point } = await postEarnedPoint(soldierId, tx);
 
       //3-1. 경험치가 덜 차서 포인트 적립 불가
-      if (point === 0) {
-        return {
-          point: 0,
-        };
-      }
+      if (!point) return { point: 0 };
 
-      //3-2. 경험치 다 차서 적립까지 성공 후, success true와 적립된 포인트 반환하기
-      return {
-        point,
-      };
+      //3-2. 경험치 다 차서 적립까지 성공 후, 적립된 포인트 반환하기
+      return { point };
     });
     return result;
   } catch {
-    return {
-      point: 0,
-    };
+    return { point: 0 };
   }
 };
 
@@ -88,7 +71,7 @@ const postReadDate = async (letterId: number, tx: Prisma.TransactionClient) => {
     throw new Error(ERROR_MESSAGES.LETTER.ID_IS_NUMBER);
   }
 
-  const res = await tx.letter.updateMany({
+  const { count } = await tx.letter.updateMany({
     where: {
       letterId,
       readDate: null,
@@ -96,12 +79,8 @@ const postReadDate = async (letterId: number, tx: Prisma.TransactionClient) => {
     data: { readDate: new Date() },
   });
 
-  const { count } = res;
-
-  //1. updateMany 성공적 실행, 안 읽은 편지라면 updated true 이미 읽었다면 false
-  return {
-    updated: count > 0,
-  };
+  // updateMany 성공적 실행, 안 읽은 편지라면 updated true 이미 읽었다면 false
+  return { updated: count > 0 };
 };
 
 /**
@@ -178,14 +157,12 @@ const postEarnedPoint = async (
 
   const randomPoint = Math.floor(Math.random() * 1000) + 1;
 
-  const createdPoint = await tx.point.create({
+  const { point } = await tx.point.create({
     data: {
       point: randomPoint,
       soldierId,
     },
   });
-
-  const { point } = createdPoint;
 
   return { point };
 };

@@ -4,14 +4,17 @@ import { useRouter } from "next/navigation";
 import { useSession } from "next-auth/react";
 import { startTransition, useState } from "react";
 import { useToast } from "@/contexts/toast/ToastContext";
-import { getFirstFollow, deleteFriend } from "@/lib/actions/friend-actions";
-import { FriendProfile } from "@/types/common/profile";
+import {
+  getFirstFollow,
+  deleteFriend,
+  getFriendsList,
+} from "@/lib/actions/friend-actions";
 import EmptyState from "./EmptyList";
 import { PrimaryButton, Txt } from "./atoms";
 import { AddFriendModal, FriendProfileCircle, Modal } from "./common";
 
 type Props = {
-  friends: FriendProfile[];
+  friends: Awaited<ReturnType<typeof getFriendsList>>["data"];
 };
 
 export default function FriendManageList({ friends }: Props) {
@@ -68,7 +71,7 @@ export default function FriendManageList({ friends }: Props) {
         </Modal>
       )}
       {/* 친구 목록  */}
-      {friends.length > 0 ? (
+      {friends && friends.length > 0 ? (
         friends.map((item) => (
           <div key={item.followId}>
             <div className="flex flex-row items-center justify-between pt-3 pb-5 pl-7 pr-10">

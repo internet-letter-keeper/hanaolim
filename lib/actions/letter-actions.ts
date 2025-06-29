@@ -53,8 +53,7 @@ export const getLetterDetail = async ({
 };
 
 /**
- *
-// 즐겨찾기 추가 삭제 api
+ * 즐겨찾기 추가 삭제 api
  * @param letterId
  * @param userId
  * @usage 편지 보관함

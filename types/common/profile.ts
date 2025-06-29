@@ -23,10 +23,3 @@ export type SoldierUserInfo = {
   letterExp: number;
   userId: number;
 };
-
-/**
- * 친구 프로필 원형 아이콘
- */
-export type FriendProfile = {
-  followId: number;
-} & SoldierProfile;
