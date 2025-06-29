@@ -7,9 +7,8 @@ import { useToast } from "@/contexts/toast/ToastContext";
 import { getFirstFollow, deleteFriend } from "@/lib/actions/friend-actions";
 import { FriendProfile } from "@/types/common/profile";
 import EmptyState from "./EmptyState";
-import { Txt } from "./atoms";
-import { Modal } from "./common";
-import FriendProfileCircle from "./common/FriendProfileCircle";
+import { PrimaryButton, Txt } from "./atoms";
+import { AddFriendModal, FriendProfileCircle, Modal } from "./common";
 
 type Props = {
   friends: FriendProfile[];
@@ -18,6 +17,9 @@ type Props = {
 export default function FriendManageList({ friends }: Props) {
   const { data: session, update } = useSession();
   const userId = session?.user.userId;
+
+  const [isAddFriendModalOpened, setAddFriendModalOpened] =
+    useState<boolean>(false);
 
   const [isModalOpened, setModalOpened] = useState<boolean>(false);
   const [selectedFollowId, setSelectedFollowId] = useState<number | null>(null);
@@ -69,7 +71,7 @@ export default function FriendManageList({ friends }: Props) {
       {friends.length > 0 ? (
         friends.map((item) => (
           <div key={item.followId}>
-            <div className="flex flex-row items-center justify-between pt-[12px] pb-[20px] px-7">
+            <div className="flex flex-row items-center justify-between pt-3 pb-5 pl-7 pr-10">
               <FriendProfileCircle isRowLayout profile={item} />
               <button
                 className="flex border-[1px] border-gray-353 px-2 py-1 rounded-[5px] mt-[8px]"
@@ -84,9 +86,19 @@ export default function FriendManageList({ friends }: Props) {
           </div>
         ))
       ) : (
-        <EmptyState>
-          친구 목록이 비어있어요 <br /> 친구를 추가하고 편지를 주고받아요!
-        </EmptyState>
+        <div className="flex flex-col justify-center items-center gap-6">
+          {isAddFriendModalOpened && (
+            <AddFriendModal closeModal={() => setAddFriendModalOpened(false)} />
+          )}
+          <EmptyState>
+            친구 목록이 비어있어요 <br /> 친구를 추가하고 편지를 주고받아요!
+          </EmptyState>
+          <PrimaryButton
+            title="친구 추가하기"
+            className="py-2 px-5 w-fit font-bold"
+            onClick={() => setAddFriendModalOpened(true)}
+          />
+        </div>
       )}
     </div>
   );

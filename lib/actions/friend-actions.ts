@@ -62,17 +62,11 @@ export const postFriend = async (code: string, userId: number) => {
  * @usage 관물대, 친구 관리
  * @param userId
  * @returns userId의 친구 목록
- * @throws userId가 숫자 형식이 아닐 때
  * @throws userId를 가진 유저가 DB에 없을 때
  */
 
 export const getFriendsList = async (userId: number) => {
   try {
-    // userId가 숫자 형식인지 확인
-    if (typeof userId !== "number" || Number.isNaN(userId)) {
-      return { success: false, message: ERROR_MESSAGES.DATA.USER_ID_NUMBER };
-    }
-
     // DB에 있는 유저인지 확인
     const res = await isUserExists(userId);
 
