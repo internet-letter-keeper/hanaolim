@@ -43,8 +43,10 @@ export const handleEarnPoint = async ({
         tx
       );
 
+      const { earnability } = earnableResult;
+
       //2-1. 포인트 적립 조건 불충족
-      if (!earnableResult.earnability) {
+      if (!earnability) {
         return {
           point: 0,
         };
@@ -53,8 +55,10 @@ export const handleEarnPoint = async ({
       //3. 적립 액션
       const earnResult = await postEarnedPoint(soldierId, tx);
 
+      const { point } = earnResult;
+
       //3-1. 경험치가 덜 차서 포인트 적립 불가
-      if (earnResult.point === 0) {
+      if (point === 0) {
         return {
           point: 0,
         };
@@ -62,7 +66,7 @@ export const handleEarnPoint = async ({
 
       //3-2. 경험치 다 차서 적립까지 성공 후, success true와 적립된 포인트 반환하기
       return {
-        point: earnResult.point,
+        point,
       };
     });
     return result;
@@ -92,9 +96,11 @@ const postReadDate = async (letterId: number, tx: Prisma.TransactionClient) => {
     data: { readDate: new Date() },
   });
 
+  const { count } = res;
+
   //1. updateMany 성공적 실행, 안 읽은 편지라면 updated true 이미 읽었다면 false
   return {
-    updated: res.count > 0,
+    updated: count > 0,
   };
 };
 
@@ -165,14 +171,12 @@ const postEarnedPoint = async (
   //2. 경험치가 10으로 나누어지는 경우 포인트 적립
   const { letterExp } = updatedExp;
 
-  const getRandomPoint = () => Math.floor(Math.random() * 1000) + 1;
-
   //2-1. 나누어 떨어지니까 난수 발생해서 포인트 적립 (안 나누어 떨어지면 0)
   if (letterExp % 10 !== 0) {
     return { point: 0 };
   }
 
-  const randomPoint = getRandomPoint();
+  const randomPoint = Math.floor(Math.random() * 1000) + 1;
 
   const createdPoint = await tx.point.create({
     data: {
@@ -181,5 +185,7 @@ const postEarnedPoint = async (
     },
   });
 
-  return { point: createdPoint.point };
+  const { point } = createdPoint;
+
+  return { point };
 };

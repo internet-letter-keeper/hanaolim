@@ -120,7 +120,7 @@ export default function LetterModal({ letterId, onHandleModal }: Props) {
         ref={scrollRef}
         className={cn(
           "absolute top-1/2 left-1/2 -translate-x-1/2 -translate-y-1/2",
-          "w-11/12 sm:w-20 p-6 bg-white-fff rounded-[10px] ",
+          "w-11/12 sm:w-[22rem] p-6 bg-white-fff rounded-[10px]",
           "flex flex-col transition-all duration-[500ms] ease-in-out overflow-auto scrollbar-hide",
           letter ? "max-h-[66vh] opacity-100" : "max-h-[150px] opacity-0"
         )}
