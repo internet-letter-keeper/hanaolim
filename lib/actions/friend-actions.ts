@@ -212,9 +212,9 @@ export const patchStatusMessage = async (
 };
 
 /**
- * 나의 첫번쨰 팔로우 목록을 보여줌
+ * 나의 첫 번쨰 팔로우 군인을 보여줌
  * @param userId
- * @returns 첫번째 follow
+ * @returns 첫 번째 follow 군인
  */
 export const getFirstFollow = async (userId: number) => {
   const follow = await prisma.follow.findFirst({
@@ -223,56 +223,6 @@ export const getFirstFollow = async (userId: number) => {
   });
 
   return follow === null ? null : follow;
-};
-
-/**
- * 코드로 친구 추가
- * @param code
- * @param userId
- * @returns success 여부
- * @returns 유효한 코드가 아닐 때 "코드를 다시 확인해주세요"
- * @returns 이미 친구일 때 "이미 친구입니다"
- */
-export const postFriendbyId = async (soldierNum: number, userId: number) => {
-  try {
-    // code와 매칭되는 군인이 있는지 확인
-    const soldierId =
-      (
-        await prisma.soldier.findUnique({
-          where: { soldierId: soldierNum },
-          select: { soldierId: true },
-        })
-      )?.soldierId ?? null;
-
-    if (!soldierId) {
-      return { success: false, message: ERROR_MESSAGES.FRIENDS.INVALID_CODE };
-    }
-
-    // 이미 친구인지 확인
-    const exists = await prisma.follow.findFirst({
-      where: { soldierId, userId },
-    });
-
-    if (exists) {
-      return { success: false, message: ERROR_MESSAGES.FRIENDS.ALREADY_FRIEND };
-    }
-
-    const follow = await prisma.follow.create({
-      data: { soldierId, userId },
-      select: { followId: true, userId: true, soldierId: true },
-    });
-
-    return {
-      success: true,
-      message: SUCCESS_MESSAGES.FRIENDS.ADD_SUCCESS,
-      follow: follow,
-    };
-  } catch {
-    return {
-      success: false,
-      message: ERROR_MESSAGES.FRIENDS.ADD_FAILED,
-    };
-  }
 };
 
 /**

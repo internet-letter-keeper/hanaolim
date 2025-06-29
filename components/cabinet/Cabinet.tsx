@@ -1,29 +1,23 @@
 "use client";
 
 import Image from "next/image";
-import { useRouter, useSearchParams } from "next/navigation";
 import { useSession } from "next-auth/react";
-import { useEffect, useState } from "react";
+import { useState } from "react";
 import { Txt } from "@/components/atoms";
 import { ICON_POSITION } from "@/constants/icons";
 import { useToast } from "@/contexts/toast/ToastContext";
-import { postFriendbyId } from "@/lib/actions/friend-actions";
 import { getLettersByUserId } from "@/lib/actions/letter-actions";
 import { getIconInfoByIconId } from "@/utils/icon";
 import { NewIcon } from "../common";
 import LetterModal from "../letters/LetterModal";
 
 type Props = {
-  userId: number;
   soldierId: number;
   letters: Awaited<ReturnType<typeof getLettersByUserId>>["data"];
 };
 
-export default function Cabinet({ userId, soldierId, letters }: Props) {
-  const { data, update } = useSession();
-
-  const loginUserId = data?.user.userId;
-
+export default function Cabinet({ soldierId, letters }: Props) {
+  const { data } = useSession();
   const loginSoldier = data?.user.soldier;
 
   const isMyCabinet = loginSoldier
@@ -57,23 +51,6 @@ export default function Cabinet({ userId, soldierId, letters }: Props) {
     // 읽자마자 'New' 아이콘 숨김 처리
     setOptimisticallyReadIds((prev) => [...prev, letterId]);
   };
-
-  const searchParams = useSearchParams();
-  const addFollow = searchParams.get("add");
-  const currentPage = searchParams.get("page") ?? "1";
-
-  const router = useRouter();
-
-  useEffect(() => {
-    (async () => {
-      if (addFollow === "true" && loginUserId && !data.user.follow) {
-        const { follow } = await postFriendbyId(soldierId, loginUserId);
-        await update({ ...data?.user, follow });
-
-        if (data.user.isSocial) router.refresh();
-      }
-    })();
-  }, [addFollow, loginUserId, userId, currentPage]);
 
   return (
     <div className="relative size-full">
