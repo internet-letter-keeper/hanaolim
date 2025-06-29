@@ -22,23 +22,9 @@ export default async function FriendsList({ soldierId }: Props) {
       }
     : null;
 
-  // if (!session) return null;
-
-  // TODO: 미로그인일 때 쿼리 안 날리게
-
-  // let friendsList = [];
-
-  const { success, message, data } = session?.user?.userId
+  const { data } = session?.user?.userId
     ? await getFriendsList(+session.user.userId)
     : {};
-
-  // const { success, message, data } = await getFriendsList(+session.user.userId);
-
-  // if (!success) {
-  //   throw new Error(message);
-  // }
-
-  // const friendsList = data!;
 
   return (
     <div className="overflow-x-auto -mx-4 px-4 [&::-webkit-scrollbar]:hidden">
@@ -46,7 +32,7 @@ export default async function FriendsList({ soldierId }: Props) {
         {/* 친구 추가 버튼 */}
         <AddFriendBtn soldierId={soldierId} />
 
-        {/* 군인이면 내 프로필도 띄우기 */}
+        {/* 군인이 로그인했으면 군인 본인의 프로필도 띄우기 */}
         {myProfile && (
           <FriendProfileCircle
             profile={myProfile}

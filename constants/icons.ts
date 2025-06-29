@@ -1,4 +1,4 @@
-import { Icon, IconPosition } from "@/types/common/icons";
+import { Icon } from "@/types/common/icons";
 
 export const ICONS: Icon[] = [
   {
@@ -45,35 +45,12 @@ export const ICONS: Icon[] = [
   },
 ];
 
-const commonIconPosition = "absolute w-[20%] h-[12%] ";
-
-export const ICON_POSITION: IconPosition[] = [
-  {
-    positionId: 0,
-    iconPosition: commonIconPosition + "top-[25%] left-[18%]",
-  },
-  {
-    positionId: 1,
-    iconPosition: commonIconPosition + "top-[7%] left-[52%]",
-  },
-  {
-    positionId: 2,
-    iconPosition: commonIconPosition + "top-[59%] left-[48%]",
-  },
-  {
-    positionId: 3,
-    iconPosition: commonIconPosition + "top-[74%] left-[16%]",
-  },
-  {
-    positionId: 4,
-    iconPosition: commonIconPosition + "top-[7%] left-[16%]",
-  },
-  {
-    positionId: 5,
-    iconPosition: commonIconPosition + "top-[50%] left-[22%]",
-  },
-  {
-    positionId: 6,
-    iconPosition: commonIconPosition + "top-[7%] left-[33%]",
-  },
+export const ICON_POSITION = [
+  "top-[26%] left-[16%]",
+  "top-[5%] left-[54%]",
+  "top-[61%] left-[48%]",
+  "top-[78%] left-[10%]",
+  "top-[5%] left-[10%]",
+  "top-[48%] left-[18%]",
+  "top-[6%] left-[31%]",
 ];

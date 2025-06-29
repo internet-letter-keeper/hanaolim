@@ -24,7 +24,7 @@ export default function AddFriendBtn({ soldierId }: Props) {
 
   const userId = data?.user.userId;
 
-  // const mySoldierCode = data?.user.soldier.code;
+  const isSoldier = data?.user.soldier;
 
   const [isModalOpened, setModalOpened] = useState<boolean>(false);
 
@@ -41,10 +41,10 @@ export default function AddFriendBtn({ soldierId }: Props) {
   const addFriendHandler = async () => {
     const typedCodeValue = soldierCodeRef.current?.value;
 
-    // if (typedCodeValue === mySoldierCode) {
-    //   showToast("나의 코드예요", toastPosition, "error");
-    //   return;
-    // }
+    if (isSoldier && isSoldier.code === typedCodeValue) {
+      showToast("나의 코드예요", toastPosition, "error");
+      return;
+    }
 
     if (typedCodeValue && userId) {
       const { success, message } = await postFriend(typedCodeValue, userId);
