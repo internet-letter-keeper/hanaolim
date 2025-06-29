@@ -24,7 +24,12 @@ export const getLetterDetail = async ({
 }: LetterDetailProp) => {
   try {
     const letter = await prisma.letter.findFirst({
-      where: isReply ? { parentLetterId: letterId } : { letterId },
+      where: isReply
+        ? {
+            parentLetterId: letterId,
+            OR: [{ senderId: userId }, { receiverId: userId }],
+          }
+        : { letterId, OR: [{ senderId: userId }, { receiverId: userId }] },
       include: {
         Favorite: true,
         User_Letter_receiverIdToUser: { select: { userName: true } },
@@ -35,6 +40,7 @@ export const getLetterDetail = async ({
     const hasReplyLetter = await prisma.letter.findFirst({
       where: {
         parentLetterId: letterId,
+        OR: [{ senderId: userId }, { receiverId: userId }],
       },
     });
 

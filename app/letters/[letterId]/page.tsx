@@ -23,12 +23,20 @@ export default function LetterDetailPage() {
 
   const letterId = Number(rawLetterId);
 
+  if (Number.isNaN(letterId)) {
+    throw new Error(ERROR_MESSAGES.LETTER.ID_IS_NUMBER);
+  }
+
   const [letter, setLetter] =
     useState<Awaited<ReturnType<typeof getLetterDetail>>["data"]>();
   const [reply, setReply] =
     useState<Awaited<ReturnType<typeof getLetterDetail>>["data"]>();
 
   const { data } = useSession();
+
+  if (!data) {
+    throw new Error(ERROR_MESSAGES.LETTER.NOT_FOUND);
+  }
 
   const userId = data?.user.userId;
   const soldierId = data?.user.soldier.soldierId;
@@ -47,6 +55,10 @@ export default function LetterDetailPage() {
         userId,
         isReply: true,
       });
+
+      if (!data) {
+        throw new Error(ERROR_MESSAGES.LETTER.NOT_FOUND);
+      }
 
       setLetter(data);
       setReply(replyData);
