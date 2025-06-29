@@ -12,6 +12,7 @@ import { handleEarnPoint } from "@/lib/actions/earn-point-actions";
 import {
   getLetterDetail,
   patchUserReadDate,
+  revalidateLetters,
 } from "@/lib/actions/letter-actions";
 
 export default function LetterDetailPage() {
@@ -50,6 +51,7 @@ export default function LetterDetailPage() {
 
       // 편지 데이터 가져오기
       const { data } = await getLetterDetail({ letterId, userId });
+
       const { data: replyData } = await getLetterDetail({
         letterId,
         userId,
@@ -69,12 +71,15 @@ export default function LetterDetailPage() {
         //TODO: result 리턴값 통일 후 구조분해할당까지
         const result = await handleEarnPoint({ letterId, soldierId });
 
+        if (result) await revalidateLetters();
+
         if (result.earn && result.bonus > 0) {
           setEarnedBonus(result.bonus);
           setShowPoint(true);
         }
       } else {
-        await patchUserReadDate(letterId, userId);
+        const { success } = await patchUserReadDate(letterId, userId);
+        if (success) await revalidateLetters();
       }
     })();
   }, [letterId, userId, soldierId]);

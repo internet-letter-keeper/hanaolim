@@ -46,15 +46,13 @@ export const getLetterDetail = async ({
 
     const result = {
       ...letter,
-      receiverName: letter?.User_Letter_receiverIdToUser?.userName,
-      senderName: letter?.User_Letter_senderIdToUser?.userName,
+      receiverName: letter?.User_Letter_receiverIdToUser.userName,
+      senderName: letter?.User_Letter_senderIdToUser.userName,
       isFavorite: letter?.Favorite.some(
         (f) => f.userId === userId && f.isFavorite
       ),
       hasReply: !!hasReplyLetter,
     };
-
-    if (result) revalidatePath("/letters");
 
     return { ok: true, data: result };
   } catch {
@@ -364,4 +362,11 @@ export const patchUserReadDate = async (letterId: number, userId: number) => {
       updated: false,
     };
   }
+};
+
+/**
+ * 편지 보관함에서 목록으로 돌아갔을 때 읽음 상태 새로고침을 위함
+ */
+export const revalidateLetters = async () => {
+  revalidatePath("/letters");
 };
