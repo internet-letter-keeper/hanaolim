@@ -81,7 +81,7 @@ export default function LetterDetailPage() {
 
   return (
     <div className="flex flex-col items-center gap-4">
-      <BasicHeader revalidateLetter className="w-full" />
+      <BasicHeader className="w-full" />
 
       {showPoint && (
         <PigSplash point={earnedBonus} onSkip={() => setShowPoint(false)} />

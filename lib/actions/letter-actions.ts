@@ -53,6 +53,9 @@ export const getLetterDetail = async ({
       ),
       hasReply: !!hasReplyLetter,
     };
+
+    if (result) revalidatePath("/letters");
+
     return { ok: true, data: result };
   } catch {
     return { ok: false, data: null };
@@ -329,10 +332,6 @@ export const getFilteredLetters = async ({
   } catch {
     return { ok: false, error: "편지 필터링에 실패했습니다." };
   }
-};
-
-export const revalidateLetters = async () => {
-  revalidatePath("/letters");
 };
 
 /**
