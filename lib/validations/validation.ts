@@ -13,7 +13,7 @@ export const checkNameValidation = (name: string | "") => {
   if (!koreanOnlyRegex.test(name)) {
     return {
       valid: false,
-      message: "영어, 숫자, 특수문자, 독립된(자음, 모음) 사용 불가합니다",
+      message: "영어, 숫자, 특수문자, 독립된 자음/모음 사용 불가합니다",
     };
   }
 
