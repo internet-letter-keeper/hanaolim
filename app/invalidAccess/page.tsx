@@ -4,8 +4,9 @@ import Image from "next/image";
 import { useRouter } from "next/navigation";
 import { PrimaryButton, Txt } from "@/components/atoms";
 
-export default function NotFound() {
+export default function invalidAccess() {
   const router = useRouter();
+
   const handleGoBack = () => router.back();
 
   return (
@@ -17,10 +18,10 @@ export default function NotFound() {
         height={100}
       />
       <Txt size={60} weight="heavy" className="text-green-49d">
-        404
+        403
       </Txt>
       <Txt size={20} weight="bold">
-        앗! 길을 잃었어요..
+        앗! 접근 권한이 없어요
       </Txt>
 
       <Txt size={18} weight="medium" className="text-green-49d mt-15">
@@ -28,7 +29,7 @@ export default function NotFound() {
       </Txt>
 
       <PrimaryButton
-        title="이전 화면으로"
+        title="뒤로가기"
         onClick={handleGoBack}
         rounded="sm"
         textSize={16}

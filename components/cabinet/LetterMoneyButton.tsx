@@ -81,7 +81,9 @@ export default function LetterMoneyButton({ soldierId, soldierName }: Props) {
   };
 
   const navigateToSignIn = () =>
-    router.push(`/write/${soldierId}?name=${soldierName}`);
+    router.push(
+      `/auth/signIn?callbackUrl=${encodeURIComponent(window.location.origin + window.location.pathname)}`
+    );
 
   return (
     <div className="absolute bottom-6 right-2 z-50 flex flex-col items-center gap-3">

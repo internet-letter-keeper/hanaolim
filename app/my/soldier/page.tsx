@@ -4,8 +4,7 @@ import { useRouter } from "next/navigation";
 import { useSession } from "next-auth/react";
 import { useState, useEffect } from "react";
 import { PrimaryButton, Txt } from "@/components/atoms";
-import { BasicHeader } from "@/components/common";
-import DatePicker from "@/components/common/DatePicker";
+import { BasicHeader, DatePicker } from "@/components/common";
 import { updateSoldierDates } from "@/lib/actions/soldier-actions";
 import { toKoreaTime } from "@/utils/date";
 

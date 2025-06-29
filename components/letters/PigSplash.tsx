@@ -38,6 +38,7 @@ export default function PigSplash({ onSkip, point }: PigSplashProps) {
           width={300}
           height={300}
           className="w-2/5 object-contain"
+          unoptimized
         />
 
         <div className="text-center">
