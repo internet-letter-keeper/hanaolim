@@ -8,13 +8,15 @@ import { Modal } from "@/components/common";
 import { STATUS_MAX_COUNT } from "@/constants/limitContent";
 import { useToast } from "@/contexts/toast/ToastContext";
 import { patchStatusMessage } from "@/lib/actions/friend-actions";
+import { SoldierUserInfo } from "@/types/common/profile";
 
 type Props = {
-  soldierId: number;
-  statusMessage: string | null;
+  soldierInfo: SoldierUserInfo;
 };
 
-export default function EditStatusMsgBtn({ soldierId, statusMessage }: Props) {
+export default function EditStatusMsgBtn({ soldierInfo }: Props) {
+  const { soldierId, statusMessage } = soldierInfo;
+
   const [isModalOpened, setModalOpened] = useState<boolean>(false);
   const [count, setCount] = useState<number>(0);
   const { showToast } = useToast();

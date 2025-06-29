@@ -9,6 +9,7 @@ import { useToast } from "@/contexts/toast/ToastContext";
 import { getAccountNumBySoldierId } from "@/lib/actions/friend-actions";
 import { cn } from "@/lib/utils";
 import { Txt } from "../atoms";
+import { Modal } from "../common";
 
 type SoldierSupportProps = {
   type: "coin" | "letter";
@@ -43,32 +44,58 @@ export default function LetterMoneyButton({ soldierId, soldierName }: Props) {
 
   const { data } = useSession();
 
+  const isLogggedIn = !!data?.user.userId;
+
   const { showToast } = useToast();
 
   const [isOpen, setIsOpen] = useState(false);
 
+  const [isModalOpened, setModalOpened] = useState<boolean>(false);
+
+  const closeModal = () => setModalOpened(false);
+
   const onCoinClick = async () => {
-    // 소셜로그인이면 soldierId 해당 군인의 계좌번호 복사, 이메일 로그인이면 하나원큐로 이동
-    if (data?.user.isSocial) {
+    // 미로그인, 소셜로그인이면 군인의 계좌번호 복사
+    // 이메일 로그인이면 하나원큐로 이동
+    if (!data?.user || data?.user.isSocial) {
       const { success, message, accountNum } =
         await getAccountNumBySoldierId(soldierId);
+
       if (success) {
         navigator.clipboard.writeText(accountNum!);
         showToast("계좌번호가 복사되었습니다");
       }
+
       if (!success) {
         showToast(message!, "", "error");
       }
-    } else {
-      router.push("/hanaBank");
+      return;
     }
+
+    router.push("/hanaBank");
   };
 
-  const onLetterClick = () =>
+  const onLetterClick = () => {
+    if (isLogggedIn) router.push(`/write/${soldierId}?name=${soldierName}`);
+    else setModalOpened(true);
+  };
+
+  const navigateToSignIn = () =>
     router.push(`/write/${soldierId}?name=${soldierName}`);
 
   return (
     <div className="absolute bottom-6 right-2 z-50 flex flex-col items-center gap-3">
+      {isModalOpened && !isLogggedIn && (
+        <Modal
+          greenBtnText="로그인"
+          whiteBtnText="닫기"
+          onClickGreenBtn={navigateToSignIn}
+          onClickWhiteBtn={closeModal}
+        >
+          로그인 후 이용해주세요
+        </Modal>
+      )}
+
       {/* 열렸을 때 나오는 용돈/편지 버튼들 */}
       <div
         className={`transition-all duration-300 ${

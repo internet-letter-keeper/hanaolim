@@ -16,7 +16,6 @@ import { isUserExists } from "./auth-actions";
  * @returns 이미 친구일 때 "이미 친구입니다"
  */
 export const postFriend = async (code: string, userId: number) => {
-  await requireAuth();
   try {
     // code와 매칭되는 군인이 있는지 확인
     const soldierId =
@@ -50,11 +49,10 @@ export const postFriend = async (code: string, userId: number) => {
       message: "친구가 추가되었습니다",
       follow: follow,
     };
-  } catch (error) {
+  } catch {
     return {
       success: false,
       message: "친구 추가에 실패했습니다. 다시 시도해주세요.",
-      error,
     };
   }
 };
@@ -69,7 +67,6 @@ export const postFriend = async (code: string, userId: number) => {
  */
 
 export const getFriendsList = async (userId: number) => {
-  await requireAuth();
   try {
     // userId가 숫자 형식인지 확인
     if (typeof userId !== "number" || Number.isNaN(userId)) {
@@ -131,11 +128,10 @@ export const getFriendsList = async (userId: number) => {
       message: SUCCESS_MESSAGES.COMMON.SUCCESS,
       data: friendsData,
     };
-  } catch (error) {
+  } catch {
     return {
       success: false,
       message: ERROR_MESSAGES.DATA.FETCH_FAILED,
-      error,
     };
   }
 };
@@ -147,7 +143,6 @@ export const getFriendsList = async (userId: number) => {
  * @throws soldierId에 해당하는 계좌번호를 찾을 수 없을 때
  */
 export const getAccountNumBySoldierId = async (soldierId: number) => {
-  await requireAuth();
   const res = await prisma.soldier.findUnique({
     where: { soldierId },
     select: { Account: { select: { accountNum: true } } },
@@ -165,7 +160,6 @@ export const getAccountNumBySoldierId = async (soldierId: number) => {
  * @returns Soldier 테이블과 User테이블의 userName, isSoldier, isSocial
  */
 export const getUserBySoldierId = async (soldierId: number) => {
-  await requireAuth();
   try {
     const soldierInfo = await prisma.soldier.findUnique({
       where: { soldierId },
@@ -190,11 +184,10 @@ export const getUserBySoldierId = async (soldierId: number) => {
       message: SUCCESS_MESSAGES.COMMON.SUCCESS,
       data: soldierInfo,
     };
-  } catch (error) {
+  } catch {
     return {
       success: false,
       message: ERROR_MESSAGES.DATA.FETCH_FAILED,
-      error,
     };
   }
 };
@@ -216,11 +209,10 @@ export const patchStatusMessage = async (
       data: { statusMessage },
     });
     return { success: true, message: SUCCESS_MESSAGES.COMMON.SUCCESS };
-  } catch (error) {
+  } catch {
     return {
       success: false,
       message: ERROR_MESSAGES.COMMON.UPDATE_FAILED,
-      error,
     };
   }
 };
@@ -231,7 +223,6 @@ export const patchStatusMessage = async (
  * @returns 첫번째 follow
  */
 export const getFirstFollow = async (userId: number) => {
-  await requireAuth();
   const follow = await prisma.follow.findFirst({
     where: { userId },
     select: { followId: true, userId: true, soldierId: true },
@@ -249,7 +240,6 @@ export const getFirstFollow = async (userId: number) => {
  * @returns 이미 친구일 때 "이미 친구입니다"
  */
 export const postFriendbyId = async (soldierNum: number, userId: number) => {
-  await requireAuth();
   try {
     // code와 매칭되는 군인이 있는지 확인
     const soldierId =
@@ -283,11 +273,10 @@ export const postFriendbyId = async (soldierNum: number, userId: number) => {
       message: SUCCESS_MESSAGES.FRIENDS.ADD_SUCCESS,
       follow: follow,
     };
-  } catch (error) {
+  } catch {
     return {
       success: false,
       message: ERROR_MESSAGES.FRIENDS.ADD_FAILED,
-      error,
     };
   }
 };
@@ -306,11 +295,10 @@ export const deleteFriend = async (followId: number) => {
       success: true,
       message: SUCCESS_MESSAGES.FRIENDS.DELETE_SUCCESS,
     };
-  } catch (error) {
+  } catch {
     return {
       success: false,
       message: ERROR_MESSAGES.FRIENDS.DELETE_FAILED,
-      error,
     };
   }
 };

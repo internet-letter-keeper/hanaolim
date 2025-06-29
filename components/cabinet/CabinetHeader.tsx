@@ -1,8 +1,8 @@
 import Image from "next/image";
 import Link from "next/link";
 import { getIsNew } from "@/lib/actions/letter-actions";
+import { auth } from "@/lib/auth";
 import { SoldierUserInfo } from "@/types/common/profile";
-import { requireAuth } from "@/utils/auth";
 import { CopyCodeBtn } from ".";
 import { Txt } from "../atoms";
 import { SidebarHeader, SidebarTrigger } from "../ui/sidebar";
@@ -16,10 +16,13 @@ export default async function CabinetHeader({
   isMyCabinet,
   soldierInfo,
 }: Props) {
-  const session = await requireAuth();
-  const { isNew } = await getIsNew(+session.user.userId);
+  const session = await auth();
 
-  const isSoldier = session.user.isSoldier;
+  const isLoggedIn = !!session?.user;
+
+  const { isNew } = isLoggedIn ? await getIsNew(+session.user.userId) : {};
+
+  const isSoldier = session?.user.isSoldier;
 
   const soldierName = isMyCabinet ? "나" : soldierInfo?.User.userName + "님";
 
@@ -45,9 +48,20 @@ export default async function CabinetHeader({
       {/* 내 관물대일 때 vs 아닐 때 분기처리 */}
       {isMyCabinet && <CopyCodeBtn />}
 
-      <SidebarHeader>
-        <SidebarTrigger isNewMessage={isNew} />
-      </SidebarHeader>
+      {isLoggedIn ? (
+        <SidebarHeader>
+          <SidebarTrigger isNewMessage={isNew} />
+        </SidebarHeader>
+      ) : (
+        <Link
+          href={`/write/${soldierInfo.soldierId}`}
+          className="border border-green-49d py-1 px-4 inline-flex rounded-[5px]"
+        >
+          <Txt weight="cm" className="text-green-49d">
+            로그인
+          </Txt>
+        </Link>
+      )}
     </header>
   );
 }

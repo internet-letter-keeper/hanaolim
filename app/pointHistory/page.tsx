@@ -3,6 +3,7 @@ import EmptyState from "@/components/EmptyList";
 import PointItem from "@/components/PointItem";
 import { Txt } from "@/components/atoms";
 import { BasicHeader } from "@/components/common";
+import { ERROR_MESSAGES } from "@/constants/message";
 import {
   getPointHistory,
   getPointSum,
@@ -14,7 +15,7 @@ export default async function PointHistoryPage() {
 
   const soldierId = session?.user.soldier.soldierId;
 
-  if (!soldierId) return null;
+  if (!soldierId) throw new Error(ERROR_MESSAGES.SOLDIER.NOT_FOUND);
 
   const {
     success: pointSumSuccess,

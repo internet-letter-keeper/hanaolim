@@ -21,10 +21,9 @@ export const getLetterDetail = async ({
   userId,
   isReply,
 }: LetterDetailProp) => {
-  const where = isReply ? { parentLetterId: letterId } : { letterId };
   try {
     const letter = await prisma.letter.findFirst({
-      where,
+      where: isReply ? { parentLetterId: letterId } : { letterId },
       include: {
         Favorite: true,
         User_Letter_receiverIdToUser: { select: { userName: true } },
@@ -32,38 +31,24 @@ export const getLetterDetail = async ({
       },
     });
 
-    const hasReply = await prisma.letter.findFirst({
+    const hasReplyLetter = await prisma.letter.findFirst({
       where: {
         parentLetterId: letterId,
       },
     });
 
-    if (!letter) {
-      return { ok: false, data: null };
-    }
-
-    //TODO: 코드 리팩토링 필요
     const result = {
-      letterId: letter.letterId,
-      nickname: letter.nickname ?? "",
-      content: letter.content,
-      fileUrl: letter.fileUrl ?? undefined,
-      iconId: letter.iconId ?? undefined,
-      createDate: letter.createDate,
-      readDate: letter.readDate,
-      parentLetterId: letter.parentLetterId ?? null,
-      receiverId: letter.receiverId,
-      senderId: letter.senderId,
-      receiverName: letter.User_Letter_receiverIdToUser?.userName,
-      senderName: letter.User_Letter_senderIdToUser?.userName,
-      isFavorite: letter.Favorite.some(
+      ...letter,
+      receiverName: letter?.User_Letter_receiverIdToUser?.userName,
+      senderName: letter?.User_Letter_senderIdToUser?.userName,
+      isFavorite: letter?.Favorite.some(
         (f) => f.userId === userId && f.isFavorite
       ),
-      hasReply,
+      hasReply: !!hasReplyLetter,
     };
     return { ok: true, data: result };
-  } catch (error) {
-    return { ok: false, data: null, error };
+  } catch {
+    return { ok: false, data: null };
   }
 };
 
@@ -104,21 +89,21 @@ export const patchFavorite = async (letterId: number, userId: number) => {
       });
       return { ok: true, isFavorite: true };
     }
-  } catch (error) {
-    console.error("즐겨찾기 실패:", error);
+  } catch {
     return { ok: false, isFavorite: null };
   }
 };
 
 /**
  * 군인이 받은 원본 편지의 개수
- * @param soldierId
- * @returns 받은 원본 편지[]
+ * @param userId 군인의 userId
+ * @returns 받은 원본 편지의 개수
+ * @usage 관물대 페이지네이션
  */
-export const getTotalReceivedNonReplyLettersCnt = async (soldierId: number) =>
+export const getLettersCntByUserId = async (userId: number) =>
   prisma.letter.count({
     where: {
-      receiverId: soldierId,
+      receiverId: userId,
       parentLetterId: null,
     },
   });
@@ -127,17 +112,17 @@ export const getTotalReceivedNonReplyLettersCnt = async (soldierId: number) =>
  * 답장이 아닌 원본 편지만 가져오기, 7개씩 페이지네이션
  * @param userId
  * @param page 페이지네이션. 가져올 페이지
- * @param totalLettersCnt 군인이 받은 편지의 총 개수
+ * @param lettersCnt 군인이 받은 편지의 총 개수
  * @usage 관물대
  * @returns 받은 원본 편지[]
  */
-export const getNonReplyLettersByUserId = async (
+export const getLettersByUserId = async (
   userId: number,
   page: number = 1,
-  totalLettersCnt: number
+  lettersCnt: number
 ) => {
   try {
-    const FIRST_PAGE_SIZE = totalLettersCnt % 7 || 7;
+    const FIRST_PAGE_SIZE = lettersCnt % 7 || 7;
     const PAGE_SIZE = 7;
 
     let skip = 0;
@@ -168,8 +153,8 @@ export const getNonReplyLettersByUserId = async (
         (a, b) => a.createDate.getTime() - b.createDate.getTime()
       ),
     };
-  } catch (error) {
-    return { ok: false, data: null, error };
+  } catch {
+    return { ok: false, data: null };
   }
 };
 
@@ -334,8 +319,7 @@ export const getFilteredLetters = async ({
 
       return { ok: true, data: result };
     }
-  } catch (error) {
-    console.error("[getFilteredLetters]", error);
+  } catch {
     return { ok: false, error: "편지 필터링에 실패했습니다." };
   }
 };
@@ -368,11 +352,10 @@ export const patchUserReadDate = async (letterId: number, userId: number) => {
       success: true,
       updated: res.count > 0,
     };
-  } catch (error) {
+  } catch {
     return {
       success: false,
       updated: false,
-      error,
     };
   }
 };

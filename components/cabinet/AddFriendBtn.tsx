@@ -9,7 +9,11 @@ import { useIsSEPhone } from "@/hooks/useMobile";
 import { postFriend } from "@/lib/actions/friend-actions";
 import { Modal } from "../common";
 
-export default function AddFriendBtn() {
+type Props = {
+  soldierId: number;
+};
+
+export default function AddFriendBtn({ soldierId }: Props) {
   const router = useRouter();
 
   const { showToast } = useToast();
@@ -20,7 +24,7 @@ export default function AddFriendBtn() {
 
   const userId = data?.user.userId;
 
-  // const mySoldierCode = data?.user.soldier.code;
+  const isSoldier = data?.user.soldier;
 
   const [isModalOpened, setModalOpened] = useState<boolean>(false);
 
@@ -37,10 +41,10 @@ export default function AddFriendBtn() {
   const addFriendHandler = async () => {
     const typedCodeValue = soldierCodeRef.current?.value;
 
-    // if (typedCodeValue === mySoldierCode) {
-    //   showToast("나의 코드예요", toastPosition, "error");
-    //   return;
-    // }
+    if (isSoldier && isSoldier.code === typedCodeValue) {
+      showToast("나의 코드예요", toastPosition, "error");
+      return;
+    }
 
     if (typedCodeValue && userId) {
       const { success, message } = await postFriend(typedCodeValue, userId);
@@ -64,7 +68,7 @@ export default function AddFriendBtn() {
     }
   };
 
-  const navigateToSignIn = () => router.push("/auth/signIn");
+  const navigateToSignIn = () => router.push(`/friends/${soldierId}`);
 
   return (
     <>
