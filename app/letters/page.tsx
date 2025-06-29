@@ -25,7 +25,7 @@ export default async function LettersPage({ searchParams }: Props) {
   const query = (params.query as string) ?? "";
   const filter = params.filter;
 
-  const filteredLetters = await getFilteredLetters({
+  const { data, ok } = await getFilteredLetters({
     box,
     userId: currentUserId,
     isFavorite: filter === "favorite",
@@ -33,8 +33,6 @@ export default async function LettersPage({ searchParams }: Props) {
     hasReply: filter === "hasReply",
     query,
   });
-
-  const { data, ok } = filteredLetters;
 
   if (!ok) {
     return <Txt className="text-gray-400">편지를 불러오지 못했어요</Txt>;
@@ -51,11 +49,7 @@ export default async function LettersPage({ searchParams }: Props) {
         </Txt>
         <FilterBtn />
       </div>
-      <LettersList
-        letters={filteredLetters.data}
-        box={box}
-        currentUserId={currentUserId}
-      />
+      <LettersList letters={data} box={box} currentUserId={currentUserId} />
     </div>
   );
 }
