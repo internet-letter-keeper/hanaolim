@@ -1,9 +1,9 @@
+"use server";
+
 import { S3Client } from "@aws-sdk/client-s3";
 import { createPresignedPost } from "@aws-sdk/s3-presigned-post";
 
-export async function POST(req: Request) {
-  const { fileName } = await req.json();
-
+export const getPresignedPost = async (fileName: string) => {
   const s3 = new S3Client({
     region: process.env.NEXT_PUBLIC_AWS_REGION!,
     credentials: {
@@ -22,5 +22,5 @@ export async function POST(req: Request) {
     Expires: 300,
   });
 
-  return Response.json({ ...presignedPost, key });
-}
+  return { ...presignedPost, key };
+};
