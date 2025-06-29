@@ -2,7 +2,7 @@ import { useState, useRef, useEffect } from "react";
 import { uploadedFileType } from "@/types/letters";
 import { uploadToS3 } from "@/utils/upload";
 
-const MAX_FILE_SIZE = 5 * 1024 * 1024; // 5MB FIXME: 고민
+const MAX_FILE_SIZE = 5 * 1024 * 1024; // 5MB
 
 export const useFileUpload = () => {
   const [uploadedFile, setUploadedFile] = useState<uploadedFileType | null>(

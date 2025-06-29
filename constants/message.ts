@@ -30,6 +30,7 @@ export const ERROR_MESSAGES = {
   },
   COMMON: {
     UPDATE_FAILED: "정보 업데이트에 실패했습니다.",
+    SERVER_ERROR: "서버 오류가 발생했습니다. 잠시 후 다시 시도해주세요.",
   },
   SOLDIER: {
     NOT_FOUND: "해당하는 군인을 찾을 수 없습니다.",
@@ -53,5 +54,11 @@ export const ERROR_MESSAGES = {
     ALREADY_FRIEND: "이미 친구입니다.",
     ADD_FAILED: "친구 추가에 실패했습니다. 다시 시도해주세요.",
     DELETE_FAILED: "삭제 도중 문제가 생겼습니다 다시 시도해 주세요",
+  },
+  FILE: {
+    UPLOAD_FAILED: "파일 업로드에 실패했습니다. 다시 시도해주세요.",
+    UNAUTHORIZED_UPLOAD: "업로드 권한이 없습니다. 다시 시도해주세요.",
+    FILE_TOO_LARGE: "파일 크기가 너무 큽니다.",
+    S3_UPLOAD_FAILED: "S3 업로드에 실패했습니다.",
   },
 } as const;
