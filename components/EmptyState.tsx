@@ -8,14 +8,14 @@ type Props = {
 
 export default function EmptyState({ children }: Props) {
   return (
-    <div className="flex flex-col justify-center items-center pt-32">
+    <div className="flex flex-col items-center mt-32">
       <Image
-        src={"/images/byeoldol-sad.svg"}
+        src="/images/byeoldol-sad.svg"
+        alt="별돌이가 슬픈 표정을 짓고 있다"
         width={150}
         height={150}
-        alt={"별돌이가 슬픈 표정을 짓고 있다"}
       />
-      <Txt weight="bold" size={16}>
+      <Txt weight="medium" size={18} className="text-gray-aaa">
         {children}
       </Txt>
     </div>

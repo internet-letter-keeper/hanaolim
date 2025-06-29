@@ -1,6 +1,7 @@
 import Image from "next/image";
 import Link from "next/link";
 import { getFilteredLetters } from "@/lib/actions/letter-actions";
+import EmptyState from "../EmptyState";
 import { Txt } from "../atoms";
 import FavoriteToggle from "./FavoriteToggle";
 
@@ -14,7 +15,7 @@ export default function LettersList({ letters, box, currentUserId }: Props) {
   return (
     <div className="flex flex-col gap-3 pb-8">
       {!letters?.length ? (
-        <Txt className="text-gray-400">조건에 맞는 편지가 없습니다</Txt>
+        <EmptyState>편지가 없어요</EmptyState>
       ) : (
         letters.map(
           ({
