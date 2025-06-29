@@ -2,6 +2,7 @@
 
 import { revalidatePath } from "next/cache";
 import prisma from "@/lib/db";
+import { Prisma } from "../generated/prisma";
 
 type LetterDetailProp = {
   letterId: number;
@@ -23,7 +24,12 @@ export const getLetterDetail = async ({
 }: LetterDetailProp) => {
   try {
     const letter = await prisma.letter.findFirst({
-      where: isReply ? { parentLetterId: letterId } : { letterId },
+      where: isReply
+        ? {
+            parentLetterId: letterId,
+            OR: [{ senderId: userId }, { receiverId: userId }],
+          }
+        : { letterId, OR: [{ senderId: userId }, { receiverId: userId }] },
       include: {
         Favorite: true,
         User_Letter_receiverIdToUser: { select: { userName: true } },
@@ -34,18 +40,20 @@ export const getLetterDetail = async ({
     const hasReplyLetter = await prisma.letter.findFirst({
       where: {
         parentLetterId: letterId,
+        OR: [{ senderId: userId }, { receiverId: userId }],
       },
     });
 
     const result = {
       ...letter,
-      receiverName: letter?.User_Letter_receiverIdToUser?.userName,
-      senderName: letter?.User_Letter_senderIdToUser?.userName,
+      receiverName: letter?.User_Letter_receiverIdToUser.userName,
+      senderName: letter?.User_Letter_senderIdToUser.userName,
       isFavorite: letter?.Favorite.some(
         (f) => f.userId === userId && f.isFavorite
       ),
       hasReply: !!hasReplyLetter,
     };
+
     return { ok: true, data: result };
   } catch {
     return { ok: false, data: null };
@@ -175,7 +183,7 @@ export const getIsNew = async (userId: number) => {
 };
 
 // 필터 작업 -> 내 관물대 / 친구 관물대 + 즐겨찾기, 안읽음, 답장옴
-type GetFilteredLettersParams = {
+type FilteredLettersParams = {
   box: "mine" | "friend";
   userId: number;
   isFavorite?: boolean;
@@ -197,9 +205,9 @@ export const getFilteredLetters = async ({
   isUnread,
   hasReply,
   query,
-}: GetFilteredLettersParams) => {
+}: FilteredLettersParams) => {
   try {
-    const where: any = {
+    const where: Prisma.LetterWhereInput = {
       parentLetterId: null,
     };
 
@@ -324,10 +332,6 @@ export const getFilteredLetters = async ({
   }
 };
 
-export const revalidateLetters = async () => {
-  revalidatePath("/letters");
-};
-
 /**
  * 일반 회원이 편지를 읽었을 경우 읽음 처리
  * @param letterId
@@ -358,4 +362,11 @@ export const patchUserReadDate = async (letterId: number, userId: number) => {
       updated: false,
     };
   }
+};
+
+/**
+ * 편지 보관함에서 목록으로 돌아갔을 때 읽음 상태 새로고침을 위함
+ */
+export const revalidateLetters = async () => {
+  revalidatePath("/letters");
 };

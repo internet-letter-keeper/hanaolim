@@ -6,7 +6,7 @@ import { startTransition, useState } from "react";
 import { useToast } from "@/contexts/toast/ToastContext";
 import { getFirstFollow, deleteFriend } from "@/lib/actions/friend-actions";
 import { FriendProfile } from "@/types/common/profile";
-import EmptyState from "./EmptyList";
+import EmptyState from "./EmptyState";
 import { PrimaryButton, Txt } from "./atoms";
 import { AddFriendModal, FriendProfileCircle, Modal } from "./common";
 

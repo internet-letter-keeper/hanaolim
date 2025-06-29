@@ -4,7 +4,7 @@ import Image from "next/image";
 import { useRouter } from "next/navigation";
 import { PrimaryButton, Txt } from "@/components/atoms";
 
-export default function invalidAccess() {
+export default function InvalidAccessPage() {
   const router = useRouter();
 
   const handleGoBack = () => router.back();

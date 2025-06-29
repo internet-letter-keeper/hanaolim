@@ -1,5 +1,5 @@
 import Link from "next/link";
-import EmptyState from "@/components/EmptyList";
+import EmptyState from "@/components/EmptyState";
 import PointItem from "@/components/PointItem";
 import { Txt } from "@/components/atoms";
 import { BasicHeader } from "@/components/common";
