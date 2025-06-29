@@ -6,10 +6,7 @@ import { PrimaryButton, Txt } from "@/components/atoms";
 
 export default function NotFound() {
   const router = useRouter();
-
-  const handleGoToHome = () => {
-    router.push("/");
-  };
+  const handleGoBack = () => router.back();
 
   return (
     <div className="h-screen flex flex-col justify-center items-center text-center gap-4 px-6">
@@ -31,8 +28,8 @@ export default function NotFound() {
       </Txt>
 
       <PrimaryButton
-        title="홈으로 이동하기"
-        onClick={handleGoToHome}
+        title="이전 화면으로"
+        onClick={handleGoBack}
         rounded="sm"
         textSize={16}
         align="center"
