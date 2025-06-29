@@ -13,10 +13,12 @@ import { handleEarnPoint } from "@/lib/actions/earn-point-actions";
 import {
   getLetterDetail,
   patchUserReadDate,
+  revalidateLetters,
 } from "@/lib/actions/letter-actions";
 
 export default function LetterDetailPage() {
   const { letterId: rawLetterId } = useParams();
+  const { data: session } = useSession();
 
   if (!rawLetterId) {
     throw new Error(ERROR_MESSAGES.LETTER.NOT_FOUND);
@@ -24,15 +26,21 @@ export default function LetterDetailPage() {
 
   const letterId = Number(rawLetterId);
 
+  if (Number.isNaN(letterId)) {
+    throw new Error(ERROR_MESSAGES.LETTER.ID_IS_NUMBER);
+  }
+
   const [letter, setLetter] =
     useState<Awaited<ReturnType<typeof getLetterDetail>>["data"]>();
   const [reply, setReply] =
     useState<Awaited<ReturnType<typeof getLetterDetail>>["data"]>();
 
-  const { data } = useSession();
+  // if (!session) {
+  //   throw new Error(ERROR_MESSAGES.LETTER.NOT_FOUND);
+  // }
 
-  const userId = data?.user.userId;
-  const soldierId = data?.user.soldier.soldierId;
+  const userId = session?.user.userId;
+  const soldierId = session?.user.soldier.soldierId;
 
   const [showPoint, setShowPoint] = useState(false);
   const [earnedBonus, setEarnedBonus] = useState(0);
@@ -43,7 +51,6 @@ export default function LetterDetailPage() {
     (async () => {
       if (!userId) return;
 
-      // 편지 데이터 가져오기
       try {
         const { data } = await getLetterDetail({ letterId, userId });
         const { data: replyData } = await getLetterDetail({
@@ -53,6 +60,10 @@ export default function LetterDetailPage() {
         });
 
         if (!data || !data.senderId || !data.receiverId) throw new Error();
+
+        if (userId !== data?.receiverId && userId !== data?.senderId) {
+          throw new Error(ERROR_MESSAGES.LETTER.NOT_FOUND);
+        }
 
         setLetter(data);
         setReply(replyData);
@@ -73,15 +84,16 @@ export default function LetterDetailPage() {
         } else {
           await patchUserReadDate(letterId, userId);
         }
+        await revalidateLetters();
       } catch {
         showToast(ERROR_MESSAGES.LETTER.NOT_FOUND, "", "error");
       }
     })();
-  }, [letterId, userId, soldierId]);
+  }, [letterId, userId, soldierId, showToast]);
 
   return (
     <div className="flex flex-col items-center gap-4">
-      <BasicHeader revalidateLetter className="w-full" />
+      <BasicHeader className="w-full" />
 
       {showPoint && (
         <PigSplash point={earnedBonus} onSkip={() => setShowPoint(false)} />

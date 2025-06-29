@@ -9,7 +9,7 @@ import {
   deleteFriend,
   getFriendsList,
 } from "@/lib/actions/friend-actions";
-import EmptyState from "./EmptyList";
+import EmptyState from "./EmptyState";
 import { PrimaryButton, Txt } from "./atoms";
 import { AddFriendModal, FriendProfileCircle, Modal } from "./common";
 

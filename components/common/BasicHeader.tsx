@@ -2,7 +2,6 @@
 
 import Image from "next/image";
 import { useRouter } from "next/navigation";
-import { revalidateLetters } from "@/lib/actions/letter-actions";
 import { cn } from "@/lib/utils";
 import { Txt } from "../atoms";
 
@@ -11,7 +10,6 @@ type Props = {
   showBackButton?: boolean;
   backUrl?: string;
   className?: string;
-  revalidateLetter?: boolean;
 };
 
 export default function BasicHeader({
@@ -19,7 +17,6 @@ export default function BasicHeader({
   showBackButton = true,
   backUrl,
   className,
-  revalidateLetter,
 }: Props) {
   const router = useRouter();
 
@@ -27,9 +24,6 @@ export default function BasicHeader({
     if (backUrl) {
       router.push(backUrl);
       return;
-    }
-    if (revalidateLetter) {
-      await revalidateLetters();
     }
     router.back();
   };
