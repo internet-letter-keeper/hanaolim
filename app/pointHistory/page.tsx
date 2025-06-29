@@ -58,8 +58,7 @@ export default async function PointHistoryPage() {
         ) : (
           <div className="flex flex-col justify-center items-center gap-6">
             <EmptyState>
-              포인트 내역이 없어요 <br /> 편지를 읽고 포인트를 받아 보세요!{" "}
-              <br />
+              받은 포인트가 없어요 <br /> 편지를 읽고 포인트를 받아 보세요!
             </EmptyState>
             <Link
               href={`/cabinet/${soldierId}`}
