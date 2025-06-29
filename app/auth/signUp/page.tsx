@@ -2,7 +2,7 @@
 
 import Image from "next/image";
 import { useRouter, useSearchParams } from "next/navigation";
-import { useState, KeyboardEvent, useMemo, ChangeEvent } from "react";
+import { useState, KeyboardEvent } from "react";
 import SignUpInput from "@/components/SignUpInput";
 import { PrimaryButton, Txt } from "@/components/atoms";
 import { signUpHook } from "@/hooks/useAuth";
