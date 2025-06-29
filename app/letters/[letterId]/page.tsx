@@ -8,6 +8,7 @@ import { Txt } from "@/components/atoms";
 import { BasicHeader } from "@/components/common";
 import { LettersDetail, PigSplash } from "@/components/letters";
 import { ERROR_MESSAGES } from "@/constants/message";
+import { useToast } from "@/contexts/toast/ToastContext";
 import { handleEarnPoint } from "@/lib/actions/earn-point-actions";
 import {
   getLetterDetail,
@@ -36,33 +37,44 @@ export default function LetterDetailPage() {
   const [showPoint, setShowPoint] = useState(false);
   const [earnedBonus, setEarnedBonus] = useState(0);
 
+  const { showToast } = useToast();
+
   useEffect(() => {
     (async () => {
       if (!userId) return;
 
       // 편지 데이터 가져오기
-      const { data } = await getLetterDetail({ letterId, userId });
-      const { data: replyData } = await getLetterDetail({
-        letterId,
-        userId,
-        isReply: true,
-      });
+      try {
+        const { data } = await getLetterDetail({ letterId, userId });
+        const { data: replyData } = await getLetterDetail({
+          letterId,
+          userId,
+          isReply: true,
+        });
 
-      setLetter(data);
-      setReply(replyData);
+        if (!data || !data.senderId || !data.receiverId) throw new Error();
 
-      if (soldierId) {
-        // 포인트 적립 처리
+        setLetter(data);
+        setReply(replyData);
 
-        //TODO: result 리턴값 통일 후 구조분해할당까지
-        const result = await handleEarnPoint({ letterId, soldierId });
+        if (soldierId) {
+          // 포인트 적립 처리
+          const { point } = await handleEarnPoint({
+            letterId,
+            soldierId,
+            senderId: data?.receiverId,
+            receiverId: data?.receiverId,
+          });
 
-        if (result.earn && result.bonus > 0) {
-          setEarnedBonus(result.bonus);
-          setShowPoint(true);
+          if (point > 0) {
+            setEarnedBonus(point);
+            setShowPoint(true);
+          }
+        } else {
+          await patchUserReadDate(letterId, userId);
         }
-      } else {
-        await patchUserReadDate(letterId, userId);
+      } catch {
+        showToast(ERROR_MESSAGES.LETTER.NOT_FOUND, "", "error");
       }
     })();
   }, [letterId, userId, soldierId]);

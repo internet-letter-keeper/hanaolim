@@ -9,7 +9,6 @@ import { useToast } from "@/contexts/toast/ToastContext";
 import { useScrollEdges } from "@/hooks/useScrollEdge";
 import { handleEarnPoint } from "@/lib/actions/earn-point-actions";
 import { getLetterDetail } from "@/lib/actions/letter-actions";
-import { getSenderNameId } from "@/lib/actions/write-actions";
 import { cn } from "@/lib/utils";
 import { formatLetterData } from "@/utils/letter";
 import { LetterView, PigSplash } from ".";
@@ -39,7 +38,7 @@ export default function LetterModal({ letterId, onHandleModal }: Props) {
 
   //포인트 적립 애니메이션 제어
   const [showPoint, setShowPoint] = useState(false);
-  const [earnedBonus, setEarnedBonus] = useState(0);
+  const [earnedPoint, setEarnedPoint] = useState(0);
 
   useEffect(() => {
     (async () => {
@@ -49,39 +48,38 @@ export default function LetterModal({ letterId, onHandleModal }: Props) {
 
       try {
         // 편지 데이터 가져오기
-        const letterData = await getLetterDetail({ letterId, userId });
+        const { data: letterData } = await getLetterDetail({
+          letterId,
+          userId,
+        });
 
-        // 발신자 이름 가져오기
-        const {
-          success,
-          message,
-          data: senderData,
-        } = await getSenderNameId(letterId);
+        if (
+          !letterData ||
+          !letterData.senderName ||
+          !letterData.senderId ||
+          !letterData.receiverId
+        )
+          throw new Error();
 
-        if (success) {
-          if (!senderData || !senderData.userName) {
-            throw new Error(ERROR_MESSAGES.DATA.NOT_FOUND);
-          }
+        const { senderName, senderId, receiverId } = letterData;
 
-          setSenderName(senderData.userName);
-          setLetter(letterData.data ? formatLetterData(letterData.data) : null);
-        }
-        if (!success) {
-          showToast(message, "", "error");
-        }
+        setLetter(letterData ? formatLetterData(letterData) : null);
+        setSenderName(senderName);
 
         // 포인트 적립 처리
-        const { earn, bonus } = await handleEarnPoint({ letterId, soldierId });
+        const { point } = await handleEarnPoint({
+          letterId,
+          soldierId,
+          senderId,
+          receiverId,
+        });
 
-        if (earn && bonus > 0) {
-          setEarnedBonus(bonus);
+        if (point > 0) {
+          setEarnedPoint(point);
           setShowPoint(true);
         }
       } catch {
-        return {
-          success: false,
-          message: ERROR_MESSAGES.LETTER.NOT_FOUND,
-        };
+        showToast(ERROR_MESSAGES.LETTER.NOT_FOUND, "", "error");
       }
     })();
   }, [letterId, userId, soldierId, showToast]);
@@ -116,7 +114,7 @@ export default function LetterModal({ letterId, onHandleModal }: Props) {
       onClick={onClickOverlay}
     >
       {showPoint && (
-        <PigSplash point={earnedBonus} onSkip={() => setShowPoint(false)} />
+        <PigSplash point={earnedPoint} onSkip={() => setShowPoint(false)} />
       )}
       <div
         ref={scrollRef}

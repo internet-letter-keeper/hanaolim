@@ -1,106 +1,78 @@
 "use server";
 
-import { ERROR_MESSAGES, SUCCESS_MESSAGES } from "@/constants/message";
+import { ERROR_MESSAGES } from "@/constants/message";
 import prisma from "../db";
-import { Letter, Prisma } from "../generated/prisma";
+import { Prisma } from "../generated/prisma";
 
 type PointEarnProps = {
   letterId: number;
   soldierId: number;
+  senderId: number;
+  receiverId: number;
 };
 
-//success: 정상 실행 여부, earn: 포인트 지급 여부, bonus: 얻은 포인트, message: 처리 결과 메시지
-type HandleEarnPointResult = {
-  success: boolean;
-  earn: boolean;
-  bonus: number;
-  message: string;
-};
 /**
  * 포인트 적립을 다루는 트랜잭션
  * @param letterId
  * @param soldierId
  * @throws letterId를 가진 편지가 DB에 존재하지 않을 때
- * success가 true && earn이 true인 경우, pointPop 애니메이션 발생
+ * point가 1이상일 경우(얻은 포인트가 있음), pointPop 애니메이션 발생
  */
 export const handleEarnPoint = async ({
   letterId,
   soldierId,
-}: PointEarnProps): Promise<HandleEarnPointResult> => {
+  senderId,
+  receiverId,
+}: PointEarnProps) => {
   try {
-    const result: HandleEarnPointResult = await prisma.$transaction(
-      async (tx) => {
-        const letter = await tx.letter.findUnique({ where: { letterId } });
-        if (!letter)
-          throw new Error(`letterId: ${letterId} 편지가 존재하지 않습니다`);
+    const result = await prisma.$transaction(async (tx) => {
+      //1. 편지 읽은 날짜 업데이트
+      const readResult = await postReadDate(letterId, tx);
 
-        //1. 편지 읽은 날짜 업데이트
-        const readResult = await postReadDate(letterId, tx);
-
-        //1-1. 업데이트 중 예기치 못한 오류 발생
-        if (!readResult.success)
-          throw new Error(ERROR_MESSAGES.LETTER.UPDATE_READ_DATE_FAILED);
-
-        //1-2. 이미 읽었던 편지인 경우
-        if (!readResult.updated) {
-          return {
-            success: true,
-            earn: false,
-            bonus: 0,
-            message: SUCCESS_MESSAGES.COMMON.SUCCESS,
-          };
-        }
-
-        //2. 적립 가능 여부 확인
-        const earnableResult = await getPointEarnability(tx, letter);
-
-        //2-1. 포인트 적립 조건 확인 중 예기치 못한 에러 발생
-        if (!earnableResult.success)
-          throw new Error(ERROR_MESSAGES.POINT.CHECK_FAILED);
-
-        //2-2. 포인트 적립 조건 불충족
-        if (!earnableResult.earnability) {
-          return {
-            success: true,
-            earn: false,
-            bonus: 0,
-            message: SUCCESS_MESSAGES.COMMON.SUCCESS,
-          };
-        }
-
-        //3. 적립 액션
-        const earnResult = await postEarnedPoint(soldierId, tx);
-
-        //3-1. 포인트 적립 중 예기치 못한 에러 발생
-        if (!earnResult.success)
-          throw new Error(ERROR_MESSAGES.POINT.CHECK_FAILED);
-
-        //3-2. 경험치가 덜 차서 포인트 적립 불가
-        if (earnResult.bonus === 0) {
-          return {
-            success: true,
-            earn: false,
-            bonus: 0,
-            message: SUCCESS_MESSAGES.COMMON.SUCCESS,
-          };
-        }
-
-        //3-3. 경험치 다 차서 적립까지 성공 후, success true와 적립된 포인트 반환하기
+      //1-1. 이미 읽었던 편지인 경우
+      if (!readResult.updated) {
         return {
-          success: true,
-          earn: true,
-          bonus: earnResult.bonus,
-          message: SUCCESS_MESSAGES.COMMON.SUCCESS,
+          point: 0,
         };
       }
-    );
+
+      //2. 적립 가능 여부 확인
+      const earnableResult = await getPointEarnability(
+        senderId,
+        receiverId,
+        tx
+      );
+
+      const { earnability } = earnableResult;
+
+      //2-1. 포인트 적립 조건 불충족
+      if (!earnability) {
+        return {
+          point: 0,
+        };
+      }
+
+      //3. 적립 액션
+      const earnResult = await postEarnedPoint(soldierId, tx);
+
+      const { point } = earnResult;
+
+      //3-1. 경험치가 덜 차서 포인트 적립 불가
+      if (point === 0) {
+        return {
+          point: 0,
+        };
+      }
+
+      //3-2. 경험치 다 차서 적립까지 성공 후, success true와 적립된 포인트 반환하기
+      return {
+        point,
+      };
+    });
     return result;
   } catch {
     return {
-      success: false,
-      earn: false,
-      bonus: 0,
-      message: ERROR_MESSAGES.POINT.CHECK_FAILED,
+      point: 0,
     };
   }
 };
@@ -116,27 +88,20 @@ const postReadDate = async (letterId: number, tx: Prisma.TransactionClient) => {
     throw new Error(ERROR_MESSAGES.LETTER.ID_IS_NUMBER);
   }
 
-  try {
-    const res = await tx.letter.updateMany({
-      where: {
-        letterId: letterId,
-        readDate: null,
-      },
-      data: { readDate: new Date() },
-    });
+  const res = await tx.letter.updateMany({
+    where: {
+      letterId,
+      readDate: null,
+    },
+    data: { readDate: new Date() },
+  });
 
-    //1. updateMany 성공적 실행, 안 읽은 편지라면 updated true 이미 읽었다면 false
-    return {
-      success: true,
-      updated: res.count > 0,
-    };
-  } catch {
-    //2. updateMany 실패, success와 updated 모두 false return
-    return {
-      success: false,
-      updated: false,
-    };
-  }
+  const { count } = res;
+
+  //1. updateMany 성공적 실행, 안 읽은 편지라면 updated true 이미 읽었다면 false
+  return {
+    updated: count > 0,
+  };
 };
 
 /**
@@ -148,8 +113,9 @@ const postReadDate = async (letterId: number, tx: Prisma.TransactionClient) => {
  * @throws 함수 실행 실패 시 false
  */
 const getPointEarnability = async (
-  tx: Prisma.TransactionClient,
-  { senderId, receiverId }: Letter
+  senderId: number,
+  receiverId: number,
+  tx: Prisma.TransactionClient
 ) => {
   //오늘 날짜의 시작 EX)2025-06-21 00시 00분 00초
   const todayStart = new Date();
@@ -159,37 +125,27 @@ const getPointEarnability = async (
   const tommorrowStart = new Date(todayStart);
   tommorrowStart.setDate(tommorrowStart.getDate() + 1);
 
-  try {
-    const res = await tx.letter.findMany({
-      where: {
-        senderId,
-        receiverId,
-        readDate: {
-          gte: todayStart,
-          lt: tommorrowStart,
-        },
+  const res = await tx.letter.findMany({
+    where: {
+      senderId,
+      receiverId,
+      readDate: {
+        gte: todayStart,
+        lt: tommorrowStart,
       },
-    });
+    },
+  });
 
-    //1.'오늘' 해당 '군인'이 '해당 유저'한테 받은 편지가 '1개'임 -> 적립 액션 시작하도록 모두 true 리턴
-    if (res.length === 1) {
-      return {
-        success: true,
-        earnability: true,
-      };
-    }
-    //2. '오늘' 해당 '군인'이 '해당 유저'한테 받은 편지가 '1개'가 아님 -> 정상실행이나 earnability는 false로 리턴
+  //1.'오늘' 해당 '군인'이 '해당 유저'한테 받은 편지가 '1개'
+  if (res.length === 1) {
     return {
-      success: true,
-      earnability: false,
-    };
-  } catch {
-    //3. 테이블 조회하다 에러가 발생함
-    return {
-      success: false,
-      earnability: false,
+      earnability: true,
     };
   }
+  //2. '오늘' 해당 '군인'이 '해당 유저'한테 받은 편지가 '1개'가 아님
+  return {
+    earnability: false,
+  };
 };
 
 /**
@@ -202,41 +158,34 @@ const postEarnedPoint = async (
   soldierId: number,
   tx: Prisma.TransactionClient
 ) => {
-  try {
-    //1. 경험치 적립 실행
-    const res = await tx.soldier.update({
-      where: { soldierId },
-      data: {
-        letterExp: {
-          increment: 1,
-        },
+  //1. 경험치 적립 실행
+  const updatedExp = await tx.soldier.update({
+    where: { soldierId },
+    data: {
+      letterExp: {
+        increment: 1,
       },
-    });
-    //2. 경험치가 10으로 나누어지는 경우 포인트 적립
-    const newExp = res.letterExp;
-    let bonus = 0;
-    const getRandomPoint = () => Math.floor(Math.random() * 1000) + 1;
+    },
+  });
 
-    //2-1. 나누어 떨어지니까 난수 발생해서 포인트 적립 (안 나누어 떨어지면 0)
-    if (newExp % 10 === 0) {
-      bonus = getRandomPoint();
-      await tx.point.create({
-        data: {
-          point: bonus,
-          createDate: new Date(),
-          soldierId,
-        },
-      });
-    }
+  //2. 경험치가 10으로 나누어지는 경우 포인트 적립
+  const { letterExp } = updatedExp;
 
-    return {
-      success: true,
-      bonus,
-    };
-  } catch {
-    return {
-      success: false,
-      bonus: 0,
-    };
+  //2-1. 나누어 떨어지니까 난수 발생해서 포인트 적립 (안 나누어 떨어지면 0)
+  if (letterExp % 10 !== 0) {
+    return { point: 0 };
   }
+
+  const randomPoint = Math.floor(Math.random() * 1000) + 1;
+
+  const createdPoint = await tx.point.create({
+    data: {
+      point: randomPoint,
+      soldierId,
+    },
+  });
+
+  const { point } = createdPoint;
+
+  return { point };
 };
