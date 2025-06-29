@@ -12,7 +12,7 @@ import { getIsNew } from "@/lib/actions/letter-actions";
 import { auth } from "@/lib/auth";
 
 type Props = {
-  params: Promise<{ soldierId: number }>;
+  params: Promise<{ soldierId: string }>;
   searchParams: Promise<{ page: number; add: "true" }>;
 };
 
