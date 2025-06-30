@@ -26,7 +26,13 @@ export default function LettersItem({ letter, currentUserId, box }: Props) {
   } = letter;
 
   const isRead = !!readDate;
-  const formattedDate = createDate?.toLocaleString();
+  const formattedDate = createDate
+    ? new Date(createDate).toLocaleDateString("ko-KR", {
+        year: "numeric",
+        month: "2-digit",
+        day: "2-digit",
+      })
+    : "";
 
   return (
     <Link
