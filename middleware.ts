@@ -59,11 +59,11 @@ export async function middleware(req: NextRequest) {
 
   // 일반 유저가 군인 전용 경로에 접근한 경우 OR
   // 군인이 군인 접근 불가 경로에 접근한 경우
-  // if (
-  //   (isPathIn(SOLDIER_ONLY) && !isSoldier) ||
-  //   (isPathIn(SOLDIER_RESTRICTED) && isSoldier)
-  // )
-  //   return NextResponse.redirect(new URL("/invalidAccess", baseUrl));
+  if (
+    (isPathIn(SOLDIER_ONLY) && !isSoldier) ||
+    (isPathIn(SOLDIER_RESTRICTED) && isSoldier)
+  )
+    return NextResponse.redirect(new URL("/invalidAccess", baseUrl));
 
   // 일반 유저가 받은 편지함(군인 전용)에 접근한 경우
   if (isPathIn(SOLDIER_ONLY_LETTERS) && !isSoldier)
