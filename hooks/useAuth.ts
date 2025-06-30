@@ -29,7 +29,12 @@ export async function signInHook(signInData: SignInProps) {
   try {
     const { email, password, callbackUrl } = signInData;
 
-    const { ok } = await loginFunc(email, password);
+    const { ok, error } = await loginFunc(email, password);
+
+    if (error) {
+      // 로그인 실패
+      return { success: false, error: "unvalid" };
+    }
 
     if (ok) {
       // 로그인 성공
