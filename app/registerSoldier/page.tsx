@@ -5,7 +5,7 @@ import { useRouter } from "next/navigation";
 import { useSession } from "next-auth/react";
 import { ChangeEvent, KeyboardEvent, useState } from "react";
 import { PrimaryButton, Input, Txt } from "@/components/atoms";
-import { DatePicker } from "@/components/common";
+import { BasicHeader, DatePicker } from "@/components/common";
 import { postSoldier } from "@/lib/actions/auth-actions";
 import { toKoreaTime } from "@/utils/date";
 
@@ -93,76 +93,71 @@ export default function SignInPage() {
   };
 
   return (
-    <div className="flex flex-col items-center justify-center h-full px-[20px]">
-      {/* 하나 올림 로고 */}
-      <Image
-        src="/icons/ic-hanaolim.svg"
-        alt="하나올림 로고"
-        width={184}
-        height={49}
-      />
-      {/* 입대일, 전역일, 계좌번호 */}
-      <div className="mt-[42px] flex flex-col gap-[16px] w-full">
-        {/* 입대일 */}
-        <div className="flex justify-between items-center">
-          <Txt size={19} weight="cm" align="left" className="min-w-1/4">
-            입대일
-          </Txt>
-          <DatePicker onChange={(date) => setJoinDate(date)} />
+    <div className="size-full">
+      <BasicHeader />
+      <div className="flex flex-col items-center justify-center h-full px-5 pb-20">
+        {/* 하나 올림 로고 */}
+        <Image
+          src="/icons/ic-hanaolim.svg"
+          alt="하나올림 로고"
+          width={184}
+          height={49}
+        />
+        {/* 입대일, 전역일, 계좌번호 */}
+        <div className="mt-[42px] flex flex-col gap-[16px] w-full">
+          {/* 입대일 */}
+          <div className="flex justify-between items-center">
+            <Txt size={19} weight="cm" align="left" className="min-w-1/4">
+              입대일
+            </Txt>
+            <DatePicker onChange={(date) => setJoinDate(date)} />
+          </div>
+
+          {/* 전역일 */}
+          <div className="flex justify-between items-center">
+            <Txt size={19} weight="cm" align="left" className="min-w-1/4 ">
+              전역일
+            </Txt>
+            <DatePicker onChange={(date) => setReleaseDate(date)} />
+          </div>
+
+          {/* 계좌번호 */}
+          <div className="flex justify-between items-center">
+            <Txt size={19} weight="cm" align="left" className="min-w-1/4 ">
+              계좌번호
+            </Txt>
+            <Input
+              placeholder="000-000000-00000"
+              maxLength={16}
+              onChange={handleAccountChange}
+              value={accountNumber}
+              onKeyDown={handleKeyDown}
+            />
+          </div>
         </div>
 
-        {/* 전역일 */}
-        <div className="flex justify-between items-center">
-          <Txt size={19} weight="cm" align="left" className="min-w-1/4 ">
-            전역일
-          </Txt>
-          <DatePicker onChange={(date) => setReleaseDate(date)} />
-        </div>
+        {/* 에러메세지 + 등록완료 */}
+        <div className="mt-[30px] w-full">
+          {errorMessage && (
+            <div className="flex justify-center items-center mb-[10px]">
+              <Txt size={12} className="text-red-a76">
+                {errorMessage}
+              </Txt>
+            </div>
+          )}
 
-        {/* 계좌번호 */}
-        <div className="flex justify-between items-center">
-          <Txt size={19} weight="cm" align="left" className="min-w-1/4 ">
-            계좌번호
-          </Txt>
-          <Input
-            placeholder="000-000000-00000"
-            maxLength={16}
-            onChange={handleAccountChange}
-            value={accountNumber}
-            onKeyDown={handleKeyDown}
+          <PrimaryButton
+            title="등록"
+            rounded="sm"
+            textSize={16}
+            align="center"
+            weight="cm"
+            className="h-[38px]"
+            onClick={handleSubmit}
+            disabled={isLoading}
           />
         </div>
       </div>
-
-      {/* 에러메세지 + 등록완료 */}
-      <div className="mt-[30px] w-full">
-        {errorMessage && (
-          <div className="flex justify-center items-center mb-[10px]">
-            <Txt size={12} className="text-red-a76">
-              {errorMessage}
-            </Txt>
-          </div>
-        )}
-
-        <PrimaryButton
-          title="등록 완료"
-          rounded="sm"
-          textSize={16}
-          align="center"
-          weight="cm"
-          className="h-[38px]"
-          onClick={handleSubmit}
-          disabled={isLoading}
-        />
-      </div>
-      <button onClick={() => router.back()} className="mt-[20px]">
-        <Txt
-          size={12}
-          className="text-gray-353 underline underline-offset-auto cursor-pointer"
-        >
-          취소
-        </Txt>
-      </button>
     </div>
   );
 }

@@ -1,11 +1,10 @@
 "use server";
 
 import { ERROR_MESSAGES, SUCCESS_MESSAGES } from "@/constants/message";
-import { FriendProfile, SoldierRank } from "@/types/common/profile";
+import { SoldierRank } from "@/types/common/profile";
 import { requireAuth } from "@/utils/auth";
 import { calculateRankByStartDate } from "@/utils/date";
 import prisma from "../db";
-import { isUserExists } from "./auth-actions";
 
 /**
  * 코드로 친구 추가
@@ -18,17 +17,15 @@ import { isUserExists } from "./auth-actions";
 export const postFriend = async (code: string, userId: number) => {
   try {
     // code와 매칭되는 군인이 있는지 확인
-    const soldierId =
-      (
-        await prisma.soldier.findUnique({
-          where: { code },
-          select: { soldierId: true },
-        })
-      )?.soldierId ?? null;
+    const soldier = await prisma.soldier.findFirst({
+      where: { code },
+    });
 
-    if (!soldierId) {
+    if (!soldier) {
       return { success: false, message: "코드를 다시 확인해주세요" };
     }
+
+    const { soldierId } = soldier;
 
     // 이미 친구인지 확인
     const exists = await prisma.follow.findFirst({
@@ -47,7 +44,7 @@ export const postFriend = async (code: string, userId: number) => {
     return {
       success: true,
       message: "친구가 추가되었습니다",
-      follow: follow,
+      follow,
     };
   } catch {
     return {
@@ -64,29 +61,15 @@ export const postFriend = async (code: string, userId: number) => {
  * @returns userId의 친구 목록
  * @throws userId를 가진 유저가 DB에 없을 때
  */
-
 export const getFriendsList = async (userId: number) => {
   try {
-    // DB에 있는 유저인지 확인
-    const res = await isUserExists(userId);
-
-    if (!res) {
-      return {
-        success: false,
-        message: `${userId}번 id를 가진 유저가 존재하지 않습니다`,
-      };
-    }
-
     const friends = await prisma.follow.findMany({
       where: { userId },
       select: {
         followId: true,
         Soldier: {
-          select: {
-            soldierId: true,
-            endDate: true,
-            startDate: true,
-            User: { select: { userName: true } },
+          include: {
+            User: true,
           },
         },
       },
@@ -96,36 +79,36 @@ export const getFriendsList = async (userId: number) => {
     // 계급 계산 결과 캐싱
     const cache = new Map<string, SoldierRank>();
 
-    const friendsData = friends.map((f) => {
-      const s = f.Soldier;
-      const key = s.startDate.toISOString().slice(0, 10);
+    const data = friends.map(({ Soldier, followId }) => {
+      const { startDate, User } = Soldier;
+
+      const key = startDate.toISOString().slice(0, 10);
 
       let rank = cache.get(key);
 
       if (!rank) {
-        rank = calculateRankByStartDate(new Date(s.startDate));
+        rank = calculateRankByStartDate(new Date(startDate));
         cache.set(key, rank);
       }
 
       return {
-        followId: f.followId,
-        soldierId: s.soldierId,
-        endDate: s.endDate,
-        startDate: s.startDate,
-        userName: s.User.userName,
+        ...Soldier,
+        followId,
+        userName: User.userName,
         rank,
-      } as FriendProfile;
+      };
     });
 
     return {
       success: true,
       message: SUCCESS_MESSAGES.COMMON.SUCCESS,
-      data: friendsData,
+      data,
     };
   } catch {
     return {
       success: false,
       message: ERROR_MESSAGES.DATA.FETCH_FAILED,
+      data: [],
     };
   }
 };
@@ -139,7 +122,7 @@ export const getFriendsList = async (userId: number) => {
 export const getAccountNumBySoldierId = async (soldierId: number) => {
   const res = await prisma.soldier.findUnique({
     where: { soldierId },
-    select: { Account: { select: { accountNum: true } } },
+    select: { Account: true },
   });
 
   if (!res)
@@ -155,19 +138,14 @@ export const getAccountNumBySoldierId = async (soldierId: number) => {
  */
 export const getUserBySoldierId = async (soldierId: number) => {
   try {
-    const soldierInfo = await prisma.soldier.findUnique({
+    const data = await prisma.soldier.findUnique({
       where: { soldierId },
       include: {
-        User: {
-          select: {
-            userName: true,
-            isSoldier: true,
-            isSocial: true,
-          },
-        },
+        User: true,
       },
     });
-    if (!soldierInfo) {
+
+    if (!data) {
       return {
         success: false,
         message: ERROR_MESSAGES.SOLDIER.NOT_FOUND,
@@ -176,7 +154,7 @@ export const getUserBySoldierId = async (soldierId: number) => {
     return {
       success: true,
       message: SUCCESS_MESSAGES.COMMON.SUCCESS,
-      data: soldierInfo,
+      data,
     };
   } catch {
     return {
@@ -212,68 +190,15 @@ export const patchStatusMessage = async (
 };
 
 /**
- * 나의 첫번쨰 팔로우 목록을 보여줌
+ * 나의 첫 번쨰 팔로우 군인을 보여줌
  * @param userId
- * @returns 첫번째 follow
+ * @returns 첫 번째 follow 군인
  */
-export const getFirstFollow = async (userId: number) => {
-  const follow = await prisma.follow.findFirst({
+export const getFirstFollow = async (userId: number) =>
+  prisma.follow.findFirst({
     where: { userId },
     select: { followId: true, userId: true, soldierId: true },
   });
-
-  return follow === null ? null : follow;
-};
-
-/**
- * 코드로 친구 추가
- * @param code
- * @param userId
- * @returns success 여부
- * @returns 유효한 코드가 아닐 때 "코드를 다시 확인해주세요"
- * @returns 이미 친구일 때 "이미 친구입니다"
- */
-export const postFriendbyId = async (soldierNum: number, userId: number) => {
-  try {
-    // code와 매칭되는 군인이 있는지 확인
-    const soldierId =
-      (
-        await prisma.soldier.findUnique({
-          where: { soldierId: soldierNum },
-          select: { soldierId: true },
-        })
-      )?.soldierId ?? null;
-
-    if (!soldierId) {
-      return { success: false, message: ERROR_MESSAGES.FRIENDS.INVALID_CODE };
-    }
-
-    // 이미 친구인지 확인
-    const exists = await prisma.follow.findFirst({
-      where: { soldierId, userId },
-    });
-
-    if (exists) {
-      return { success: false, message: ERROR_MESSAGES.FRIENDS.ALREADY_FRIEND };
-    }
-
-    const follow = await prisma.follow.create({
-      data: { soldierId, userId },
-      select: { followId: true, userId: true, soldierId: true },
-    });
-
-    return {
-      success: true,
-      message: SUCCESS_MESSAGES.FRIENDS.ADD_SUCCESS,
-      follow: follow,
-    };
-  } catch {
-    return {
-      success: false,
-      message: ERROR_MESSAGES.FRIENDS.ADD_FAILED,
-    };
-  }
-};
 
 /**
  * 친구 삭제

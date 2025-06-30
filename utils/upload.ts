@@ -1,7 +1,7 @@
 import { ERROR_MESSAGES } from "@/constants/message";
 import { getPresignedPost } from "@/lib/actions/upload-actions";
 
-export const uploadToS3 = async (file: File): Promise<string> => {
+export const uploadToS3 = async (file: File) => {
   try {
     //  Presigned URL 발급
     const { url, fields, key } = await getPresignedPost(file.name);

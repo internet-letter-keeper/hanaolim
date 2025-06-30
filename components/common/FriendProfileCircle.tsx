@@ -1,9 +1,9 @@
 import Image from "next/image";
 import Link from "next/link";
 import Txt from "@/components/atoms/Text";
+import { getFriendsList } from "@/lib/actions/friend-actions";
 import { cn } from "@/lib/utils";
 import {
-  FriendProfile,
   SoldierProfile,
   SoldierRank,
   SoldierRankToNum,
@@ -18,7 +18,9 @@ export const RankNumMap: Record<SoldierRank, SoldierRankToNum> = {
 };
 
 type Props = {
-  profile: FriendProfile | SoldierProfile;
+  profile:
+    | Awaited<ReturnType<typeof getFriendsList>>["data"][number]
+    | SoldierProfile;
   isRowLayout?: boolean;
   selectedSoldierId?: number;
 };

@@ -12,22 +12,22 @@ type Props = {
 
 export default function FavoriteToggle({
   letterId,
-  isFavorite: isFavoriteState,
+  isFavorite: initialFavoriteState,
   currentUserId,
 }: Props) {
   const [isFavorite, toggleFavorite] = useOptimistic(
-    isFavoriteState ?? false,
-    (state) => !state
+    initialFavoriteState ?? false,
+    (prev) => !prev
   );
 
   const handleToggleFavorite = async (e: MouseEvent) => {
     e.preventDefault();
-    toggleFavorite(isFavoriteState);
+    toggleFavorite(null);
 
     const { ok } = await patchFavorite(letterId, currentUserId);
 
     if (!ok) {
-      toggleFavorite(isFavoriteState);
+      toggleFavorite(null);
     }
   };
 

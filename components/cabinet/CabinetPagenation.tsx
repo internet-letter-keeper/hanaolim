@@ -46,7 +46,7 @@ export default async function CabinetPagenation({
         )}
 
         {/* 관물대 */}
-        <Cabinet userId={userId} soldierId={soldierId} letters={data} />
+        <Cabinet soldierId={soldierId} letters={data} />
 
         {/* 관물대 마지막 페이지면 다음 페이지 버튼이 안 보이게 */}
         {currentPage < totalPage ? (
