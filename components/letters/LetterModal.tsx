@@ -157,7 +157,7 @@ export default function LetterModal({ letterId, onHandleModal }: Props) {
             <Txt
               align="left"
               size={16}
-              className="py-4 cursor-pointer"
+              className="py-4 cursor-pointer break-words whitespace-pre-wrap"
               onClick={handleGoToDetail}
             >
               {letter.content}

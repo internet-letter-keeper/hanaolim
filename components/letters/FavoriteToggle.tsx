@@ -1,7 +1,7 @@
 "use client";
 
 import Image from "next/image";
-import { useOptimistic, type MouseEvent } from "react";
+import { useState, type MouseEvent } from "react";
 import { patchFavorite } from "@/lib/actions/letter-actions";
 
 type Props = {
@@ -15,19 +15,17 @@ export default function FavoriteToggle({
   isFavorite: initialFavoriteState,
   currentUserId,
 }: Props) {
-  const [isFavorite, toggleFavorite] = useOptimistic(
-    initialFavoriteState ?? false,
-    (prev) => !prev
-  );
+  const [isFavorite, setIsFavorite] = useState(initialFavoriteState);
 
   const handleToggleFavorite = async (e: MouseEvent) => {
     e.preventDefault();
-    toggleFavorite(null);
+    const newFavorite = !isFavorite;
+    setIsFavorite(newFavorite);
 
     const { ok } = await patchFavorite(letterId, currentUserId);
 
     if (!ok) {
-      toggleFavorite(null);
+      setIsFavorite(!newFavorite);
     }
   };
 

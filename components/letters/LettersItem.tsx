@@ -26,7 +26,13 @@ export default function LettersItem({ letter, currentUserId, box }: Props) {
   } = letter;
 
   const isRead = !!readDate;
-  const formattedDate = createDate?.toLocaleString();
+  const formattedDate = createDate
+    ? new Date(createDate).toLocaleDateString("ko-KR", {
+        year: "numeric",
+        month: "2-digit",
+        day: "2-digit",
+      })
+    : "";
 
   return (
     <Link
@@ -56,7 +62,7 @@ export default function LettersItem({ letter, currentUserId, box }: Props) {
 
       <div className="flex justify-between items-center w-full mt-2">
         {/* 답장 버튼 영역 */}
-        {(box === "mine" && hasReply) || (box === "friend" && hasReply) ? (
+        {(box === "mine" && !hasReply) || (box === "friend" && hasReply) ? (
           <div className="inline-flex items-center gap-1 rounded-[5px] border border-red-a76 px-2 py-0.5">
             <Image
               src="/icons/ic-isReply.svg"

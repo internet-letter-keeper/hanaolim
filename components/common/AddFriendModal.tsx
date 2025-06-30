@@ -13,9 +13,11 @@ type Props = {
 };
 
 export default function AddFriendModal({ closeModal }: Props) {
-  const { data } = useSession();
+  const { data, update } = useSession();
+  const user = data?.user;
   const userId = data?.user.userId;
   const isSoldier = data?.user.soldier;
+  const follow = data?.user.follow;
 
   const router = useRouter();
   const { showToast } = useToast();
@@ -33,7 +35,10 @@ export default function AddFriendModal({ closeModal }: Props) {
     }
 
     if (typedCodeValue && userId) {
-      const { success, message } = await postFriend(typedCodeValue, userId);
+      const { success, message, follow } = await postFriend(
+        typedCodeValue,
+        userId
+      );
 
       if (!success) {
         showToast(message, toastPosition, "error");
@@ -41,7 +46,8 @@ export default function AddFriendModal({ closeModal }: Props) {
       }
 
       showToast(message, toastPosition);
-      router.refresh();
+      await update({ ...user, follow });
+      router.push(`/cabinet/${follow?.soldierId}`);
       closeModal();
     }
   };
