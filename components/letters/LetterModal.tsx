@@ -109,7 +109,7 @@ export default function LetterModal({ letterId, onHandleModal }: Props) {
   };
 
   //스크롤 감지 페이드 처리
-  const { ref: scrollRef, isBottom } = useScrollEdges();
+  const { ref: scrollRef, isScrolled } = useScrollEdges();
 
   return (
     <div
@@ -129,7 +129,7 @@ export default function LetterModal({ letterId, onHandleModal }: Props) {
           letter ? "max-h-[66vh] opacity-100" : "max-h-[150px] opacity-0"
         )}
       >
-        {!isBottom && (
+        {!isScrolled && (
           <div className="absolute bottom-0 left-0 w-full h-12 bg-gradient-to-t from-white-fff to-transparent pointer-events-none z-10" />
         )}
 
