@@ -40,8 +40,14 @@ export default function SignInPage() {
       setIsLoading(false);
       router.push(result.redirectUrl || "/onboarding");
     } else {
-      setIsLoading(false);
-      router.push("/auth/error?type=signin");
+      if (result?.error === "unvalid") {
+        setIsLoading(false);
+        setErrorMessage("이메일 또는 비밀번호가 올바르지 않습니다.");
+        return;
+      } else {
+        setIsLoading(false);
+        router.push("/auth/error?type=signin");
+      }
     }
   };
 
