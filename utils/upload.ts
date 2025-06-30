@@ -19,13 +19,6 @@ export const uploadToS3 = async (file: File) => {
 
     // 업로드
     if (!uploadRes.ok) {
-      const errorText = await uploadRes.text();
-      console.error(
-        ERROR_MESSAGES.FILE.S3_UPLOAD_FAILED,
-        uploadRes.status,
-        errorText
-      );
-
       if (uploadRes.status === 403) {
         throw new Error(ERROR_MESSAGES.FILE.UNAUTHORIZED_UPLOAD);
       } else if (uploadRes.status >= 500) {
