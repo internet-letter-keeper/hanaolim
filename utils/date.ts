@@ -58,3 +58,6 @@ export const toKoreaTime = (date: Date) => {
   const minusNine = -9 * 60 * 60 * 1000; // 9시간을 밀어줌
   return new Date(date.getTime() - minusNine);
 };
+
+export const isNotSoldierYet = (startDate: Date) =>
+  new Date(startDate) > new Date();

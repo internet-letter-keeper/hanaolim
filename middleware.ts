@@ -1,5 +1,6 @@
 import { NextRequest, NextResponse } from "next/server";
 import { auth } from "./lib/auth";
+import { isNotSoldierYet } from "./utils/date";
 
 // 미포함 경로 - 정적 파일 경로 | auth | api/auth | cabinet
 export const config = {
@@ -44,6 +45,7 @@ export async function middleware(req: NextRequest) {
   if (!didLogin) return NextResponse.redirect(new URL("/auth/signIn", baseUrl));
 
   const isSoldier = !!session.user.isSoldier;
+  const startDate = session.user.soldier?.startDate;
   const follow = session.user.follow;
   const isSocial = session.user.isSocial;
 
@@ -65,8 +67,13 @@ export async function middleware(req: NextRequest) {
   )
     return NextResponse.redirect(new URL("/invalidAccess", baseUrl));
 
-  // 일반 유저가 받은 편지함(군인 전용)에 접근한 경우
-  if (isPathIn(SOLDIER_ONLY_LETTERS) && !isSoldier)
+  if (!startDate) return null;
+
+  // 일반 유저 또는 입대 전 군인이 받은 편지함(군인 전용)에 접근한 경우
+  if (
+    (isPathIn(SOLDIER_ONLY_LETTERS) && !isSoldier) ||
+    (isPathIn(SOLDIER_ONLY_LETTERS) && isNotSoldierYet(startDate))
+  )
     return NextResponse.redirect(new URL("/letters?box=friend", baseUrl));
 
   // 팔로잉 없는 일반 유저가 편지 작성 OR 홈으로 접근한 경우

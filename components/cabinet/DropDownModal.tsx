@@ -9,7 +9,9 @@ import {
   SidebarMenuItem,
   useSidebar,
 } from "@/components/ui/sidebar";
+import { useToast } from "@/contexts/toast/ToastContext";
 import { cn } from "@/lib/utils";
+import { isNotSoldierYet } from "@/utils/date";
 import { PrimaryButton } from "../atoms";
 import { NewIcon } from "../common";
 import Profile from "../common/Profile";
@@ -22,9 +24,23 @@ const ButtonStyle = "border border-gray-353/25 py-3";
 
 export default function DropDownModal({ isNew }: Props) {
   const { data: session } = useSession();
-  const isSoldier = session?.user?.isSoldier;
+  const isSoldier = session?.user.isSoldier;
+  const startDate = session?.user.soldier.startDate;
+
   const router = useRouter();
-  const goToLetters = () => router.push("/letters");
+
+  const { showToast } = useToast();
+
+  const goToLetters = async () => {
+    if (!startDate) return null;
+
+    if (isNotSoldierYet(startDate)) {
+      showToast("입대일 이후에 열어볼 수 있어요", "", "warning");
+      return;
+    }
+
+    router.push("/letters");
+  };
   const goToRegisterSoldier = () => router.push("/registerSoldier");
   const goToFriends = () => router.push("/friends");
   const goToMy = () => router.push("/my");
