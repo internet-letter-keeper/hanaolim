@@ -1,111 +1,77 @@
 import { NextRequest, NextResponse } from "next/server";
 import { auth } from "./lib/auth";
 
-// 로그인 필요 페이지
-const authenticatedPages = [
-  "/friends",
-  "/hanaBank",
-  "/letters",
-  "/my",
-  "/onboarding",
-  "/pointHistory",
-  "/registerSoldier",
-  "/write",
-];
+// 미포함 경로 - 정적 파일 경로 | auth | api/auth | cabinet
+export const config = {
+  matcher: [
+    "/((?!_next/static|_next/image|icons|images|fonts|video|auth|api/auth|cabinet).*)",
+  ],
+};
 
-// 군인접근 불가능한 페이지
-const isSoldierRestrictedPage = ["/registerSoldier", "/onboarding"];
+// 군인은 접근 불가능
+const SOLDIER_RESTRICTED = ["/registerSoldier", "/onboarding"];
 
-const redirectPages = ["/friends", "/write"];
-const isRedirectPage = (pathname: string) =>
-  redirectPages.some((page) => pathname.startsWith(page));
+// 군인만 접근 가능
+const SOLDIER_ONLY = ["/my/soldier", "/pointHistory"];
 
-// const isNotLoginPages = ["auth/siginIn", "auth/signUp"];
+// 군인만 접근 가능한 받은 편지 보관함
+const SOLDIER_ONLY_LETTERS = ["/letters?box=mine"];
 
-// 인증 필요 페이지
-const isAuthenticatedPage = (pathname: string) =>
-  authenticatedPages.some((page) => pathname.startsWith(page));
+// 일반 유저 - 팔로잉 1명 이상이면 접근 가능
+const FOLLOW_REQUIRED = ["/write"];
 
-// 군인 접근 불가 페이지
-const isUserPage = (pathname: string) =>
-  isSoldierRestrictedPage.some((page) => pathname.startsWith(page));
+// 일반 유저 - 팔로잉 1명 이상이면 접근 불가
+const HAS_FOLLOW_RESTRICTED = ["/onboarding"];
 
-// 일반 유저, 팔로우유무에 따른 페이지
-const needsFollow = (pathname: string) =>
-  // pathname.startsWith("/cabinet") ||
-  pathname === "/friends" ||
-  pathname.startsWith("/letters") ||
-  pathname.startsWith("/write") ||
-  pathname.startsWith("/pointHistory");
+// 소셜로그인 유저 - 비밀번호 변경 페이지 접근 불가
+const IS_SOCIAL_RESTRICTED = ["/my/pwd"];
 
 export async function middleware(req: NextRequest) {
   const session = await auth();
   const didLogin = !!session?.user;
-  const isSoldier = !!session?.user?.isSoldier;
-  const follow = session?.user?.follow;
-  const isSocial = session?.user?.isSocial;
-  const { pathname } = req.nextUrl;
 
-  // 인증 필요 페이지
-  if (isAuthenticatedPage(pathname) && !didLogin) {
-    if (isRedirectPage(pathname)) {
-      return NextResponse.redirect(
-        new URL(
-          `/auth/signIn?callbackUrl=${encodeURIComponent(`http://localhost:3000/cabinet/${pathname.split("/").pop()}`)}`,
-          req.url
-        )
-      );
-    }
+  const baseUrl = req.url;
+  const { pathname, search } = req.nextUrl;
 
-    return NextResponse.redirect(new URL(`/auth/signIn`, req.url));
-  }
+  // 요청 경로가 홈인지 여부
+  const isPathHome = pathname === "/";
 
-  // 군인 접근 불가 페이지
-  if (isUserPage(pathname) && didLogin && isSoldier) {
-    return NextResponse.redirect(new URL("/", req.url));
-  }
+  // 요청 경로가 각 제한 경로들에 포함되는지 검사하는 함수
+  const isPathIn = (pathType: string[]) =>
+    pathType.some((page) => (pathname + search).startsWith(page));
 
-  // 홈
-  if (pathname === "/") {
-    if (!didLogin) {
-      return NextResponse.redirect(new URL(`/auth/signIn`, req.url));
-    }
-    if (!isSoldier && !follow) {
-      return NextResponse.redirect(new URL("/onboarding", req.url));
-    }
-    if (!isSoldier && follow?.followId) {
-      return NextResponse.redirect(
-        new URL(`/cabinet/${follow.soldierId}`, req.url)
-      );
-    }
-  }
+  // 미로그인 사용자의 경우
+  if (!didLogin) return NextResponse.redirect(new URL("/auth/signIn", baseUrl));
 
-  // 온보딩
-  if (pathname === "/onboarding") {
-    if (!isSoldier && didLogin && follow?.followId) {
-      return NextResponse.redirect(
-        new URL(`/cabinet/${follow.soldierId}`, req.url)
-      );
-    }
-    // 팔로우가 없으면 온보딩 페이지 그대로
-  }
+  const isSoldier = !!session.user.isSoldier;
+  const follow = session.user.follow;
+  const isSocial = session.user.isSocial;
 
-  // 팔로우 필수 페이지
-  if (needsFollow(pathname) && didLogin && !isSoldier && !follow) {
-    return NextResponse.redirect(new URL("/onboarding", req.url));
-  }
+  // 일반 유저가 군인 전용 경로에 접근한 경우 OR
+  // 군인이 군인 접근 불가 경로에 접근한 경우
+  if (
+    (isPathIn(SOLDIER_ONLY) && !isSoldier) ||
+    (isPathIn(SOLDIER_RESTRICTED) && isSoldier)
+  )
+    return NextResponse.redirect(new URL("/invalidAccess", baseUrl));
 
-  //소셜 로그인일 경우 비밀번호 변경 페이지 접근 불가
-  if (pathname === "/my/pwd" && isSocial) {
-    return NextResponse.redirect(new URL("/my", req.url));
-  }
+  // 일반 유저가 받은 편지함(군인 전용)에 접근한 경우
+  if (isPathIn(SOLDIER_ONLY_LETTERS) && !isSoldier)
+    return NextResponse.redirect(new URL("/letters?box=friend", baseUrl));
+
+  // 팔로잉 있는 일반 유저가 온보딩 OR 홈으로 접근한 경우
+  if ((isPathIn(HAS_FOLLOW_RESTRICTED) || isPathHome) && !isSoldier && follow)
+    return NextResponse.redirect(
+      new URL(`/cabinet/${follow.soldierId}`, baseUrl)
+    );
+
+  // 팔로잉 없는 일반 유저가 편지 작성 OR 홈으로 접근한 경우
+  if ((isPathIn(FOLLOW_REQUIRED) || isPathHome) && !isSoldier && !follow)
+    return NextResponse.redirect(new URL("/onboarding", baseUrl));
+
+  // 소셜 로그인일 경우
+  if (isPathIn(IS_SOCIAL_RESTRICTED) && isSocial)
+    return NextResponse.redirect(new URL("/my", baseUrl));
 
   return NextResponse.next();
 }
-
-export const config = {
-  matcher: [
-    "/((?!login|_next/static|_next/image|auth|favicon.ico|robots.txt|images|api/auth|auth/signin$).*)",
-    "/api/:path*",
-  ],
-};

@@ -1,33 +1,33 @@
 "use client";
 
 import Image from "next/image";
-import { useState, type MouseEvent } from "react";
+import { useOptimistic, type MouseEvent } from "react";
 import { patchFavorite } from "@/lib/actions/letter-actions";
 
 type Props = {
   letterId: number;
-  isFavorite: boolean | null | undefined;
   currentUserId: number;
+  isFavorite?: boolean | null;
 };
 
 export default function FavoriteToggle({
   letterId,
-  isFavorite: initialFavorite,
+  isFavorite: initialFavoriteState,
   currentUserId,
 }: Props) {
-  const [isFavorite, setIsFavorite] = useState(initialFavorite);
+  const [isFavorite, toggleFavorite] = useOptimistic(
+    initialFavoriteState ?? false,
+    (prev) => !prev
+  );
 
-  // 즐겨찾기 토글
   const handleToggleFavorite = async (e: MouseEvent) => {
     e.preventDefault();
+    toggleFavorite(null);
 
-    const newFavorite = !isFavorite;
-    setIsFavorite(newFavorite); // 로컬 즉시 반영
+    const { ok } = await patchFavorite(letterId, currentUserId);
 
-    const res = await patchFavorite(letterId, currentUserId);
-
-    if (!res.ok) {
-      setIsFavorite(!newFavorite); // 실패 시 롤백
+    if (!ok) {
+      toggleFavorite(null);
     }
   };
 

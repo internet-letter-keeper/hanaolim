@@ -1,86 +1,80 @@
-"use client";
-
 import Link from "next/link";
-import { useParams } from "next/navigation";
-import { useSession } from "next-auth/react";
-import { useEffect, useState } from "react";
 import { Txt } from "@/components/atoms";
 import { BasicHeader } from "@/components/common";
-import { LettersDetail, PigSplash } from "@/components/letters";
+import { LettersDetail, PigSplashWrapper } from "@/components/letters";
 import { ERROR_MESSAGES } from "@/constants/message";
 import { handleEarnPoint } from "@/lib/actions/earn-point-actions";
 import {
   getLetterDetail,
   patchUserReadDate,
 } from "@/lib/actions/letter-actions";
+import { auth } from "@/lib/auth";
 
-export default function LetterDetailPage() {
-  const { letterId: rawLetterId } = useParams();
+type Props = {
+  params: Promise<{ letterId: string }>;
+};
 
-  if (!rawLetterId) {
-    throw new Error(ERROR_MESSAGES.LETTER.NOT_FOUND);
-  }
+export default async function LetterDetailPage({ params }: Props) {
+  const { letterId: rawLetterId } = await params;
+  const letterId = +rawLetterId;
 
-  const letterId = Number(rawLetterId);
+  // letterId가 숫자가 아닐 때
+  if (Number.isNaN(letterId))
+    throw new Error(ERROR_MESSAGES.LETTER.ID_IS_NUMBER);
 
-  const [letter, setLetter] =
-    useState<Awaited<ReturnType<typeof getLetterDetail>>["data"]>();
-  const [reply, setReply] =
-    useState<Awaited<ReturnType<typeof getLetterDetail>>["data"]>();
+  const session = await auth();
+  const userId = session?.user.userId;
+  const soldierId = session?.user.soldier.soldierId;
 
-  const { data } = useSession();
+  if (!userId) return;
 
-  const userId = data?.user.userId;
-  const soldierId = data?.user.soldier.soldierId;
+  // 원본 편지와 답장 모두 불러오기
+  const { data: letter } = await getLetterDetail({ letterId, userId });
+  const { data: reply } = await getLetterDetail({
+    letterId,
+    userId,
+    isReply: true,
+  });
 
-  const [showPoint, setShowPoint] = useState(false);
-  const [earnedBonus, setEarnedBonus] = useState(0);
+  // 내가 쓰거나 받은 편지가 아니거나, 존재하지 않는 편지일 때
+  if (!letter)
+    throw new Error(ERROR_MESSAGES.LETTER.NOT_FOUND_OR_ACCESS_DENIED);
 
-  useEffect(() => {
-    (async () => {
-      if (!userId) return;
+  const { receiverId, senderId } = letter;
 
-      // 편지 데이터 가져오기
-      const { data } = await getLetterDetail({ letterId, userId });
-      const { data: replyData } = await getLetterDetail({
+  if (!receiverId || !senderId)
+    throw new Error(ERROR_MESSAGES.LETTER.NOT_FOUND_OR_ACCESS_DENIED);
+
+  // 포인트 적립 처리
+  const res = soldierId
+    ? await handleEarnPoint({
         letterId,
-        userId,
-        isReply: true,
-      });
+        soldierId,
+        senderId,
+        receiverId,
+      })
+    : await patchUserReadDate(letterId, userId);
 
-      setLetter(data);
-      setReply(replyData);
-
-      if (soldierId) {
-        // 포인트 적립 처리
-
-        //TODO: result 리턴값 통일 후 구조분해할당까지
-        const result = await handleEarnPoint({ letterId, soldierId });
-
-        if (result.earn && result.bonus > 0) {
-          setEarnedBonus(result.bonus);
-          setShowPoint(true);
-        }
-      } else {
-        await patchUserReadDate(letterId, userId);
-      }
-    })();
-  }, [letterId, userId, soldierId]);
+  // TODO: 살리기
+  // await revalidateLetters();
 
   return (
     <div className="flex flex-col items-center gap-4">
-      <BasicHeader revalidateLetter className="w-full" />
+      <BasicHeader className="w-full" />
 
-      {showPoint && (
-        <PigSplash point={earnedBonus} onSkip={() => setShowPoint(false)} />
+      {"point" in res && res.point !== 0 && (
+        <PigSplashWrapper point={res.point} />
       )}
 
       <div className="px-4 w-full flex flex-col items-end gap-4">
         {/* 원본 편지 */}
         {letter && <LettersDetail letter={letter} />}
 
-        {/* 답장 없을 경우 버튼 */}
-        {letter && !letter.hasReply && letter.receiverId === userId && (
+        {/* 답장 */}
+        {reply?.letterId && <LettersDetail letter={reply} />}
+
+        {/* 답장 없을 경우 답장하기 버튼 */}
+        {!reply?.letterId && (
           <Link
             href={`/write/${soldierId}/${letter.letterId}`}
             className="inline-flex bg-green-49d px-3 py-1 rounded-[5px] border border-[#D6E9E7]"
@@ -90,8 +84,6 @@ export default function LetterDetailPage() {
             </Txt>
           </Link>
         )}
-
-        {letter?.hasReply && reply && <LettersDetail letter={reply} />}
       </div>
     </div>
   );

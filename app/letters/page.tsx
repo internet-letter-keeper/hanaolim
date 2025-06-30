@@ -1,3 +1,4 @@
+import { Suspense } from "react";
 import { Txt } from "@/components/atoms";
 import { BasicHeader } from "@/components/common";
 import {
@@ -25,7 +26,7 @@ export default async function LettersPage({ searchParams }: Props) {
   const query = (params.query as string) ?? "";
   const filter = params.filter;
 
-  const filteredLetters = await getFilteredLetters({
+  const { data, ok } = await getFilteredLetters({
     box,
     userId: currentUserId,
     isFavorite: filter === "favorite",
@@ -33,8 +34,6 @@ export default async function LettersPage({ searchParams }: Props) {
     hasReply: filter === "hasReply",
     query,
   });
-
-  const { data, ok } = filteredLetters;
 
   if (!ok) {
     return <Txt className="text-gray-400">편지를 불러오지 못했어요</Txt>;
@@ -44,18 +43,18 @@ export default async function LettersPage({ searchParams }: Props) {
     <div className="flex flex-col gap-4">
       <BasicHeader title="편지 보관함" />
       {isSoldierStauts && <LetterboxTabSelector box={box} />}
-      <SearchLetter />
+      <Suspense>
+        <SearchLetter />
+      </Suspense>
       <div className="flex flex-col gap-2">
         <Txt weight="cm" align="left" size={13} className="px-1">
           총 {data?.length}개
         </Txt>
-        <FilterBtn />
+        <Suspense>
+          <FilterBtn />
+        </Suspense>
       </div>
-      <LettersList
-        letters={filteredLetters.data}
-        box={box}
-        currentUserId={currentUserId}
-      />
+      <LettersList letters={data} box={box} currentUserId={currentUserId} />
     </div>
   );
 }

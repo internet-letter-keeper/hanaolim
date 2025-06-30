@@ -30,7 +30,7 @@ export default async function FriendsList({ soldierId }: Props) {
     <div className="overflow-x-auto -mx-4 px-4 [&::-webkit-scrollbar]:hidden">
       <div className="flex w-max gap-[20px] items-center">
         {/* 친구 추가 버튼 */}
-        <AddFriendBtn soldierId={soldierId} />
+        <AddFriendBtn />
 
         {/* 군인이 로그인했으면 군인 본인의 프로필도 띄우기 */}
         {myProfile && (

@@ -1,6 +1,5 @@
 import { signIn } from "next-auth/react";
-import { getUserByEmail, postSignUp } from "@/lib/actions/auth-actions";
-import { postFriendbyId } from "@/lib/actions/friend-actions";
+import { postSignUp } from "@/lib/actions/auth-actions";
 
 type SignInProps = {
   email: string;
@@ -29,20 +28,13 @@ async function loginFunc(email: string, password?: string) {
 export async function signInHook(signInData: SignInProps) {
   try {
     const { email, password, callbackUrl } = signInData;
-    if (callbackUrl && callbackUrl !== "/") {
-      if (email) {
-        const user = await getUserByEmail(email);
-        await postFriendbyId(
-          Number(callbackUrl.split("/").pop()),
-          Number(user?.userId)
-        );
-      }
-    }
-    const result = await loginFunc(email, password);
-    if (result.ok) {
+
+    const { ok } = await loginFunc(email, password);
+
+    if (ok) {
       // 로그인 성공
       if (callbackUrl && callbackUrl !== "/") {
-        return { success: true, redirectUrl: callbackUrl };
+        return { success: true, redirectUrl: `${callbackUrl}?add=true` };
       } else {
         return { success: true, redirectUrl: "/onboarding" };
       }

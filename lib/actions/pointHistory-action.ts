@@ -47,37 +47,3 @@ export const getPointHistory = async (soldierId: number) => {
     };
   }
 };
-
-//TODO: 무한스크롤 안 할 시 그냥 위에서 누적합한 거로 쓰기
-
-/**
- * 포인트 총합 불러오기
- * @param soldierId
- * @returns soldierId의 포인트 총합
- * @throws soldierId가 숫자가 아닐 때
- */
-export const getPointSum = async (soldierId: number) => {
-  requireAuth();
-  try {
-    if (!Number.isInteger(soldierId)) {
-      throw new Error(ERROR_MESSAGES.SOLDIER.NOT_FOUND);
-    }
-    const pointSum = await prisma.point.aggregate({
-      where: { soldierId },
-      _sum: { point: true },
-    });
-
-    //합계가 null이면 0으로 처리함
-    const result = pointSum._sum.point ?? 0;
-    return {
-      success: true,
-      message: SUCCESS_MESSAGES.COMMON.SUCCESS,
-      data: result,
-    };
-  } catch {
-    return {
-      success: false,
-      message: ERROR_MESSAGES.POINT.FETCH_FAILED,
-    };
-  }
-};

@@ -1,6 +1,8 @@
+export { default as AddFriendModal } from "./AddFriendModal";
 export { default as BasicHeader } from "./BasicHeader";
+export { default as DatePicker } from "./DatePicker";
 export { default as FriendProfileCircle } from "./FriendProfileCircle";
 export { default as Modal } from "./Modal";
-export { default as Toast } from "./Toast";
-export { default as Profile } from "./Profile";
 export { default as NewIcon } from "./NewIcon";
+export { default as Profile } from "./Profile";
+export { default as Toast } from "./Toast";
