@@ -13,9 +13,11 @@ type Props = {
 };
 
 export default function AddFriendModal({ closeModal }: Props) {
-  const { data } = useSession();
+  const { data, update } = useSession();
+  const user = data?.user;
   const userId = data?.user.userId;
   const isSoldier = data?.user.soldier;
+  const follow = data?.user.follow;
 
   const router = useRouter();
   const { showToast } = useToast();
@@ -41,6 +43,7 @@ export default function AddFriendModal({ closeModal }: Props) {
       }
 
       showToast(message, toastPosition);
+      await update({ ...user, follow });
       router.refresh();
       closeModal();
     }
