@@ -35,7 +35,10 @@ export default function AddFriendModal({ closeModal }: Props) {
     }
 
     if (typedCodeValue && userId) {
-      const { success, message } = await postFriend(typedCodeValue, userId);
+      const { success, message, follow } = await postFriend(
+        typedCodeValue,
+        userId
+      );
 
       if (!success) {
         showToast(message, toastPosition, "error");
@@ -44,7 +47,7 @@ export default function AddFriendModal({ closeModal }: Props) {
 
       showToast(message, toastPosition);
       await update({ ...user, follow });
-      router.refresh();
+      router.push(`/cabinet/${follow?.soldierId}`);
       closeModal();
     }
   };
