@@ -167,6 +167,7 @@ export const getIsNew = async (userId: number) => {
     where: {
       receiverId: userId,
       readDate: null,
+      parentLetterId: null,
     },
   });
   const isNew = unreadCount > 0 ? true : false;
