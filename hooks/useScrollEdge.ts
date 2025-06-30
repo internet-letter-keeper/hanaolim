@@ -11,7 +11,7 @@ export const useScrollEdges = <T extends HTMLDivElement>() => {
     const update = () => {
       const distanceFromBottom =
         el.scrollHeight - el.scrollTop - el.clientHeight;
-      setIsBottom(distanceFromBottom <= 60); //스크롤 내리면 페이드 사라짐 (500자 맞춰서 설정)
+      setIsBottom(distanceFromBottom <= 100); //스크롤 내리면 페이드 사라짐 (500자 맞춰서 설정)
     };
 
     //초기 값 감지
