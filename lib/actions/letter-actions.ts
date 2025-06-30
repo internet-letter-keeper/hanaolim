@@ -2,7 +2,6 @@
 
 import { revalidatePath } from "next/cache";
 import prisma from "@/lib/db";
-import { Prisma } from "../generated/prisma";
 
 type LetterDetailProp = {
   letterId: number;
