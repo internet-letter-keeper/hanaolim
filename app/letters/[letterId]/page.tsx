@@ -7,7 +7,6 @@ import { handleEarnPoint } from "@/lib/actions/earn-point-actions";
 import {
   getLetterDetail,
   patchUserReadDate,
-  revalidateLetters,
 } from "@/lib/actions/letter-actions";
 import { auth } from "@/lib/auth";
 
