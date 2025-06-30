@@ -40,7 +40,7 @@ export default async function LetterDetailPage({ params }: Props) {
   if (!letter)
     throw new Error(ERROR_MESSAGES.LETTER.NOT_FOUND_OR_ACCESS_DENIED);
 
-  const { receiverId, senderId } = letter;
+  const { senderName, receiverId, senderId } = letter;
 
   if (!receiverId || !senderId)
     throw new Error(ERROR_MESSAGES.LETTER.NOT_FOUND_OR_ACCESS_DENIED);
@@ -57,6 +57,10 @@ export default async function LetterDetailPage({ params }: Props) {
 
   // TODO: 살리기
   // await revalidateLetters();
+  if (!senderName) {
+    throw new Error(ERROR_MESSAGES.COMMON.SERVER_ERROR);
+  }
+  const encodedName = encodeURIComponent(senderName);
 
   return (
     <div className="flex flex-col items-center gap-4">
@@ -76,7 +80,7 @@ export default async function LetterDetailPage({ params }: Props) {
         {/* 답장 없을 경우 답장하기 버튼 */}
         {!reply?.letterId && (
           <Link
-            href={`/write/${soldierId}/${letter.letterId}`}
+            href={`/write/${soldierId}/${letter.letterId}?name=${encodedName}`}
             className="inline-flex bg-green-49d px-3 py-1 rounded-[5px] border border-[#D6E9E7]"
           >
             <Txt size={12} className="text-white">
