@@ -42,7 +42,6 @@ export default function useValidation() {
     } else if (field === "email") {
       // 중복된 이메일인지 확인
       if (duplicated) {
-        console.log("이미 사용 중.");
         setErrors((prev) => ({
           ...prev,
           email: "이미 사용 중인 이메일입니다.",
