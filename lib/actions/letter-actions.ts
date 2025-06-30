@@ -157,7 +157,7 @@ export const getLettersByUserId = async (
   }
 };
 
-/** 
+/**
  * 읽지 않은 편지 존재 유무
  * @param userId number - 현재 로그인한 유저 ID
  * @returns { isNew : boolean }
@@ -206,6 +206,14 @@ export const getFilteredLetters = async ({
   const isMine = box === "mine";
   const isFriend = box === "friend";
 
+  const stopwords = await prisma.stopWord.findMany({
+    select: { value: true },
+  });
+  const stopwordSet = new Set(stopwords.map((s) => s.value.trim()));
+
+  const isValidQuery = query && !stopwordSet.has(query.trim());
+  console.log("🚀 ~ isValidQuery:", isValidQuery);
+
   const rawLetters = await prisma.letter.findMany({
     where: {
       parentLetterId: null,
@@ -213,7 +221,7 @@ export const getFilteredLetters = async ({
       senderId: isFriend ? userId : undefined,
       readDate: isUnread && isMine ? null : undefined,
       childLetterId: hasReply && isFriend ? { not: null } : undefined,
-      OR: query
+      OR: isValidQuery
         ? [
             { content: { contains: query } },
             isMine
