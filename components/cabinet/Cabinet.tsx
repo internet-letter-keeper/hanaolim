@@ -7,6 +7,7 @@ import { Txt } from "@/components/atoms";
 import { ICON_POSITION } from "@/constants/icons";
 import { useToast } from "@/contexts/toast/ToastContext";
 import { getLettersByUserId } from "@/lib/actions/letter-actions";
+import { isNotSoldierYet } from "@/utils/date";
 import { getIconInfoByIconId } from "@/utils/icon";
 import { NewIcon } from "../common";
 import LetterModal from "../letters/LetterModal";
@@ -19,6 +20,7 @@ type Props = {
 export default function Cabinet({ soldierId, letters }: Props) {
   const { data } = useSession();
   const loginSoldier = data?.user.soldier;
+  const startDate = data?.user.soldier.startDate;
 
   const isMyCabinet = loginSoldier
     ? loginSoldier.soldierId === soldierId
@@ -32,16 +34,15 @@ export default function Cabinet({ soldierId, letters }: Props) {
     []
   );
 
-  const onLetterClick = (letterId: number) => {
+  const onLetterClick = async (letterId: number) => {
     if (!isMyCabinet) {
-      showToast("편지 수신인만 열어볼 수 있어요", "", "warning");
+      showToast("받은 사람만 볼 수 있어요", "", "warning");
       return;
     }
 
-    const startDate = data?.user.soldier.startDate;
-    const isAfterStartDate = startDate && new Date(startDate) > new Date();
+    if (!startDate) return null;
 
-    if (isMyCabinet && isAfterStartDate) {
+    if (isMyCabinet && isNotSoldierYet(startDate)) {
       showToast("입대일 이후에 열어볼 수 있어요", "", "warning");
       return;
     }
