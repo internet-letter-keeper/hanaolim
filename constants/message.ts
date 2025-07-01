@@ -23,6 +23,7 @@ export const ERROR_MESSAGES = {
     WRONG_PASSWORD: "현재 비밀번호 확인에 실패했습니다.",
     CHANGE_PASSWORD_FAILED: "비밀번호 변경에 실패했습니다.",
     FAILD_TO_SIGN_UP: "회원가입에 실패했습니다.",
+    FAILD_TO_DELETE_ACCOUNT: "회원 탈퇴에 실패했습니다.",
   },
   DATA: {
     NOT_FOUND: "요청한 데이터를 찾을 수 없습니다.",
@@ -35,6 +36,7 @@ export const ERROR_MESSAGES = {
   },
   SOLDIER: {
     NOT_FOUND: "해당하는 군인을 찾을 수 없습니다.",
+    REGISTER_FAILED: "군인 등록에 실패했습니다.",
     DATE_UPDATE_FAILED: "입대일/전역일 변경에 실패했습니다.",
     INVALID_ACCOUNT: "계좌번호를 불러오지 못했습니다. 다시 시도해주세요.",
   },

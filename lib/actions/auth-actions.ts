@@ -66,9 +66,11 @@ export const deleteUser = async (userId: number) => {
       where: { userId },
       data: { delYN: true },
     });
-    return { ok: true, message: "회원 탈퇴가 완료되었습니다." };
+    return { success: true };
   } catch {
-    return { ok: false, message: "회원 탈퇴에 실패했습니다." };
+    return {
+      success: false,
+    };
   }
 };
 
@@ -115,9 +117,9 @@ export const postSoldier = async (soldier: SoldierData) => {
       data: { isSoldier: true },
     });
 
-    return { ok: true, data: postSoldier };
+    return { success: true, data: postSoldier };
   } catch {
-    return { ok: false, error: "군인등록에 실패했습니다." };
+    return { success: false, message: ERROR_MESSAGES.SOLDIER.REGISTER_FAILED };
   }
 };
 

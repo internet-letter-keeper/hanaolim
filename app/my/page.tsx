@@ -5,6 +5,7 @@ import { signOut, useSession } from "next-auth/react";
 import { useState } from "react";
 import { Txt } from "@/components/atoms";
 import { BasicHeader, Modal } from "@/components/common";
+import { ERROR_MESSAGES } from "@/constants/message";
 import { deleteUser } from "@/lib/actions/auth-actions";
 import { cn } from "@/lib/utils";
 
@@ -37,7 +38,7 @@ export default function MyPage() {
       else router.push("/auth/signIn");
       // catch
     } catch {
-      throw new Error("회원 탈퇴에 실패했습니다.");
+      throw new Error(ERROR_MESSAGES.AUTH.FAILD_TO_DELETE_ACCOUNT);
     }
   };
   const backUrl = `cabinet/${isSoldier ? soldier?.soldierId : follow?.soldierId}`;
