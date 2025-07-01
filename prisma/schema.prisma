@@ -57,11 +57,12 @@ model Letter {
   parentLetterId               Int?       @unique(map: "unique_parentLetterId") @db.UnsignedInt
   receiverId                   Int        @db.UnsignedInt
   senderId                     Int        @db.UnsignedInt
+  childLetterId                Int?
   Favorite                     Favorite[]
+  parentLetter                 Letter?    @relation("ParentChild", fields: [parentLetterId], references: [letterId], onUpdate: NoAction, map: "FK_Letter_Parent")
+  childLetter                  Letter?    @relation("ParentChild")
   User_Letter_receiverIdToUser User       @relation("Letter_receiverIdToUser", fields: [receiverId], references: [userId], onDelete: NoAction, onUpdate: NoAction, map: "Letter_ibfk_1")
   User_Letter_senderIdToUser   User       @relation("Letter_senderIdToUser", fields: [senderId], references: [userId], onDelete: NoAction, onUpdate: NoAction, map: "Letter_ibfk_2")
-  Letter                       Letter?    @relation("LetterToLetter", fields: [parentLetterId], references: [letterId], onDelete: NoAction, onUpdate: NoAction, map: "Letter_ibfk_3")
-  other_Letter                 Letter?    @relation("LetterToLetter")
 
   @@index([receiverId], map: "receiverId")
   @@index([senderId], map: "senderId")
@@ -83,7 +84,7 @@ model Soldier {
   soldierId     Int       @id @default(autoincrement()) @db.UnsignedInt
   startDate     DateTime  @db.Date
   endDate       DateTime  @db.Date
-  statusMessage String?   @db.VarChar(50)
+  statusMessage String    @default("편지로 관물대를 채워주세요 *^0^*") @db.VarChar(50)
   letterExp     Int       @default(0)
   code          String    @unique(map: "code") @db.VarChar(20)
   userId        Int       @db.UnsignedInt
@@ -93,6 +94,11 @@ model Soldier {
   User          User      @relation(fields: [userId], references: [userId], onDelete: NoAction, onUpdate: NoAction, map: "Soldier_ibfk_1")
 
   @@index([userId], map: "userId")
+}
+
+model StopWord {
+  id    Int    @id @default(autoincrement())
+  value String @unique(map: "value") @db.VarChar(255)
 }
 
 /// This model or at least one of its fields has comments in the database, and requires an additional setup for migrations: Read more: https://pris.ly/d/database-comments
@@ -108,9 +114,4 @@ model User {
   Letter_Letter_receiverIdToUser Letter[]   @relation("Letter_receiverIdToUser")
   Letter_Letter_senderIdToUser   Letter[]   @relation("Letter_senderIdToUser")
   Soldier                        Soldier[]
-}
-
-model StopWord {
-  id    Int    @id @default(autoincrement())
-  value String @unique(map: "value") @db.VarChar(255)
 }

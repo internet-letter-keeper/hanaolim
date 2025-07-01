@@ -2,6 +2,7 @@
 
 import Image from "next/image";
 import { useRouter } from "next/navigation";
+import { useEffect } from "react";
 import { cn } from "@/lib/utils";
 import { Txt } from "../atoms";
 
@@ -10,6 +11,7 @@ type Props = {
   showBackButton?: boolean;
   backUrl?: string;
   className?: string;
+  isRefresh?: boolean;
 };
 
 export default function BasicHeader({
@@ -17,6 +19,7 @@ export default function BasicHeader({
   showBackButton = true,
   backUrl,
   className,
+  isRefresh,
 }: Props) {
   const router = useRouter();
 
@@ -27,6 +30,12 @@ export default function BasicHeader({
     }
     router.back();
   };
+
+  useEffect(() => {
+    if (isRefresh) {
+      router.refresh();
+    }
+  }, [isRefresh]);
 
   return (
     <header className={cn("flex items-center px-2 h-[40px]", className)}>
