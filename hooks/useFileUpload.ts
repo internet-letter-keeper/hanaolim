@@ -1,7 +1,7 @@
 import { useState, useRef, useEffect } from "react";
 import { ERROR_MESSAGES } from "@/constants/message";
+import { uploadToS3 } from "@/lib/actions/upload-actions";
 import { uploadedFileType } from "@/types/letters";
-import { uploadToS3 } from "@/utils/upload";
 
 const MAX_FILE_SIZE = 5 * 1024 * 1024; // 5MB
 
@@ -27,7 +27,7 @@ export const useFileUpload = () => {
 
     setIsUploading(true);
     try {
-      const url = await uploadToS3(file);
+      const url = await postUploadToS3(file);
       const fileType = file.type.startsWith("image/") ? "image" : "video";
 
       setUploadedFile({
