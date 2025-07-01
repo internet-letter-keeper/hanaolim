@@ -31,11 +31,7 @@ export default function InvalidAccessPage() {
       <PrimaryButton
         title="뒤로가기"
         onClick={handleGoBack}
-        rounded="sm"
-        textSize={16}
-        align="center"
-        weight="cm"
-        className="h-[38px] w-2/3 mt-10"
+        className="mt-10"
       />
     </div>
   );

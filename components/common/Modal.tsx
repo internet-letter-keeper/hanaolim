@@ -53,16 +53,12 @@ export default function Modal({
           <PrimaryButton
             title={whiteBtnText}
             color="white"
-            textSize={16}
-            weight="medium"
             onClick={onClickWhiteBtn}
             className="h-[50px]"
           />
           <PrimaryButton
             title={greenBtnText}
             color="green"
-            textSize={16}
-            weight="medium"
             onClick={onClickGreenBtn}
             className="h-[50px]"
             disabled={disabled}

@@ -2,7 +2,7 @@
 
 import { useRouter } from "next/navigation";
 import { useSession } from "next-auth/react";
-import { useState,KeyboardEvent } from "react";
+import { useState, KeyboardEvent } from "react";
 import { Input, PrimaryButton, Txt } from "@/components/atoms";
 import { BasicHeader } from "@/components/common";
 import {
@@ -144,9 +144,7 @@ export default function MyPwdPage() {
 
         <PrimaryButton
           title={isLoading ? "변경 중..." : "변경"}
-          textSize={20}
-          weight="medium"
-          className="h-[38px] mt-[38px]"
+          className="mt-[38px]"
           disabled={!isButtonEnabled}
           onClick={handleChangePassword}
         />

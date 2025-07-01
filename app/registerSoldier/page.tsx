@@ -147,11 +147,6 @@ export default function SignInPage() {
 
           <PrimaryButton
             title="등록"
-            rounded="sm"
-            textSize={16}
-            align="center"
-            weight="cm"
-            className="h-[38px]"
             onClick={handleSubmit}
             disabled={isLoading}
           />

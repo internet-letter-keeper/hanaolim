@@ -98,7 +98,7 @@ export default function FriendManageList({ friends }: Props) {
           </EmptyState>
           <PrimaryButton
             title="친구 추가하기"
-            className="py-2 px-5 w-fit font-bold"
+            className="py-2 px-5 w-fit"
             onClick={() => setAddFriendModalOpened(true)}
           />
         </div>

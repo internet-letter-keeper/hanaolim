@@ -27,16 +27,7 @@ export default async function Card() {
         </Txt>
 
         <div className="mt-3">
-          <PrimaryButton
-            title="보내기"
-            color="green"
-            rounded="sm"
-            textSize={12}
-            weight="medium"
-            align="center"
-            padding="py-0"
-            className="w-[80px] h-[23px]"
-          />
+          <PrimaryButton title="보내기" className="w-[80px] h-[23px]" />
         </div>
       </div>
 

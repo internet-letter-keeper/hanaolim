@@ -30,11 +30,7 @@ export default function NotFound() {
       <PrimaryButton
         title="이전 화면으로"
         onClick={handleGoBack}
-        rounded="sm"
-        textSize={16}
-        align="center"
-        weight="cm"
-        className="h-[38px] w-2/3 mt-10"
+        className="mt-10"
       />
     </div>
   );
