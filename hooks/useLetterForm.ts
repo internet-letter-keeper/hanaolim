@@ -12,7 +12,7 @@ export const useLetterForm = ({ isReply = false }: UseLetterFormProps = {}) => {
   const [userName, setUserName] = useState<string>("");
   const [nickname, setNickname] = useState<string>("");
   const [content, setContent] = useState<string>("");
-  const [selectedIcon, setSelectedIcon] = useState<IconName>("face");
+  const [selectedIcon, setSelectedIcon] = useState<IconName>("bag");
   const [senderId, setSenderId] = useState<number>(0);
   const { showToast } = useToast();
 
