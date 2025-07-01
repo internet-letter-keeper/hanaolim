@@ -3,7 +3,7 @@ import {
   checkEmailValidation,
   checkNameValidation,
   checkPasswordValidation,
-} from "@/lib/validations/validation";
+} from "@/lib/validations/authValidation";
 
 export default function useValidation() {
   const [form, setForm] = useState({
