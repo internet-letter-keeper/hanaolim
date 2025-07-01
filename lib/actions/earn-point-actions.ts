@@ -63,8 +63,8 @@ export const handleEarnPoint = async ({
 /**
  * readDate가 null인 Letter를 현재 시간으로 업데이트
  * @param letterId 편지 ID
- * @returns 업데이트 성공 시 succss, 업데이트 실행시 success
- * @throws 유효하지 않은 letterId 형식 또는 DB 처리 중 에러 발생
+ * @returns 업데이트 성공 시 true, 실패 시 false
+ * @throws 유효하지 않은 letterId 형식 또는 DB 처리 중 오류 발생
  */
 const postReadDate = async (letterId: number, tx: Prisma.TransactionClient) => {
   if (typeof letterId !== "number" || Number.isNaN(letterId)) {
@@ -79,7 +79,6 @@ const postReadDate = async (letterId: number, tx: Prisma.TransactionClient) => {
     data: { readDate: new Date() },
   });
 
-  // updateMany 성공적 실행, 안 읽은 편지라면 updated true 이미 읽었다면 false
   return { updated: count > 0 };
 };
 
@@ -88,8 +87,8 @@ const postReadDate = async (letterId: number, tx: Prisma.TransactionClient) => {
  * @param letterId 편지 ID
  * @param senderId 편지 보낸 사람 ID
  * @param receiverId 편지 받은 사람 ID
- * @returns 함수 실행 성공 여부와 포인트 적립 가능 여부
- * @throws 함수 실행 실패 시 false
+ * @returns 포인트 적립 조건 만족 시 true, 실패 시 false
+ * @throws DB 처리 중 오류 발생
  */
 const getPointEarnability = async (
   senderId: number,
@@ -130,8 +129,8 @@ const getPointEarnability = async (
 /**
  * 포인트 적립 조건을 만족했을 때 경험치를 업데이트하고 포인트를 적립해 줌
  * @param soldierId
- * @returns 경험치 적립 성공 여부와 적립한 포인트
- * @throws 경험치 적립 실패 또는 포인트 적립 실패
+ * @returns 조건 모두 만족 시 적립한 포인트(1 이상), 실패 시 0
+ * @throws DB 처리 중 오류 발생
  */
 const postEarnedPoint = async (
   soldierId: number,

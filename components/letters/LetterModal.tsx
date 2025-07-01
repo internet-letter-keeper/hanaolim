@@ -14,8 +14,8 @@ import { formatLetterData } from "@/utils/letter";
 import { LetterView, PigSplash } from ".";
 import { Txt } from "../atoms";
 
-// 답장 페이지 또는 편지 상세 페이지로 이동하기 위해 letterId 받아옴
-// 모달 제어를 위해 콜백 함수 받아옴 (onHandle), 페이지에서 useState 이용해서 모달 제어
+// 답장 페이지 또는 편지 상세 페이지로 이동하기 위한 letterId
+// 모달 제어를 위한 콜백 함수 (페이지에서 useState 이용해서 모달 제어)
 
 type Props = {
   letterId: number;
@@ -73,7 +73,7 @@ export default function LetterModal({ letterId, onHandleModal }: Props) {
           senderId,
           receiverId,
         });
-
+        // point가 0보다 크면 획득 완료 -> 포인트 적립 스플래시 띄우기
         if (point > 0) {
           setEarnedPoint(point);
           setShowPoint(true);
@@ -108,7 +108,7 @@ export default function LetterModal({ letterId, onHandleModal }: Props) {
     if (e.target === overlay.current) onHandleModal();
   };
 
-  //스크롤 감지 페이드 처리
+  //스크롤 감지(최하단 페이드 처리)
   const { ref: scrollRef, isScrolled } = useScrollEdges();
 
   return (
@@ -129,6 +129,7 @@ export default function LetterModal({ letterId, onHandleModal }: Props) {
           letter ? "max-h-[66vh] opacity-100" : "max-h-[150px] opacity-0"
         )}
       >
+        {/* 최하단 페이드 처리 부분, 스크롤 시 페이드 사라짐 */}
         {!isScrolled && (
           <div className="absolute bottom-0 left-0 w-full h-12 bg-gradient-to-t from-white-fff to-transparent pointer-events-none z-10" />
         )}
