@@ -42,7 +42,7 @@ export default async function CabinetHeader({
             alt="뒤로가기"
             width={12}
             height={20}
-            className="w-3 h-5"
+            className="w-[12px] h-[20px]"
           />
         </Link>
       )}

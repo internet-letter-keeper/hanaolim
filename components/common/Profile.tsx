@@ -47,6 +47,7 @@ export default function Profile() {
           alt="profile-icon"
           width={55}
           height={55}
+          className="w-[55px] h-[55px]"
         />
       </div>
       <div>
@@ -80,6 +81,7 @@ export default function Profile() {
                   alt="copy-icon"
                   width={12}
                   height={12}
+                  className="w-[12px] h-[12px]"
                 />
               </button>
             )}
