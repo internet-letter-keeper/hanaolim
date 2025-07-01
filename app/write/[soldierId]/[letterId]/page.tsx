@@ -1,7 +1,7 @@
 "use client";
 
 import { useRouter } from "next/navigation";
-import { useTransition } from "react";
+import { useState } from "react";
 import { ChangeEvent } from "react";
 import {
   FileUploadSection,
@@ -17,7 +17,7 @@ import { postLetterReply } from "@/lib/actions/write-actions";
 export default function LetterWritePage() {
   const router = useRouter();
   const { showToast } = useToast();
-  const [isPending, startTransition] = useTransition();
+  const [isSubmitting, setIsSubmitting] = useState(false);
 
   const { formData, setContent, soldierId, letterId, isFormValid } =
     useLetterForm({ isReply: true });
@@ -39,8 +39,9 @@ export default function LetterWritePage() {
     }
   };
 
-  const handleSubmit = () => {
-    startTransition(async () => {
+  const handleSubmit = async () => {
+    setIsSubmitting(true);
+    try {
       if (!soldierId || !letterId) {
         throw new Error(ERROR_MESSAGES.LETTER.MISSING_REQUIRED_IDS);
       }
@@ -65,7 +66,11 @@ export default function LetterWritePage() {
       if (!success) {
         showToast(message, "", "error");
       }
-    });
+    } catch (error) {
+      showToast(ERROR_MESSAGES.LETTER.SENDING_ERROR, "", "error");
+    } finally {
+      setIsSubmitting(false);
+    }
   };
 
   return (
@@ -75,7 +80,7 @@ export default function LetterWritePage() {
         isReply={true}
         onContentChange={setContent}
         onSubmit={handleSubmit}
-        isPending={isPending}
+        isPending={isSubmitting}
         isFormValid={isFormValid}
         isUploading={isUploading}
       >
