@@ -34,6 +34,7 @@ export default function SearchLetter() {
         usage="modal"
         className="rounded-[10px] pr-10"
         onKeyDown={handleKeyDown}
+        defaultValue={searchParams.get("query") ?? ""}
       />
       <button onClick={handleSearch}>
         <Image
