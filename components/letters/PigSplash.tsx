@@ -53,11 +53,7 @@ export default function PigSplash({ onSkip, point }: PigSplashProps) {
         <PrimaryButton
           title="포인트 적립 내역 보기"
           onClick={handleGoToHistory}
-          rounded="sm"
-          textSize={16}
-          align="center"
-          weight="cm"
-          className="p-3 w-fit"
+          className="px-5 w-fit"
         />
       </div>
     </div>

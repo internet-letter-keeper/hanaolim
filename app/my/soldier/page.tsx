@@ -116,9 +116,6 @@ export default function MySoldierPage() {
           </div>
           <PrimaryButton
             title={isLoading ? "변경 중..." : "변경"}
-            textSize={20}
-            weight="medium"
-            className="h-[38px]"
             disabled={!isButtonEnabled}
             onClick={handleSubmit}
           />

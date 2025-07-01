@@ -86,12 +86,9 @@ export default function LetterForm({
       <div className="flex justify-end mt-4">
         <PrimaryButton
           title="전송"
-          rounded="sm"
-          weight="medium"
-          className="w-20 py-1"
           disabled={isPending || !isFormValid || isUploading}
-          textSize={16}
           onClick={handleSubmitClick}
+          isMini
         />
       </div>
 
