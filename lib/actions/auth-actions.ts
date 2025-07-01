@@ -50,9 +50,9 @@ export const postSignUp = async (user: UserData) => {
       },
     });
 
-    return { ok: true, data: newUser };
+    return { success: true, data: newUser };
   } catch {
-    return { ok: false, error: "회원가입에 실패했습니다." };
+    return { success: false, message: ERROR_MESSAGES.AUTH.FAILD_TO_SIGN_UP };
   }
 };
 /**

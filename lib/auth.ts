@@ -76,14 +76,14 @@ export const {
             isSocial: true,
           };
 
-          const signUp = await postSignUp(newUser);
-          if (!signUp.ok || !signUp.data) return false;
+          const { success, data } = await postSignUp(newUser);
+          if (!success || !data) return false;
 
-          user.userId = signUp.data.userId;
-          user.email = signUp.data.email;
-          user.userName = signUp.data.userName;
-          user.isSoldier = signUp.data.isSoldier;
-          user.isSocial = signUp.data.isSocial;
+          user.userId = data.userId;
+          user.email = data.email;
+          user.userName = data.userName;
+          user.isSoldier = data.isSoldier;
+          user.isSocial = data.isSocial;
         } else {
           // DB에 유저가 이미 존재하면 로그인 성공
           if (dbUser.delYN) return false;
