@@ -1,5 +1,6 @@
 import { useParams, useSearchParams } from "next/navigation";
 import { useState, useEffect } from "react";
+import { ERROR_MESSAGES } from "@/constants/message";
 import { useToast } from "@/contexts/toast/ToastContext";
 import { getSenderNameId } from "@/lib/actions/write-actions";
 import { IconName } from "@/types/common/icons";
@@ -21,7 +22,7 @@ export const useLetterForm = ({ isReply = false }: UseLetterFormProps = {}) => {
   const nameParam = searchParams.get("name");
 
   if (!soldierId) {
-    throw new Error("군인 아이디가 존재하지 않습니다.");
+    throw new Error(ERROR_MESSAGES.SOLDIER.NOT_FOUND);
   }
 
   useEffect(() => {

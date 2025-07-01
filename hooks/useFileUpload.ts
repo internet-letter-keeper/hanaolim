@@ -1,4 +1,5 @@
 import { useState, useRef, useEffect } from "react";
+import { ERROR_MESSAGES } from "@/constants/message";
 import { uploadedFileType } from "@/types/letters";
 import { uploadToS3 } from "@/utils/upload";
 
@@ -35,7 +36,7 @@ export const useFileUpload = () => {
         type: fileType,
       });
     } catch {
-      setError("파일 업로드에 실패했습니다. 다시 시도해주세요.");
+      setError(ERROR_MESSAGES.FILE.UPLOAD_FAILED);
     } finally {
       setIsUploading(false);
     }
