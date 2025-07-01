@@ -25,16 +25,14 @@ const ButtonStyle = "border border-gray-353/25 py-3";
 export default function DropDownModal({ isNew }: Props) {
   const { data: session } = useSession();
   const isSoldier = session?.user.isSoldier;
-  const startDate = session?.user.soldier.startDate;
+  const startDate = isSoldier ? session?.user.soldier.startDate : null;
 
   const router = useRouter();
 
   const { showToast } = useToast();
 
   const goToLetters = async () => {
-    if (!startDate) return null;
-
-    if (isNotSoldierYet(startDate)) {
+    if (startDate && isNotSoldierYet(startDate)) {
       showToast("입대일 이후에 열어볼 수 있어요", "", "warning");
       return;
     }
