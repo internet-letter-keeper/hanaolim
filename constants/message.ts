@@ -43,6 +43,7 @@ export const ERROR_MESSAGES = {
   LETTER: {
     INVALID_INPUT: "입력이 잘못되었습니다.",
     POST_FAILED: "편지 작성에 실패했습니다.",
+    SENDING_ERROR: "답장 전송 중 오류가 발생했습니다.",
     NOT_FOUND_OR_ACCESS_DENIED: "편지를 찾을 수 없거나 접근 권한이 없습니다.",
     MISSING_REQUIRED_IDS: "필수 아이디가 누락되었습니다.",
     UPDATE_READ_DATE_FAILED: "편지 읽은 날짜 업데이트에 실패했습니다.",
