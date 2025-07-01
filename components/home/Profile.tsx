@@ -1,18 +1,18 @@
 import Image from "next/image";
 import Link from "next/link";
-import Txt from "@/components/atoms/Text";
 import { Progress } from "@/components/ui/progress";
-import { getProfileInfo } from "@/lib/actions/home-actions";
 import { requireAuth } from "@/utils/auth";
 import { untilEndDate } from "@/utils/date";
+import { Txt } from "../atoms";
 
 export default async function Profile() {
   const session = await requireAuth();
-  const userId = session.user.userId;
-  const { userName, startDate, endDate } = await getProfileInfo(userId);
+  const userName = session.user.userName;
+  const startDate = session.user.soldier.startDate;
+  const endDate = session.user.soldier.endDate;
 
-  const startDateObj = new Date(startDate);
-  const endDateObj = new Date(endDate);
+  const startDateObj = new Date(startDate ?? "");
+  const endDateObj = new Date(endDate ?? "");
   const today = new Date();
 
   // 남은 복무일
