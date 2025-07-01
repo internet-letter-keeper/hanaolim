@@ -59,6 +59,7 @@ export default function EditStatusMsgBtn({ soldierInfo }: Props) {
               alt="무전기 이미지"
               width={88}
               height={105}
+              className="w-22 h-[105px]"
             />
             상태 메시지를 <br /> 입력하세요
           </div>

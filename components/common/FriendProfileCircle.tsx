@@ -65,6 +65,7 @@ export default function FriendProfileCircle({
               alt={rank}
               width={37}
               height={37}
+              className="w-[37px] h-[37px]"
             />
           </div>
         </div>
