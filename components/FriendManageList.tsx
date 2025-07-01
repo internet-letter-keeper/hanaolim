@@ -9,9 +9,13 @@ import {
   deleteFriend,
   getFriendsList,
 } from "@/lib/actions/friend-actions";
-import EmptyState from "./EmptyState";
 import { PrimaryButton, Txt } from "./atoms";
-import { AddFriendModal, FriendProfileCircle, Modal } from "./common";
+import {
+  AddFriendModal,
+  EmptyState,
+  FriendProfileCircle,
+  Modal,
+} from "./common";
 
 type Props = {
   friends: Awaited<ReturnType<typeof getFriendsList>>["data"];

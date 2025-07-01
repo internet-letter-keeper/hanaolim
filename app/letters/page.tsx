@@ -1,7 +1,6 @@
 import { Suspense } from "react";
-import EmptyState from "@/components/EmptyState";
 import { Txt } from "@/components/atoms";
-import { BasicHeader } from "@/components/common";
+import { BasicHeader, EmptyState } from "@/components/common";
 import {
   FilterBtn,
   LetterboxTabSelector,
