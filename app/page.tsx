@@ -23,6 +23,7 @@ export default async function Page() {
             alt="하나올림 로고"
             width={110}
             height={36}
+            style={{ width: 110, height: 36 }}
           />
           <Link href="/api/auth/signout">
             <Txt

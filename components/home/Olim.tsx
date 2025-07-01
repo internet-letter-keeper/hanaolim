@@ -42,6 +42,7 @@ export default async function Olim() {
                 alt="확인하기 아이콘"
                 width={5}
                 height={10}
+                style={{ width: 5, height: 10 }}
               />
             </div>
           </div>
