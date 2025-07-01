@@ -58,7 +58,6 @@ export default function DropDownModal({ isNew }: Props) {
                     <PrimaryButton
                       title="편지 보관함"
                       className={cn(ButtonStyle, "gap-1")}
-                      textSize={16}
                       color="gray"
                       onClick={goToLetters}
                       icon={isNew ? <NewIcon /> : undefined}
@@ -66,7 +65,6 @@ export default function DropDownModal({ isNew }: Props) {
                     <PrimaryButton
                       title="내 정보"
                       className={cn(ButtonStyle, "gap-1")}
-                      textSize={16}
                       color="gray"
                       onClick={goToMy}
                     />
@@ -77,7 +75,6 @@ export default function DropDownModal({ isNew }: Props) {
                         title="군인으로 등록하기"
                         className={ButtonStyle}
                         color="gray"
-                        textSize={16}
                         onClick={goToRegisterSoldier}
                       />
                     )}
@@ -85,7 +82,6 @@ export default function DropDownModal({ isNew }: Props) {
                       title="친구 관리"
                       className={ButtonStyle}
                       color="gray"
-                      textSize={16}
                       onClick={goToFriends}
                     />
                   </div>

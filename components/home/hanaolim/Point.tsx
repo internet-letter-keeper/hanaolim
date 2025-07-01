@@ -45,13 +45,14 @@ export default function Point({ letterExp }: Props) {
             alt="코인 아이콘"
             width={25}
             height={25}
+            className="w-[25px] h-[25px]"
           />
           <Image
             src="/icons/ic-question.svg"
             alt="도움말 아이콘"
             width={15}
             height={15}
-            className="cursor-pointer"
+            className="w-[15px] h-[15px] cursor-pointer"
             onClick={toggleTooltip}
           />
           {showTooltip && (

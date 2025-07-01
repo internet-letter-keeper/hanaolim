@@ -19,6 +19,7 @@ export default function StatusMessage({ isMyCabinet, soldierInfo }: Props) {
         width={30}
         height={30}
         priority
+        className="w-auto h-auto"
       />
 
       <Txt className="w-full text-gray-353 truncate" align="left">

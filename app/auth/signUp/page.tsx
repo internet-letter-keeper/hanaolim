@@ -130,11 +130,7 @@ export default function SignUpPage() {
       {/* 회원가입 버튼 */}
       <PrimaryButton
         title="회원가입"
-        rounded="sm"
-        textSize={16}
-        align="center"
-        weight="cm"
-        className="h-[38px] mt-[38px]"
+        className="mt-[38px]"
         onClick={handleSignUp}
         disabled={!isButtonEnabled}
       />

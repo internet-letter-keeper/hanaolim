@@ -138,11 +138,6 @@ export default function SignInPage() {
           {/* 로그인 버튼 */}
           <PrimaryButton
             title={isLoading ? "로그인 중..." : "로그인"}
-            rounded="sm"
-            textSize={16}
-            align="center"
-            weight="cm"
-            className="h-[38px] "
             disabled={isLoading}
             onClick={handleSignIn}
           />

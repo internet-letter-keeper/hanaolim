@@ -57,7 +57,6 @@ export default function SignInPage() {
         ...session.user,
         soldier: result.data,
         isSoldier: true,
-        follow: result.data,
       }); // 세션 업데이트
 
       setIsLoading(false);
@@ -148,11 +147,6 @@ export default function SignInPage() {
 
           <PrimaryButton
             title="등록"
-            rounded="sm"
-            textSize={16}
-            align="center"
-            weight="cm"
-            className="h-[38px]"
             onClick={handleSubmit}
             disabled={isLoading}
           />
