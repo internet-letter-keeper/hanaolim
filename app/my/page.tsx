@@ -1,10 +1,11 @@
 "use client";
 
 import { useRouter } from "next/navigation";
-import { useSession } from "next-auth/react";
+import { signOut, useSession } from "next-auth/react";
 import { useState } from "react";
 import { Txt } from "@/components/atoms";
 import { BasicHeader, Modal } from "@/components/common";
+import { deleteUser } from "@/lib/actions/auth-actions";
 import { cn } from "@/lib/utils";
 
 const buttonStyle = "flex flex-row pl-4 py-3 ";
@@ -24,11 +25,21 @@ export default function MyPage() {
     router.push("/api/auth/signout");
     setShowLogoutModal(false);
   };
-  const handleWithdraw = () => {
-    // TODO: 회원 탈퇴 로직 구현
-    // 회원 탈퇴된 후 라우터 이동ㄴ
-    alert("회원 탈퇴");
-    setShowWithdrawModal(false);
+  const handleWithdraw = async () => {
+    try {
+      // TODO: 회원 탈퇴 로직 구현
+      await deleteUser(session?.user.userId || 0);
+      const preSession = session;
+      await signOut({ redirect: false });
+      setShowWithdrawModal(false);
+      // 회원 탈퇴 후 팔로잉이 있는 경우 해당 군인 페이지로 이동
+      if (preSession?.user.follow)
+        router.push(`/cabinet/${preSession.user.follow.soldierId}`);
+      else router.push("/auth/signIn");
+      // catch
+    } catch (error) {
+      throw new Error("회원 탈퇴에 실패했습니다.");
+    }
   };
   const backUrl = `cabinet/${isSoldier ? soldier?.soldierId : follow?.soldierId}`;
 

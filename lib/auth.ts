@@ -32,7 +32,7 @@ export const {
 
         const { email, password } = validator.data;
 
-        const dbUser = await getUserByEmail(email);
+        const dbUser = await getUserByEmail(email, true);
         if (!dbUser || !dbUser.password) return null;
         // 비밀번호가 일치하는지 확인
         const isValid = await bcrypt.compare(password, dbUser.password);
@@ -86,6 +86,7 @@ export const {
           user.isSocial = signUp.data.isSocial;
         } else {
           // DB에 유저가 이미 존재하면 로그인 성공
+          if (dbUser.delYN) return false;
           user.userId = dbUser.userId;
           user.email = dbUser.email;
           user.userName = dbUser.userName;
