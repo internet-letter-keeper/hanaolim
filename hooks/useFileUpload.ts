@@ -34,8 +34,7 @@ export const useFileUpload = () => {
         url,
         type: fileType,
       });
-    } catch (err) {
-      console.error("업로드 실패", err);
+    } catch {
       setError("파일 업로드에 실패했습니다. 다시 시도해주세요.");
     } finally {
       setIsUploading(false);

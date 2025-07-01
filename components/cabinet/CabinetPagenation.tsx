@@ -1,4 +1,4 @@
-import Image from "next/image";
+import { ChevronLeft, ChevronRight } from "lucide-react";
 import Link from "next/link";
 import { Txt } from "@/components/atoms";
 import {
@@ -28,21 +28,17 @@ export default async function CabinetPagenation({
   const { data } = await getLettersByUserId(userId, +currentPage, lettersCnt);
 
   return (
-    <div className="flex flex-col items-center gap-3 px-2">
-      <div className="flex items-center justify-center gap-3 w-full">
+    <div className="flex flex-col items-center gap-3">
+      <div className="flex items-center justify-center">
         {/* 관물대 첫 페이지면 이전 페이지 버튼이 안 보이게 */}
         {currentPage > 1 ? (
           <Link href={`/cabinet/${soldierId}?page=${currentPage - 1}`} replace>
-            <Image
-              src="/icons/ic-next-page.svg"
-              alt="관물대 이전 페이지로"
-              width={20}
-              height={20}
-              className="w-5 scale-x-[-1]"
-            />
+            <ChevronLeft color="lightgray" size={40} />
           </Link>
         ) : (
-          <div className="w-5" />
+          <div>
+            <ChevronLeft size={40} className="invisible" />
+          </div>
         )}
 
         {/* 관물대 */}
@@ -51,16 +47,12 @@ export default async function CabinetPagenation({
         {/* 관물대 마지막 페이지면 다음 페이지 버튼이 안 보이게 */}
         {currentPage < totalPage ? (
           <Link href={`/cabinet/${soldierId}?page=${currentPage + 1}`} replace>
-            <Image
-              src="/icons/ic-next-page.svg"
-              alt="관물대 다음 페이지로"
-              width={20}
-              height={20}
-              className="w-5"
-            />
+            <ChevronRight color="lightgray" size={40} />
           </Link>
         ) : (
-          <div className="w-5" />
+          <div>
+            <ChevronRight size={40} className="invisible" />
+          </div>
         )}
       </div>
 
