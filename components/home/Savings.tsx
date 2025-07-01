@@ -6,8 +6,13 @@ import { getAccountInfo } from "@/lib/actions/home-actions";
 
 export default async function Savings() {
   const session = await requireAuth();
-  const userId = session.user.userId;
-  const { savingsBalance } = await getAccountInfo(userId);
+  const soldierId = session.user.soldier.soldierId;
+  if (!soldierId) return null;
+
+  const { data } = await getSavingsInfo(soldierId);
+  if (!data) return null;
+
+  const { savingsBalance } = data;
 
   return (
     <Link

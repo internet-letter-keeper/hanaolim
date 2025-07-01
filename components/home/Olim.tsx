@@ -10,9 +10,14 @@ export default async function Olim() {
   const session = await requireAuth();
   const userId = session.user.userId;
   const soldierId = session.user.soldier.soldierId;
+  if (!soldierId) return null;
 
-  const { totalCount, unreadCount } = await getLetterCount(userId);
-  const { letterExp } = await getEarnedPoint(userId);
+  const { data: letterData } = await getLetterCount(userId);
+  const { data: pointData } = await getEarnedPoint(soldierId);
+  if (!letterData || !pointData) return null;
+
+  const { totalCount, unreadCount } = letterData;
+  const { letterExp } = pointData;
 
   return (
     <div className="flex flex-col justify-between pl-[26px] py-[27px] pr-[22px] bg-white-fff rounded-[20px] shadow-[0_0_5px_rgba(0,0,0,0.15)]">
@@ -23,7 +28,7 @@ export default async function Olim() {
               하나올림
             </Txt>
             <Txt size={18} weight="bold" className="leading-tight">
-              읽지 않은 편지{" "}
+              읽지 않은 편지&nbsp;
               <Txt size={18} weight="bold" className="text-green-49d">
                 {unreadCount}장
               </Txt>
@@ -60,7 +65,7 @@ export default async function Olim() {
       </Link>
 
       {/* 편지 + 포인트 */}
-      <div className="flex flex-col gap-[12px]">
+      <div className="flex flex-col gap-3">
         <Letter totalCount={totalCount} />
         <Point letterExp={letterExp} />
       </div>
