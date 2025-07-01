@@ -5,7 +5,7 @@ import Google from "next-auth/providers/google";
 import Kakao from "next-auth/providers/kakao";
 import Naver from "next-auth/providers/naver";
 import { getUserByEmail, postSignUp } from "./actions/auth-actions";
-import { credentialValidator } from "./validations/zodValidation";
+import { credentialValidator } from "./validations/authValidation";
 
 export const {
   handlers: { GET, POST },
