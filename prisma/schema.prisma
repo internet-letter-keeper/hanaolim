@@ -109,6 +109,7 @@ model User {
   userName                       String     @db.VarChar(50)
   isSoldier                      Boolean
   isSocial                       Boolean    @default(false)
+  delYN                          Boolean?   @default(false)
   Favorite                       Favorite[]
   Follow                         Follow[]
   Letter_Letter_receiverIdToUser Letter[]   @relation("Letter_receiverIdToUser")
