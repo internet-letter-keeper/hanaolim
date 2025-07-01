@@ -1,7 +1,7 @@
 "use client";
 
 import Image from "next/image";
-import { useState, type MouseEvent } from "react";
+import { useReducer, type MouseEvent } from "react";
 import { patchFavorite } from "@/lib/actions/letter-actions";
 
 type Props = {
@@ -12,20 +12,20 @@ type Props = {
 
 export default function FavoriteToggle({
   letterId,
-  isFavorite: initialFavoriteState,
+  isFavorite,
   currentUserId,
 }: Props) {
-  const [isFavorite, setIsFavorite] = useState(initialFavoriteState);
+  const [isFavoriteState, toggleIsFavorite] = useReducer(
+    (prev) => !prev,
+    isFavorite ?? false
+  );
 
   const handleToggleFavorite = async (e: MouseEvent) => {
     e.preventDefault();
-    const newFavorite = !isFavorite;
-    setIsFavorite(newFavorite);
-
+    toggleIsFavorite();
     const { ok } = await patchFavorite(letterId, currentUserId);
-
     if (!ok) {
-      setIsFavorite(!newFavorite);
+      toggleIsFavorite();
     }
   };
 
@@ -33,7 +33,7 @@ export default function FavoriteToggle({
     <button onClick={handleToggleFavorite}>
       <Image
         src={
-          isFavorite
+          isFavoriteState
             ? "/icons/ic-favorite-colered.svg"
             : "/icons/ic-favorite-none.svg"
         }
