@@ -1,6 +1,6 @@
 import { useState, useRef, useEffect } from "react";
 import { ERROR_MESSAGES } from "@/constants/message";
-import { uploadToS3 } from "@/lib/actions/upload-actions";
+import { postUploadToS3 } from "@/lib/actions/upload-actions";
 import { uploadedFileType } from "@/types/letters";
 
 const MAX_FILE_SIZE = 5 * 1024 * 1024; // 5MB
