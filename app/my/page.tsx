@@ -27,7 +27,6 @@ export default function MyPage() {
   };
   const handleWithdraw = async () => {
     try {
-      // TODO: 회원 탈퇴 로직 구현
       await deleteUser(session?.user.userId || 0);
       const preSession = session;
       await signOut({ redirect: false });
@@ -37,7 +36,7 @@ export default function MyPage() {
         router.push(`/cabinet/${preSession.user.follow.soldierId}`);
       else router.push("/auth/signIn");
       // catch
-    } catch (error) {
+    } catch {
       throw new Error("회원 탈퇴에 실패했습니다.");
     }
   };

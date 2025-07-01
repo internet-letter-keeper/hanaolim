@@ -67,7 +67,7 @@ export const deleteUser = async (userId: number) => {
       data: { delYN: true },
     });
     return { ok: true, message: "회원 탈퇴가 완료되었습니다." };
-  } catch (error) {
+  } catch {
     return { ok: false, message: "회원 탈퇴에 실패했습니다." };
   }
 };

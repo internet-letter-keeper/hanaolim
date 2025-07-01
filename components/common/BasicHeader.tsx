@@ -35,7 +35,7 @@ export default function BasicHeader({
     if (isRefresh) {
       router.refresh();
     }
-  }, [isRefresh]);
+  }, [router, isRefresh]);
 
   return (
     <header className={cn("flex items-center px-2 h-[40px]", className)}>
