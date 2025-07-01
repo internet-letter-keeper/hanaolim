@@ -1,4 +1,5 @@
 import { Suspense } from "react";
+import EmptyState from "@/components/EmptyState";
 import { Txt } from "@/components/atoms";
 import { BasicHeader } from "@/components/common";
 import {
@@ -36,12 +37,12 @@ export default async function LettersPage({ searchParams }: Props) {
   });
 
   if (!ok) {
-    return <Txt className="text-gray-400">편지를 불러오지 못했어요</Txt>;
+    return <EmptyState>편지를 불러오지 못했어요</EmptyState>;
   }
 
   return (
     <div className="flex flex-col gap-4">
-      <BasicHeader title="편지 보관함" />
+      <BasicHeader isRefresh title="편지 보관함" />
       {isSoldierStauts && <LetterboxTabSelector box={box} />}
       <Suspense>
         <SearchLetter />

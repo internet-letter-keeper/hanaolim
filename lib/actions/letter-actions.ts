@@ -211,7 +211,6 @@ export const getFilteredLetters = async ({
   const stopwordSet = new Set(stopwords.map((s) => s.value.trim()));
 
   const isValidQuery = query && !stopwordSet.has(query.trim());
-  console.log("🚀 ~ isValidQuery:", isValidQuery);
 
   const rawLetters = await prisma.letter.findMany({
     where: {
@@ -293,11 +292,4 @@ export const patchUserReadDate = async (letterId: number, userId: number) => {
       updated: false,
     };
   }
-};
-
-/**
- * 편지 보관함에서 목록으로 돌아갔을 때 읽음 상태 새로고침을 위함
- */
-export const revalidateLetters = async () => {
-  revalidatePath("/letters");
 };

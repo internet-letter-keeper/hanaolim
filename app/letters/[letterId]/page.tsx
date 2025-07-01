@@ -55,8 +55,6 @@ export default async function LetterDetailPage({ params }: Props) {
       })
     : await patchUserReadDate(letterId, userId);
 
-  // TODO: 살리기
-  // await revalidateLetters();
   if (!senderName) {
     throw new Error(ERROR_MESSAGES.COMMON.SERVER_ERROR);
   }
