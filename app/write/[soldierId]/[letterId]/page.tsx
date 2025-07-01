@@ -1,7 +1,8 @@
 "use client";
 
 import { useRouter } from "next/navigation";
-import { useState } from "react";
+import { useSession } from "next-auth/react";
+import { useEffect, useState } from "react";
 import { ChangeEvent } from "react";
 import {
   FileUploadSection,
@@ -12,9 +13,11 @@ import { ERROR_MESSAGES } from "@/constants/message";
 import { useToast } from "@/contexts/toast/ToastContext";
 import { useFileUpload } from "@/hooks/useFileUpload";
 import { useLetterForm } from "@/hooks/useLetterForm";
-import { postLetterReply } from "@/lib/actions/write-actions";
+import { getIsFriend } from "@/lib/actions/friend-actions";
+import { getSenderNameId, postLetterReply } from "@/lib/actions/write-actions";
 
 export default function LetterWritePage() {
+  const { data: session } = useSession();
   const router = useRouter();
   const { showToast } = useToast();
   const [isSubmitting, setIsSubmitting] = useState(false);
@@ -72,6 +75,28 @@ export default function LetterWritePage() {
       setIsSubmitting(false);
     }
   };
+
+  useEffect(() => {
+    const checkIsFriend = async () => {
+      if (!session?.user?.userId || !soldierId || !letterId) {
+        router.back();
+        return;
+      }
+      const { success, message, data } = await getSenderNameId(+letterId);
+
+      if (!success || !data) {
+        showToast(message, "", "error");
+        router.back();
+        return;
+      }
+
+      const isFriend = await getIsFriend(data.userId, +soldierId);
+      if (!isFriend) {
+        router.back();
+      }
+    };
+    checkIsFriend();
+  }, []);
 
   return (
     <LetterPageLayout userName={formData.userName}>

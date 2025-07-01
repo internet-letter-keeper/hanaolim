@@ -203,3 +203,16 @@ export const deleteFriend = async (followId: number) => {
     };
   }
 };
+
+/**
+ * 특정 유저가 군인의 친구인지 확인
+ * @param userId
+ * @param soldierId
+ * @returns true: 친구, false: 친구 아님
+ */
+export const getIsFriend = async (userId: number, soldierId: number) => {
+  const exists = await prisma.follow.findFirst({
+    where: { soldierId, userId },
+  });
+  return exists !== null;
+};
