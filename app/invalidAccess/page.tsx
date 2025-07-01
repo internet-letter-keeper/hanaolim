@@ -1,14 +1,8 @@
-"use client";
-
 import Image from "next/image";
-import { useRouter } from "next/navigation";
-import { PrimaryButton, Txt } from "@/components/atoms";
+import { Txt } from "@/components/atoms";
+import { GoBackBtn } from "@/components/common";
 
 export default function InvalidAccessPage() {
-  const router = useRouter();
-
-  const handleGoBack = () => router.back();
-
   return (
     <div className="h-screen flex flex-col justify-center items-center text-center gap-4 px-6">
       <Image
@@ -24,15 +18,11 @@ export default function InvalidAccessPage() {
         앗! 접근 권한이 없어요
       </Txt>
 
-      <Txt size={18} weight="medium" className="text-green-49d mt-15">
+      <Txt size={18} weight="medium" className="text-green-49d my-10">
         요기있는 별돌이가 다시 데려다줄게요!
       </Txt>
 
-      <PrimaryButton
-        title="뒤로가기"
-        onClick={handleGoBack}
-        className="mt-10"
-      />
+      <GoBackBtn />
     </div>
   );
 }
