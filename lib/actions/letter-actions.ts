@@ -2,7 +2,6 @@
 
 import { revalidatePath } from "next/cache";
 import prisma from "@/lib/db";
-import { Prisma } from "../generated/prisma";
 
 type LetterDetailProp = {
   letterId: number;
@@ -157,7 +156,7 @@ export const getLettersByUserId = async (
   }
 };
 
-/*
+/**
  * 읽지 않은 편지 존재 유무
  * @param userId number - 현재 로그인한 유저 ID
  * @returns { isNew : boolean }
@@ -186,9 +185,14 @@ type FilteredLettersParams = {
 
 /**
  * 필터와 검색 결과에 따른 편지 목록 불러오기
- * @param param0
+ * @param box 내 관물대, 친구 관물대
+ * @param userId
+ * @param isFavorite
+ * @param isUnread
+ * @param hasReply
+ * @param query 검색어
  * @usage 편지 목록 페이지
- * @returns
+ * @returns 필터된 편지 목록
  */
 export const getFilteredLetters = async ({
   box,
@@ -198,130 +202,64 @@ export const getFilteredLetters = async ({
   hasReply,
   query,
 }: FilteredLettersParams) => {
-  try {
-    const where: Prisma.LetterWhereInput = {
+  const isMine = box === "mine";
+  const isFriend = box === "friend";
+
+  const stopwords = await prisma.stopWord.findMany({
+    select: { value: true },
+  });
+  const stopwordSet = new Set(stopwords.map((s) => s.value.trim()));
+
+  const isValidQuery = query && !stopwordSet.has(query.trim());
+
+  const rawLetters = await prisma.letter.findMany({
+    where: {
       parentLetterId: null,
+      receiverId: isMine ? userId : undefined,
+      senderId: isFriend ? userId : undefined,
+      readDate: isUnread && isMine ? null : undefined,
+      childLetterId: hasReply && isFriend ? { not: null } : undefined,
+      OR: isValidQuery
+        ? [
+            { content: { contains: query } },
+            isMine
+              ? {
+                  User_Letter_senderIdToUser: { userName: { contains: query } },
+                }
+              : {
+                  User_Letter_receiverIdToUser: {
+                    userName: { contains: query },
+                  },
+                },
+          ]
+        : undefined,
+    },
+    orderBy: { createDate: "desc" },
+    include: {
+      Favorite: true,
+      User_Letter_senderIdToUser: isMine,
+      User_Letter_receiverIdToUser: isFriend,
+    },
+  });
+
+  const filtered = rawLetters.filter((letter) => {
+    const myFavorite = letter.Favorite.find((f) => f.userId === userId);
+    return isFavorite ? myFavorite?.isFavorite === true : true;
+  });
+
+  const result = filtered.map((letter) => {
+    const myFavorite = letter.Favorite.find((f) => f.userId === userId);
+    return {
+      ...letter,
+      favoriteId: myFavorite?.favoriteId,
+      isFavorite: myFavorite?.isFavorite,
+      senderName: letter.User_Letter_senderIdToUser?.userName ?? "",
+      receiverName: letter.User_Letter_receiverIdToUser?.userName ?? "",
+      hasReply: letter.childLetterId,
     };
+  });
 
-    // 받은편지함
-    if (box === "mine") {
-      where.receiverId = userId;
-
-      if (isUnread === true) {
-        where.readDate = null;
-      }
-
-      if (query) {
-        where.OR = [
-          { content: { contains: query } },
-          {
-            User_Letter_senderIdToUser: { userName: { contains: query } },
-          },
-        ];
-      }
-
-      const rawLetters = await prisma.letter.findMany({
-        where,
-        orderBy: { createDate: "desc" },
-        include: {
-          Favorite: true,
-          User_Letter_senderIdToUser: true,
-        },
-      });
-
-      // 내가 쓴 답장
-      const myReplies = await prisma.letter.findMany({
-        where: {
-          senderId: userId,
-          parentLetterId: { not: null },
-        },
-        select: {
-          parentLetterId: true,
-        },
-      });
-
-      const myReplySet = new Set(myReplies.map((r) => r.parentLetterId));
-
-      const filtered = rawLetters.filter((letter) => {
-        const myFavorite = letter.Favorite.find((f) => f.userId === userId);
-        return isFavorite ? myFavorite?.isFavorite === true : true;
-      });
-
-      const result = filtered.map((letter) => {
-        const myFavorite = letter.Favorite.find((f) => f.userId === userId);
-        return {
-          ...letter,
-          favoriteId: myFavorite?.favoriteId,
-          isFavorite: myFavorite?.isFavorite,
-          senderName: letter.User_Letter_senderIdToUser?.userName ?? "",
-          receiverName: "",
-          hasReply: myReplySet.has(letter.letterId),
-        };
-      });
-
-      return { ok: true, data: result };
-    } else {
-      // 보낸 편지함
-      where.senderId = userId;
-
-      if (query) {
-        where.OR = [
-          { content: { contains: query } },
-          {
-            User_Letter_receiverIdToUser: { userName: { contains: query } },
-          },
-        ];
-      }
-
-      const rawLetters = await prisma.letter.findMany({
-        where,
-        orderBy: { createDate: "desc" },
-        include: {
-          Favorite: true,
-          User_Letter_receiverIdToUser: true,
-        },
-      });
-
-      const letterIds = rawLetters.map((letter) => letter.letterId);
-
-      // 내가 받은 답장
-      const replyMap = await prisma.letter.findMany({
-        where: {
-          parentLetterId: { in: letterIds },
-        },
-        select: {
-          parentLetterId: true,
-        },
-      });
-
-      const hasReplySet = new Set(replyMap.map((r) => r.parentLetterId));
-
-      const filtered = rawLetters.filter((letter) => {
-        const myFavorite = letter.Favorite.find((f) => f.userId === userId);
-        const matchFavorite = isFavorite
-          ? myFavorite?.isFavorite === true
-          : true;
-        const matchReply = hasReply ? hasReplySet.has(letter.letterId) : true;
-        return matchFavorite && matchReply;
-      });
-
-      const result = filtered.map((letter) => {
-        const myFavorite = letter.Favorite.find((f) => f.userId === userId);
-        return {
-          ...letter,
-          favoriteId: myFavorite?.favoriteId,
-          isFavorite: myFavorite?.isFavorite,
-          receiverName: letter.User_Letter_receiverIdToUser?.userName ?? "",
-          senderName: "",
-          hasReply: hasReplySet.has(letter.letterId),
-        };
-      });
-
-      return { ok: true, data: result };
-    }
-  } catch {
-    return { ok: false, error: "편지 필터링에 실패했습니다.", data: [] };
-  }
+  return { data: result, ok: true };
 };
 
 /**
@@ -354,11 +292,4 @@ export const patchUserReadDate = async (letterId: number, userId: number) => {
       updated: false,
     };
   }
-};
-
-/**
- * 편지 보관함에서 목록으로 돌아갔을 때 읽음 상태 새로고침을 위함
- */
-export const revalidateLetters = async () => {
-  revalidatePath("/letters");
 };
