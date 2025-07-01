@@ -114,24 +114,6 @@ export const getFriendsList = async (userId: number) => {
 };
 
 /**
- * 군인의 계좌번호 조회
- * @param soldierId
- * @returns 계좌번호
- * @throws soldierId에 해당하는 계좌번호를 찾을 수 없을 때
- */
-export const getAccountNumBySoldierId = async (soldierId: number) => {
-  const res = await prisma.soldier.findUnique({
-    where: { soldierId },
-    select: { Account: true },
-  });
-
-  if (!res)
-    return { success: false, message: ERROR_MESSAGES.SOLDIER.INVALID_ACCOUNT };
-
-  return { success: true, accountNum: res.Account[0].accountNum };
-};
-
-/**
  * 군인의 user테이블 정보 조회
  * @param soldierId
  * @returns Soldier 테이블과 User테이블의 userName, isSoldier, isSocial

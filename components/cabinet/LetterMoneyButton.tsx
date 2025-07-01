@@ -6,7 +6,7 @@ import { useRouter } from "next/navigation";
 import { useSession } from "next-auth/react";
 import { useState } from "react";
 import { useToast } from "@/contexts/toast/ToastContext";
-import { getAccountNumBySoldierId } from "@/lib/actions/friend-actions";
+import { getAccountInfo } from "@/lib/actions/home-actions";
 import { cn } from "@/lib/utils";
 import { Txt } from "../atoms";
 import { Modal } from "../common";
@@ -42,9 +42,9 @@ type Props = {
 export default function LetterMoneyButton({ soldierId, soldierName }: Props) {
   const router = useRouter();
 
-  const { data } = useSession();
-
-  const isLogggedIn = !!data?.user.userId;
+  const { data: session } = useSession();
+  const isSocial = session?.user.isSocial;
+  const isLoggedIn = !!session?.user.userId;
 
   const { showToast } = useToast();
 
@@ -57,18 +57,18 @@ export default function LetterMoneyButton({ soldierId, soldierName }: Props) {
   const onCoinClick = async () => {
     // 미로그인, 소셜로그인이면 군인의 계좌번호 복사
     // 이메일 로그인이면 하나원큐로 이동
-    if (!data?.user || data?.user.isSocial) {
-      const { success, message, accountNum } =
-        await getAccountNumBySoldierId(soldierId);
+    if (!isLoggedIn || isSocial) {
+      const { data, message } = await getAccountInfo(soldierId);
 
-      if (success) {
-        navigator.clipboard.writeText(accountNum!);
+      if (!data) {
+        showToast(message!, "", "error");
+      }
+
+      if (data?.accountNum) {
+        navigator.clipboard.writeText(data?.accountNum);
         showToast("계좌번호가 복사되었습니다");
       }
 
-      if (!success) {
-        showToast(message!, "", "error");
-      }
       return;
     }
 
@@ -76,7 +76,7 @@ export default function LetterMoneyButton({ soldierId, soldierName }: Props) {
   };
 
   const onLetterClick = () => {
-    if (isLogggedIn) router.push(`/write/${soldierId}?name=${soldierName}`);
+    if (isLoggedIn) router.push(`/write/${soldierId}?name=${soldierName}`);
     else setModalOpened(true);
   };
 
@@ -87,7 +87,7 @@ export default function LetterMoneyButton({ soldierId, soldierName }: Props) {
 
   return (
     <div className="absolute bottom-6 right-2 z-50 flex flex-col items-center gap-3">
-      {isModalOpened && !isLogggedIn && (
+      {isModalOpened && !isLoggedIn && (
         <Modal
           greenBtnText="로그인"
           whiteBtnText="닫기"
