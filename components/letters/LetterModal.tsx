@@ -164,7 +164,7 @@ export default function LetterModal({ letterId, onHandleModal }: Props) {
               {letter.content}
             </Txt>
             {letter.fileUrl && <LetterView fileUrl={letter.fileUrl} />}
-            <div className="flex w-full justify-end">
+            <div className="flex w-full justify-end z-20">
               <button onClick={handleGoReply}>
                 <Txt
                   align="left"
