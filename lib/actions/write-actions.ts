@@ -82,7 +82,14 @@ const createLetter = async (data: LetterFormData, senderId?: number) => {
         parentLetterId: +data.parentLetterId,
       };
 
-      await prisma.letter.create({ data: letterData });
+      const reply = await prisma.letter.create({ data: letterData });
+
+      if (reply.parentLetterId)
+        await prisma.letter.update({
+          where: { letterId: reply.parentLetterId },
+          data: { childLetterId: reply.letterId },
+        });
+
       return { success: true, message: SUCCESS_MESSAGES.COMMON.SUCCESS };
     }
 
