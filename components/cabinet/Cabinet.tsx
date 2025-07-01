@@ -20,7 +20,7 @@ type Props = {
 export default function Cabinet({ soldierId, letters }: Props) {
   const { data } = useSession();
   const loginSoldier = data?.user.soldier;
-  const startDate = data?.user.soldier.startDate;
+  const startDate = loginSoldier ? data?.user.soldier.startDate : null;
 
   const isMyCabinet = loginSoldier
     ? loginSoldier.soldierId === soldierId
