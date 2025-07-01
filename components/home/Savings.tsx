@@ -1,8 +1,8 @@
 import Image from "next/image";
 import Link from "next/link";
-import Txt from "@/components/atoms/Text";
+import { getSavingsInfo } from "@/lib/actions/home-actions";
 import { requireAuth } from "@/utils/auth";
-import { getAccountInfo } from "@/lib/actions/home-actions";
+import { Txt } from "../atoms";
 
 export default async function Savings() {
   const session = await requireAuth();

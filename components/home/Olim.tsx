@@ -1,10 +1,9 @@
 import Image from "next/image";
 import Link from "next/link";
-import Txt from "@/components/atoms/Text";
 import { getEarnedPoint, getLetterCount } from "@/lib/actions/home-actions";
 import { requireAuth } from "@/utils/auth";
-import Letter from "./hanaolim/Letter";
-import Point from "./hanaolim/Point";
+import { Letter, Point } from ".";
+import { Txt } from "../atoms";
 
 export default async function Olim() {
   const session = await requireAuth();

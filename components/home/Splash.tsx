@@ -1,7 +1,7 @@
 "use client";
 
 import { useEffect, useState } from "react";
-import RocketSplash from "./RocketSplash";
+import { RocketSplash } from ".";
 
 const SPLASH_SKIP_KEY = "skipRocketSplash";
 
