@@ -56,7 +56,7 @@ export const postUploadToS3 = async (file: File) => {
     // 성공 시 S3 URL 반환
     const s3Url = `https://${process.env.NEXT_PUBLIC_AWS_BUCKET_NAME}.s3.${process.env.NEXT_PUBLIC_AWS_REGION}.amazonaws.com/${key}`;
     return s3Url;
-  } catch (error) {
+  } catch {
     throw new Error(ERROR_MESSAGES.COMMON.SERVER_ERROR);
   }
 };

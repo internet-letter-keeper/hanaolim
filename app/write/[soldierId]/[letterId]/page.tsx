@@ -66,7 +66,7 @@ export default function LetterWritePage() {
       if (!success) {
         showToast(message, "", "error");
       }
-    } catch (error) {
+    } catch {
       showToast(ERROR_MESSAGES.LETTER.SENDING_ERROR, "", "error");
     } finally {
       setIsSubmitting(false);
