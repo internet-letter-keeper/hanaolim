@@ -7,4 +7,3 @@ export { default as GoBackBtn } from "./GoBackBtn";
 export { default as Modal } from "./Modal";
 export { default as NewIcon } from "./NewIcon";
 export { default as Profile } from "./Profile";
-export { default as Toast } from "./Toast";
