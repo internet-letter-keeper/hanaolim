@@ -49,7 +49,9 @@ export default function FileUploadSection({
 
         {isUploading && (
           <div className="flex flex-row gap-2 items-center">
-            <span className="text-blue-9a0 text-sm">업로드 중...</span>
+            <Txt size={14} className="text-blue-9a0">
+              업로드 중...
+            </Txt>
           </div>
         )}
 

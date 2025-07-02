@@ -15,17 +15,17 @@ type SignUpProps = {
 };
 
 // next-auth 로그인 함수
-async function loginFunc(email: string, password?: string) {
+const loginFunc = async (email: string, password?: string) => {
   const result = await signIn("credentials", {
     email,
     password,
     redirect: false,
   });
   return result;
-}
+};
 
 //로그인
-export async function signInHook(signInData: SignInProps) {
+export const signInHook = async (signInData: SignInProps) => {
   try {
     const { email, password, callbackUrl } = signInData;
 
@@ -49,29 +49,30 @@ export async function signInHook(signInData: SignInProps) {
   } catch {
     return { success: false, error: "signIn" };
   }
-}
+};
 
 //회원가입
-export async function signUpHook(signUpData: SignUpProps) {
+export const signUpHook = async (signUpData: SignUpProps) => {
   try {
     const { name, email, password, callbackUrl } = signUpData;
 
-    const result = await postSignUp({
+    const { success } = await postSignUp({
       email,
       userName: name,
       password: password,
     });
 
-    if (result.ok) {
+    if (success) {
       return await signInHook({
         email,
         password,
         callbackUrl,
       });
-    } else {
+    }
+    if (!success) {
       return { success: false, error: "signUp" };
     }
   } catch {
     return { success: false, error: "signUp" };
   }
-}
+};

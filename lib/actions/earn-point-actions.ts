@@ -4,7 +4,7 @@ import { ERROR_MESSAGES } from "@/constants/message";
 import prisma from "../db";
 import { Prisma } from "../generated/prisma";
 
-type PointEarnProps = {
+type EarnPointParams = {
   letterId: number;
   soldierId: number;
   senderId: number;
@@ -26,7 +26,7 @@ export const handleEarnPoint = async ({
   soldierId,
   senderId,
   receiverId,
-}: PointEarnProps) => {
+}: EarnPointParams) => {
   try {
     const result = await prisma.$transaction(async (tx) => {
       //1. 편지 읽은 날짜 업데이트

@@ -42,22 +42,21 @@ export default function SignInPage() {
       return;
     }
     setIsLoading(true);
-    const result = await postSoldier({
+    const { success, data } = await postSoldier({
       userId: session?.user.userId,
       startDate: toKoreaTime(joinDate),
       endDate: toKoreaTime(releaseDate),
       accountNumber: accountNumber,
     });
-    if (result.ok) {
+    if (success) {
       setErrorMessage(""); // 에러 초기화
       setJoinDate(null);
       setReleaseDate(null);
 
       await update({
         ...session.user,
-        soldier: result.data,
+        soldier: data,
         isSoldier: true,
-        follow: result.data,
       }); // 세션 업데이트
 
       setIsLoading(false);

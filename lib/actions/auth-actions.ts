@@ -11,10 +11,11 @@ import prisma from "../db";
  * @param email 유저 이메일
  * @returns
  */
-export const getUserByEmail = async (email: string) =>
+export const getUserByEmail = async (email: string, includeDel = false) =>
   prisma.user.findUnique({
     where: {
       email,
+      delYN: includeDel ? false : undefined, // 삭제되지 않은 유저만 조회
     },
     include: {
       Soldier: true,
@@ -49,9 +50,27 @@ export const postSignUp = async (user: UserData) => {
       },
     });
 
-    return { ok: true, data: newUser };
+    return { success: true, data: newUser };
   } catch {
-    return { ok: false, error: "회원가입에 실패했습니다." };
+    return { success: false, message: ERROR_MESSAGES.AUTH.FAILD_TO_SIGN_UP };
+  }
+};
+/**
+ * 회원 탈퇴
+ * @param userId 유저 ID
+ * @returns
+ */
+export const deleteUser = async (userId: number) => {
+  try {
+    await prisma.user.update({
+      where: { userId },
+      data: { delYN: true },
+    });
+    return { success: true };
+  } catch {
+    return {
+      success: false,
+    };
   }
 };
 
@@ -98,9 +117,9 @@ export const postSoldier = async (soldier: SoldierData) => {
       data: { isSoldier: true },
     });
 
-    return { ok: true, data: postSoldier };
+    return { success: true, data: postSoldier };
   } catch {
-    return { ok: false, error: "군인등록에 실패했습니다." };
+    return { success: false, message: ERROR_MESSAGES.SOLDIER.REGISTER_FAILED };
   }
 };
 

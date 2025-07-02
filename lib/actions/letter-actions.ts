@@ -1,9 +1,8 @@
 "use server";
 
-import { revalidatePath } from "next/cache";
 import prisma from "@/lib/db";
 
-type LetterDetailProp = {
+type LetterDetailParams = {
   letterId: number;
   userId: number;
   isReply?: boolean;
@@ -20,7 +19,7 @@ export const getLetterDetail = async ({
   letterId,
   userId,
   isReply,
-}: LetterDetailProp) => {
+}: LetterDetailParams) => {
   try {
     const letter = await prisma.letter.findFirst({
       where: isReply

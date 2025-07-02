@@ -24,16 +24,21 @@ export default function LoginErrorPage() {
 
       <Txt size={18}>
         {errorType === "signup"
-          ? "회원가입"
+          ? "회원가입 중 오류가 발생했어요"
           : errorType === "regist"
-            ? "군인 등록"
-            : "로그인"}{" "}
-        중 오류가 발생했어요
+            ? "군인 등록 중 오류가 발생했어요"
+            : "탈퇴한 회원입니다"}{" "}
       </Txt>
 
-      <Txt size={14} className="text-gray-500 mt-2 mb-4">
-        잠시 후 다시 시도해 주세요. 문제가 계속되면 관리자에게 문의해 주세요.
-      </Txt>
+      {errorType === "signup" || errorType === "regist" ? (
+        <Txt size={14} className="text-gray-500 mt-2 mb-4">
+          잠시 후 다시 시도해 주세요. 문제가 계속되면 관리자에게 문의해 주세요.
+        </Txt>
+      ) : (
+        <Txt size={14} className="text-gray-500 mt-2 mb-4">
+          다른 이메일로 로그인해 주세요.
+        </Txt>
+      )}
 
       {/* 다시 시도 버튼 */}
 

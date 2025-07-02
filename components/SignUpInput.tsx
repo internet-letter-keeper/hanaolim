@@ -11,7 +11,6 @@ type Props = {
   type?: string;
   customRef?: Ref<HTMLInputElement> | Ref<HTMLTextAreaElement>;
   onChange?: ChangeEventHandler<HTMLInputElement | HTMLTextAreaElement>;
-
   onFocus?: () => void;
   onKeyDown?: KeyboardEventHandler<HTMLInputElement | HTMLTextAreaElement>;
 };

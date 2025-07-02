@@ -1,7 +1,7 @@
 "use client";
 
 import { useRouter } from "next/navigation";
-import { useTransition } from "react";
+import { useState } from "react";
 import { ChangeEvent } from "react";
 import {
   IconSelectionSection,
@@ -9,6 +9,7 @@ import {
   LetterForm,
   FileUploadSection,
 } from "@/components/write";
+import { ERROR_MESSAGES } from "@/constants/message";
 import { useToast } from "@/contexts/toast/ToastContext";
 import { useFileUpload } from "@/hooks/useFileUpload";
 import { useLetterForm } from "@/hooks/useLetterForm";
@@ -18,7 +19,7 @@ import { getIconIdByName } from "@/utils/icon";
 export default function WritePage() {
   const router = useRouter();
   const { showToast } = useToast();
-  const [isPending, startTransition] = useTransition();
+  const [isSubmitting, setIsSubmitting] = useState(false);
   const {
     formData,
     setNickname,
@@ -44,8 +45,9 @@ export default function WritePage() {
     }
   };
 
-  const handleSubmit = () => {
-    startTransition(async () => {
+  const handleSubmit = async () => {
+    setIsSubmitting(true);
+    try {
       const formDataToSubmit = new FormData();
       formDataToSubmit.append("nickname", formData.nickname);
       formDataToSubmit.append("content", formData.content);
@@ -66,7 +68,11 @@ export default function WritePage() {
       if (!success) {
         showToast(message, "", "error");
       }
-    });
+    } catch {
+      showToast(ERROR_MESSAGES.LETTER.SENDING_ERROR, "", "error");
+    } finally {
+      setIsSubmitting(false);
+    }
   };
 
   return (
@@ -82,7 +88,7 @@ export default function WritePage() {
         onNicknameChange={setNickname}
         onContentChange={setContent}
         onSubmit={handleSubmit}
-        isPending={isPending}
+        isPending={isSubmitting}
         isFormValid={isFormValid}
         isUploading={isUploading}
       >

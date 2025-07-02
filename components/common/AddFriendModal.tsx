@@ -17,7 +17,6 @@ export default function AddFriendModal({ closeModal }: Props) {
   const user = data?.user;
   const userId = data?.user.userId;
   const isSoldier = data?.user.soldier;
-  const follow = data?.user.follow;
 
   const router = useRouter();
   const { showToast } = useToast();

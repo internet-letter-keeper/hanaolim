@@ -1,18 +1,18 @@
 import Image from "next/image";
 import Link from "next/link";
-import Txt from "@/components/atoms/Text";
 import { Progress } from "@/components/ui/progress";
-import { getProfileInfo } from "@/lib/actions/home-actions";
 import { requireAuth } from "@/utils/auth";
 import { untilEndDate } from "@/utils/date";
+import { Txt } from "../atoms";
 
 export default async function Profile() {
   const session = await requireAuth();
-  const userId = session.user.userId;
-  const { userName, startDate, endDate } = await getProfileInfo(userId);
+  const userName = session.user.userName;
+  const startDate = session.user.soldier.startDate;
+  const endDate = session.user.soldier.endDate;
 
-  const startDateObj = new Date(startDate);
-  const endDateObj = new Date(endDate);
+  const startDateObj = new Date(startDate ?? "");
+  const endDateObj = new Date(endDate ?? "");
   const today = new Date();
 
   // 남은 복무일
@@ -30,6 +30,9 @@ export default async function Profile() {
 
   // 복무 진행률 게이지 계산
   const progressPercent = Math.min(100, (passedDays / totalDays) * 100);
+
+  // 입대 전이라 복무 진행률이 음수값이라면 0으로 바꿈
+  const positiveProgressPercent = progressPercent > 0 ? progressPercent : 0;
 
   return (
     <Link
@@ -54,7 +57,7 @@ export default async function Profile() {
           </Txt>
         </div>
         <div className="mt-[4px] w-full">
-          <Progress variant="green" value={progressPercent} />
+          <Progress variant="green" value={positiveProgressPercent} />
           {until < 0 ? (
             // 전역 전
             <div className="flex items-baseline gap-[2px] mt-[4px]">

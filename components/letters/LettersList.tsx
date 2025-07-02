@@ -1,6 +1,6 @@
 import { getFilteredLetters } from "@/lib/actions/letter-actions";
 import { LettersItem } from ".";
-import EmptyState from "../EmptyState";
+import { EmptyState } from "../common";
 
 type Props = {
   letters: Awaited<ReturnType<typeof getFilteredLetters>>["data"];

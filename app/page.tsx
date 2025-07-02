@@ -1,8 +1,7 @@
 import Image from "next/image";
 import Link from "next/link";
-import Txt from "@/components/atoms/Text";
-import { Card, Olim, Profile, Savings } from "@/components/home";
-import Splash from "@/components/home/Splash";
+import { Txt } from "@/components/atoms";
+import { Card, Olim, Profile, Savings, Splash } from "@/components/home";
 import { getLetterCount } from "@/lib/actions/home-actions";
 import { requireAuth } from "@/utils/auth";
 
@@ -10,7 +9,10 @@ export default async function Page() {
   const session = await requireAuth();
   const userId = session.user.userId;
 
-  const { totalCount, unreadCount } = await getLetterCount(userId);
+  const { data } = await getLetterCount(userId);
+  if (!data) return null;
+
+  const { totalCount, unreadCount } = data;
 
   return (
     <>
@@ -28,7 +30,7 @@ export default async function Page() {
           <Link href="/api/auth/signout">
             <Txt
               size={12}
-              className="text-gray-353 underline underline-offset-auto"
+              className="text-gray-353 underline underline-offset-3"
             >
               로그아웃
             </Txt>

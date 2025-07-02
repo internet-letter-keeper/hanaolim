@@ -9,7 +9,7 @@ import {
   verifyCurrentPassword,
   changePassword,
 } from "@/lib/actions/auth-actions";
-import { checkPasswordValidation } from "@/lib/validations/validation";
+import { checkPasswordValidation } from "@/lib/validations/authValidation";
 
 export default function MyPwdPage() {
   const router = useRouter();
