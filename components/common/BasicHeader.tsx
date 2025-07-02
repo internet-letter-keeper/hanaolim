@@ -9,7 +9,6 @@ import { Txt } from "../atoms";
 type Props = {
   title?: string;
   showBackButton?: boolean;
-  backUrl?: string;
   className?: string;
   isRefresh?: boolean;
 };
@@ -17,19 +16,12 @@ type Props = {
 export default function BasicHeader({
   title,
   showBackButton = true,
-  backUrl,
   className,
   isRefresh,
 }: Props) {
   const router = useRouter();
 
-  const handleBack = async () => {
-    if (backUrl) {
-      router.push(backUrl);
-      return;
-    }
-    router.back();
-  };
+  const handleBack = async () => router.back();
 
   useEffect(() => {
     if (isRefresh) {
