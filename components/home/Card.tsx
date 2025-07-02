@@ -6,8 +6,13 @@ import { PrimaryButton, Txt } from "../atoms";
 
 export default async function Card() {
   const session = await requireAuth();
-  const userId = session.user.userId;
-  const { accountNum, accountBalance } = await getAccountInfo(userId);
+  const soldierId = session.user.soldier.soldierId;
+  if (!soldierId) return null;
+
+  const { data } = await getAccountInfo(soldierId);
+  if (!data) return null;
+
+  const { accountNum, accountBalance } = data;
 
   return (
     <Link

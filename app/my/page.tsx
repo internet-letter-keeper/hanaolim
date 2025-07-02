@@ -5,6 +5,7 @@ import { signOut, useSession } from "next-auth/react";
 import { useState } from "react";
 import { Txt } from "@/components/atoms";
 import { BasicHeader, Modal } from "@/components/common";
+import { ERROR_MESSAGES } from "@/constants/message";
 import { deleteUser } from "@/lib/actions/auth-actions";
 import { cn } from "@/lib/utils";
 
@@ -27,7 +28,6 @@ export default function MyPage() {
   };
   const handleWithdraw = async () => {
     try {
-      // TODO: 회원 탈퇴 로직 구현
       await deleteUser(session?.user.userId || 0);
       const preSession = session;
       await signOut({ redirect: false });
@@ -37,8 +37,8 @@ export default function MyPage() {
         router.push(`/cabinet/${preSession.user.follow.soldierId}`);
       else router.push("/auth/signIn");
       // catch
-    } catch (error) {
-      throw new Error("회원 탈퇴에 실패했습니다.");
+    } catch {
+      throw new Error(ERROR_MESSAGES.AUTH.FAILD_TO_DELETE_ACCOUNT);
     }
   };
   const backUrl = `cabinet/${isSoldier ? soldier?.soldierId : follow?.soldierId}`;

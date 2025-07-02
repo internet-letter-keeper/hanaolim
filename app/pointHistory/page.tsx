@@ -1,8 +1,7 @@
 import Link from "next/link";
-import EmptyState from "@/components/EmptyState";
 import PointItem from "@/components/PointItem";
 import { Txt } from "@/components/atoms";
-import { BasicHeader } from "@/components/common";
+import { BasicHeader, EmptyState } from "@/components/common";
 import { ERROR_MESSAGES } from "@/constants/message";
 import { getPointHistory } from "@/lib/actions/pointHistory-action";
 import { auth } from "@/lib/auth";

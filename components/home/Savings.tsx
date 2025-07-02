@@ -1,13 +1,18 @@
 import Image from "next/image";
 import Link from "next/link";
-import Txt from "@/components/atoms/Text";
+import { getSavingsInfo } from "@/lib/actions/home-actions";
 import { requireAuth } from "@/utils/auth";
-import { getAccountInfo } from "@/lib/actions/home-actions";
+import { Txt } from "../atoms";
 
 export default async function Savings() {
   const session = await requireAuth();
-  const userId = session.user.userId;
-  const { savingsBalance } = await getAccountInfo(userId);
+  const soldierId = session.user.soldier.soldierId;
+  if (!soldierId) return null;
+
+  const { data } = await getSavingsInfo(soldierId);
+  if (!data) return null;
+
+  const { savingsBalance } = data;
 
   return (
     <Link

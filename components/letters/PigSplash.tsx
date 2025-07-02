@@ -5,12 +5,12 @@ import { useRouter } from "next/navigation";
 import { type MouseEvent } from "react";
 import { PrimaryButton, Txt } from "../atoms";
 
-type PigSplashProps = {
+type Props = {
   onSkip: () => void;
   point: number;
 };
 
-export default function PigSplash({ onSkip, point }: PigSplashProps) {
+export default function PigSplash({ onSkip, point }: Props) {
   const router = useRouter();
 
   const handleGoToHistory = (e: MouseEvent) => {

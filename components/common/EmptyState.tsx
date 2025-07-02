@@ -1,6 +1,6 @@
 import Image from "next/image";
 import { ReactNode } from "react";
-import { Txt } from "./atoms";
+import { Txt } from "../atoms";
 
 type Props = {
   children: ReactNode;

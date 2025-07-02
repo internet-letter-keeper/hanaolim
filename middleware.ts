@@ -18,9 +18,6 @@ const SOLDIER_ONLY = ["/my/soldier", "/pointHistory"];
 // 군인만 접근 가능한 받은 편지 보관함
 const SOLDIER_ONLY_LETTERS = ["/letters?box=mine"];
 
-// 일반 유저 - 팔로잉 1명 이상이면 접근 가능
-const FOLLOW_REQUIRED = ["/write"];
-
 // 소셜로그인 유저 - 비밀번호 변경 페이지 접근 불가
 const IS_SOCIAL_RESTRICTED = ["/my/pwd"];
 
@@ -59,6 +56,10 @@ export async function middleware(req: NextRequest) {
       new URL(`/cabinet/${follow.soldierId}`, baseUrl)
     );
 
+  // 일반 유저가 홈으로 접근한 경우
+  if (isPathHome && !isSoldier)
+    return NextResponse.redirect(new URL("/onboarding", baseUrl));
+
   // 일반 유저가 군인 전용 경로에 접근한 경우 OR
   // 군인이 군인 접근 불가 경로에 접근한 경우
   if (
@@ -73,10 +74,6 @@ export async function middleware(req: NextRequest) {
     (isPathIn(SOLDIER_ONLY_LETTERS) && startDate && isNotSoldierYet(startDate))
   )
     return NextResponse.redirect(new URL("/letters?box=friend", baseUrl));
-
-  // 팔로잉 없는 일반 유저가 편지 작성 OR 홈으로 접근한 경우
-  if ((isPathIn(FOLLOW_REQUIRED) || isPathHome) && !isSoldier && !follow)
-    return NextResponse.redirect(new URL("/onboarding", baseUrl));
 
   // 소셜 로그인일 경우
   if (isPathIn(IS_SOCIAL_RESTRICTED) && isSocial)
