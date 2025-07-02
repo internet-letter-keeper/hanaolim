@@ -13,8 +13,8 @@ export default function RootLayout({
   children,
 }: Readonly<{ children: ReactNode }>) {
   return (
-    <html lang="en" suppressHydrationWarning>
-      <body>
+    <html lang="ko">
+      <body suppressHydrationWarning>
         <SessionProvider>
           <ToastProvider>
             <div className="h-full w-full sm:max-w-sm p-4 bg-white-afa shadow-[0_0_10px_rgba(0,0,0,0.3)] overflow-y-auto [&::-webkit-scrollbar]:hidden">
