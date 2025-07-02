@@ -88,16 +88,6 @@ export default function LetterModal({ letterId, onHandleModal }: Props) {
     })();
   }, [letterId, userId, soldierId, showToast]);
 
-  //답장하는 페이지로 이동
-  const handleGoReply = () => {
-    if (!senderName) {
-      return;
-    }
-
-    const encodedName = encodeURIComponent(senderName);
-    router.push(`/write/${soldierId}/${letterId}?name=${encodedName}`);
-  };
-
   //편지 상세 페이지로 이동
   const handleGoToDetail = () => {
     router.push(`/letters/${letterId}`);
@@ -165,13 +155,13 @@ export default function LetterModal({ letterId, onHandleModal }: Props) {
             </Txt>
             {letter.fileUrl && <LetterView fileUrl={letter.fileUrl} />}
             <div className="flex w-full justify-end z-20">
-              <button onClick={handleGoReply}>
+              <button onClick={handleGoToDetail}>
                 <Txt
                   align="left"
                   weight="bold"
                   className="text-green-49d rounded-[5px] border border-green-49d px-2 py-1"
                 >
-                  답장하기
+                  상세 보기
                 </Txt>
               </button>
             </div>
