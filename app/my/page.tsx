@@ -35,7 +35,6 @@ export default function MyPage() {
       if (preSession?.user.follow)
         router.push(`/cabinet/${preSession.user.follow.soldierId}`);
       else router.push("/auth/signIn");
-      // catch
     } catch {
       throw new Error(ERROR_MESSAGES.AUTH.FAILD_TO_DELETE_ACCOUNT);
     }

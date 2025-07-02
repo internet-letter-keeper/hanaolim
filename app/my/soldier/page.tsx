@@ -17,7 +17,7 @@ export default function MySoldierPage() {
   const [errorMessage, setErrorMessage] = useState("");
   const [isLoading, setIsLoading] = useState(false);
 
-  //null값일 경우 버튼 비활성화ㄴ
+  //null값일 경우 버튼 비활성화
   const isButtonEnabled =
     joinDate !== null && releaseDate !== null && !isLoading;
 
@@ -46,14 +46,13 @@ export default function MySoldierPage() {
     setErrorMessage("");
 
     try {
-      const res = await updateSoldierDates(
+      const { success, message } = await updateSoldierDates(
         session.user.soldier.soldierId,
         toKoreaTime(joinDate),
         toKoreaTime(releaseDate)
       );
 
-      //성공했을 경우
-      if (res.success) {
+      if (success) {
         await update({
           ...session.user,
           soldier: {
@@ -65,7 +64,7 @@ export default function MySoldierPage() {
         setErrorMessage("");
         router.back();
       } else {
-        setErrorMessage(res.message);
+        setErrorMessage(message);
       }
     } finally {
       setIsLoading(false);
