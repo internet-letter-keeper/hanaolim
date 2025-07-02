@@ -34,6 +34,10 @@ export async function middleware(req: NextRequest) {
   // 요청 경로가 온보딩인지 여부. 현재 로그인 이후 모두 온보딩으로 보냄
   const isPathOnboarding = pathname === "/onboarding";
 
+  // 요청 경로가 편지보관함인 경우.
+  // 현재 모든 회원을 내 관물대로 보낸 뒤, 일반유저나 입대 전 군인은 친구 관물대로 리다이렉트
+  const isFullPathLetters = pathname + search === "/letters";
+
   // 요청 경로가 각 제한 경로들에 포함되는지 검사하는 함수
   const isPathIn = (pathType: string[]) =>
     pathType.some((page) => (pathname + search).startsWith(page));
@@ -67,6 +71,10 @@ export async function middleware(req: NextRequest) {
     (isPathIn(SOLDIER_RESTRICTED) && isSoldier)
   )
     return NextResponse.redirect(new URL("/invalidAccess", baseUrl));
+
+  // 편지 보관함에 접속한 경우, box=mine param 강제 부여
+  if (isFullPathLetters)
+    return NextResponse.redirect(new URL("/letters?box=mine", baseUrl));
 
   // 일반 유저 또는 입대 전 군인이 받은 편지함(군인 전용)에 접근한 경우
   if (
