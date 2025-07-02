@@ -10,7 +10,9 @@ export const letterValidator = z.object({
   content: z
     .string()
     .min(1, "내용을 입력해주세요.")
-    .max(500, "내용은 500자 이하여야 합니다."),
+    .refine((val) => val.replace(/\r\n/g, "\n").length <= 500, {
+      message: "내용은 500자 이하여야 합니다.",
+    }),
   iconId: z.coerce.number().optional(),
   fileUrl: z.string().optional(),
   soldierId: z.coerce.number(),
