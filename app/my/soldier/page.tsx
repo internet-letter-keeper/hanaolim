@@ -63,7 +63,7 @@ export default function MySoldierPage() {
           },
         });
         setErrorMessage("");
-        router.push("/my");
+        router.back();
       } else {
         setErrorMessage(res.message);
       }

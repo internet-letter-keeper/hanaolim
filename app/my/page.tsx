@@ -16,8 +16,7 @@ const containerStyle =
 export default function MyPage() {
   const { data: session } = useSession();
   const router = useRouter();
-  const { userName, email, isSoldier, isSocial, soldier, follow } =
-    session?.user || {};
+  const { userName, email, isSoldier, isSocial } = session?.user || {};
 
   const [showLogoutModal, setShowLogoutModal] = useState(false);
   const [showWithdrawModal, setShowWithdrawModal] = useState(false);
@@ -41,11 +40,10 @@ export default function MyPage() {
       throw new Error(ERROR_MESSAGES.AUTH.FAILD_TO_DELETE_ACCOUNT);
     }
   };
-  const backUrl = `cabinet/${isSoldier ? soldier?.soldierId : follow?.soldierId}`;
 
   return (
     <div>
-      <BasicHeader title="내 정보" backUrl={backUrl} />
+      <BasicHeader title="내 정보" />
       <div className="flex flex-col items-start border-b border-gray-aaa pb-5 pl-4 mt-9 mb-9">
         <Txt className="text-gray-353" size={22} weight="cm">
           {userName}
