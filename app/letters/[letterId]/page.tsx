@@ -24,7 +24,9 @@ export default async function LetterDetailPage({ params }: Props) {
 
   const session = await auth();
   const userId = session?.user.userId;
-  const soldierId = session?.user.soldier.soldierId;
+  const soldierId = session?.user.isSoldier
+    ? session?.user.soldier.soldierId
+    : null;
 
   if (!userId) return;
 
