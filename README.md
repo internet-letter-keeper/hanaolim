@@ -33,6 +33,14 @@
 
 <br/>
 
+## 🎲 ERD 다이어그램
+
+![image](https://github.com/user-attachments/assets/86932126-b888-4e80-a1bd-9eec844abdfa)
+
+
+<br/>
+
+## 🍥 서비스 소개
 
 ![image](https://github.com/user-attachments/assets/602d788e-c3d0-4198-bb56-badf01c45e70)
 ![image](https://github.com/user-attachments/assets/8255719a-777d-4d39-8804-06e4b1898a1f)
