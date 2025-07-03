@@ -17,7 +17,7 @@
 
 | [<img src="https://github.com/ryd10227.png" width="150"/>](https://github.com/ryd10227) | [<img src="https://github.com/ssilver01.png" width="150"/>](https://github.com/ssilver01) | [<img src="https://github.com/sooocong.png" width="150"/>](https://github.com/sooocong) | [<img src="https://github.com/philosophy1106.png" width="150"/>](https://github.com/philosophy1106) | [<img src="https://github.com/Ausdauer1.png" width="150"/>](https://github.com/Ausdauer1) | [<img src="https://github.com/cheskt.png" width="150"/>](https://github.com/cheskt) |
 |:--:|:--:|:--:|:--:|:--:|:--:|
-| 윤서연 (팀장)<br/>[`@ryd10227`](https://github.com/ryd10227) | 정소은<br/>[`@ssilver01`](https://github.com/ssilver01) | 최수빈<br/>[`@sooocong`](https://github.com/sooocong) | 임아현<br/>[`@shroqkf`](https://github.com/shroqkf) | 우재현<br/>[`@Ausdauer1`](https://github.com/Ausdauer1) | 김재윤<br/>[`@cheskt`](https://github.com/cheskt) |
+| 윤서연 (팀장)<br/>[`@ryd10227`](https://github.com/ryd10227) | 정소은<br/>[`@ssilver01`](https://github.com/ssilver01) | 최수빈<br/>[`@sooocong`](https://github.com/sooocong) | 임아현<br/>[`@philosophy1106`](https://github.com/philosophy1106) | 우재현<br/>[`@Ausdauer1`](https://github.com/Ausdauer1) | 김재윤<br/>[`@cheskt`](https://github.com/cheskt) |
 
 <br/>
 
